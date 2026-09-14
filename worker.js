@@ -41,7 +41,14 @@ export default {
       // =========================
       // PRO ROUND
       // =========================
-      if (url.pathname === "/api/db/query") {
+      if (url.pathname === "/api/db/status") {
+  return json({
+    ok: true,
+    secret_configured: Boolean(env.ZINGO_DB_SECRET),
+  });
+}
+
+if (url.pathname === "/api/db/query") {
         if (request.method !== "POST") {
           return json({ ok: false, error: "Method not allowed" }, 405);
         }
