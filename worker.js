@@ -48,7 +48,7 @@ export default {
   });
 }
 
-if (url.pathname === "/api/db/query") {
+if (url.pathname === "/api/db/query" || url.pathname === "/api/xdb") {
         if (request.method !== "POST") {
           return json({ ok: false, error: "Method not allowed" }, 405);
         }
