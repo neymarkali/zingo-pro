@@ -53,18 +53,15 @@ if (url.pathname === "/api/db/query" || url.pathname === "/api/xdb") {
           return json({ ok: false, error: "Method not allowed" }, 405);
         }
 
-        const auth = request.headers.get("Authorization") || "";
-        const dbKey = auth.startsWith("Bearer ")
-          ? auth.slice(7).trim()
-          : request.headers.get("X-ZINGO-DB-KEY") || "";
-        if (!env.ZINGO_DB_SECRET || dbKey !== env.ZINGO_DB_SECRET) {
-          return json({ ok: false, error: "Unauthorized" }, 401);
-        }
-
         try {
           const body = await request.json();
+          const dbKey = typeof body?.db_key === "string" ? body.db_key.trim() : "";
           const sql = typeof body?.sql === "string" ? body.sql.trim() : "";
           const params = Array.isArray(body?.params) ? body.params : [];
+
+          if (!env.ZINGO_DB_SECRET || dbKey !== env.ZINGO_DB_SECRET) {
+            return json({ ok: false, error: "Unauthorized" }, 401);
+          }
 
           if (!sql) {
             return json({ ok: false, error: "SQL is required" }, 400);
