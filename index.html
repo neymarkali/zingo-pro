@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>ZINGO PRO WEEKLY</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+*{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+:root{
+  --bg:#05070b;
+  --card:#0b1018;
+  --card2:#0e1520;
+  --blue:#168cff;
+  --blue2:#0066ff;
+  --text:#f5f8ff;
+  --muted:#8995a8;
+  --line:rgba(22,140,255,.18);
+  --gold:#d9aa45;
+}
+
+body{
+  margin:0;
+  background:
+    radial-gradient(circle at 50% -10%,rgba(0,102,255,.22),transparent 38%),
+    #05070b;
+  color:var(--text);
+  font-family:Arial,"Tahoma",sans-serif;
+  min-height:100vh;
+}
+
+button{
+  font-family:inherit;
+}
+
+.app{
+  width:100%;
+  max-width:680px;
+  margin:auto;
+  padding:16px 13px 35px;
+}
+
+/* HEADER */
+
+.header{
+  position:relative;
+  overflow:hidden;
+  background:linear-gradient(145deg,#090d14,#070a10);
+  border:1px solid rgba(22,140,255,.22);
+  border-radius:25px;
+  padding:22px 18px;
+  margin-bottom:13px;
+  box-shadow:0 15px 45px rgba(0,0,0,.35);
+}
+
+.header:after{
+  content:"";
+  position:absolute;
+  width:180px;
+  height:180px;
+  background:rgba(0,102,255,.11);
+  filter:blur(55px);
+  left:-50px;
+  top:-80px;
+}
+
+.brand{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+}
+
+.logo{
+  width:54px;
+  height:54px;
+  border-radius:17px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:1000;
+  font-size:20px;
+  color:white;
+  background:linear-gradient(145deg,#111b2a,#07101d);
+  border:1px solid rgba(22,140,255,.5);
+  box-shadow:0 0 25px rgba(0,102,255,.2);
+}
+
+.brandText{
+  flex:1;
+  padding-right:13px;
+}
+
+.brandText h1{
+  margin:0;
+  font-size:22px;
+  font-weight:1000;
+  letter-spacing:.5px;
+}
+
+.brandText p{
+  margin:4px 0 0;
+  color:#6faeff;
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:1.5px;
+}
+
+.status{
+  font-size:10px;
+  font-weight:900;
+  color:#54aaff;
+  border:1px solid rgba(22,140,255,.3);
+  padding:7px 9px;
+  border-radius:999px;
+}
+
+/* PROFILE */
+
+.profile{
+  margin-top:17px;
+  position:relative;
+  z-index:2;
+  background:rgba(8,13,21,.8);
+  border:1px solid rgba(255,255,255,.06);
+  border-radius:17px;
+  padding:13px;
+}
+
+.profileTop{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.avatar{
+  width:43px;
+  height:43px;
+  border-radius:50%;
+  background:linear-gradient(145deg,#167dff,#063e96);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-weight:1000;
+}
+
+.profileInfo{
+  flex:1;
+}
+
+.profileInfo small{
+  color:var(--muted);
+  font-size:10px;
+}
+
+.profileName{
+  font-weight:900;
+  margin-top:3px;
+}
+
+.editName{
+  background:#101923;
+  color:#7dbbff;
+  border:1px solid rgba(22,140,255,.2);
+  border-radius:10px;
+  padding:8px 10px;
+  font-size:11px;
+}
+
+/* INTRO */
+
+.intro{
+  margin-bottom:13px;
+  padding:17px;
+  border-radius:20px;
+  background:linear-gradient(145deg,#0b111a,#080c13);
+  border:1px solid rgba(255,255,255,.06);
+}
+
+.introTitle{
+  font-size:17px;
+  font-weight:1000;
+  margin-bottom:7px;
+}
+
+.introText{
+  color:#8f9bad;
+  font-size:12px;
+  line-height:1.8;
+}
+
+.rules{
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+
+.rule{
+  background:#0e1723;
+  border:1px solid rgba(22,140,255,.15);
+  border-radius:10px;
+  padding:7px 9px;
+  color:#a7b7cc;
+  font-size:10px;
+  font-weight:800;
+}
+
+/* MATCHES */
+
+.sectionHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin:17px 2px 9px;
+}
+
+.sectionTitle{
+  font-size:16px;
+  font-weight:1000;
+}
+
+.closeAll{
+  border:0;
+  background:transparent;
+  color:#5daeff;
+  font-size:10px;
+  font-weight:900;
+  padding:7px;
+}
+
+.match{
+  background:linear-gradient(145deg,#0a1018,#080c12);
+  border:1px solid rgba(255,255,255,.055);
+  border-radius:19px;
+  margin-bottom:9px;
+  overflow:hidden;
+  transition:.2s;
+}
+
+.match.open{
+  border-color:rgba(22,140,255,.35);
+  box-shadow:0 10px 30px rgba(0,70,160,.12);
+}
+
+.matchHead{
+  width:100%;
+  background:none;
+  border:0;
+  color:white;
+  padding:14px 13px;
+  display:flex;
+  align-items:center;
+  gap:9px;
+  text-align:right;
+  cursor:pointer;
+}
+
+.matchNumber{
+  width:27px;
+  height:27px;
+  border-radius:9px;
+  background:#0d1827;
+  color:#4ba2ff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:10px;
+  font-weight:1000;
+  flex-shrink:0;
+}
+
+.teams{
+  flex:1;
+  min-width:0;
+}
+
+.teamsLine{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  font-size:12px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.teamMini{
+  display:flex;
+  align-items:center;
+  gap:5px;
+  min-width:0;
+}
+
+.teamMini span{
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+
+.teamMini img{
+  width:24px;
+  height:24px;
+  object-fit:contain;
+}
+
+.vs{
+  color:#526174;
+  font-size:9px;
+  font-weight:1000;
+}
+
+.chevron{
+  color:#58718f;
+  transition:.2s;
+  font-size:15px;
+}
+
+.match.open .chevron{
+  transform:rotate(180deg);
+  color:#4da5ff;
+}
+
+.matchBody{
+  display:none;
+  padding:0 11px 12px;
+}
+
+.match.open .matchBody{
+  display:block;
+}
+
+.marketTitle{
+  color:#728097;
+  font-size:10px;
+  font-weight:900;
+  margin:2px 3px 8px;
+}
+
+.options{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+}
+
+.option{
+  border:1px solid rgba(255,255,255,.07);
+  background:#0c141e;
+  color:#dfe8f4;
+  border-radius:13px;
+  padding:11px 5px;
+  cursor:pointer;
+  transition:.16s;
+}
+
+.option:active{
+  transform:scale(.97);
+}
+
+.option.selected{
+  border-color:#168cff;
+  background:linear-gradient(145deg,#09284b,#0b1828);
+  box-shadow:0 0 16px rgba(22,140,255,.16);
+}
+
+.option strong{
+  display:block;
+  font-size:12px;
+  margin-bottom:5px;
+}
+
+.points{
+  display:block;
+  color:#56aaff;
+  font-size:9px;
+  font-weight:900;
+}
+
+/* SUBMIT */
+
+.submitBox{
+  margin-top:17px;
+  padding:15px;
+  background:linear-gradient(145deg,#09121d,#070b11);
+  border:1px solid rgba(22,140,255,.18);
+  border-radius:20px;
+}
+
+.progress{
+  height:6px;
+  border-radius:20px;
+  background:#101923;
+  overflow:hidden;
+  margin-bottom:12px;
+}
+
+.progressBar{
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#0066ff,#25a1ff);
+  transition:.25s;
+}
+
+.progressText{
+  text-align:center;
+  color:#8290a4;
+  font-size:10px;
+  margin-bottom:12px;
+}
+
+.submit{
+  width:100%;
+  border:0;
+  border-radius:15px;
+  padding:15px;
+  color:white;
+  font-size:13px;
+  font-weight:1000;
+  background:linear-gradient(100deg,#075ee8,#168cff);
+  box-shadow:0 8px 25px rgba(0,102,255,.2);
+}
+
+.submit:disabled{
+  opacity:.45;
+}
+
+/* FOOTER */
+
+.footer{
+  text-align:center;
+  padding:18px 0 4px;
+  color:#3f4b5b;
+  font-size:9px;
+  letter-spacing:1px;
+}
+
+/* TOAST */
+
+.toast{
+  position:fixed;
+  bottom:25px;
+  left:50%;
+  transform:translate(-50%,20px);
+  opacity:0;
+  pointer-events:none;
+  background:#101923;
+  border:1px solid rgba(22,140,255,.3);
+  color:white;
+  padding:12px 17px;
+  border-radius:13px;
+  font-size:11px;
+  font-weight:900;
+  transition:.25s;
+  z-index:99;
+  white-space:nowrap;
+}
+
+.toast.show{
+  opacity:1;
+  transform:translate(-50%,0);
+}
+
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:90;
+}
+
+.modal.show{
+  display:flex;
+}
+
+.modalBox{
+  width:100%;
+  max-width:420px;
+  background:#0a1018;
+  border:1px solid rgba(22,140,255,.22);
+  border-radius:22px;
+  padding:18px;
+}
+
+.modalBox h3{
+  margin:0 0 12px;
+}
+
+.nameInput{
+  width:100%;
+  border:1px solid rgba(255,255,255,.08);
+  background:#080d14;
+  color:white;
+  border-radius:12px;
+  padding:13px;
+  outline:none;
+}
+
+.modalBtns{
+  display:flex;
+  gap:8px;
+  margin-top:11px;
+}
+
+.modalBtns button{
+  flex:1;
+  border:0;
+  border-radius:12px;
+  padding:11px;
+  font-weight:900;
+}
+
+.cancel{
+  background:#121a24;
+  color:#9ca9ba;
+}
+
+.saveName{
+  background:#0873f9;
+  color:white;
+}
+</style>
+
+<style>
+.leaderboardBox{
+    margin:18px 0;
+    padding:18px;
+    border:1px solid rgba(40,140,255,.28);
+    border-radius:20px;
+    background:linear-gradient(145deg,rgba(10,18,32,.98),rgba(3,8,16,.98));
+    box-shadow:0 10px 30px rgba(0,0,0,.28);
+}
+.lbHead{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:10px;
+    margin-bottom:14px;
+}
+.lbTitle{
+    font-size:18px;
+    font-weight:800;
+}
+.lbSub{
+    margin-top:4px;
+    font-size:11px;
+    opacity:.58;
+}
+.lbRefresh{
+    border:1px solid rgba(40,140,255,.35);
+    background:rgba(20,35,55,.8);
+    color:#fff;
+    border-radius:12px;
+    width:38px;
+    height:38px;
+    font-size:20px;
+}
+.myRank{
+    display:none;
+    margin-bottom:12px;
+    padding:12px 14px;
+    border-radius:15px;
+    background:linear-gradient(90deg,rgba(25,100,190,.25),rgba(15,25,40,.7));
+    border:1px solid rgba(40,140,255,.3);
+    text-align:center;
+}
+.myRank strong{
+    font-size:20px;
+}
+.lbList{
+    display:flex;
+    flex-direction:column;
+    gap:7px;
+    max-height:500px;
+    overflow-y:auto;
+}
+.lbRow{
+    display:grid;
+    grid-template-columns:38px 1fr auto;
+    align-items:center;
+    gap:8px;
+    padding:10px 11px;
+    border-radius:13px;
+    background:rgba(255,255,255,.035);
+    border:1px solid rgba(255,255,255,.045);
+}
+.lbRow.me{
+    border-color:rgba(40,140,255,.55);
+    background:rgba(25,100,190,.16);
+}
+.lbRank{
+    font-weight:800;
+    text-align:center;
+}
+.lbName{
+    min-width:0;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    white-space:nowrap;
+}
+.lbPoints{
+    font-weight:800;
+    font-size:13px;
+}
+.lbEmpty{
+    text-align:center;
+    padding:20px;
+    opacity:.55;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="app">
+
+  <header class="header">
+
+    <div class="brand">
+
+      <div class="logo">Z</div>
+
+      <div class="brandText">
+        <h1>ZINGO</h1>
+        <p>PRO WEEKLY</p>
+      </div>
+
+      <div class="status">PRO</div>
+
+    </div>
+
+    <div class="profile">
+
+      <div class="profileTop">
+
+        <div class="avatar" id="avatar">Z</div>
+
+        <div class="profileInfo">
+          <small>المشارك</small>
+          <div class="profileName" id="profileName">ZINGO PLAYER</div>
+        </div>
+
+        <button class="editName" onclick="openNameModal()">تعديل</button>
+
+      </div>
+
+    </div>
+
+  </header>
+
+  <section class="intro">
+
+    <div class="introTitle">🏆 المسابقة الأسبوعية المجانية</div>
+
+    <div class="introText">
+      اختر توقعك لكل مباراة وحاول تجمع أكبر عدد من النقاط.
+      لا توجد رهانات أو معاملات — فقط توقعات ومنافسة.
+    </div>
+
+    <div class="rules">
+      <div class="rule">⚽ 7 مباريات</div>
+      <div class="rule">🎯 1X2 فقط</div>
+      <div class="rule">⭐ الصحيح +3 نقاط</div>
+      <div class="rule">🔒 بدون Correct Score</div>
+    </div>
+
+  </section>
+
+  <div class="sectionHead">
+
+    <div class="sectionTitle">المباريات</div>
+
+    <button class="closeAll" onclick="closeAll()">
+      إغلاق الكل
+    </button>
+
+  </div>
+
+  <main id="matches"></main>
+
+  <section class="submitBox">
+
+    <div class="progress">
+      <div class="progressBar" id="progressBar"></div>
+    </div>
+
+    <div class="progressText" id="progressText">
+      0 / 7 توقعات
+    </div>
+
+    <button class="submit" id="submitBtn" onclick="submitPredictions()" disabled>
+      🔒 أكمل جميع التوقعات
+    </button>
+
+  </section>
+
+  <div class="footer">
+    ZINGO • PRO WEEKLY COMPETITION
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="modal" id="nameModal">
+
+  <div class="modalBox">
+
+    <h3>تعديل الاسم</h3>
+
+    <input
+      class="nameInput"
+      id="nameInput"
+      maxlength="30"
+      placeholder="اكتب اسمك"
+    >
+
+    <div class="modalBtns">
+
+      <button class="cancel" onclick="closeNameModal()">
+        إلغاء
+      </button>
+
+      <button class="saveName" onclick="saveName()">
+        حفظ
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+<script>
+window.addEventListener("error", function(e) {
+  document.body.insertAdjacentHTML(
+    "afterbegin",
+    '<div style="position:fixed;z-index:999999;top:0;left:0;right:0;background:#7f1d1d;color:white;padding:15px;font-size:13px;direction:ltr;word-break:break-all">JS ERROR: ' +
+    String(e.message || "unknown") +
+    '</div>'
+  );
+});
+window.addEventListener("unhandledrejection", function(e) {
+  document.body.insertAdjacentHTML(
+    "afterbegin",
+    '<div style="position:fixed;z-index:999999;top:0;left:0;right:0;background:#92400e;color:white;padding:15px;font-size:13px;direction:ltr;word-break:break-all">PROMISE ERROR: ' +
+    String(e.reason || "unknown") +
+    '</div>'
+  );
+});
+</script>
+<script>
+const tg = window.Telegram?.WebApp;
+
+if(tg){
+  tg.ready();
+  tg.expand();
+}
+
+const telegramId =
+  tg?.initDataUnsafe?.user?.id ||
+  new URLSearchParams(location.search).get("telegram_id") ||
+  "1";
+
+let userName =
+  tg?.initDataUnsafe?.user?.first_name ||
+  "ZINGO PLAYER";
+
+let matches = [];
+let predictions = {};
+let bttsPredictions = {};
+
+const MAX_MATCHES = 7;
+
+/* fallback matches */
+
+const fallbackMatches = [
+  {
+    id:1,
+    home_team:"Manchester City",
+    away_team:"Manchester United",
+    home_logo:"https://media.api-sports.io/football/teams/50.png",
+    away_logo:"https://media.api-sports.io/football/teams/33.png"
+  },
+  {
+    id:2,
+    home_team:"Real Madrid",
+    away_team:"Barcelona",
+    home_logo:"https://media.api-sports.io/football/teams/541.png",
+    away_logo:"https://media.api-sports.io/football/teams/529.png"
+  },
+  {
+    id:3,
+    home_team:"Liverpool",
+    away_team:"Chelsea",
+    home_logo:"https://media.api-sports.io/football/teams/40.png",
+    away_logo:"https://media.api-sports.io/football/teams/49.png"
+  },
+  {
+    id:4,
+    home_team:"Arsenal",
+    away_team:"Tottenham",
+    home_logo:"https://media.api-sports.io/football/teams/42.png",
+    away_logo:"https://media.api-sports.io/football/teams/47.png"
+  },
+  {
+    id:5,
+    home_team:"Inter",
+    away_team:"Milan",
+    home_logo:"https://media.api-sports.io/football/teams/505.png",
+    away_logo:"https://media.api-sports.io/football/teams/489.png"
+  },
+  {
+    id:6,
+    home_team:"Bayern Munich",
+    away_team:"Dortmund",
+    home_logo:"https://media.api-sports.io/football/teams/157.png",
+    away_logo:"https://media.api-sports.io/football/teams/165.png"
+  },
+  {
+    id:7,
+    home_team:"PSG",
+    away_team:"Marseille",
+    home_logo:"https://media.api-sports.io/football/teams/85.png",
+    away_logo:"https://media.api-sports.io/football/teams/81.png"
+  }
+];
+
+function escapeHtml(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;")
+    .replace(/"/g,"&quot;")
+    .replace(/'/g,"&#039;");
+}
+
+function logo(url){
+  if(!url) return "";
+
+  return `
+    <img
+      src="${escapeHtml(url)}"
+      onerror="this.style.display='none'"
+      alt=""
+    >
+  `;
+}
+
+function normalizeMatch(m,i){
+
+  const home =
+    m.home_team ||
+    m.homeTeam ||
+    m.home ||
+    m.teams?.home?.name ||
+    `الفريق ${i+1}`;
+
+  const away =
+    m.away_team ||
+    m.awayTeam ||
+    m.away ||
+    m.teams?.away?.name ||
+    `الفريق ${i+1}`;
+
+  const homeLogo =
+    m.home_logo ||
+    m.homeLogo ||
+    m.home_team_logo ||
+    m.teams?.home?.logo ||
+    "";
+
+  const awayLogo =
+    m.away_logo ||
+    m.awayLogo ||
+    m.away_team_logo ||
+    m.teams?.away?.logo ||
+    "";
+
+  return {
+    id:m.id ?? m.match_id ?? i+1,
+    home_team:home,
+    away_team:away,
+    home_logo:homeLogo,
+    away_logo:awayLogo
+  };
+}
+
+async function loadMatches(){
+
+  try{
+
+    const response = await fetch(
+      "/api/pro_round?telegram_id=" +
+      encodeURIComponent(telegramId),
+      {cache:"no-store"}
+    );
+
+    if(response.ok){
+
+      const data = await response.json();
+
+      if(data.ok && data.competition && Array.isArray(data.matches)){
+
+        matches = data.matches
+          .map((m, i) => ({
+            id: String(m.id),
+            match_id: m.match_id,
+            home_team: m.home_team,
+            away_team: m.away_team,
+            home_logo: m.home_logo || "",
+            away_logo: m.away_logo || "",
+            result: m.result || "pending",
+            prediction: m.prediction || null,
+            prediction_1x2: m.prediction_1x2 || null,
+            prediction_btts: m.prediction_btts || null
+          }))
+          .slice(0, MAX_MATCHES);
+
+        // استرجاع التوقعات المحفوظة مسبقاً
+        predictions = {};
+        bttsPredictions = {};
+
+
+        matches.forEach(match => {
+
+          // استرجاع BTTS المحفوظ
+          if(match.prediction_btts){
+            const b = String(match.prediction_btts).toLowerCase();
+
+            if(b === "yes" || b === "نعم" || b === "true" || b === "1"){
+              bttsPredictions[match.id] = "yes";
+            }else if(b === "no" || b === "لا" || b === "false" || b === "0"){
+              bttsPredictions[match.id] = "no";
+            }
+          }
+
+
+          if(!match.prediction) return;
+
+          if(match.prediction === match.home_team){
+            predictions[match.id] = "home";
+          }else if(match.prediction === match.away_team){
+            predictions[match.id] = "away";
+          }else if(
+            String(match.prediction).toLowerCase() === "draw" ||
+            String(match.prediction) === "تعادل"
+          ){
+            predictions[match.id] = "draw";
+          }
+
+        });
+      }
+    }
+
+  }catch(error){
+
+    console.log("PRO ROUND API:", error);
+
+  }
+
+  // لا نستخدم مباريات وهمية إذا فشل الـAPI.
+  // الجولة الحقيقية فقط هي التي يجب أن تظهر.
+  if(!matches.length){
+
+    matches = [];
+
+    showToast("⚠️ تعذر تحميل الجولة الحالية");
+
+  }
+
+  renderMatches();
+}
+
+function renderMatches(){
+
+  const container = document.getElementById("matches");
+  container.innerHTML = "";
+
+  // الجولة مكتملة فقط عندما يكون لكل مباراة 1X2 + BTTS
+  const allLocked =
+    matches.length > 0 &&
+    matches.every(match => {
+      const id = String(match.id);
+      return !!predictions[id] && !!bttsPredictions[id];
+    });
+
+  matches.forEach((match,index)=>{
+
+    const id = String(match.id);
+    const x2 = predictions[id];
+    const btts = bttsPredictions[id];
+
+    const html = document.createElement("section");
+
+    html.className = "match";
+    html.dataset.id = id;
+
+    let x2Text = "";
+    if(x2 === "home"){
+      x2Text = `فوز ${escapeHtml(match.home_team)}`;
+    }else if(x2 === "away"){
+      x2Text = `فوز ${escapeHtml(match.away_team)}`;
+    }else if(x2 === "draw"){
+      x2Text = "تعادل";
+    }
+
+    const bttsText =
+      btts === "yes" ? "نعم" :
+      btts === "no" ? "لا" : "";
+
+    html.innerHTML = `
+      <button
+        class="matchHead"
+        onclick="toggleMatch('${id}')"
+      >
+        <div class="matchNumber">${index + 1}</div>
+
+        <div class="teams">
+          <div class="teamsLine">
+
+            <div class="teamMini">
+              ${logo(match.home_logo)}
+              <span>${escapeHtml(match.home_team)}</span>
+            </div>
+
+            <span class="vs">VS</span>
+
+            <div class="teamMini">
+              ${logo(match.away_logo)}
+              <span>${escapeHtml(match.away_team)}</span>
+            </div>
+
+          </div>
+        </div>
+
+        <div class="chevron">⌄</div>
+      </button>
+
+      <div class="matchBody">
+
+        ${
+          x2 && btts
+          ? `
+            <div style="
+              margin-bottom:16px;
+              padding:14px;
+              border-radius:14px;
+              background:rgba(255,255,255,.05);
+              border:1px solid rgba(255,255,255,.10);
+            ">
+              <div style="font-weight:900;margin-bottom:8px;">
+                🎯 توقعك
+              </div>
+
+              <div style="margin-bottom:5px;">
+                🏆 ${x2Text}
+              </div>
+
+              <div>
+                📊 الفريقان يسجلان: ${bttsText}
+              </div>
+            </div>
+          `
+          : ""
+        }
+
+        <div class="marketTitle">
+          اختر نتيجة المباراة
+        </div>
+
+        <div class="options">
+
+          <button
+            class="option"
+            data-match="${id}"
+            data-market="1x2"
+            data-value="home"
+            onclick="selectPrediction(event,'${id}','home')"
+          >
+            <strong>فوز ${escapeHtml(match.home_team)}</strong>
+            <span class="points">+2 نقاط</span>
+          </button>
+
+          <button
+            class="option"
+            data-match="${id}"
+            data-market="1x2"
+            data-value="draw"
+            onclick="selectPrediction(event,'${id}','draw')"
+          >
+            <strong>تعادل</strong>
+            <span class="points">+2 نقاط</span>
+          </button>
+
+          <button
+            class="option"
+            data-match="${id}"
+            data-market="1x2"
+            data-value="away"
+            onclick="selectPrediction(event,'${id}','away')"
+          >
+            <strong>فوز ${escapeHtml(match.away_team)}</strong>
+            <span class="points">+2 نقاط</span>
+          </button>
+
+        </div>
+
+        <div class="marketTitle" style="margin-top:18px;">
+          📊 هل يسجل الفريقان؟
+        </div>
+
+        <div class="options">
+
+          <button
+            class="option"
+            data-match="${id}"
+            data-market="btts"
+            data-value="yes"
+            onclick="selectBTTS(event,'${id}','yes')"
+          >
+            <strong>✅ نعم</strong>
+            <span class="points">+1 نقطة</span>
+          </button>
+
+          <button
+            class="option"
+            data-match="${id}"
+            data-market="btts"
+            data-value="no"
+            onclick="selectBTTS(event,'${id}','no')"
+          >
+            <strong>❌ لا</strong>
+            <span class="points">+1 نقطة</span>
+          </button>
+
+        </div>
+
+      </div>
+    `;
+
+    container.appendChild(html);
+
+    // تحديد اختيار 1X2
+    if(x2){
+      const btn = html.querySelector(
+        `.option[data-market="1x2"][data-value="${x2}"]`
+      );
+
+      if(btn) btn.classList.add("selected");
+    }
+
+    // تحديد اختيار BTTS
+    if(btts){
+      const btn = html.querySelector(
+        `.option[data-market="btts"][data-value="${btts}"]`
+      );
+
+      if(btn) btn.classList.add("selected");
+    }
+
+    // قفل المباراة المكتملة
+    if(x2 && btts){
+      html.querySelectorAll(".option").forEach(button=>{
+        button.disabled = true;
+        button.classList.add("locked");
+      });
+    }
+
+    // عند اكتمال الجولة كلها
+    if(allLocked){
+      html.classList.add("pro-match-locked");
+    }
+
+  });
+
+  // ==========================================
+  // توقعاتي
+  // ==========================================
+
+  if(allLocked){
+
+    const summary = document.createElement("div");
+
+    summary.style.cssText = `
+      margin-top:18px;
+      padding:18px;
+      border-radius:18px;
+      background:linear-gradient(
+        145deg,
+        rgba(0,180,100,.16),
+        rgba(255,255,255,.04)
+      );
+      border:1px solid rgba(0,220,120,.35);
+    `;
+
+    summary.innerHTML = `
+      <div style="
+        font-size:18px;
+        font-weight:900;
+        margin-bottom:6px;
+      ">
+        🔐 توقعاتي
+      </div>
+
+      <div style="
+        font-size:13px;
+        opacity:.78;
+        margin-bottom:15px;
+      ">
+        تم تثبيت جميع توقعاتك لهذه الجولة
+      </div>
+
+      ${matches.map((match,index)=>{
+
+        const id = String(match.id);
+        const x2 = predictions[id];
+        const btts = bttsPredictions[id];
+
+        let resultText = "";
+
+        if(x2 === "home"){
+          resultText = `فوز ${escapeHtml(match.home_team)}`;
+        }else if(x2 === "away"){
+          resultText = `فوز ${escapeHtml(match.away_team)}`;
+        }else{
+          resultText = "تعادل";
+        }
+
+        const bttsText = btts === "yes" ? "نعم" : "لا";
+
+        return `
+          <div style="
+            padding:11px 0;
+            border-bottom:1px solid rgba(255,255,255,.08);
+          ">
+            <div style="font-weight:800;">
+              ${index + 1}. ${escapeHtml(match.home_team)}
+              <span style="opacity:.5;">VS</span>
+              ${escapeHtml(match.away_team)}
+            </div>
+
+            <div style="
+              margin-top:5px;
+              font-size:13px;
+              opacity:.85;
+            ">
+              🏆 ${resultText}
+              &nbsp; • &nbsp;
+              📊 BTTS: ${bttsText}
+            </div>
+          </div>
+        `;
+      }).join("")}
+
+      <div style="
+        margin-top:15px;
+        text-align:center;
+        font-size:13px;
+        font-weight:800;
+        opacity:.85;
+      ">
+        🔒 التوقعات مقفلة ولا يمكن تعديلها
+      </div>
+    `;
+
+    container.appendChild(summary);
+  }
+
+  updateProgress();
+}
+
+function toggleMatch(id){
+
+  const current =
+    document.querySelector(
+      `.match[data-id="${CSS.escape(id)}"]`
+    );
+
+  if(!current) return;
+
+  const wasOpen = current.classList.contains("open");
+
+  document
+    .querySelectorAll(".match.open")
+    .forEach(el=>el.classList.remove("open"));
+
+  if(!wasOpen){
+    current.classList.add("open");
+  }
+
+}
+
+function closeAll(){
+
+  document
+    .querySelectorAll(".match.open")
+    .forEach(el=>el.classList.remove("open"));
+
+}
+
+function selectPrediction(event,id,value){
+
+  event.stopPropagation();
+
+  // لا تسمح بتعديل مباراة تم إرسالها مسبقاً
+  if(
+    predictions[id] &&
+    bttsPredictions[id]
+  ){
+    showToast("🔒 تم إرسال توقعاتك لهذه الجولة ولا يمكن تعديلها");
+    return;
+  }
+
+  predictions[id] = value;
+
+  const match =
+    document.querySelector(
+      `.match[data-id="${CSS.escape(id)}"]`
+    );
+
+  if(match){
+
+    match
+      .querySelectorAll('.option[data-market="1x2"]')
+      .forEach(button=>{
+        button.classList.toggle(
+          "selected",
+          button.dataset.value === value
+        );
+      });
+  }
+
+  updateProgress();
+}
+
+function selectBTTS(event,id,value){
+
+  event.stopPropagation();
+
+  // لا تسمح بتعديل مباراة تم إرسالها مسبقاً
+  if(
+    predictions[id] &&
+    bttsPredictions[id]
+  ){
+    showToast("🔒 تم إرسال توقعاتك لهذه الجولة ولا يمكن تعديلها");
+    return;
+  }
+
+  bttsPredictions[id] = value;
+
+  const match =
+    document.querySelector(
+      `.match[data-id="${CSS.escape(id)}"]`
+    );
+
+  if(match){
+
+    match
+      .querySelectorAll('.option[data-market="btts"]')
+      .forEach(button=>{
+        button.classList.toggle(
+          "selected",
+          button.dataset.value === value
+        );
+      });
+  }
+
+  updateProgress();
+}
+
+function updateProgress(){
+
+  const total = matches.length * 2;
+
+  let selected = 0;
+
+  matches.forEach(match=>{
+    const id = String(match.id);
+
+    if(predictions[id]) selected++;
+    if(bttsPredictions[id]) selected++;
+  });
+
+  const percent =
+    total ? Math.round((selected / total) * 100) : 0;
+
+  const progress =
+    document.getElementById("progress");
+
+  const progressBar =
+    document.getElementById("progressBar");
+
+  if(progress){
+    progress.textContent = `${selected}/${total}`;
+  }
+
+  if(progressBar){
+    progressBar.style.width = `${percent}%`;
+  }
+
+  const button =
+    document.getElementById("submitBtn");
+
+  if(!button) return;
+
+  if(selected === total && total > 0){
+
+    button.disabled = false;
+    button.textContent = "🏆 إرسال التوقعات";
+
+  }else{
+
+    button.disabled = true;
+    button.textContent =
+      `🔒 أكمل جميع التوقعات (${selected}/${total})`;
+  }
+}
+
+async function submitPredictions(){
+
+  let selected = 0;
+
+  matches.forEach(match=>{
+    const id = String(match.id);
+
+    if(predictions[id]) selected++;
+    if(bttsPredictions[id]) selected++;
+  });
+
+  const total = matches.length * 2;
+
+  if(selected !== total){
+    showToast("⚠️ لازم تختار نتيجة المباراة + هل يسجل الفريقان لكل المباريات");
+    return;
+  }
+
+  // إذا كانت كل المباريات محفوظة مسبقاً، لا تسمح بإعادة الإرسال.
+  const alreadySubmitted = matches.length > 0 &&
+    matches.every(match=>{
+      const id = String(match.id);
+      return predictions[id] && bttsPredictions[id];
+    });
+
+  if(alreadySubmitted){
+    showToast("🔒 تم إرسال توقعاتك مسبقاً ولا يمكن تعديلها");
+    return;
+  }
+
+  const button =
+    document.getElementById("submitBtn");
+
+  if(button){
+    button.disabled = true;
+    button.textContent = "⏳ جاري حفظ التوقعات...";
+  }
+
+  try{
+
+    for(const match of matches){
+
+      const id = String(match.id);
+
+      // 1X2 = نقطتان
+      const response1x2 = await fetch("/api/pro_submit", {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          telegram_id:Number(telegramId),
+          competition_match_id:Number(match.id),
+          prediction:predictions[id],
+          market:"1x2"
+        })
+      });
+
+      const data1x2 = await response1x2.json();
+
+      if(!response1x2.ok || !data1x2.ok){
+        throw new Error(
+          data1x2.error || "فشل حفظ توقع 1X2"
+        );
+      }
+
+      // BTTS = نقطة واحدة
+      const responseBTTS = await fetch("/api/pro_submit", {
+        method:"POST",
+        headers:{
+          "Content-Type":"application/json"
+        },
+        body:JSON.stringify({
+          telegram_id:Number(telegramId),
+          competition_match_id:Number(match.id),
+          prediction:bttsPredictions[id],
+          market:"btts"
+        })
+      });
+
+      const dataBTTS = await responseBTTS.json();
+
+      if(!responseBTTS.ok || !dataBTTS.ok){
+        throw new Error(
+          dataBTTS.error || "فشل حفظ توقع BTTS"
+        );
+      }
+    }
+
+    showToast("🏆 تم حفظ توقعاتك فعلياً");
+
+    if(tg){
+      try{
+        tg.HapticFeedback.notificationOccurred("success");
+      }catch(e){}
+    }
+
+    await loadMatches();
+
+  }catch(error){
+
+    console.error("PRO SUBMIT:",error);
+
+    showToast(
+      "❌ لم يتم حفظ التوقعات: " + error.message
+    );
+
+  }finally{
+
+    updateProgress();
+  }
+}
+
+
+function showToast(text){
+
+  const toast =
+    document.getElementById("toast");
+
+  toast.textContent = text;
+  toast.classList.add("show");
+
+  clearTimeout(window.toastTimer);
+
+  window.toastTimer =
+    setTimeout(
+      ()=>toast.classList.remove("show"),
+      2400
+    );
+
+}
+
+function openNameModal(){
+
+  document.getElementById("nameInput").value =
+    userName || "";
+
+  document
+    .getElementById("nameModal")
+    .classList.add("show");
+
+  setTimeout(
+    ()=>document.getElementById("nameInput").focus(),
+    100
+  );
+
+}
+
+function closeNameModal(){
+
+  document
+    .getElementById("nameModal")
+    .classList.remove("show");
+
+}
+
+function saveName(){
+
+  const value =
+    document
+      .getElementById("nameInput")
+      .value
+      .trim();
+
+  if(!value){
+
+    showToast("اكتب اسم أولاً");
+    return;
+
+  }
+
+  userName = value;
+
+  document.getElementById("profileName").textContent =
+    userName;
+
+  document.getElementById("avatar").textContent =
+    userName.charAt(0).toUpperCase();
+
+  closeNameModal();
+
+  showToast("✅ تم تعديل الاسم");
+
+}
+
+document.getElementById("profileName").textContent =
+  userName;
+
+document.getElementById("avatar").textContent =
+  userName.charAt(0).toUpperCase();
+
+loadMatches();
+
+</script>
+
+
+<section class="leaderboardBox" id="leaderboardBox">
+    <div class="lbHead">
+        <div>
+            <div class="lbTitle">🏆 ترتيب المحللين</div>
+            <div class="lbSub">ترتيب جميع لاعبي ZINGO في المسابقة الحالية</div>
+        </div>
+        <button class="lbRefresh" id="lbRefresh">↻</button>
+    </div>
+
+    <div class="myRank" id="myRank"></div>
+
+    <div class="lbList" id="leaderboardList">
+        <div class="lbEmpty">جاري تحميل الترتيب...</div>
+    </div>
+</section>
+
+</body>
+
+<script>
+async function loadLeaderboard() {
+    const list = document.getElementById("leaderboardList");
+    const myRank = document.getElementById("myRank");
+
+    if (!list) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const telegramId =
+        params.get("telegram_id") ||
+        (window.Telegram &&
+         Telegram.WebApp &&
+         Telegram.WebApp.initDataUnsafe &&
+         Telegram.WebApp.initDataUnsafe.user
+            ? Telegram.WebApp.initDataUnsafe.user.id
+            : 0);
+
+    try {
+        list.innerHTML = '<div class="lbEmpty">جاري تحميل الترتيب...</div>';
+
+        const res = await fetch(
+            "/api/pro_ranking?telegram_id=" + encodeURIComponent(telegramId)
+        );
+
+        const data = await res.json();
+
+        if (!data.ok) {
+            throw new Error(data.error || "Leaderboard error");
+        }
+
+        if (!data.players || !data.players.length) {
+            list.innerHTML =
+                '<div class="lbEmpty">لا يوجد لاعبين حاليًا</div>';
+            myRank.style.display = "none";
+            return;
+        }
+
+        if (data.current_rank) {
+            myRank.style.display = "block";
+            myRank.innerHTML =
+                "ترتيبك الحالي: <strong>#" +
+                data.current_rank +
+                "</strong> من " +
+                data.total_players;
+        } else {
+            myRank.style.display = "none";
+        }
+
+        list.innerHTML = data.players.map(function(player) {
+            let medal = "";
+            if (player.rank === 1) medal = "🥇";
+            else if (player.rank === 2) medal = "🥈";
+            else if (player.rank === 3) medal = "🥉";
+
+            return `
+                <div class="lbRow ${player.is_me ? "me" : ""}">
+                    <div class="lbRank">${medal || "#" + player.rank}</div>
+                    <div class="lbName">
+                        ${escapeLeaderboardText(player.name)}
+                        ${player.is_me ? " <strong>— أنت</strong>" : ""}
+                    </div>
+                    <div class="lbPoints">${player.points} نقطة</div>
+                </div>
+            `;
+        }).join("");
+
+    } catch (err) {
+        list.innerHTML =
+            '<div class="lbEmpty">تعذر تحميل الترتيب، حاول مرة ثانية.</div>';
+        console.error("PRO leaderboard:", err);
+    }
+}
+
+function escapeLeaderboardText(text) {
+    return String(text ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    loadLeaderboard();
+
+    const refresh = document.getElementById("lbRefresh");
+    if (refresh) {
+        refresh.addEventListener("click", loadLeaderboard);
+    }
+});
+</script>
+
+</html>
