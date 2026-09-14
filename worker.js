@@ -41,6 +41,60 @@ export default {
       // =========================
       // PRO ROUND
       // =========================
+      if (url.pathname === "/api/db/query") {
+        if (request.method !== "POST") {
+          return json({ ok: false, error: "Method not allowed" }, 405);
+        }
+
+        const dbKey = request.headers.get("X-ZINGO-DB-KEY") || "";
+        if (!env.ZINGO_DB_SECRET || dbKey !== env.ZINGO_DB_SECRET) {
+          return json({ ok: false, error: "Unauthorized" }, 401);
+        }
+
+        try {
+          const body = await request.json();
+          const sql = typeof body?.sql === "string" ? body.sql.trim() : "";
+          const params = Array.isArray(body?.params) ? body.params : [];
+
+          if (!sql) {
+            return json({ ok: false, error: "SQL is required" }, 400);
+          }
+
+          if (sql.includes(";")) {
+            return json(
+              { ok: false, error: "Multiple SQL statements are not allowed" },
+              400
+            );
+          }
+
+          const result = await env.DB
+            .prepare(sql)
+            .bind(...params)
+            .all();
+
+          return json({
+            ok: true,
+            rows: result.results || [],
+            meta: {
+              changes: result.meta?.changes ?? 0,
+              last_row_id: result.meta?.last_row_id ?? null,
+              rows_read: result.meta?.rows_read ?? 0,
+              rows_written: result.meta?.rows_written ?? 0,
+            },
+          });
+        } catch (error) {
+          console.error("DB QUERY ERROR:", error);
+
+          return json(
+            {
+              ok: false,
+              error: error?.message || "Database error",
+            },
+            500
+          );
+        }
+      }
+
       if (url.pathname === "/api/pro_round") {
         const telegramId = Number(url.searchParams.get("telegram_id") || 0);
 
