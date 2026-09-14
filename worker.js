@@ -53,7 +53,10 @@ if (url.pathname === "/api/db/query" || url.pathname === "/api/xdb") {
           return json({ ok: false, error: "Method not allowed" }, 405);
         }
 
-        const dbKey = request.headers.get("X-ZINGO-DB-KEY") || "";
+        const auth = request.headers.get("Authorization") || "";
+        const dbKey = auth.startsWith("Bearer ")
+          ? auth.slice(7).trim()
+          : request.headers.get("X-ZINGO-DB-KEY") || "";
         if (!env.ZINGO_DB_SECRET || dbKey !== env.ZINGO_DB_SECRET) {
           return json({ ok: false, error: "Unauthorized" }, 401);
         }
