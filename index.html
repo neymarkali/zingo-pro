@@ -1444,17 +1444,7 @@ async function submitPredictions(){
     return;
   }
 
-  // إذا كانت كل المباريات محفوظة مسبقاً، لا تسمح بإعادة الإرسال.
-  const alreadySubmitted = matches.length > 0 &&
-    matches.every(match=>{
-      const id = String(match.id);
-      return predictions[id] && bttsPredictions[id];
-    });
-
-  if(alreadySubmitted){
-    showToast("🔒 تم إرسال توقعاتك مسبقاً ولا يمكن تعديلها");
-    return;
-  }
+  // السماح بالإرسال؛ Worker/D1 هو المسؤول عن منع التكرار.
 
   const button =
     document.getElementById("submitBtn");
