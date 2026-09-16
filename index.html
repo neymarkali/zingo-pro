@@ -6730,6 +6730,161 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 /* ===== END ZINGO VIP ACHIEVEMENTS V3 ===== */
 
+
+
+/* ===== ZINGO VIP ACHIEVEMENTS GRID V4 ===== */
+
+.vipAchievementGrid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:12px !important;
+  width:100% !important;
+}
+
+.vipAchievement{
+  position:relative !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  text-align:center !important;
+  min-height:145px !important;
+  padding:18px 10px 12px !important;
+  border-radius:18px !important;
+  border:1px solid rgba(212,175,55,.30) !important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(212,175,55,.16),transparent 58%),
+    linear-gradient(145deg,rgba(24,20,8,.96),rgba(10,10,10,.98)) !important;
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.04) !important;
+  cursor:pointer !important;
+  overflow:hidden !important;
+  transition:.22s ease !important;
+}
+
+.vipAchievement:hover{
+  transform:translateY(-2px) !important;
+  border-color:rgba(212,175,55,.65) !important;
+}
+
+.vipAchievement.unlocked{
+  border-color:rgba(212,175,55,.72) !important;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.42),
+    0 0 22px rgba(212,175,55,.13) !important;
+}
+
+.vipAchIcon{
+  width:62px !important;
+  height:62px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:0 auto 10px !important;
+  border-radius:18px !important;
+  font-size:34px !important;
+  background:radial-gradient(circle,rgba(212,175,55,.18),rgba(212,175,55,.035) 68%) !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+}
+
+.vipAchMain{
+  width:100% !important;
+}
+
+.vipAchTop{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  gap:5px !important;
+}
+
+.vipAchName{
+  color:#fff !important;
+  font-size:15px !important;
+  font-weight:800 !important;
+}
+
+.vipAchLevel{
+  color:#c9a646 !important;
+  font-size:10px !important;
+  font-weight:700 !important;
+  letter-spacing:.7px !important;
+}
+
+.vipAchState{
+  position:absolute !important;
+  top:9px !important;
+  right:10px !important;
+  width:22px !important;
+  height:22px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:50% !important;
+  font-size:11px !important;
+  background:rgba(0,0,0,.38) !important;
+}
+
+.vipAchProgress,
+.vipAchMeta{
+  display:none !important;
+}
+
+.vipAchievement.open{
+  min-height:190px !important;
+}
+
+.vipAchievement.open .vipAchProgress{
+  display:block !important;
+  width:100% !important;
+  height:5px !important;
+  margin:14px 0 8px !important;
+  border-radius:99px !important;
+  overflow:hidden !important;
+  background:rgba(255,255,255,.08) !important;
+}
+
+.vipAchievement.open .vipAchProgress span{
+  display:block !important;
+  height:100% !important;
+  border-radius:99px !important;
+  background:linear-gradient(90deg,#a67c00,#f5d76e,#d4af37) !important;
+}
+
+.vipAchievement.open .vipAchMeta{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  gap:5px !important;
+  color:#aaa !important;
+  font-size:10px !important;
+}
+
+.vipAchievement.open .vipAchMeta b{
+  color:#d4af37 !important;
+}
+
+@media(max-width:430px){
+  .vipAchievementGrid{
+    gap:9px !important;
+  }
+
+  .vipAchievement{
+    min-height:132px !important;
+    padding:14px 7px 10px !important;
+  }
+
+  .vipAchIcon{
+    width:55px !important;
+    height:55px !important;
+    font-size:30px !important;
+  }
+
+  .vipAchievement.open{
+    min-height:180px !important;
+  }
+}
+
 </style>
 <!-- ZINGO VIP 5 SECOND CINEMATIC START -->
 
@@ -7317,66 +7472,89 @@ document.addEventListener("DOMContentLoaded", function() {
 })();
 
 
-/* ===== ZINGO VIP ACHIEVEMENTS ENGINE V3 ===== */
+/* ===== ZINGO VIP ACHIEVEMENTS ENGINE V4 ===== */
+
 (function(){
 
   const ACHIEVEMENTS = [
-    {id:"first",icon:"🌱",name:"البداية",level:"LEVEL 1",target:1,type:"correct",reward:"🎨 إطار Rookie خاص"},
-    {id:"hot",icon:"🎯",name:"القنّاص",level:"LEVEL 2",target:5,type:"correct",reward:"🏷️ Badge القنّاص"},
-    {id:"sniper",icon:"🔥",name:"Sniper",level:"LEVEL 3",target:10,type:"correct",reward:"⚡ تأثير ناري للملف"},
-    {id:"elite",icon:"👑",name:"Elite",level:"LEVEL 4",target:25,type:"correct",reward:"🎟️ VIP لمدة 24 ساعة"},
-    {id:"master",icon:"💎",name:"Master",level:"LEVEL 5",target:50,type:"correct",reward:"🎟️ VIP لمدة 3 أيام"},
-    {id:"legend",icon:"🏆",name:"Legend",level:"LEVEL 6",target:100,type:"points",reward:"🎟️ VIP لمدة أسبوع + إطار Legend"}
+    {id:"first",icon:"🌱",name:"البداية",level:"LEVEL 1",target:1,type:"correct",reward:"🎁 إطار Rookie خاص"},
+    {id:"hot",icon:"🎯",name:"القنّاص",level:"LEVEL 2",target:5,type:"correct",reward:"🎁 Badge القنّاص"},
+    {id:"sniper",icon:"🔥",name:"Sniper",level:"LEVEL 3",target:10,type:"correct",reward:"🎁 تأثير ناري للملف"},
+    {id:"elite",icon:"👑",name:"Elite",level:"LEVEL 4",target:25,type:"correct",reward:"🎁 VIP لمدة 24 ساعة"},
+    {id:"master",icon:"💎",name:"Master",level:"LEVEL 5",target:50,type:"correct",reward:"🎁 VIP لمدة 3 أيام"},
+    {id:"legend",icon:"🏆",name:"Legend",level:"LEVEL 6",target:100,type:"points",reward:"🎁 VIP أسبوع + إطار Legend"}
   ];
 
-  function num(v){
-    const n=parseInt(String(v||"").replace(/[^\d]/g,""),10);
-    return Number.isFinite(n) ? n : 0;
-  }
-
   function getStats(){
-    const stats=document.querySelectorAll(".pstat strong");
+    let points = 0;
+    let correct = 0;
+
+    try{
+      if(window.__zingoVIPProfile){
+        const p = window.__zingoVIPProfile;
+        points = Number(p.points ?? p.total_points ?? p.rating ?? 0);
+        correct = Number(p.correct ?? p.correct_predictions ?? p.correct_count ?? 0);
+      }
+    }catch(e){}
+
+    try{
+      document.querySelectorAll(".pstat strong").forEach(function(el){
+        const text = (el.textContent || "").trim();
+        if(!points && /^[0-9]+$/.test(text)){
+          points = Number(text);
+        }
+      });
+    }catch(e){}
 
     return {
-      points:stats[0] ? num(stats[0].textContent) : 0,
-      correct:stats[2] ? num(stats[2].textContent) : 0
+      points:Math.max(0,points),
+      correct:Math.max(0,correct)
     };
   }
 
-  function renderAchievements(forceAdmin){
-    const grid=document.getElementById("vipAchievementGrid");
-    const count=document.getElementById("vipAchCount");
+  function bindClicks(){
+    const cards = document.querySelectorAll("#vipAchievementGrid .vipAchievement");
+
+    cards.forEach(function(card){
+      card.addEventListener("click",function(){
+        const wasOpen = card.classList.contains("open");
+
+        cards.forEach(function(other){
+          other.classList.remove("open");
+        });
+
+        if(!wasOpen){
+          card.classList.add("open");
+        }
+      });
+    });
+  }
+
+  function renderAchievements(){
+
+    const grid = document.getElementById("vipAchievementGrid");
+    const count = document.getElementById("vipAchCount");
 
     if(!grid) return;
 
-    const stats=getStats();
-    let unlocked=0;
+    const stats = getStats();
+    let unlocked = 0;
 
-    grid.innerHTML=ACHIEVEMENTS.map(function(a){
+    grid.innerHTML = ACHIEVEMENTS.map(function(a){
 
-      let value=a.type==="points"
+      const value = a.type === "points"
         ? stats.points
         : stats.correct;
 
-      if(forceAdmin) value=100;
-
-      const progress=Math.min(
-        100,
-        Math.round((value/a.target)*100)
-      );
-
-      const isUnlocked=forceAdmin || value>=a.target;
+      const progress = Math.min(100,(value / a.target) * 100);
+      const isUnlocked = value >= a.target;
 
       if(isUnlocked) unlocked++;
 
-      const shownValue=Math.min(value,a.target);
-
       return `
-        <div class="vipAchievement ${isUnlocked ? "unlocked" : "locked"}">
+        <div class="vipAchievement ${isUnlocked ? "unlocked" : "locked"}" data-achievement="${a.id}">
 
-          <div class="vipAchIcon">
-            ${a.icon}
-          </div>
+          <div class="vipAchIcon">${a.icon}</div>
 
           <div class="vipAchMain">
 
@@ -7387,9 +7565,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 <div class="vipAchLevel">${a.level}</div>
               </div>
 
-              <div class="vipAchState">
-                ${isUnlocked ? "✓" : "🔒"}
-              </div>
+              <div class="vipAchState">+</div>
 
             </div>
 
@@ -7398,7 +7574,10 @@ document.addEventListener("DOMContentLoaded", function() {
             </div>
 
             <div class="vipAchMeta">
-              <span>${shownValue} / ${a.target} ${a.type==="points" ? "نقطة" : "صحيحة"}</span>
+              <span>
+                ${Math.min(value,a.target)} / ${a.target}
+                ${a.type === "points" ? "نقطة" : "صحيحة"}
+              </span>
               <b>${a.reward}</b>
             </div>
 
@@ -7410,43 +7589,35 @@ document.addEventListener("DOMContentLoaded", function() {
     }).join("");
 
     if(count){
-      count.textContent=unlocked+" / "+ACHIEVEMENTS.length;
+      count.textContent = unlocked + " / " + ACHIEVEMENTS.length;
     }
+
+    bindClicks();
   }
 
   function refresh(){
-    let forceAdmin=false;
-
-    try{
-      const data=window.__zingoVIPIdentity;
-      if(data && typeof data.isAdmin==="function"){
-        forceAdmin=!!data.isAdmin();
-      }
-    }catch(e){}
-
-    renderAchievements(forceAdmin);
+    renderAchievements();
   }
 
-  window.__zingoAchievements={
+  window.__zingoAchievements = {
     refresh:refresh,
     render:renderAchievements
   };
 
-  console.log("🏆 ZINGO ACHIEVEMENTS ENGINE V3 LOADED");
-
   function boot(){
-    refresh();
-
-    setTimeout(refresh,500);
-    setTimeout(refresh,1500);
-    setTimeout(refresh,3000);
+    renderAchievements();
+    setTimeout(renderAchievements,500);
+    setTimeout(renderAchievements,1500);
+    setTimeout(renderAchievements,3000);
   }
 
-  if(document.readyState==="loading"){
+  if(document.readyState === "loading"){
     document.addEventListener("DOMContentLoaded",boot);
   }else{
     boot();
   }
+
+  console.log("🏆 ZINGO ACHIEVEMENTS ENGINE V4 LOADED");
 
 })();
 </script>
