@@ -1523,7 +1523,7 @@ async function loadMatches(){
 
     if(response.ok){
 
-      const data = await response.json();
+      const data = await response.json(); console.log("ZINGO COMPETITION DATA:", data.competition);
 
       if(data.ok && data.competition && Array.isArray(data.matches)){
 
