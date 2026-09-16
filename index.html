@@ -5620,22 +5620,8 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 
 })();
+
 </script>
-/* ZINGO VIP FRAME MODAL HOOK */
-(function(){
-  const originalOpenProfile = window.openProfile;
-  if(typeof originalOpenProfile !== "function") return;
-
-  window.openProfile = function(){
-    originalOpenProfile.apply(this, arguments);
-
-    setTimeout(function(){
-      if(window.__zingoVIPIdentity && window.__zingoVIPIdentity.refresh){
-        window.__zingoVIPIdentity.refresh();
-      }
-    },100);
-  };
-})();
 </body>
 </html>
 
@@ -6844,6 +6830,26 @@ document.addEventListener("DOMContentLoaded", function() {
         refresh.addEventListener("click", loadLeaderboard);
     }
 });
+
+/* ZINGO VIP FRAME MODAL HOOK */
+(function(){
+  const originalOpenProfile = window.openProfile;
+
+  if(typeof originalOpenProfile !== "function") return;
+
+  window.openProfile = function(){
+    originalOpenProfile.apply(this, arguments);
+
+    setTimeout(function(){
+      if(
+        window.__zingoVIPIdentity &&
+        typeof window.__zingoVIPIdentity.refresh === "function"
+      ){
+        window.__zingoVIPIdentity.refresh();
+      }
+    }, 100);
+  };
+})();
 </script>
 
 </html>
