@@ -883,6 +883,101 @@ button{
 
 </div>
 
+<script id="zingoUnifiedModeScript">
+(function(){
+
+  let vipLoaded = false;
+
+
+
+
+
+  window.switchZingoMode = function(mode){
+
+    const proLayer = document.getElementById("zingoProLayer");
+    const vipLayer = document.getElementById("zingoVipLayer");
+    const proBtn = document.getElementById("zingoProBtn");
+    const vipBtn = document.getElementById("zingoVipBtn");
+    const frame = document.getElementById("zingoVipFrame");
+    const source = document.getElementById("zingoVipSource");
+    const glow = document.getElementById("zingoVipTransitionGlow");
+
+    if(!proLayer || !vipLayer || !proBtn || !vipBtn || !frame || !source){
+      console.error("ZINGO MODE ERROR");
+      return;
+    }
+
+    const isVIP = mode === "vip";
+
+    if(isVIP){
+      // ===== ZINGO ROYAL VIP CINEMATIC ONLY =====
+      try{
+        if(typeof window.__zingoRoyalVIP === "function"){
+          window.__zingoRoyalVIP();
+        }
+      }catch(e){
+        console.error("VIP cinematic:", e);
+      }
+
+      proLayer.classList.remove("zingo-pro-enter");
+      proLayer.classList.add("zingo-pro-exit");
+
+      setTimeout(function(){
+        proLayer.style.display = "none";
+        vipLayer.style.display = "block";
+
+        vipLayer.classList.remove("zingo-vip-exit");
+        void vipLayer.offsetWidth;
+        vipLayer.classList.add("zingo-vip-enter");
+
+        if(!vipLoaded){
+          frame.srcdoc = source.innerHTML;
+          vipLoaded = true;
+        }
+
+        proBtn.classList.remove("active-pro");
+        vipBtn.classList.add("active-vip");
+
+        window.scrollTo({
+          top: 0,
+          behavior: "smooth"
+        });
+      }, 180);
+
+      return;
+    }
+
+    vipLayer.classList.remove("zingo-vip-enter");
+    vipLayer.classList.add("zingo-vip-exit");
+
+    setTimeout(function(){
+
+      vipLayer.style.display = "none";
+
+      proLayer.style.display = "block";
+      proLayer.classList.remove("zingo-pro-exit");
+      void proLayer.offsetWidth;
+      proLayer.classList.add("zingo-pro-enter");
+
+      vipBtn.classList.remove("active-vip");
+      proBtn.classList.add("active-pro");
+
+      window.scrollTo({
+        top:0,
+        behavior:"smooth"
+      });
+
+    }, 180);
+
+  };
+
+  document.addEventListener("DOMContentLoaded", function(){
+    window.switchZingoMode("pro");
+  });
+
+})();
+</script>
+
 <script>
 window.addEventListener("error", function(e) {
   document.body.insertAdjacentHTML(
@@ -6444,45 +6539,10 @@ window.__zingoVIPSound = playVIPRealAudio;
 })();
 
 
-<script>
 /* ===== ZINGO VIP ACHIEVEMENTS FORCE RENDER V2 ===== */
-(function(){
-  function forceAchievements(){
-    try{
-      const grid=document.getElementById("vipAchievementGrid");
-      const count=document.getElementById("vipAchCount");
-      if(!grid) return;
+/* removed: duplicate broken renderer */
 
-      const achievements=[
-        ["🌱","البداية","LEVEL 1","1","🎨 إطار Rookie خاص"],
-        ["🎯","القنّاص","LEVEL 2","5","🏷️ Badge القنّاص"],
-        ["🔥","Sniper","LEVEL 3","10","⚡ تأثير ناري للملف"],
-        ["👑","Elite","LEVEL 4","25","🎟️ VIP لمدة 24 ساعة"],
-        ["💎","Master","LEVEL 5","50","🎟️ VIP لمدة 3 أيام"],
-        ["🏆","Legend","LEVEL 6","100","🎟️ VIP لمدة أسبوع + إطار Legend"]
-      ];
-
-      let points=0;
-      let correct=0;
-
-      const stats=document.querySelectorAll(".pstat strong");
-      if(stats[0]) points=parseInt(stats[0].textContent)||0;
-      if(stats[2]) correct=parseInt(stats[2].textContent)||0;
-
-      if(window.__zingoVIPAdmin===true){
-        points=100;
-        correct=100;
-      }
-
-      grid.innerHTML=achievements.map(function(a){
-        const target=parseInt(a[3]);
-        const type=a[1]==="Legend" ? points : correct;
-        const unlocked=type>=target;
-        const progress=Math.min(100,Math.round((type/target)*100));
-
-        return `
-          <div class="vipAchievementCard ${unlocked ? "unlocked" : "locked"}">
-            <div class="vipAchIcon">${a[0]}
+})();
 </script>
 </body>
 
