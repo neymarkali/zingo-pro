@@ -2911,6 +2911,401 @@ button{
   }
 }
 </style>
+
+<style id="zingoVIPRatingCSS">
+/* ===== ZINGO VIP RATING SYSTEM V2 ===== */
+
+.vipRatingCard{
+  margin:16px 0;
+  padding:16px;
+  border-radius:22px;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 15% 0%,rgba(255,215,90,.12),transparent 35%),
+    linear-gradient(145deg,#101722,#080c13);
+  border:1px solid rgba(255,215,100,.22);
+  box-shadow:0 14px 38px rgba(0,0,0,.32);
+}
+
+.vipRatingCard::before{
+  content:"";
+  position:absolute;
+  inset:-60%;
+  background:linear-gradient(
+    110deg,
+    transparent 35%,
+    rgba(255,255,255,.08) 50%,
+    transparent 65%
+  );
+  transform:translateX(-45%);
+  animation:vipRatingSweep 5s linear infinite;
+  pointer-events:none;
+}
+
+@keyframes vipRatingSweep{
+  to{transform:translateX(45%)}
+}
+
+.vipRatingHead{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px;
+}
+
+.vipRatingTitle{
+  font-size:13px;
+  font-weight:1000;
+  color:#fff;
+}
+
+.vipRatingSub{
+  margin-top:3px;
+  color:#7f899a;
+  font-size:9px;
+}
+
+.vipRatingScore{
+  text-align:right;
+}
+
+.vipRatingScore strong{
+  display:block;
+  font-size:25px;
+  line-height:1;
+  color:#ffe28a;
+}
+
+.vipRatingScore span{
+  font-size:8px;
+  color:#8d97a8;
+}
+
+.vipIdentity{
+  position:relative;
+  z-index:2;
+  display:flex;
+  align-items:center;
+  gap:12px;
+  margin-bottom:14px;
+}
+
+.vipRatedAvatar{
+  position:relative;
+  width:62px;
+  height:62px;
+  flex:0 0 62px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:#101722;
+  overflow:visible;
+}
+
+.vipRatedAvatar::before{
+  content:"";
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  border:2px solid #c99b38;
+  box-shadow:
+    0 0 12px rgba(255,210,80,.35),
+    inset 0 0 10px rgba(255,210,80,.12);
+  animation:vipFramePulse 2.5s ease-in-out infinite;
+}
+
+.vipRatedAvatar::after{
+  content:"";
+  position:absolute;
+  inset:-7px;
+  border-radius:50%;
+  border:1px solid rgba(255,220,120,.22);
+  animation:vipFrameRotate 6s linear infinite;
+}
+
+@keyframes vipFramePulse{
+  0%,100%{transform:scale(1);opacity:.75}
+  50%{transform:scale(1.06);opacity:1}
+}
+
+@keyframes vipFrameRotate{
+  to{transform:rotate(360deg)}
+}
+
+.vipAvatarInner{
+  width:54px;
+  height:54px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#1a2230,#080c13);
+  color:#fff;
+  font-size:23px;
+  font-weight:1000;
+  position:relative;
+  z-index:2;
+}
+
+.vipRatingBadge{
+  position:absolute;
+  right:-5px;
+  bottom:-3px;
+  width:25px;
+  height:25px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:13px;
+  background:#0c1119;
+  border:2px solid #e0b84e;
+  box-shadow:0 0 14px rgba(255,210,80,.55);
+  z-index:4;
+}
+
+.vipIdentityInfo{
+  min-width:0;
+}
+
+.vipIdentityName{
+  display:flex;
+  align-items:flex-start;
+  gap:6px;
+  flex-wrap:wrap;
+}
+
+.vipIdentityName strong{
+  color:#fff;
+  font-size:16px;
+  font-weight:1000;
+}
+
+.vipSmallTitle{
+  position:relative;
+  top:-3px;
+  padding:3px 7px;
+  border-radius:999px;
+  font-size:8px;
+  line-height:1;
+  font-weight:1000;
+  letter-spacing:.4px;
+  color:#ffe69a;
+  background:rgba(255,210,80,.10);
+  border:1px solid rgba(255,210,80,.30);
+  box-shadow:0 0 10px rgba(255,210,80,.08);
+}
+
+.vipIdentityHint{
+  margin-top:5px;
+  color:#818c9e;
+  font-size:9px;
+}
+
+.vipRatingBar{
+  position:relative;
+  z-index:2;
+  height:9px;
+  border-radius:999px;
+  overflow:hidden;
+  background:#151c27;
+  border:1px solid rgba(255,255,255,.04);
+}
+
+.vipRatingBar i{
+  display:block;
+  height:100%;
+  width:0;
+  border-radius:999px;
+  background:linear-gradient(90deg,#a97822,#ffe58d,#d5a331);
+  box-shadow:0 0 16px rgba(255,213,90,.55);
+  transition:width 1.2s cubic-bezier(.16,.8,.18,1);
+}
+
+.vipRatingProgress{
+  position:relative;
+  z-index:2;
+  display:flex;
+  justify-content:space-between;
+  margin-top:6px;
+  color:#7e899b;
+  font-size:8px;
+}
+
+.vipRatingStats{
+  position:relative;
+  z-index:2;
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-top:14px;
+}
+
+.vipMiniStat{
+  padding:9px 5px;
+  text-align:center;
+  border-radius:13px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.055);
+}
+
+.vipMiniStat strong{
+  display:block;
+  color:#fff;
+  font-size:14px;
+}
+
+.vipMiniStat span{
+  display:block;
+  margin-top:3px;
+  color:#7e899b;
+  font-size:8px;
+}
+
+.vipNextLevel{
+  position:relative;
+  z-index:2;
+  margin-top:12px;
+  text-align:center;
+  color:#9aa4b4;
+  font-size:8px;
+}
+
+/* ===== RATING LEVELS ===== */
+
+.vip-rated-rookie::before{
+  border-color:#71c987;
+  box-shadow:0 0 14px rgba(113,201,135,.38);
+}
+
+.vip-rated-skilled::before{
+  border-color:#5da9ff;
+  box-shadow:0 0 16px rgba(93,169,255,.45);
+}
+
+.vip-rated-pro::before{
+  border-color:#ff8a3d;
+  box-shadow:0 0 18px rgba(255,138,61,.52);
+}
+
+.vip-rated-elite::before{
+  border-color:#caa7ff;
+  box-shadow:0 0 20px rgba(202,167,255,.55);
+}
+
+.vip-rated-master::before{
+  border-color:#ffe083;
+  box-shadow:
+    0 0 12px rgba(255,220,110,.65),
+    0 0 30px rgba(255,200,60,.25);
+}
+
+.vip-rated-legend::before{
+  border:2px solid #fff2a8;
+  box-shadow:
+    0 0 8px #fff,
+    0 0 18px #ffe45c,
+    0 0 34px rgba(255,190,40,.85),
+    0 0 55px rgba(255,180,30,.35);
+  animation:
+    vipLegendPulse .8s ease-in-out infinite,
+    vipLegendLightning 1.7s steps(2,end) infinite;
+}
+
+.vip-rated-legend::after{
+  border-color:rgba(255,235,145,.75);
+  box-shadow:
+    0 0 12px rgba(255,225,100,.55),
+    0 0 25px rgba(255,190,40,.25);
+  animation:vipFrameRotate 2.2s linear infinite;
+}
+
+@keyframes vipLegendPulse{
+  0%,100%{
+    transform:scale(1);
+    filter:brightness(1);
+  }
+  50%{
+    transform:scale(1.10);
+    filter:brightness(1.45);
+  }
+}
+
+@keyframes vipLegendLightning{
+  0%,82%,100%{opacity:1}
+  84%{opacity:.25}
+  86%{opacity:1}
+  89%{opacity:.35}
+  91%{opacity:1}
+}
+
+.vip-rated-legend .vipRatingBadge{
+  border-color:#fff0a0;
+  box-shadow:
+    0 0 10px #fff,
+    0 0 22px rgba(255,205,50,.9);
+  animation:vipBadgeFlash .75s steps(2,end) infinite;
+}
+
+@keyframes vipBadgeFlash{
+  0%,100%{transform:scale(1);filter:brightness(1)}
+  50%{transform:scale(1.16);filter:brightness(1.7)}
+}
+
+/* Lightning sparks */
+
+.vip-rated-legend .vipLightning{
+  display:block;
+}
+
+.vipLightning{
+  display:none;
+  position:absolute;
+  inset:-16px;
+  pointer-events:none;
+  z-index:1;
+}
+
+.vipLightning::before,
+.vipLightning::after{
+  content:"⚡";
+  position:absolute;
+  color:#fff5b0;
+  font-size:15px;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 14px #ffd83d,
+    0 0 25px #ff9d00;
+  animation:vipBolt .9s steps(2,end) infinite;
+}
+
+.vipLightning::before{
+  top:-7px;
+  left:12px;
+  transform:rotate(-15deg);
+}
+
+.vipLightning::after{
+  right:-7px;
+  bottom:9px;
+  transform:rotate(18deg);
+  animation-delay:.35s;
+}
+
+@keyframes vipBolt{
+  0%,65%,100%{opacity:0}
+  67%,72%{opacity:1}
+  74%,78%{opacity:.15}
+  80%{opacity:1}
+}
+
+.vipLevelLegend{
+  color:#fff0a0 !important;
+  text-shadow:0 0 10px rgba(255,215,80,.65);
+}
+</style>
+
 </head>
 
 <body>
@@ -3191,6 +3586,79 @@ button{
     </div>
 
   </div>
+
+
+<!-- ===== ZINGO VIP RATING BOX ===== -->
+<div class="vipRatingCard" id="zingoVipRatingCard">
+
+  <div class="vipRatingHead">
+    <div>
+      <div class="vipRatingTitle">💎 VIP RATING</div>
+      <div class="vipRatingSub">مستوى اللاعب داخل ZINGO VIP</div>
+    </div>
+
+    <div class="vipRatingScore">
+      <strong id="vipRatingNumber">84</strong>
+      <span>/ 100</span>
+    </div>
+  </div>
+
+  <div class="vipIdentity">
+
+    <div class="vipRatedAvatar" id="vipRatedAvatar">
+      <div class="vipAvatarInner" id="vipAvatarLetter">Z</div>
+      <div class="vipRatingBadge" id="vipRatingBadge">⚡</div>
+      <div class="vipLightning"></div>
+    </div>
+
+    <div class="vipIdentityInfo">
+
+      <div class="vipIdentityName">
+        <strong id="vipRatingPlayerName">ZINGO PLAYER</strong>
+        <span class="vipSmallTitle" id="vipRatingTitleName">Skilled</span>
+      </div>
+
+      <div class="vipIdentityHint">
+        تقييمك يتطور مع أداء توقعاتك
+      </div>
+
+    </div>
+  </div>
+
+  <div class="vipRatingBar">
+    <i id="vipRatingFill"></i>
+  </div>
+
+  <div class="vipRatingProgress">
+    <span id="vipRatingCurrent">Skilled</span>
+    <span id="vipRatingNext">Pro</span>
+  </div>
+
+  <div class="vipRatingStats">
+
+    <div class="vipMiniStat">
+      <strong id="vipAccuracy">80%</strong>
+      <span>الدقة</span>
+    </div>
+
+    <div class="vipMiniStat">
+      <strong id="vipStreak">8</strong>
+      <span>السلسلة</span>
+    </div>
+
+    <div class="vipMiniStat">
+      <strong id="vipPredictions">10</strong>
+      <span>التوقعات</span>
+    </div>
+
+  </div>
+
+  <div class="vipNextLevel" id="vipRatingMessage">
+    باقي 16 نقطة للوصول إلى Pro
+  </div>
+
+</div>
+<!-- ===== END ZINGO VIP RATING BOX ===== -->
 
 </section>
 
@@ -4476,6 +4944,194 @@ document
 
 
 
+
+
+<script id="zingoVIPRatingJS">
+/* ===== ZINGO VIP RATING ENGINE V2 ===== */
+
+(function(){
+
+  const LEVELS = [
+    {min:0,  max:19,  name:"Rookie",  badge:"🌱", cls:"rookie"},
+    {min:20, max:39,  name:"Skilled", badge:"⚡", cls:"skilled"},
+    {min:40, max:59,  name:"Pro",     badge:"🔥", cls:"pro"},
+    {min:60, max:79,  name:"Elite",   badge:"👑", cls:"elite"},
+    {min:80, max:94,  name:"Master",  badge:"💎", cls:"master"},
+    {min:95, max:100, name:"Legend",  badge:"🏆", cls:"legend"}
+  ];
+
+  function getLevel(score){
+    score=Math.max(0,Math.min(100,Number(score)||0));
+
+    for(const level of LEVELS){
+      if(score>=level.min && score<=level.max){
+        return level;
+      }
+    }
+
+    return LEVELS[0];
+  }
+
+  function getPlayerName(){
+    const el=document.getElementById("profileName");
+    return el && el.textContent.trim()
+      ? el.textContent.trim()
+      : "ZINGO PLAYER";
+  }
+
+  function getProfileStats(){
+
+    const stats=document.querySelectorAll(".pstat strong");
+
+    let points=84;
+    let correct=8;
+    let total=10;
+
+    if(stats.length>=1){
+      const n=parseInt(stats[0].textContent.replace(/\D/g,""),10);
+      if(Number.isFinite(n)) points=n;
+    }
+
+    if(stats.length>=3){
+      const n=parseInt(stats[2].textContent.replace(/\D/g,""),10);
+      if(Number.isFinite(n)) correct=n;
+    }
+
+    return {
+      points,
+      correct,
+      total
+    };
+  }
+
+  function calculateScore(data){
+
+    /*
+      النظام الجديد لا يعتمد على Rank القديم.
+      التقييم الحالي يجمع بين:
+      - دقة التوقعات
+      - النقاط
+      - الاستمرارية
+    */
+
+    const accuracy = data.total > 0
+      ? Math.max(0,Math.min(100,(data.correct/data.total)*100))
+      : 0;
+
+    const pointScore = Math.max(
+      0,
+      Math.min(100,(data.points/120)*100)
+    );
+
+    const score = Math.round(
+      (accuracy * 0.55) +
+      (pointScore * 0.45)
+    );
+
+    return {
+      score:Math.max(0,Math.min(100,score)),
+      accuracy:Math.round(accuracy)
+    };
+  }
+
+  function render(){
+
+    const card=document.getElementById("zingoVipRatingCard");
+    if(!card)return;
+
+    const name=getPlayerName();
+    const data=getProfileStats();
+    const result=calculateScore(data);
+    const score=result.score;
+    const level=getLevel(score);
+
+    const number=document.getElementById("vipRatingNumber");
+    const title=document.getElementById("vipRatingTitleName");
+    const current=document.getElementById("vipRatingCurrent");
+    const next=document.getElementById("vipRatingNext");
+    const fill=document.getElementById("vipRatingFill");
+    const accuracy=document.getElementById("vipAccuracy");
+    const predictions=document.getElementById("vipPredictions");
+    const playerName=document.getElementById("vipRatingPlayerName");
+    const badge=document.getElementById("vipRatingBadge");
+    const avatar=document.getElementById("vipRatedAvatar");
+    const letter=document.getElementById("vipAvatarLetter");
+    const message=document.getElementById("vipRatingMessage");
+
+    if(number)number.textContent=score;
+
+    if(title){
+      title.textContent=level.name;
+      title.className="vipSmallTitle";
+      if(level.name==="Legend"){
+        title.classList.add("vipLevelLegend");
+      }
+    }
+
+    if(current)current.textContent=level.name;
+
+    const nextLevel=LEVELS.find(x=>x.min>score);
+
+    if(nextLevel){
+      if(next)next.textContent=nextLevel.name;
+
+      if(message){
+        message.textContent=
+          "باقي "+
+          (nextLevel.min-score)+
+          " نقطة للوصول إلى "+
+          nextLevel.name;
+      }
+    }else{
+      if(next)next.textContent="MAX";
+
+      if(message){
+        message.textContent="🏆 وصلت إلى أعلى تقييم — Legend";
+      }
+    }
+
+    if(fill)fill.style.width=score+"%";
+
+    if(accuracy)accuracy.textContent=result.accuracy+"%";
+
+    if(predictions)predictions.textContent=data.total;
+
+    if(playerName)playerName.textContent=name;
+
+    if(letter){
+      letter.textContent=
+        name.charAt(0).toUpperCase() || "Z";
+    }
+
+    if(badge)badge.textContent=level.badge;
+
+    if(avatar){
+      avatar.className="vipRatedAvatar vip-rated-"+level.cls;
+    }
+
+    /* streak placeholder until backend data is connected */
+    const streak=document.getElementById("vipStreak");
+    if(streak){
+      streak.textContent="8";
+    }
+  }
+
+  window.__zingoVIPRating={
+    refresh:render,
+    getLevel:getLevel
+  };
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",render);
+  }else{
+    render();
+  }
+
+  setTimeout(render,300);
+  setTimeout(render,1200);
+
+})();
+</script>
 
 </body>
 </html>
