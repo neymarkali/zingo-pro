@@ -4526,14 +4526,6 @@ document
 
 </template>
 
-<script id="zingoUnifiedModeScript">
-(function(){
-
-  let vipLoaded = false;
-
-
-
-<!-- ZINGO VIP 5 SECOND CINEMATIC START -->
 <style id="zingoVIP5SceneCSS">
 #zingoVIP5Scene{
   position:fixed;
@@ -4752,6 +4744,8 @@ document
   100%{opacity:0}
 }
 </style>
+<!-- ZINGO VIP 5 SECOND CINEMATIC START -->
+
 
 <div id="zingoVIP5Scene" aria-hidden="true">
   <canvas id="zingoVIP5Canvas"></canvas>
@@ -4770,6 +4764,10 @@ document
   <div id="zingoVIP5Flash"></div>
   <div id="zingoVIP5Vignette"></div>
 </div>
+
+
+
+<!-- ZINGO VIP 5 SECOND CINEMATIC END -->
 
 <script id="zingoVIP5SceneJS">
 (function(){
@@ -5148,7 +5146,15 @@ document
 
 })();
 </script>
-<!-- ZINGO VIP 5 SECOND CINEMATIC END -->
+
+<script id="zingoUnifiedModeScript">
+(function(){
+
+  let vipLoaded = false;
+
+
+
+
 
   window.switchZingoMode = function(mode){
 
