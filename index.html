@@ -6898,6 +6898,84 @@ window.__zingoRoyalVIP = play;
   }
 })();
 
+
+<script>
+/* ===== ZINGO VIP ACHIEVEMENTS FORCE RENDER V2 ===== */
+(function(){
+  function forceAchievements(){
+    try{
+      const grid=document.getElementById("vipAchievementGrid");
+      const count=document.getElementById("vipAchCount");
+      if(!grid) return;
+
+      const achievements=[
+        ["🌱","البداية","LEVEL 1","1","🎨 إطار Rookie خاص"],
+        ["🎯","القنّاص","LEVEL 2","5","🏷️ Badge القنّاص"],
+        ["🔥","Sniper","LEVEL 3","10","⚡ تأثير ناري للملف"],
+        ["👑","Elite","LEVEL 4","25","🎟️ VIP لمدة 24 ساعة"],
+        ["💎","Master","LEVEL 5","50","🎟️ VIP لمدة 3 أيام"],
+        ["🏆","Legend","LEVEL 6","100","🎟️ VIP لمدة أسبوع + إطار Legend"]
+      ];
+
+      let points=0;
+      let correct=0;
+
+      const stats=document.querySelectorAll(".pstat strong");
+      if(stats[0]) points=parseInt(stats[0].textContent)||0;
+      if(stats[2]) correct=parseInt(stats[2].textContent)||0;
+
+      if(window.__zingoVIPAdmin===true){
+        points=100;
+        correct=100;
+      }
+
+      grid.innerHTML=achievements.map(function(a){
+        const target=parseInt(a[3]);
+        const type=a[1]==="Legend" ? points : correct;
+        const unlocked=type>=target;
+        const progress=Math.min(100,Math.round((type/target)*100));
+
+        return `
+          <div class="vipAchievementCard ${unlocked ? "unlocked" : "locked"}">
+            <div class="vipAchIcon">${a[0]}</div>
+            <div class="vipAchBody">
+              <div class="vipAchLevel">${a[2]}</div>
+              <div class="vipAchName">${a[1]}</div>
+              <div class="vipAchReward">${a[4]}</div>
+              <div class="vipAchProgress">
+                <div class="vipAchProgressBar">
+                  <span style="width:${progress}%"></span>
+                </div>
+                <small>${unlocked ? "✅ مكتمل" : progress+"%"}</small>
+              </div>
+            </div>
+            <div class="vipAchLock">${unlocked ? "🔓" : "🔒"}</div>
+          </div>
+        `;
+      }).join("");
+
+      const unlocked=achievements.filter(function(a){
+        const target=parseInt(a[3]);
+        const value=a[1]==="Legend" ? points : correct;
+        return value>=target;
+      }).length;
+
+      if(count) count.textContent=unlocked+" / 6";
+    }catch(e){
+      console.error("VIP achievements render error:",e);
+    }
+  }
+
+  window.__zingoVIPAchievementsForceRender=forceAchievements;
+
+  document.addEventListener("DOMContentLoaded",function(){
+    setTimeout(forceAchievements,500);
+    setTimeout(forceAchievements,1500);
+    setTimeout(forceAchievements,3000);
+  });
+})();
+</script>
+
 </body>
 
 
