@@ -4657,53 +4657,6 @@ document
 
 
 
-<!-- ZINGO ROYAL VIP ASCENSION V2 -->
-
-
-
-  <div class="rfRing"></div>
-
-  <div class="rfCenter">
-   <div class="rfBadge">
-    <div class="rfPro">PRO</div>
-    <div class="rfVIP">VIP</div>
-   </div>
-  </div>
-
-  <div class="rfText">ROYAL ASCENSION</div>
-  <div class="rfFinal">✦ VIP ✦</div>
-  <div class="flash"></div>
-
-  <div class="metal" style="--w:62px;--h:25px;--sx:-330px;--sy:-170px;--sr:-55deg"></div>
-  <div class="metal" style="--w:48px;--h:32px;--sx:310px;--sy:-210px;--sr:42deg"></div>
-  <div class="metal" style="--w:72px;--h:28px;--sx:-300px;--sy:70px;--sr:70deg"></div>
-  <div class="metal" style="--w:55px;--h:42px;--sx:330px;--sy:100px;--sr:-35deg"></div>
-  <div class="metal" style="--w:44px;--h:60px;--sx:-190px;--sy:-270px;--sr:25deg"></div>
-  <div class="metal" style="--w:67px;--h:25px;--sx:205px;--sy:270px;--sr:-65deg"></div>
-  <div class="metal" style="--w:35px;--h:50px;--sx:-360px;--sy:-20px;--sr:35deg"></div>
-  <div class="metal" style="--w:52px;--h:35px;--sx:365px;--sy:5px;--sr:-45deg"></div>
-  <div class="metal" style="--w:60px;--h:30px;--sx:-240px;--sy:210px;--sr:-30deg"></div>
-  <div class="metal" style="--w:46px;--h:52px;--sx:250px;--sy:-80px;--sr:55deg"></div>
-  <div class="metal" style="--w:70px;--h:24px;--sx:-120px;--sy:-310px;--sr:20deg"></div>
-  <div class="metal" style="--w:58px;--h:32px;--sx:120px;--sy:310px;--sr:-25deg"></div>
-
-  <div class="spark" style="--dx:-160px;--dy:-130px"></div>
-  <div class="spark" style="--dx:150px;--dy:-150px"></div>
-  <div class="spark" style="--dx:-180px;--dy:80px"></div>
-  <div class="spark" style="--dx:170px;--dy:100px"></div>
-  <div class="spark" style="--dx:-100px;--dy:190px"></div>
-  <div class="spark" style="--dx:100px;--dy:-200px"></div>
-
- </div>
-</div>
-
-
-
-
-
-
-
-
 <div id="zingoVipRankBox" class="zvRankBox"></div>
 <div id="zvLevelUp" class="zvLevelUp"></div>
 <script id="zingoVIPRankJS">
@@ -4829,17 +4782,7 @@ document
       '</div>'+
       '<div class="zvBar"><i style="width:'+pct+'%"></i></div>'+
       '<div class="zvProgress">'+
-        '<span>المستوى الحالي</span>'+
-        '<span>'+
-          (r.max===Infinity
-            ? "LEGEND"
-            : remaining+" نقطة للمستوى التالي")+
-        '</span>'+
-      '</div>'+
-      '<div class="zvReward '+(rewardAvailable?"show":"")+'" id="zvReward">'+
-        '<b>🎉 وصلت إلى مستوى '+r.title+'</b>'+
-        '<span>'+REWARDS[r.title]+'</span>'+
-        '<button class="zvClaim" id="zvClaim">🎁 اجمع المكافأة</button>'+
+        '<span></button>'+
       '</div>';
 
     if(rewardAvailable){
