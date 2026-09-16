@@ -5081,6 +5081,7 @@ document
   }
 
   function play(){
+    try{ if(window.__zingoVIPSound) window.__zingoVIPSound(); }catch(e){}
     if(timer) clearTimeout(timer);
 
     makeParticles();
@@ -5095,7 +5096,40 @@ document
 
   skip.addEventListener("click",finish);
 
-  window.__zingoRoyalVIP = play;
+  
+
+
+
+/* ZINGO VIP REAL AUDIO */
+(function(){
+  var vipAudio = null;
+
+  function playVIPRealAudio(){
+    try{
+      if(vipAudio){
+        vipAudio.pause();
+        vipAudio.currentTime=0;
+      }
+
+      vipAudio = new Audio("vip-cinematic.wav");
+      vipAudio.preload="auto";
+      vipAudio.volume=1.0;
+
+      var p=vipAudio.play();
+      if(p && p.catch){
+        p.catch(function(e){
+          console.warn("VIP audio blocked:",e);
+        });
+      }
+    }catch(e){
+      console.warn("VIP audio:",e);
+    }
+  }
+
+  window.__zingoVIPSound=playVIPRealAudio;
+})();
+
+window.__zingoRoyalVIP = play;
 })();
 </script>
 
