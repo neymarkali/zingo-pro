@@ -5111,7 +5111,7 @@ document
 
   const scene = document.getElementById("zingoVIP5Scene");
   const canvas = document.getElementById("zingoVIP5Canvas");
-  const ctx = canvas ? canvas.getContext("2d") : null; if(!ctx) return;
+  const ctx = canvas ? (canvas ? canvas.getContext : function(){ return null; }).call(canvas,"2d") : null; if(!ctx) return;
   const title = document.getElementById("zingoVIP5Title");
   const crown = document.getElementById("zingoVIP5Crown");
   const ring = document.getElementById("zingoVIP5Ring");
