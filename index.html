@@ -4454,6 +4454,16 @@ document
 </script>
 
 
+
+
+
+
+
+</body>
+</html>
+
+</template>
+
 <script id="zingoUnifiedModeScript">
 (function(){
 
@@ -4517,38 +4527,6 @@ document
 })();
 </script>
 
-
-<script>
-function switchZingoMode(mode) {
-  const pro = document.getElementById("zingoProLayer");
-  const vip = document.getElementById("zingoVipLayer");
-  const frame = document.getElementById("zingoVipFrame");
-  const source = document.getElementById("zingoVipSource");
-
-  if (!pro || !vip) {
-    console.error("ZINGO mode layers not found");
-    return;
-  }
-
-  if (mode === "vip") {
-    pro.style.display = "none";
-    vip.style.display = "block";
-
-    if (frame && source && !frame.dataset.loaded) {
-      frame.srcdoc = source.innerHTML;
-      frame.dataset.loaded = "1";
-    }
-  } else {
-    vip.style.display = "none";
-    pro.style.display = "block";
-  }
-}
-</script>
-
-</body>
-</html>
-
-</template>
 </body>
 
 
