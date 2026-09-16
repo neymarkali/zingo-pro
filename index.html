@@ -4745,28 +4745,104 @@ document
 }
 </style>
 <!-- ZINGO VIP 5 SECOND CINEMATIC START -->
-
+<style id="zingoVIPCinematicCSS">
+#zingoVIP5Scene{position:fixed;inset:0;z-index:2147483647;display:none;overflow:hidden;background:#03070b;font-family:Arial,Helvetica,sans-serif;touch-action:none;user-select:none}
+#zingoVIP5Scene.is-on{display:block}
+#zingoVIP5Canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.zv-bg,.zv-vignette,.zv-scan{position:absolute;inset:0;pointer-events:none}
+.zv-bg{background:radial-gradient(circle at 50% 48%,rgba(24,31,36,.7) 0,rgba(5,9,13,.86) 38%,#010204 80%),linear-gradient(180deg,#071019 0%,#020406 100%)}
+.zv-vignette{background:radial-gradient(ellipse at center,transparent 34%,rgba(0,0,0,.35) 62%,rgba(0,0,0,.94) 100%)}
+.zv-scan{opacity:.08;background:repeating-linear-gradient(0deg,transparent 0,transparent 3px,rgba(255,255,255,.035) 4px)}
+#zvSubject{position:absolute;left:50%;top:52%;width:min(58vw,330px);height:min(72vh,470px);transform:translate(-50%,-50%);opacity:.98;filter:drop-shadow(0 18px 40px rgba(0,0,0,.9))}
+.zv-head{position:absolute;left:50%;top:5%;width:32%;height:23%;transform:translateX(-50%);border-radius:45% 45% 35% 35%;background:linear-gradient(100deg,#05080a 0%,#253039 42%,#020405 58%,#11181d 100%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.10),0 0 35px rgba(0,0,0,.9)}
+.zv-head:after{content:"";position:absolute;left:14%;right:14%;top:48%;height:4%;background:linear-gradient(90deg,transparent,#cfd5d7 18%,#111 45%,#cfd5d7 82%,transparent);opacity:.55}
+.zv-body{position:absolute;left:17%;right:17%;top:24%;bottom:3%;border-radius:24% 24% 12% 12%;background:linear-gradient(105deg,#050709 0%,#182127 29%,#05080a 49%,#202a30 70%,#030506 100%);box-shadow:inset 0 0 0 2px rgba(255,255,255,.055),inset 0 -40px 80px rgba(0,0,0,.7)}
+.zv-shoulder{position:absolute;top:25%;width:32%;height:24%;border-radius:50%;background:linear-gradient(120deg,#050709,#263139,#060809);box-shadow:inset 0 0 0 2px rgba(255,255,255,.07)}
+.zv-shoulder.l{left:4%;transform:rotate(18deg)}.zv-shoulder.r{right:4%;transform:rotate(-18deg)}
+.zv-chest{position:absolute;left:50%;top:39%;transform:translateX(-50%);width:58%;height:42%;border-radius:16px 16px 28px 28px;background:linear-gradient(90deg,#06090b,#1d272c 48%,#050708);box-shadow:inset 0 0 0 1px rgba(255,255,255,.07)}
+#zvPro{position:absolute;left:50%;top:69%;transform:translate(-50%,-50%);color:#e7ecef;font-weight:900;font-size:clamp(38px,8vw,72px);letter-spacing:.10em;text-shadow:0 3px 0 #101417,0 0 22px rgba(255,255,255,.18)}
+#zvVIP{position:absolute;left:50%;top:69%;transform:translate(-50%,-50%) scale(.65);color:#ffd56b;font-weight:900;font-size:clamp(48px,11vw,92px);letter-spacing:.13em;opacity:0;text-shadow:0 2px 0 #6c3b00,0 0 10px #ffb52e,0 0 35px #ff8a00,0 0 70px rgba(255,160,20,.7)}
+#zvCrown{position:absolute;left:50%;top:48%;transform:translate(-50%,-50%) scale(.45);width:min(36vw,190px);opacity:0;filter:drop-shadow(0 0 10px #ffb42e) drop-shadow(0 0 28px rgba(255,155,0,.65))}
+#zvCrown svg{width:100%;height:auto;display:block}
+#zvWelcome{position:absolute;left:50%;top:81%;transform:translate(-50%,20px);color:#ffe4a3;font-size:clamp(10px,2.5vw,16px);letter-spacing:.42em;white-space:nowrap;opacity:0;text-shadow:0 0 14px rgba(255,174,40,.55)}
+#zvFlash{position:absolute;inset:0;opacity:0;pointer-events:none;background:radial-gradient(circle at 50% 51%,rgba(255,245,211,.98),rgba(255,177,40,.55) 13%,transparent 48%)}
+#zvSkip{position:absolute;right:16px;top:max(16px,env(safe-area-inset-top));z-index:5;border:1px solid rgba(255,205,105,.42);background:rgba(4,7,10,.62);backdrop-filter:blur(8px);color:#f4dfad;border-radius:999px;padding:9px 15px;font-size:12px;font-weight:700;letter-spacing:.08em;opacity:.88;cursor:pointer}
+#zvSkip:active{transform:scale(.97)}
+#zvProgress{position:absolute;left:50%;bottom:max(14px,env(safe-area-inset-bottom));transform:translateX(-50%);width:min(260px,58vw);height:2px;background:rgba(255,255,255,.10);overflow:hidden;border-radius:99px}
+#zvProgress i{display:block;width:0;height:100%;background:#ffc65a;box-shadow:0 0 9px #ffb52e}
+</style>
 
 <div id="zingoVIP5Scene" aria-hidden="true">
+  <div class="zv-bg"></div>
   <canvas id="zingoVIP5Canvas"></canvas>
-
-  <div class="zingoVIP5Beam b1"></div>
-  <div class="zingoVIP5Beam b2"></div>
-  <div class="zingoVIP5Beam b3"></div>
-
-  <div id="zingoVIP5Ring"></div>
-  <div id="zingoVIP5Crown">♛</div>
-
-  <div id="zingoVIP5Title"></div>
-
-  <div id="zingoVIP5Sub">WELCOME TO VIP</div>
-
-  <div id="zingoVIP5Flash"></div>
-  <div id="zingoVIP5Vignette"></div>
+  <div id="zvSubject" aria-hidden="true">
+    <div class="zv-head"></div><div class="zv-shoulder l"></div><div class="zv-shoulder r"></div>
+    <div class="zv-body"></div><div class="zv-chest"></div>
+    <div id="zvPro">PRO</div><div id="zvVIP">VIP</div>
+    <div id="zvCrown">
+      <svg viewBox="0 0 220 130" aria-hidden="true">
+        <defs><linearGradient id="zvGold" x1="0" x2="1"><stop offset="0" stop-color="#7a4100"/><stop offset=".28" stop-color="#ffd86a"/><stop offset=".52" stop-color="#fff0ae"/><stop offset=".78" stop-color="#ffbd32"/><stop offset="1" stop-color="#6c3500"/></linearGradient></defs>
+        <path d="M18 96L8 22l51 43 51-55 51 55 51-43-10 74H18Z" fill="url(#zvGold)" stroke="#fff0ae" stroke-width="3"/>
+        <path d="M25 99h170v17H25z" fill="url(#zvGold)" stroke="#8c4d00" stroke-width="3"/>
+        <circle cx="59" cy="65" r="7" fill="#fff1b0"/><circle cx="110" cy="35" r="8" fill="#fff1b0"/><circle cx="161" cy="65" r="7" fill="#fff1b0"/>
+      </svg>
+    </div>
+  </div>
+  <div id="zvFlash"></div><div class="zv-vignette"></div><div class="zv-scan"></div>
+  <button id="zvSkip" type="button">SKIP ✕</button>
+  <div id="zvProgress"><i></i></div>
+  <div id="zvWelcome">WELCOME TO VIP</div>
 </div>
 
-
-
+<script id="zingoVIP5SceneJS">
+(function(){
+"use strict";
+const scene=document.getElementById("zingoVIP5Scene"),canvas=document.getElementById("zingoVIP5Canvas"),ctx=canvas.getContext("2d",{alpha:false,desynchronized:true});
+const pro=document.getElementById("zvPro"),vip=document.getElementById("zvVIP"),crown=document.getElementById("zvCrown"),flash=document.getElementById("zvFlash"),welcome=document.getElementById("zvWelcome"),progress=document.querySelector("#zvProgress i"),skip=document.getElementById("zvSkip");
+const DURATION=10000,TAU=Math.PI*2,particles=[],sparks=[];
+let raf=0,started=false,finished=false,startTime=0,W=1,H=1,DPR=1,audio=null;
+function resize(){W=Math.max(1,innerWidth);H=Math.max(1,innerHeight);DPR=Math.min(devicePixelRatio||1,1.5);canvas.width=Math.round(W*DPR);canvas.height=Math.round(H*DPR);canvas.style.width=W+"px";canvas.style.height=H+"px";ctx.setTransform(DPR,0,0,DPR,0,0)}
+function rand(a,b){return a+Math.random()*(b-a)} function clamp(v,a,b){return v<a?a:v>b?b:v} function ease(t){t=clamp(t,0,1);return t*t*(3-2*t)}
+function resetParticles(){particles.length=0;const count=Math.min(145,Math.max(88,Math.round(W*H/9000)));for(let i=0;i<count;i++){const ang=rand(0,TAU),r=rand(Math.min(W,H)*.18,Math.min(W,H)*.62);particles.push({x:W*.5+Math.cos(ang)*r,y:H*.53+Math.sin(ang)*r,vx:rand(-.25,.25),vy:rand(-.35,.35),size:rand(1.2,4.4),rot:rand(0,TAU),spin:rand(-.05,.05),phase:rand(0,TAU),gold:0,hit:rand(0,1)})}}
+function resetSparks(){sparks.length=0}
+function addSpark(x,y,e){const n=Math.min(18,Math.max(6,Math.round(e*10)));for(let i=0;i<n;i++){const a=rand(0,TAU),s=rand(1.2,5.5)*e;sparks.push({x:x,y:y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,size:rand(.7,2.4),life:rand(.35,.8)})}}
+function drawMetal(p){const s=p.size;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.rot);ctx.beginPath();ctx.moveTo(-s*1.5,-s*.35);ctx.lineTo(-s*.25,-s*1.15);ctx.lineTo(s*1.55,-s*.25);ctx.lineTo(s*.35,s*1.05);ctx.closePath();const g=ctx.createLinearGradient(-s,0,s,0);if(p.gold){g.addColorStop(0,"#754000");g.addColorStop(.35,"#ffd76a");g.addColorStop(.58,"#fff0b0");g.addColorStop(1,"#8a4800")}else{g.addColorStop(0,"#10171b");g.addColorStop(.42,"#d6dcde");g.addColorStop(.55,"#4a555b");g.addColorStop(1,"#0a0d0f")}ctx.fillStyle=g;ctx.fill();ctx.strokeStyle=p.gold?"rgba(255,205,93,.8)":"rgba(220,230,235,.28)";ctx.lineWidth=.7;ctx.stroke();ctx.restore()}
+function drawBeam(x1,y1,x2,y2,a,w){ctx.save();ctx.globalAlpha=a;ctx.strokeStyle="#ffbd48";ctx.lineWidth=w;ctx.shadowBlur=14;ctx.shadowColor="#ff9d18";ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();ctx.restore()}
+function render(now){
+ if(finished)return;
+ const elapsed=now-startTime,sec=elapsed/1000,t=clamp(elapsed/DURATION,0,1),cx=W*.5,cy=H*.53;
+ ctx.setTransform(DPR,0,0,DPR,0,0);ctx.fillStyle="#020508";ctx.fillRect(0,0,W,H);
+ const haze=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*.65);haze.addColorStop(0,"rgba(37,45,48,.38)");haze.addColorStop(.45,"rgba(10,16,20,.20)");haze.addColorStop(1,"rgba(0,0,0,0)");ctx.fillStyle=haze;ctx.fillRect(0,0,W,H);
+ const strikeStart=1.0,mergeStart=3.0,goldStart=4.2;
+ for(let i=0;i<particles.length;i++){const p=particles[i],ang=p.phase+sec*(.16+p.hit*.08),baseR=Math.min(W,H)*(.18+p.hit*.38);let tx=cx+Math.cos(ang)*baseR,ty=cy+Math.sin(ang)*baseR*.82;
+  if(sec<strikeStart){p.x+=(tx-p.x)*.018+p.vx;p.y+=(ty-p.y)*.018+p.vy;p.gold=0}
+  else if(sec<mergeStart){const k=ease((sec-strikeStart)/(mergeStart-strikeStart)),impact=Math.sin((sec-strikeStart)*13+p.phase)*(.5+2.2*k);tx=cx+(tx-cx)*(1-k*.82)+impact*Math.cos(ang)*8;ty=cy+(ty-cy)*(1-k*.82)+impact*Math.sin(ang)*8;p.x+=(tx-p.x)*(.045+k*.09);p.y+=(ty-p.y)*(.045+k*.09);p.gold=k;if(k>.58&&i%7===0)drawBeam(p.x,p.y,cx,cy,.18,1)}
+  else if(sec<goldStart){const k=ease((sec-mergeStart)/(goldStart-mergeStart));p.x+=(cx-p.x)*(.14+k*.16);p.y+=(cy-p.y)*(.14+k*.16);p.gold=Math.min(1,k*1.25);if(i%11===0)drawBeam(p.x,p.y,cx,cy,.20,1)}
+  else {const k=ease((sec-goldStart)/2.1),spread=Math.min(W,H)*(.10+k*.34);tx=cx+Math.cos(ang)*spread;ty=cy+Math.sin(ang)*spread*.72;p.x+=(tx-p.x)*.075;p.y+=(ty-p.y)*.075;p.gold=1}
+  p.rot+=p.spin;drawMetal(p)
+ }
+ if(sec>=strikeStart&&sec<goldStart){const pulse=Math.max(0,Math.sin((sec-strikeStart)*8));drawBeam(cx-W*.42,cy+H*.08,cx+W*.32,cy-H*.22,.12+pulse*.18,1.3);drawBeam(cx+W*.40,cy-H*.02,cx-W*.24,cy+H*.25,.10+pulse*.16,1.1)}
+ if(sec>=goldStart){const k=ease((sec-goldStart)/2);ctx.save();ctx.globalAlpha=.18*(1-k)+.08;ctx.strokeStyle="#ffbd48";ctx.lineWidth=2;ctx.shadowBlur=18;ctx.shadowColor="#ff9c20";ctx.beginPath();ctx.arc(cx,cy,Math.min(W,H)*(.13+k*.28),0,TAU);ctx.stroke();ctx.restore()}
+ if(sec>2&&sec<7.2&&sparks.length<75&&Math.random()<.35)addSpark(cx+rand(-W*.22,W*.22),cy+rand(-H*.18,H*.18),.65);
+ for(let i=sparks.length-1;i>=0;i--){const s=sparks[i];s.x+=s.vx;s.y+=s.vy;s.vy+=.035;s.life-=.022;if(s.life<=0){sparks.splice(i,1);continue}ctx.globalAlpha=clamp(s.life,0,1);ctx.fillStyle="#ffd47a";ctx.fillRect(s.x,s.y,s.size,s.size)}ctx.globalAlpha=1;
+ const proOut=clamp((sec-2.9)/1.35,0,1);pro.style.opacity=String(1-proOut);pro.style.transform="translate(-50%,-50%) scale("+(1+proOut*.08)+")";
+ const crownK=ease((sec-5)/1.4);crown.style.opacity=String(crownK);crown.style.transform="translate(-50%,-50%) scale("+(0.45+crownK*.55)+")";
+ const vipK=ease((sec-5.7)/1.7);vip.style.opacity=String(vipK);vip.style.transform="translate(-50%,-50%) scale("+(0.65+vipK*.35)+")";
+ const welcomeK=ease((sec-7.1)/1.4);welcome.style.opacity=String(welcomeK);welcome.style.transform="translate(-50%,"+(20-20*welcomeK)+"px)";
+ const fl=sec>2.45&&sec<3?Math.max(0,1-Math.abs(sec-2.7)/.25):sec>8&&sec<8.65?Math.max(0,1-Math.abs(sec-8.22)/.42):0;flash.style.opacity=String(fl*.72);progress.style.width=t*100+"%";
+ if(sec>=2.5&&sec<3)addSpark(cx,cy,.95);if(sec>=8&&sec<8.35)addSpark(cx,cy,1.2);
+ if(elapsed>=DURATION){finish();return}raf=requestAnimationFrame(render)
+}
+function ensureAudio(){try{if(!audio){const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;const ac=new AC(),master=ac.createGain(),comp=ac.createDynamicsCompressor();master.gain.value=.88;comp.threshold.value=-18;comp.knee.value=12;comp.ratio.value=5;comp.attack.value=.003;comp.release.value=.18;master.connect(comp);comp.connect(ac.destination);audio={ac:ac,master:master}}if(audio.ac.state==="suspended")audio.ac.resume()}catch(e){}}
+function noise(time,dur,amp,freq){if(!audio)return;const ac=audio.ac,n=Math.max(1,Math.floor(ac.sampleRate*dur)),b=ac.createBuffer(1,n,ac.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=(Math.random()*2-1)*Math.pow(1-i/n,2.5);const src=ac.createBufferSource(),f=ac.createBiquadFilter(),g=ac.createGain();src.buffer=b;f.type="bandpass";f.frequency.value=freq;f.Q.value=.7;g.gain.setValueAtTime(.0001,time);g.gain.exponentialRampToValueAtTime(amp,time+.006);g.gain.exponentialRampToValueAtTime(.0001,time+dur);src.connect(f);f.connect(g);g.connect(audio.master);src.start(time);src.stop(time+dur+.02)}
+function hit(time,base,amp){if(!audio)return;const ac=audio.ac,o=ac.createOscillator(),g=ac.createGain(),f=ac.createBiquadFilter();o.type="sine";o.frequency.setValueAtTime(base,time);o.frequency.exponentialRampToValueAtTime(Math.max(45,base*.32),time+.32);f.type="lowpass";f.frequency.value=1800;g.gain.setValueAtTime(.0001,time);g.gain.exponentialRampToValueAtTime(amp,time+.008);g.gain.exponentialRampToValueAtTime(.0001,time+.36);o.connect(f);f.connect(g);g.connect(audio.master);o.start(time);o.stop(time+.4);noise(time,.28,amp*.7,Math.max(180,base*2.5))}
+function playSoundtrack(){if(!audio)return;const t=audio.ac.currentTime+.04;noise(t,.9,.035,240);hit(t+.95,115,.30);hit(t+1.55,95,.42);hit(t+2.10,82,.55);noise(t+2.1,.45,.32,1600);noise(t+2.48,.38,.28,2400);hit(t+3.05,70,.72);hit(t+4.65,58,.45);hit(t+6.05,62,.34);hit(t+8.05,52,.95);noise(t+8.03,.65,.48,1250);noise(t+8.35,.85,.18,420)}
+function finish(){if(finished)return;finished=true;cancelAnimationFrame(raf);scene.classList.remove("is-on");scene.setAttribute("aria-hidden","true");document.documentElement.style.overflow="";document.body.style.overflow="";started=false}
+function play(){if(started)return;started=true;finished=false;ensureAudio();playSoundtrack();resize();resetParticles();resetSparks();scene.classList.add("is-on");scene.setAttribute("aria-hidden","false");document.documentElement.style.overflow="hidden";document.body.style.overflow="hidden";pro.style.opacity="1";vip.style.opacity="0";crown.style.opacity="0";welcome.style.opacity="0";flash.style.opacity="0";progress.style.width="0%";startTime=performance.now();cancelAnimationFrame(raf);raf=requestAnimationFrame(render)}
+skip.addEventListener("click",function(e){e.preventDefault();e.stopPropagation();finish()});addEventListener("resize",resize,{passive:true});
+window.__zingoRoyalVIP=play;
+})();
+</script>
 <!-- ZINGO VIP 5 SECOND CINEMATIC END -->
 
 <script id="zingoVIP5SceneJS">
