@@ -4009,6 +4009,11 @@ button{
 
     <div id="clubGrid" class="club-grid"></div>
 
+    <div class="vipFrameSelector" id="vipFrameSelector">
+      <h4>🖼️ إطار ملفك</h4>
+      <div class="vipFrameGrid" id="vipFrameGrid"></div>
+    </div>
+
     <button class="gold-btn save-profile" onclick="saveProfile()">
       حفظ الملف الشخصي
     </button>
@@ -5616,6 +5621,21 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 })();
 </script>
+/* ZINGO VIP FRAME MODAL HOOK */
+(function(){
+  const originalOpenProfile = window.openProfile;
+  if(typeof originalOpenProfile !== "function") return;
+
+  window.openProfile = function(){
+    originalOpenProfile.apply(this, arguments);
+
+    setTimeout(function(){
+      if(window.__zingoVIPIdentity && window.__zingoVIPIdentity.refresh){
+        window.__zingoVIPIdentity.refresh();
+      }
+    },100);
+  };
+})();
 </body>
 </html>
 
@@ -6705,6 +6725,31 @@ window.__zingoRoyalVIP = play;
 
 
 
+
+
+/* ZINGO VIP LEADERBOARD IDENTITY HOOK */
+(function(){
+  function refreshVIPLeaderboardIdentity(){
+    try{
+      if(window.__zingoVIPIdentity && typeof window.__zingoVIPIdentity.refresh === "function"){
+        window.__zingoVIPIdentity.refresh();
+      }
+    }catch(e){}
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+    setTimeout(refreshVIPLeaderboardIdentity, 900);
+    setTimeout(refreshVIPLeaderboardIdentity, 2200);
+  });
+
+  const list = document.getElementById("leaderboardList");
+  if(list){
+    const observer = new MutationObserver(function(){
+      refreshVIPLeaderboardIdentity();
+    });
+    observer.observe(list,{childList:true,subtree:true});
+  }
+})();
 
 </body>
 
