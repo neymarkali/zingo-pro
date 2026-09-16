@@ -6356,7 +6356,20 @@ document.addEventListener("DOMContentLoaded",()=>{
     timer=setTimeout(finish,6500);
   }
 
-  skip.addEventListener("click",finish);
+  skip.addEventListener("click",function(){
+  try{
+    if(vipAudio){
+      vipAudio.pause();
+      vipAudio.currentTime=0;
+    }
+  }catch(e){}
+  try{
+    if(window.__zingoVIPSound){
+      window.__zingoVIPSound = function(){};
+    }
+  }catch(e){}
+  finish();
+});
 
   
 
@@ -6375,7 +6388,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
       vipAudio = new Audio("vip-cinematic.wav");
       vipAudio.preload="auto";
-      vipAudio.volume=1.0;
+      vipAudio.volume=0.38;
 
       var p=vipAudio.play();
       if(p && p.catch){
