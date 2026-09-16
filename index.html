@@ -4014,7 +4014,20 @@ button{
       <div class="vipFrameGrid" id="vipFrameGrid"></div>
     </div>
 
-    <button class="gold-btn save-profile" onclick="saveProfile()">
+
+<!-- ZINGO VIP ACHIEVEMENTS V1 -->
+<div class="vipAchievements" id="vipAchievements">
+  <div class="vipAchievementsHead">
+    <div>
+      <div class="vipAchievementsTitle">🏆 إنجازاتي</div>
+      <div class="vipAchievementsSub">افتح إنجازاتك واحصل على مكافآت VIP</div>
+    </div>
+    <div id="vipAchCount" class="vipAchCount">0 / 6</div>
+  </div>
+  <div class="vipAchievementGrid" id="vipAchievementGrid"></div>
+</div>
+
+<button class="gold-btn save-profile" onclick="saveProfile()">
       حفظ الملف الشخصي
     </button>
 
@@ -6105,6 +6118,110 @@ document.addEventListener("DOMContentLoaded",()=>{
     animation-duration:1ms!important;
   }
 }
+
+/* ===== ZINGO VIP ACHIEVEMENTS V1 ===== */
+.vipAchievements{
+  margin-top:18px;
+  padding:16px;
+  border:1px solid rgba(212,175,55,.28);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(255,215,90,.07),rgba(0,0,0,.18));
+  box-shadow:0 8px 30px rgba(0,0,0,.18);
+}
+.vipAchievementsHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:12px;
+}
+.vipAchievementsTitle{
+  font-size:17px;
+  font-weight:900;
+  color:#f7d774;
+}
+.vipAchievementsSub{
+  font-size:11px;
+  color:rgba(255,255,255,.55);
+}
+.vipAchievementGrid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+.vipAchievement{
+  position:relative;
+  min-height:132px;
+  padding:13px 11px;
+  border-radius:15px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.035);
+  overflow:hidden;
+}
+.vipAchievement.unlocked{
+  border-color:rgba(212,175,55,.38);
+  background:linear-gradient(145deg,rgba(212,175,55,.13),rgba(255,255,255,.025));
+}
+.vipAchievement.locked{
+  opacity:.48;
+  filter:saturate(.35);
+}
+.vipAchIcon{
+  font-size:25px;
+  margin-bottom:5px;
+}
+.vipAchName{
+  font-size:12px;
+  font-weight:900;
+  color:#fff;
+}
+.vipAchLevel{
+  font-size:9px;
+  color:#d9b84c;
+  margin-top:2px;
+}
+.vipAchReward{
+  font-size:9px;
+  color:rgba(255,255,255,.62);
+  margin-top:6px;
+  line-height:1.35;
+}
+.vipAchProgress{
+  height:4px;
+  margin-top:8px;
+  border-radius:99px;
+  background:rgba(255,255,255,.08);
+  overflow:hidden;
+}
+.vipAchProgress span{
+  display:block;
+  height:100%;
+  width:0;
+  border-radius:99px;
+  background:linear-gradient(90deg,#9d7417,#f5d76e,#fff0a6);
+  box-shadow:0 0 10px rgba(245,215,110,.45);
+}
+.vipAchState{
+  position:absolute;
+  top:9px;
+  right:9px;
+  font-size:11px;
+}
+.vipAchUnlocked{
+  color:#f5d76e;
+}
+.vipAchLocked{
+  color:rgba(255,255,255,.35);
+}
+.vipAchCount{
+  margin-top:9px;
+  text-align:center;
+  font-size:10px;
+  color:rgba(255,255,255,.55);
+}
+@media(max-width:360px){
+  .vipAchievementGrid{grid-template-columns:1fr;}
+}
+
 </style>
 
 <div id="zingoVIPFinalScene" aria-hidden="true">
@@ -6850,6 +6967,140 @@ document.addEventListener("DOMContentLoaded", function() {
     }, 100);
   };
 })();
+
+
+/* ===== ZINGO VIP ACHIEVEMENTS ENGINE V1 ===== */
+(function(){
+
+  const ACHIEVEMENTS = [
+    {
+      id:"first",
+      icon:"🌱",
+      name:"البداية",
+      level:"LEVEL 1",
+      target:1,
+      type:"correct",
+      reward:"🎨 إطار Rookie خاص"
+    },
+    {
+      id:"hot",
+      icon:"🎯",
+      name:"القنّاص",
+      level:"LEVEL 2",
+      target:5,
+      type:"correct",
+      reward:"🏷️ Badge القنّاص"
+    },
+    {
+      id:"sniper",
+      icon:"🔥",
+      name:"Sniper",
+      level:"LEVEL 3",
+      target:10,
+      type:"correct",
+      reward:"⚡ تأثير ناري للملف"
+    },
+    {
+      id:"elite",
+      icon:"👑",
+      name:"Elite",
+      level:"LEVEL 4",
+      target:25,
+      type:"correct",
+      reward:"🎟️ VIP لمدة 24 ساعة"
+    },
+    {
+      id:"master",
+      icon:"💎",
+      name:"Master",
+      level:"LEVEL 5",
+      target:50,
+      type:"correct",
+      reward:"🎟️ VIP لمدة 3 أيام"
+    },
+    {
+      id:"legend",
+      icon:"🏆",
+      name:"Legend",
+      level:"LEVEL 6",
+      target:100,
+      type:"points",
+      reward:"🎟️ VIP لمدة أسبوع + إطار Legend"
+    }
+  ];
+
+  function num(v){
+    const n=parseInt(String(v||"").replace(/[^\d]/g,""),10);
+    return Number.isFinite(n) ? n : 0;
+  }
+
+  function getStats(){
+    const stats=document.querySelectorAll(".pstat strong");
+    return {
+      points: stats[0] ? num(stats[0].textContent) : 0,
+      correct: stats[2] ? num(stats[2].textContent) : 0
+    };
+  }
+
+  function renderAchievements(forceAdmin){
+    const grid=document.getElementById("vipAchievementGrid");
+    const count=document.getElementById("vipAchCount");
+    if(!grid) return;
+
+    const stats=getStats();
+
+    let unlocked=0;
+
+    grid.innerHTML=ACHIEVEMENTS.map(function(a){
+
+      let value=a.type==="points" ? stats.points : stats.correct;
+
+      if(forceAdmin) value=100;
+
+      const progress=Math.min(100,Math.round((value/a.target)*100));
+      const isUnlocked=forceAdmin || value>=a.target;
+
+      if(isUnlocked) unlocked++;
+
+      return `
+        <div class="vipAchievement ${isUnlocked ? "unlocked" : "locked"}">
+          <div class="vipAchState ${isUnlocked ? "vipAchUnlocked" : "vipAchLocked"}">
+            ${isUnlocked ? "✓" : "🔒"}
+          </div>
+
+          <div class="vipAchIcon">${a.icon}</div>
+          <div class="vipAchName">${a.name}</div>
+          <div class="vipAchLevel">${a.level}</div>
+
+          <div class="vipAchReward">${a.reward}</div>
+
+          <div class="vipAchProgress">
+            <span style="width:${progress}%"></span>
+          </div>
+        </div>
+      `;
+    }).join("");
+
+    if(count){
+      count.textContent=unlocked+" / "+ACHIEVEMENTS.length;
+    }
+  }
+
+  window.__zingoVIPAchievements={
+    refresh:function(){
+      const admin =
+        window.__zingoVIPAdmin === true;
+      renderAchievements(admin);
+    }
+  };
+
+  document.addEventListener("DOMContentLoaded",function(){
+    setTimeout(function(){ renderAchievements(false); },700);
+    setTimeout(function(){ renderAchievements(false); },1900);
+  });
+
+})();
+
 </script>
 
 </html>
