@@ -5234,7 +5234,7 @@ document
     const isVIP = mode === "vip";
 
     if(isVIP){
-      // ZINGO VIP ROYAL CINEMATIC — override old transition
+      // ===== ZINGO ROYAL VIP CINEMATIC ONLY =====
       try{
         if(typeof window.__zingoRoyalVIP === "function"){
           window.__zingoRoyalVIP();
@@ -5243,107 +5243,7 @@ document
         console.error("VIP cinematic:",e);
       }
 
-
-      // ===== PREMIUM FINAL CINEMATIC =====
-      const fx = document.getElementById("zingoPremiumFinalOverlay");
-
-      if(fx){
-        fx.classList.remove("active");
-        void fx.offsetWidth;
-        fx.classList.add("active");
-
-        clearTimeout(window.__zingoPremiumFXTimer);
-        window.__zingoPremiumFXTimer = setTimeout(() => {
-          fx.classList.remove("active");
-        }, 3300);
-      }
-
-      // ===== PREMIUM CINEMATIC TITLE =====
-      
-
-      // ===== ZINGO PREMIUM ASCENSION SOUND =====
-      try {
-        const AudioCtx = window.AudioContext || window.webkitAudioContext;
-        if(AudioCtx){
-          const ctx = new AudioCtx();
-          const now = ctx.currentTime;
-
-          const master = ctx.createGain();
-          master.gain.setValueAtTime(0.0001, now);
-          master.gain.exponentialRampToValueAtTime(0.16, now + 0.06);
-          master.gain.exponentialRampToValueAtTime(0.0001, now + 2.2);
-          master.connect(ctx.destination);
-
-          // Rising ceremonial chord
-          [261.63, 329.63, 392.00, 523.25, 659.25].forEach((freq, i) => {
-            const osc = ctx.createOscillator();
-            const gain = ctx.createGain();
-
-            osc.type = i < 3 ? "sine" : "triangle";
-            osc.frequency.setValueAtTime(freq, now + i * 0.055);
-
-            gain.gain.setValueAtTime(0.0001, now);
-            gain.gain.exponentialRampToValueAtTime(
-              0.22 / (i + 1),
-              now + 0.12 + i * 0.055
-            );
-            gain.gain.exponentialRampToValueAtTime(
-              0.0001,
-              now + 1.8 + i * 0.07
-            );
-
-            osc.connect(gain);
-            gain.connect(master);
-
-            osc.start(now + i * 0.055);
-            osc.stop(now + 2.1 + i * 0.07);
-          });
-
-          // Bright final chime
-          const chime = ctx.createOscillator();
-          const chimeGain = ctx.createGain();
-
-          chime.type = "sine";
-          chime.frequency.setValueAtTime(1046.5, now + 0.55);
-          chime.frequency.exponentialRampToValueAtTime(1318.5, now + 0.85);
-
-          chimeGain.gain.setValueAtTime(0.0001, now + 0.55);
-          chimeGain.gain.exponentialRampToValueAtTime(0.12, now + 0.62);
-          chimeGain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
-
-          chime.connect(chimeGain);
-          chimeGain.connect(master);
-
-          chime.start(now + 0.55);
-          chime.stop(now + 1.9);
-
-          setTimeout(() => {
-            try { ctx.close(); } catch(e) {}
-          }, 2600);
-        }
-      } catch(e) {
-        console.debug("Premium audio unavailable");
-      }
-
-      vipBtn.classList.remove("zingo-vip-pulse");
-      void vipBtn.offsetWidth;
-      vipBtn.classList.add("zingo-vip-pulse");
-
-      glow?.classList.remove("active");
-      if(glow){
-        void glow.offsetWidth;
-        glow.classList.add("active");
-      }
-
-      proLayer.classList.remove("zingo-pro-enter");
-      proLayer.classList.add("zingo-pro-exit");
-
-      setTimeout(function(){
-
-        proLayer.style.display = "none";
-
-        vipLayer.style.display = "block";
-        vipLayer.classList.remove("zingo-vip-exit");
+    vipLayer.classList.remove("zingo-vip-exit");
         void vipLayer.offsetWidth;
         vipLayer.classList.add("zingo-vip-enter");
 
