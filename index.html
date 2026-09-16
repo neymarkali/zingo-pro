@@ -5224,7 +5224,6 @@ document
     const frame = document.getElementById("zingoVipFrame");
     const source = document.getElementById("zingoVipSource");
     const glow = document.getElementById("zingoVipTransitionGlow");
-    const premiumTitle = document.getElementById("zingoPremiumAscension");
 
     if(!proLayer || !vipLayer || !proBtn || !vipBtn || !frame || !source){
       console.error("ZINGO MODE ERROR");
@@ -5240,10 +5239,17 @@ document
           window.__zingoRoyalVIP();
         }
       }catch(e){
-        console.error("VIP cinematic:",e);
+        console.error("VIP cinematic:", e);
       }
 
-    vipLayer.classList.remove("zingo-vip-exit");
+      proLayer.classList.remove("zingo-pro-enter");
+      proLayer.classList.add("zingo-pro-exit");
+
+      setTimeout(function(){
+        proLayer.style.display = "none";
+        vipLayer.style.display = "block";
+
+        vipLayer.classList.remove("zingo-vip-exit");
         void vipLayer.offsetWidth;
         vipLayer.classList.add("zingo-vip-enter");
 
@@ -5256,10 +5262,9 @@ document
         vipBtn.classList.add("active-vip");
 
         window.scrollTo({
-          top:0,
-          behavior:"smooth"
+          top: 0,
+          behavior: "smooth"
         });
-
       }, 180);
 
       return;
