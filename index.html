@@ -5202,6 +5202,210 @@ document
 </script>
 <!-- END ZINGO ROYAL PREMIUM ASCENSION V2 -->
 
+
+<!-- ZINGO VIP DIRECT CINEMATIC HOOK -->
+<style>
+#zingoRoyalFX{
+  position:fixed!important;
+  inset:0!important;
+  z-index:999999!important;
+  pointer-events:none!important;
+  display:flex!important;
+  align-items:center!important;
+  justify-content:center!important;
+  background:radial-gradient(circle at center,rgba(255,190,40,.30),rgba(0,0,0,.96) 58%,#000 100%);
+  opacity:0;
+  visibility:hidden;
+  transition:opacity .18s ease;
+}
+#zingoRoyalFX.active{
+  opacity:1!important;
+  visibility:visible!important;
+}
+
+#zingoRoyalFX .vipReveal{
+  position:relative;
+  text-align:center;
+  transform:scale(.55);
+  opacity:0;
+}
+
+#zingoRoyalFX.active .vipReveal{
+  animation:vipReveal .9s cubic-bezier(.16,1,.3,1) 2.25s forwards;
+}
+
+#zingoRoyalFX .vipPro{
+  font-size:clamp(70px,20vw,150px);
+  font-weight:1000;
+  letter-spacing:8px;
+  color:#fff;
+  text-shadow:
+    0 0 12px #fff,
+    0 0 30px #ffd34d,
+    0 0 70px rgba(255,180,20,.9);
+}
+
+#zingoRoyalFX .vipFinal{
+  margin-top:8px;
+  font-size:clamp(42px,13vw,100px);
+  font-weight:1000;
+  letter-spacing:12px;
+  color:#ffd447;
+  text-shadow:
+    0 0 10px #fff,
+    0 0 25px #ffd447,
+    0 0 60px #ff9d00,
+    0 0 110px rgba(255,150,0,.8);
+}
+
+#zingoRoyalFX .metalPiece{
+  position:absolute;
+  width:72px;
+  height:28px;
+  left:50%;
+  top:50%;
+  background:linear-gradient(135deg,#fff,#d9d9d9 18%,#777 45%,#f5f5f5 60%,#666 85%,#fff);
+  border:2px solid #ffe28a;
+  box-shadow:0 0 14px rgba(255,190,50,.8),inset 0 0 8px #fff;
+  transform:translate(-50%,-50%);
+}
+
+#zingoRoyalFX .p1{--x:-46vw;--y:-32vh;--r:-35deg}
+#zingoRoyalFX .p2{--x:45vw;--y:-28vh;--r:42deg}
+#zingoRoyalFX .p3{--x:-48vw;--y:8vh;--r:70deg}
+#zingoRoyalFX .p4{--x:47vw;--y:12vh;--r:-60deg}
+#zingoRoyalFX .p5{--x:-32vw;--y:35vh;--r:25deg}
+#zingoRoyalFX .p6{--x:34vw;--y:34vh;--r:-25deg}
+#zingoRoyalFX .p7{--x:0;--y:-45vh;--r:90deg}
+#zingoRoyalFX .p8{--x:0;--y:45vh;--r:-90deg}
+
+#zingoRoyalFX.active .metalPiece{
+  animation:metalHit 1.65s cubic-bezier(.12,.85,.22,1) forwards;
+}
+#zingoRoyalFX.active .p1{animation-delay:.15s}
+#zingoRoyalFX.active .p2{animation-delay:.35s}
+#zingoRoyalFX.active .p3{animation-delay:.55s}
+#zingoRoyalFX.active .p4{animation-delay:.75s}
+#zingoRoyalFX.active .p5{animation-delay:.95s}
+#zingoRoyalFX.active .p6{animation-delay:1.15s}
+#zingoRoyalFX.active .p7{animation-delay:1.35s}
+#zingoRoyalFX.active .p8{animation-delay:1.55s}
+
+@keyframes metalHit{
+  0%{
+    transform:
+      translate(calc(-50% + var(--x)),calc(-50% + var(--y)))
+      rotate(var(--r)) scale(1.4);
+    opacity:1;
+  }
+  65%{
+    transform:
+      translate(-50%,-50%)
+      rotate(0deg) scale(.85);
+    opacity:1;
+  }
+  78%{
+    transform:
+      translate(-50%,-50%)
+      rotate(4deg) scale(1.08);
+  }
+  100%{
+    transform:
+      translate(-50%,-50%)
+      rotate(0deg) scale(0);
+    opacity:0;
+  }
+}
+
+@keyframes vipReveal{
+  0%{transform:scale(.55);opacity:0}
+  45%{transform:scale(1.18);opacity:1}
+  70%{transform:scale(.94)}
+  100%{transform:scale(1);opacity:1}
+}
+</style>
+
+<div id="zingoRoyalFX">
+  <div class="metalPiece p1"></div>
+  <div class="metalPiece p2"></div>
+  <div class="metalPiece p3"></div>
+  <div class="metalPiece p4"></div>
+  <div class="metalPiece p5"></div>
+  <div class="metalPiece p6"></div>
+  <div class="metalPiece p7"></div>
+  <div class="metalPiece p8"></div>
+
+  <div class="vipReveal">
+    <div class="vipPro">PRO</div>
+    <div class="vipFinal">✦ VIP ✦</div>
+  </div>
+</div>
+
+<script>
+(function(){
+  function vipCinematic(){
+    const fx=document.getElementById("zingoRoyalFX");
+    if(!fx)return;
+
+    fx.classList.remove("active");
+    void fx.offsetWidth;
+    fx.classList.add("active");
+
+    try{
+      const A=window.AudioContext||window.webkitAudioContext;
+      if(A){
+        const c=new A();
+        const g=c.createGain();
+        g.gain.value=.22;
+        g.connect(c.destination);
+
+        const now=c.currentTime;
+
+        [0,.35,.7,1.05,1.4,1.75,2.15].forEach((t,i)=>{
+          const o=c.createOscillator();
+          const x=c.createGain();
+          o.type=i<5?"sawtooth":"sine";
+          o.frequency.setValueAtTime(i<5?90+i*16:260,now+t);
+          o.frequency.exponentialRampToValueAtTime(i<5?45:520,now+t+.16);
+          x.gain.setValueAtTime(.0001,now+t);
+          x.gain.exponentialRampToValueAtTime(.16,now+t+.015);
+          x.gain.exponentialRampToValueAtTime(.0001,now+t+.22);
+          o.connect(x);x.connect(g);
+          o.start(now+t);
+          o.stop(now+t+.24);
+        });
+
+        setTimeout(()=>c.close(),4500);
+      }
+    }catch(e){}
+
+    clearTimeout(window.__vipFXTimer);
+    window.__vipFXTimer=setTimeout(()=>{
+      fx.classList.remove("active");
+    },4300);
+  }
+
+  function bindVIP(){
+    const btn=document.getElementById("zingoVipBtn");
+    if(!btn){
+      console.log("VIP button not found yet");
+      setTimeout(bindVIP,500);
+      return;
+    }
+
+    if(btn.dataset.vipCinematicBound)return;
+    btn.dataset.vipCinematicBound="1";
+
+    btn.addEventListener("click",vipCinematic,true);
+    console.log("👑 ZINGO VIP CINEMATIC READY");
+  }
+
+  bindVIP();
+  document.addEventListener("DOMContentLoaded",bindVIP);
+})();
+</script>
+<!-- END ZINGO VIP DIRECT CINEMATIC HOOK -->
+
 </body>
 </html>
 
