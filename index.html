@@ -4843,8 +4843,8 @@ document
 
 
 
-<!-- ZINGO ROYAL PREMIUM ASCENSION V2 -->
-<style id="zingoRoyalPremiumCSS">
+<!-- ZINGO ROYAL VIP ASCENSION V2 -->
+<style id="zingoRoyalVIPCSS">
 #zingoRoyalFX{
  position:fixed;inset:0;z-index:1000001;pointer-events:none;
  overflow:hidden;display:flex;align-items:center;justify-content:center;
@@ -4882,7 +4882,7 @@ document
  color:#eef1f4;
  text-shadow:0 3px 0 #777,0 8px 25px #000;
 }
-#zingoRoyalFX .rfPremium{
+#zingoRoyalFX .rfVIP{
  position:absolute;top:86px;
  font-size:38px;font-weight:1000;letter-spacing:2px;
  color:#ffe18a;opacity:0;
@@ -4942,8 +4942,8 @@ document
 #zingoRoyalFX.active .rfPro{
  animation:rfPro 4.7s cubic-bezier(.16,1,.3,1) both;
 }
-#zingoRoyalFX.active .rfPremium{
- animation:rfPremium 4.7s cubic-bezier(.16,1,.3,1) both;
+#zingoRoyalFX.active .rfVIP{
+ animation:rfVIP 4.7s cubic-bezier(.16,1,.3,1) both;
 }
 #zingoRoyalFX.active .rfText{
  animation:rfText 4.7s ease both;
@@ -4986,7 +4986,7 @@ document
  65%{opacity:.45;transform:scale(1.16)}
  76%,100%{opacity:0;transform:scale(1.3)}
 }
-@keyframes rfPremium{
+@keyframes rfVIP{
  0%,58%{opacity:0;transform:scale(.7);letter-spacing:0}
  67%{opacity:.15}
  74%{opacity:1;transform:scale(1.12);letter-spacing:2px}
@@ -5022,12 +5022,12 @@ document
   <div class="rfCenter">
    <div class="rfBadge">
     <div class="rfPro">PRO</div>
-    <div class="rfPremium">PREMIUM</div>
+    <div class="rfVIP">VIP</div>
    </div>
   </div>
 
   <div class="rfText">ROYAL ASCENSION</div>
-  <div class="rfFinal">✦ PREMIUM ✦</div>
+  <div class="rfFinal">✦ VIP ✦</div>
   <div class="flash"></div>
 
   <div class="metal" style="--w:62px;--h:25px;--sx:-330px;--sy:-170px;--sr:-55deg"></div>
@@ -5053,7 +5053,7 @@ document
  </div>
 </div>
 
-<script id="zingoRoyalPremiumJS">
+<script id="zingoRoyalVIPJS">
 (function(){
 
  function metalAnimation(){
@@ -5108,7 +5108,7 @@ document
    });
  }
 
- function premiumSound(){
+ function vipSound(){
    try{
      var AC=window.AudioContext||window.webkitAudioContext;
      if(!AC)return;
@@ -5173,7 +5173,7 @@ document
 
    metalAnimation();
    sparks();
-   premiumSound();
+   vipSound();
 
    clearTimeout(window.__zingoRoyalTimer);
    window.__zingoRoyalTimer=setTimeout(function(){
@@ -5196,7 +5196,7 @@ document
    bind();
  }
 
- window.zingoRoyalPremium=play;
+ window.__zingoRoyalVIP=play;
 
 })();
 </script>
@@ -5435,6 +5435,15 @@ document
     const isVIP = mode === "vip";
 
     if(isVIP){
+      // ZINGO VIP ROYAL CINEMATIC — override old transition
+      try{
+        if(typeof window.__zingoRoyalVIP === "function"){
+          window.__zingoRoyalVIP();
+        }
+      }catch(e){
+        console.error("VIP cinematic:",e);
+      }
+
 
       // ===== PREMIUM FINAL CINEMATIC =====
       const fx = document.getElementById("zingoPremiumFinalOverlay");
@@ -5451,11 +5460,7 @@ document
       }
 
       // ===== PREMIUM CINEMATIC TITLE =====
-      premiumTitle?.classList.remove("active");
-      if(premiumTitle){
-        void premiumTitle.offsetWidth;
-        premiumTitle.classList.add("active");
-      }
+      
 
       // ===== ZINGO PREMIUM ASCENSION SOUND =====
       try {
