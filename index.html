@@ -4842,6 +4842,366 @@ document
 
 
 
+
+<!-- ZINGO ROYAL PREMIUM ASCENSION V2 -->
+<style id="zingoRoyalPremiumCSS">
+#zingoRoyalFX{
+ position:fixed;inset:0;z-index:1000001;pointer-events:none;
+ overflow:hidden;display:flex;align-items:center;justify-content:center;
+ background:radial-gradient(circle at 50% 45%,rgba(255,193,45,.10),rgba(0,0,0,.78) 48%,rgba(0,0,0,.96));
+ opacity:0;visibility:hidden;
+ transition:opacity .22s ease;
+ font-family:Arial,sans-serif;
+}
+#zingoRoyalFX.active{opacity:1;visibility:visible}
+#zingoRoyalFX .rfStage{
+ position:relative;width:100%;height:100%;
+ display:flex;align-items:center;justify-content:center;
+}
+#zingoRoyalFX .rfCenter{
+ position:relative;width:250px;height:330px;
+ display:flex;align-items:center;justify-content:center;
+}
+#zingoRoyalFX .rfBadge{
+ position:relative;width:190px;height:235px;
+ display:flex;align-items:center;justify-content:center;
+ border:2px solid rgba(255,219,91,.35);
+ background:linear-gradient(145deg,rgba(20,18,13,.92),rgba(5,5,5,.94));
+ clip-path:polygon(50% 0%,88% 16%,100% 52%,83% 92%,50% 100%,17% 92%,0 52%,12% 16%);
+ box-shadow:0 0 35px rgba(255,184,30,.22),inset 0 0 30px rgba(255,205,60,.08);
+ transform:scale(.86) rotateY(0deg);
+}
+#zingoRoyalFX .rfBadge:before{
+ content:"♛";position:absolute;top:20px;
+ font-size:42px;color:#f8cc50;
+ text-shadow:0 0 12px rgba(255,201,56,.7);
+}
+#zingoRoyalFX .rfPro{
+ position:absolute;top:91px;
+ font-size:57px;font-weight:1000;letter-spacing:4px;
+ color:#eef1f4;
+ text-shadow:0 3px 0 #777,0 8px 25px #000;
+}
+#zingoRoyalFX .rfPremium{
+ position:absolute;top:86px;
+ font-size:38px;font-weight:1000;letter-spacing:2px;
+ color:#ffe18a;opacity:0;
+ text-shadow:0 0 8px #ffcf45,0 0 25px #e9a817,0 4px 10px #000;
+}
+#zingoRoyalFX .rfAura{
+ position:absolute;width:290px;height:290px;border-radius:50%;
+ background:radial-gradient(circle,rgba(255,210,75,.34),rgba(255,166,20,.08) 38%,transparent 70%);
+ filter:blur(8px);opacity:0;transform:scale(.65);
+}
+#zingoRoyalFX .rfRing{
+ position:absolute;width:310px;height:310px;border-radius:50%;
+ border:1px solid rgba(255,211,76,.38);
+ box-shadow:0 0 35px rgba(255,190,30,.18),inset 0 0 35px rgba(255,190,30,.10);
+ opacity:0;transform:scale(.55);
+}
+#zingoRoyalFX .metal{
+ position:absolute;left:50%;top:50%;
+ width:var(--w);height:var(--h);
+ margin-left:calc(var(--w)/-2);margin-top:calc(var(--h)/-2);
+ background:linear-gradient(135deg,#fff4b0,#d59c20 20%,#fff0a0 38%,#805106 57%,#f4c83e 76%,#6b4104);
+ border:1px solid rgba(255,239,157,.9);
+ box-shadow:0 0 9px rgba(255,207,65,.65),0 0 28px rgba(255,177,18,.18),inset 2px 2px 4px rgba(255,255,220,.5),inset -4px -4px 6px rgba(40,20,0,.65);
+ clip-path:polygon(7% 20%,73% 0%,100% 29%,87% 91%,25% 100%,0 62%);
+ opacity:0;
+ transform:translate3d(var(--sx),var(--sy),0) rotate(var(--sr)) scale(.72);
+ will-change:transform,opacity;
+}
+#zingoRoyalFX .spark{
+ position:absolute;left:50%;top:50%;width:4px;height:4px;border-radius:50%;
+ background:#fff0a5;box-shadow:0 0 10px #ffd34c;opacity:0;
+}
+#zingoRoyalFX .flash{
+ position:absolute;inset:0;background:#fff8d6;opacity:0;
+}
+#zingoRoyalFX .rfText{
+ position:absolute;bottom:15%;left:0;right:0;text-align:center;
+ color:#fff;font-size:13px;letter-spacing:5px;font-weight:800;
+ opacity:0;text-shadow:0 2px 10px #000;
+}
+#zingoRoyalFX .rfFinal{
+ position:absolute;bottom:9%;left:0;right:0;text-align:center;
+ font-size:clamp(34px,11vw,58px);font-weight:1000;letter-spacing:5px;
+ color:#ffe08a;opacity:0;
+ text-shadow:0 0 8px #ffd04b,0 0 28px #d99612,0 4px 15px #000;
+}
+
+#zingoRoyalFX.active .rfAura{
+ animation:rfAura 4.7s cubic-bezier(.16,1,.3,1) both;
+}
+#zingoRoyalFX.active .rfRing{
+ animation:rfRing 4.7s cubic-bezier(.16,1,.3,1) both;
+}
+#zingoRoyalFX.active .rfBadge{
+ animation:rfBadge 4.7s cubic-bezier(.16,1,.3,1) both;
+}
+#zingoRoyalFX.active .rfPro{
+ animation:rfPro 4.7s cubic-bezier(.16,1,.3,1) both;
+}
+#zingoRoyalFX.active .rfPremium{
+ animation:rfPremium 4.7s cubic-bezier(.16,1,.3,1) both;
+}
+#zingoRoyalFX.active .rfText{
+ animation:rfText 4.7s ease both;
+}
+#zingoRoyalFX.active .rfFinal{
+ animation:rfFinal 4.7s cubic-bezier(.16,1,.3,1) both;
+}
+#zingoRoyalFX.active .flash{
+ animation:rfFlash 4.7s ease both;
+}
+
+@keyframes rfAura{
+ 0%,8%{opacity:0;transform:scale(.65)}
+ 20%{opacity:.45;transform:scale(.9)}
+ 45%{opacity:.75;transform:scale(1.08)}
+ 70%{opacity:.9;transform:scale(1.2)}
+ 100%{opacity:.28;transform:scale(1.5)}
+}
+@keyframes rfRing{
+ 0%,8%{opacity:0;transform:scale(.55) rotate(0)}
+ 18%{opacity:.5}
+ 45%{opacity:.85;transform:scale(1) rotate(130deg)}
+ 72%{opacity:.5;transform:scale(1.25) rotate(280deg)}
+ 100%{opacity:0;transform:scale(1.65) rotate(420deg)}
+}
+@keyframes rfBadge{
+ 0%{transform:scale(.86) rotateY(0deg) translateX(0)}
+ 12%{transform:scale(.9) rotateY(-9deg) translateX(-9px)}
+ 24%{transform:scale(.94) rotateY(10deg) translateX(11px)}
+ 36%{transform:scale(.98) rotateY(-8deg) translateX(-10px)}
+ 49%{transform:scale(1.01) rotateY(7deg) translateX(8px)}
+ 61%{transform:scale(1.04) rotateY(-3deg) translateX(-4px)}
+ 74%{transform:scale(1.08) rotateY(0) translateX(0)}
+ 100%{transform:scale(1.04) rotateY(0)}
+}
+@keyframes rfPro{
+ 0%{opacity:1;transform:scale(1)}
+ 20%{opacity:1;transform:scale(1.04)}
+ 52%{opacity:1;transform:scale(1.08)}
+ 65%{opacity:.45;transform:scale(1.16)}
+ 76%,100%{opacity:0;transform:scale(1.3)}
+}
+@keyframes rfPremium{
+ 0%,58%{opacity:0;transform:scale(.7);letter-spacing:0}
+ 67%{opacity:.15}
+ 74%{opacity:1;transform:scale(1.12);letter-spacing:2px}
+ 82%{transform:scale(.96);letter-spacing:3px}
+ 91%,100%{opacity:1;transform:scale(1);letter-spacing:4px}
+}
+@keyframes rfText{
+ 0%,67%{opacity:0;transform:translateY(12px)}
+ 76%,92%{opacity:.9;transform:translateY(0)}
+ 100%{opacity:0}
+}
+@keyframes rfFinal{
+ 0%,68%{opacity:0;transform:scale(.65) translateY(18px)}
+ 77%{opacity:1;transform:scale(1.12) translateY(0)}
+ 84%,100%{opacity:1;transform:scale(1)}
+}
+@keyframes rfFlash{
+ 0%,51%{opacity:0}
+ 54%{opacity:.8}
+ 56%{opacity:0}
+ 63%{opacity:.35}
+ 65%{opacity:0}
+ 100%{opacity:0}
+}
+</style>
+
+<div id="zingoRoyalFX" aria-hidden="true">
+ <div class="rfStage">
+
+  <div class="rfAura"></div>
+  <div class="rfRing"></div>
+
+  <div class="rfCenter">
+   <div class="rfBadge">
+    <div class="rfPro">PRO</div>
+    <div class="rfPremium">PREMIUM</div>
+   </div>
+  </div>
+
+  <div class="rfText">ROYAL ASCENSION</div>
+  <div class="rfFinal">✦ PREMIUM ✦</div>
+  <div class="flash"></div>
+
+  <div class="metal" style="--w:62px;--h:25px;--sx:-330px;--sy:-170px;--sr:-55deg"></div>
+  <div class="metal" style="--w:48px;--h:32px;--sx:310px;--sy:-210px;--sr:42deg"></div>
+  <div class="metal" style="--w:72px;--h:28px;--sx:-300px;--sy:70px;--sr:70deg"></div>
+  <div class="metal" style="--w:55px;--h:42px;--sx:330px;--sy:100px;--sr:-35deg"></div>
+  <div class="metal" style="--w:44px;--h:60px;--sx:-190px;--sy:-270px;--sr:25deg"></div>
+  <div class="metal" style="--w:67px;--h:25px;--sx:205px;--sy:270px;--sr:-65deg"></div>
+  <div class="metal" style="--w:35px;--h:50px;--sx:-360px;--sy:-20px;--sr:35deg"></div>
+  <div class="metal" style="--w:52px;--h:35px;--sx:365px;--sy:5px;--sr:-45deg"></div>
+  <div class="metal" style="--w:60px;--h:30px;--sx:-240px;--sy:210px;--sr:-30deg"></div>
+  <div class="metal" style="--w:46px;--h:52px;--sx:250px;--sy:-80px;--sr:55deg"></div>
+  <div class="metal" style="--w:70px;--h:24px;--sx:-120px;--sy:-310px;--sr:20deg"></div>
+  <div class="metal" style="--w:58px;--h:32px;--sx:120px;--sy:310px;--sr:-25deg"></div>
+
+  <div class="spark" style="--dx:-160px;--dy:-130px"></div>
+  <div class="spark" style="--dx:150px;--dy:-150px"></div>
+  <div class="spark" style="--dx:-180px;--dy:80px"></div>
+  <div class="spark" style="--dx:170px;--dy:100px"></div>
+  <div class="spark" style="--dx:-100px;--dy:190px"></div>
+  <div class="spark" style="--dx:100px;--dy:-200px"></div>
+
+ </div>
+</div>
+
+<script id="zingoRoyalPremiumJS">
+(function(){
+
+ function metalAnimation(){
+   document.querySelectorAll("#zingoRoyalFX .metal").forEach(function(el,i){
+     var delay = [0,.08,.16,.24,.32,.40,.48,.56,.64,.72,.80,.88][i] || 0;
+
+     el.animate([
+       {
+         opacity:0,
+         transform:"translate3d(var(--sx),var(--sy),0) rotate(var(--sr)) scale(.72)"
+       },
+       {
+         opacity:1,
+         transform:"translate3d(calc(var(--sx) * .72),calc(var(--sy) * .72),0) rotate(calc(var(--sr) * 1.4)) scale(.9)",
+         offset:.20
+       },
+       {
+         opacity:1,
+         transform:"translate3d(calc(var(--sx) * .35),calc(var(--sy) * .35),0) rotate(calc(var(--sr) * -1.8)) scale(1)",
+         offset:.47
+       },
+       {
+         opacity:1,
+         transform:"translate3d(0,0,0) rotate(0deg) scale(1.05)",
+         offset:.64
+       },
+       {
+         opacity:0,
+         transform:"translate3d(0,0,0) rotate(0deg) scale(1.18)"
+       }
+     ],{
+       duration:2300,
+       delay:delay*1000,
+       easing:"cubic-bezier(.12,.82,.18,1)",
+       fill:"both"
+     });
+   });
+ }
+
+ function sparks(){
+   document.querySelectorAll("#zingoRoyalFX .spark").forEach(function(el,i){
+     el.animate([
+       {opacity:0,transform:"translate(0,0) scale(.3)"},
+       {opacity:1,transform:"translate(calc(var(--dx)*.45),calc(var(--dy)*.45)) scale(1)",offset:.45},
+       {opacity:0,transform:"translate(var(--dx),var(--dy)) scale(.1)"}
+     ],{
+       duration:1700,
+       delay:900+(i*80),
+       easing:"cubic-bezier(.16,1,.3,1)",
+       fill:"both"
+     });
+   });
+ }
+
+ function premiumSound(){
+   try{
+     var AC=window.AudioContext||window.webkitAudioContext;
+     if(!AC)return;
+
+     var ctx=new AC();
+     if(ctx.state==="suspended")ctx.resume();
+
+     var master=ctx.createGain();
+     master.gain.setValueAtTime(.0001,ctx.currentTime);
+     master.gain.exponentialRampToValueAtTime(.28,ctx.currentTime+.08);
+     master.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+4.6);
+     master.connect(ctx.destination);
+
+     function tone(freq,start,duration,type,volume){
+       var o=ctx.createOscillator();
+       var g=ctx.createGain();
+       o.type=type;
+       o.frequency.setValueAtTime(freq,ctx.currentTime+start);
+       g.gain.setValueAtTime(.0001,ctx.currentTime+start);
+       g.gain.exponentialRampToValueAtTime(volume,ctx.currentTime+start+.025);
+       g.gain.exponentialRampToValueAtTime(.0001,ctx.currentTime+start+duration);
+       o.connect(g);g.connect(master);
+       o.start(ctx.currentTime+start);
+       o.stop(ctx.currentTime+start+duration+.05);
+     }
+
+     /* deep cinematic rise */
+     tone(92,0,1.8,"sine",.16);
+     tone(130,0.35,1.9,"sine",.13);
+     tone(196,0.8,1.8,"triangle",.11);
+     tone(261.63,1.25,1.7,"triangle",.09);
+     tone(392,1.8,1.5,"triangle",.08);
+
+     /* heavy metal impacts */
+     [1.05,1.30,1.55,1.82,2.08].forEach(function(t){
+       tone(58,t,.20,"square",.12);
+       tone(116,t+.015,.14,"triangle",.07);
+     });
+
+     /* main reveal impact */
+     tone(48,2.38,.55,"sawtooth",.22);
+     tone(96,2.40,.48,"triangle",.16);
+     tone(523.25,2.55,1.8,"sine",.13);
+     tone(659.25,2.68,1.7,"sine",.10);
+     tone(1046.5,3.05,1.35,"sine",.14);
+     tone(1318.5,3.22,1.2,"sine",.10);
+
+     setTimeout(function(){
+       try{ctx.close()}catch(e){}
+     },5200);
+
+   }catch(e){}
+ }
+
+ function play(){
+   var fx=document.getElementById("zingoRoyalFX");
+   if(!fx)return;
+
+   fx.classList.remove("active");
+   void fx.offsetWidth;
+   fx.classList.add("active");
+
+   metalAnimation();
+   sparks();
+   premiumSound();
+
+   clearTimeout(window.__zingoRoyalTimer);
+   window.__zingoRoyalTimer=setTimeout(function(){
+     fx.classList.remove("active");
+   },5000);
+ }
+
+ function bind(){
+   var btn=document.getElementById("zingoVipBtn");
+   if(!btn)return;
+
+   btn.addEventListener("click",function(){
+     play();
+   },true);
+ }
+
+ if(document.readyState==="loading"){
+   document.addEventListener("DOMContentLoaded",bind);
+ }else{
+   bind();
+ }
+
+ window.zingoRoyalPremium=play;
+
+})();
+</script>
+<!-- END ZINGO ROYAL PREMIUM ASCENSION V2 -->
+
 </body>
 </html>
 
