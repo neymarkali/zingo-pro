@@ -6636,286 +6636,210 @@ document.addEventListener("DOMContentLoaded",()=>{
   }
 }
 
-/* ===== ZINGO VIP ACHIEVEMENTS V1 ===== */
+/* ===== ZINGO VIP ACHIEVEMENTS V2 ===== */
 .vipAchievements{
-  margin-top:18px;
-  padding:16px;
-  border:1px solid rgba(212,175,55,.28);
-  border-radius:18px;
-  background:linear-gradient(145deg,rgba(255,215,90,.07),rgba(0,0,0,.18));
-  box-shadow:0 8px 30px rgba(0,0,0,.18);
+  margin-top:20px;
+  padding:18px;
+  border:1px solid rgba(212,175,55,.32);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(212,175,55,.12),transparent 42%),
+    linear-gradient(145deg,rgba(255,215,90,.075),rgba(0,0,0,.28));
+  box-shadow:
+    0 12px 38px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.04);
 }
+
 .vipAchievementsHead{
   display:flex;
   align-items:center;
   justify-content:space-between;
-  margin-bottom:12px;
+  gap:12px;
+  margin-bottom:15px;
 }
+
 .vipAchievementsTitle{
-  font-size:17px;
-  font-weight:900;
+  font-size:18px;
+  font-weight:950;
   color:#f7d774;
+  letter-spacing:.2px;
 }
+
 .vipAchievementsSub{
+  margin-top:3px;
   font-size:11px;
-  color:rgba(255,255,255,.55);
+  color:rgba(255,255,255,.52);
 }
+
+.vipAchCount{
+  min-width:52px;
+  padding:7px 10px;
+  text-align:center;
+  border:1px solid rgba(212,175,55,.3);
+  border-radius:12px;
+  background:rgba(212,175,55,.08);
+  color:#f5d76e;
+  font-size:11px;
+  font-weight:900;
+}
+
 .vipAchievementGrid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
+  display:flex;
+  flex-direction:column;
   gap:10px;
 }
+
 .vipAchievement{
   position:relative;
-  min-height:132px;
-  padding:13px 11px;
-  border-radius:15px;
-  border:1px solid rgba(255,255,255,.08);
-  background:rgba(255,255,255,.035);
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  align-items:center;
+  gap:11px;
+  min-height:88px;
+  padding:12px;
+  border-radius:17px;
+  border:1px solid rgba(255,255,255,.075);
+  background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
   overflow:hidden;
+  transition:.25s ease;
 }
+
+.vipAchievement::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:rgba(255,255,255,.1);
+}
+
 .vipAchievement.unlocked{
-  border-color:rgba(212,175,55,.38);
-  background:linear-gradient(145deg,rgba(212,175,55,.13),rgba(255,255,255,.025));
+  border-color:rgba(212,175,55,.42);
+  background:
+    radial-gradient(circle at 0% 50%,rgba(212,175,55,.13),transparent 45%),
+    linear-gradient(135deg,rgba(212,175,55,.09),rgba(255,255,255,.025));
+  box-shadow:0 5px 20px rgba(212,175,55,.07);
 }
+
+.vipAchievement.unlocked::before{
+  background:linear-gradient(180deg,#fff0a6,#d4af37,#8d6714);
+}
+
 .vipAchievement.locked{
-  opacity:.48;
-  filter:saturate(.35);
+  opacity:.58;
 }
+
 .vipAchIcon{
-  font-size:25px;
-  margin-bottom:5px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:45px;
+  height:45px;
+  border-radius:14px;
+  font-size:23px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.08);
 }
+
+.vipAchievement.unlocked .vipAchIcon{
+  border-color:rgba(212,175,55,.38);
+  background:rgba(212,175,55,.1);
+  box-shadow:0 0 18px rgba(212,175,55,.12);
+}
+
+.vipAchMain{
+  min-width:0;
+}
+
 .vipAchName{
-  font-size:12px;
-  font-weight:900;
+  font-size:13px;
+  font-weight:950;
   color:#fff;
 }
+
 .vipAchLevel{
-  font-size:9px;
-  color:#d9b84c;
   margin-top:2px;
-}
-.vipAchReward{
   font-size:9px;
-  color:rgba(255,255,255,.62);
-  margin-top:6px;
-  line-height:1.35;
+  font-weight:800;
+  color:#d9b84c;
+  letter-spacing:.7px;
 }
+
 .vipAchProgress{
-  height:4px;
+  position:relative;
+  height:5px;
   margin-top:8px;
   border-radius:99px;
   background:rgba(255,255,255,.08);
   overflow:hidden;
 }
+
 .vipAchProgress span{
   display:block;
   height:100%;
   width:0;
   border-radius:99px;
-  background:linear-gradient(90deg,#9d7417,#f5d76e,#fff0a6);
-  box-shadow:0 0 10px rgba(245,215,110,.45);
+  background:linear-gradient(90deg,#8d6714,#d4af37,#fff0a6);
+  box-shadow:0 0 11px rgba(245,215,110,.42);
+  transition:width .5s ease;
 }
+
+.vipAchProgressText{
+  margin-top:4px;
+  font-size:9px;
+  color:rgba(255,255,255,.48);
+}
+
+.vipAchReward{
+  min-width:94px;
+  max-width:110px;
+  padding:7px 8px;
+  text-align:center;
+  border-radius:11px;
+  border:1px solid rgba(212,175,55,.2);
+  background:rgba(212,175,55,.055);
+  color:#f1d77a;
+  font-size:9px;
+  font-weight:800;
+  line-height:1.35;
+}
+
+.vipAchievement.locked .vipAchReward{
+  color:rgba(255,255,255,.42);
+  border-color:rgba(255,255,255,.08);
+  background:rgba(255,255,255,.025);
+}
+
 .vipAchState{
   position:absolute;
-  top:9px;
-  right:9px;
-  font-size:11px;
-}
-.vipAchUnlocked{
-  color:#f5d76e;
-}
-.vipAchLocked{
-  color:rgba(255,255,255,.35);
-}
-.vipAchCount{
-  margin-top:9px;
-  text-align:center;
+  top:7px;
+  right:7px;
   font-size:10px;
-  color:rgba(255,255,255,.55);
-}
-@media(max-width:360px){
-  .vipAchievementGrid{grid-template-columns:1fr;}
 }
 
-</style>
-
-<div id="zingoVIPFinalScene" aria-hidden="true">
-  <button id="zingoVIPFinalSkip" type="button">✕ SKIP</button>
-  <div id="zingoVIPFinalSweep"></div>
-  <div id="zingoVIPFinalGlow"></div>
-  <div id="zingoVIPFinalShock"></div>
-
-  <svg id="zingoVIPFinalCrown" viewBox="0 0 160 120" aria-hidden="true">
-    <defs>
-      <linearGradient id="vipGold" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#fff4b0"/>
-        <stop offset=".28" stop-color="#e8bd4e"/>
-        <stop offset=".65" stop-color="#a86e12"/>
-        <stop offset="1" stop-color="#f7d978"/>
-      </linearGradient>
-    </defs>
-    <path d="M15 25 L42 48 L80 12 L118 48 L145 25 L132 91 L28 91 Z"
-          fill="url(#vipGold)" stroke="#ffe9a0" stroke-width="3"/>
-    <path d="M28 91 H132" stroke="#ffe9a0" stroke-width="7" stroke-linecap="round"/>
-    <circle cx="80" cy="28" r="5" fill="#fff6c9"/>
-    <circle cx="42" cy="48" r="4" fill="#fff6c9"/>
-    <circle cx="118" cy="48" r="4" fill="#fff6c9"/>
-  </svg>
-
-  <h1 id="zingoVIPFinalTitle">PRO</h1>
-  <h1 id="zingoVIPFinalVIP">VIP</h1>
-  <div id="zingoVIPFinalWelcome">WELCOME TO VIP</div>
-  <div id="zingoVIPFinalFlash"></div>
-</div>
-
-<script id="zingoVIPFinalJS">
-(function(){
-  const scene = document.getElementById("zingoVIPFinalScene");
-  const skip = document.getElementById("zingoVIPFinalSkip");
-
-  if(!scene) return;
-
-  let timer = null;
-
-  function makeParticles(){
-    scene.querySelectorAll(".zingoFinalParticle").forEach(function(x){x.remove()});
-
-    const count = 28;
-
-    for(let i=0;i<count;i++){
-      const p=document.createElement("i");
-      p.className="zingoFinalParticle";
-
-      const a=Math.random()*Math.PI*2;
-      const r=70+Math.random()*180;
-      const sx=Math.cos(a)*r;
-      const sy=Math.sin(a)*r;
-      const tx=(Math.random()-.5)*35;
-      const ty=(Math.random()-.5)*35;
-      const fa=Math.random()*Math.PI*2;
-      const fr=180+Math.random()*300;
-
-      p.style.setProperty("--sx",sx+"px");
-      p.style.setProperty("--sy",sy+"px");
-      p.style.setProperty("--tx",tx+"px");
-      p.style.setProperty("--ty",ty+"px");
-      p.style.setProperty("--fx",(Math.cos(fa)*fr)+"px");
-      p.style.setProperty("--fy",(Math.sin(fa)*fr)+"px");
-      p.style.setProperty("--d",(Math.random()*.7)+"s");
-
-      scene.appendChild(p);
-    }
-  }
-
-  function finish(){
-    if(timer) clearTimeout(timer);
-    scene.classList.remove("active");
-    scene.setAttribute("aria-hidden","true");
-  }
-
-  function play(){
-    try{ if(window.__zingoVIPSound) window.__zingoVIPSound(); }catch(e){}
-    if(timer) clearTimeout(timer);
-
-    makeParticles();
-
-    scene.classList.remove("active");
-    void scene.offsetWidth;
-    scene.classList.add("active");
-    scene.setAttribute("aria-hidden","false");
-
-    timer=setTimeout(finish,6500);
-  }
-
-  skip.addEventListener("click",function(){
-    try{
-      if(window.vipAudioCtx){
-        try{ window.vipAudioCtx.close(); }catch(e){}
-        window.vipAudioCtx = null;
-      }
-    }catch(e){}
-    finish();
-  });
-
-
-
-
-
-/* ZINGO VIP SHORT CINEMATIC SOUND V2 */
-var vipAudioCtx = null;
-window.vipAudioCtx = null;
-
-function playVIPRealAudio(){
-  try{
-    var AudioCtx = window.AudioContext || window.webkitAudioContext;
-    if(!AudioCtx) return;
-
-    if(vipAudioCtx){
-      try{ vipAudioCtx.close(); }catch(e){}
-    }
-
-    vipAudioCtx = new AudioCtx();
-    window.vipAudioCtx = vipAudioCtx;
-
-    var now = vipAudioCtx.currentTime;
-
-    function tone(freq, start, duration, volume, type){
-      var osc = vipAudioCtx.createOscillator();
-      var gain = vipAudioCtx.createGain();
-
-      osc.type = type || "sine";
-      osc.frequency.setValueAtTime(freq, now + start);
-
-      gain.gain.setValueAtTime(0.0001, now + start);
-      gain.gain.exponentialRampToValueAtTime(volume, now + start + 0.012);
-      gain.gain.exponentialRampToValueAtTime(0.0001, now + start + duration);
-
-      osc.connect(gain);
-      gain.connect(vipAudioCtx.destination);
-
-      osc.start(now + start);
-      osc.stop(now + start + duration + 0.03);
-    }
-
-    /* short premium rise + clean sparkle */
-    tone(220, 0.00, 0.20, 0.055, "sine");
-    tone(330, 0.06, 0.20, 0.045, "sine");
-    tone(495, 0.12, 0.22, 0.040, "sine");
-    tone(660, 0.19, 0.24, 0.032, "triangle");
-
-  }catch(e){
-    console.warn("VIP sound:",e);
-  }
+.vipAchievement.locked .vipAchState{
+  opacity:.8;
 }
 
-window.__zingoVIPSound = playVIPRealAudio;
-
-/* ZINGO VIP LEADERBOARD IDENTITY HOOK */
-(function(){
-  function refreshVIPLeaderboardIdentity(){
-    try{
-      if(window.__zingoVIPIdentity && typeof window.__zingoVIPIdentity.refresh === "function"){
-        window.__zingoVIPIdentity.refresh();
-      }
-    }catch(e){}
+@media(max-width:380px){
+  .vipAchievement{
+    grid-template-columns:42px 1fr;
   }
 
-  document.addEventListener("DOMContentLoaded", function(){
-    setTimeout(refreshVIPLeaderboardIdentity, 900);
-    setTimeout(refreshVIPLeaderboardIdentity, 2200);
-  });
-
-  const list = document.getElementById("leaderboardList");
-  if(list){
-    const observer = new MutationObserver(function(){
-      refreshVIPLeaderboardIdentity();
-    });
-    observer.observe(list,{childList:true,subtree:true});
+  .vipAchIcon{
+    width:40px;
+    height:40px;
   }
-})();
 
+  .vipAchReward{
+    grid-column:2;
+    max-width:none;
+    text-align:right;
+    margin-top:-4px;
+  }
+}
 
 /* ===== ZINGO VIP ACHIEVEMENTS FORCE RENDER V2 ===== */
 /* removed: duplicate broken renderer */
@@ -7037,7 +6961,7 @@ document.addEventListener("DOMContentLoaded", function() {
 })();
 
 
-/* ===== ZINGO VIP ACHIEVEMENTS ENGINE V1 ===== */
+/* ===== ZINGO VIP ACHIEVEMENTS ENGINE V2 ===== */
 (function(){
 
   const ACHIEVEMENTS = [
@@ -7104,6 +7028,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
   function getStats(){
     const stats=document.querySelectorAll(".pstat strong");
+
     return {
       points: stats[0] ? num(stats[0].textContent) : 0,
       correct: stats[2] ? num(stats[2].textContent) : 0
@@ -7113,59 +7038,104 @@ document.addEventListener("DOMContentLoaded", function() {
   function renderAchievements(forceAdmin){
     const grid=document.getElementById("vipAchievementGrid");
     const count=document.getElementById("vipAchCount");
+
     if(!grid) return;
 
     const stats=getStats();
-
     let unlocked=0;
 
     grid.innerHTML=ACHIEVEMENTS.map(function(a){
 
-      let value=a.type==="points" ? stats.points : stats.correct;
+      let value = a.type==="points"
+        ? stats.points
+        : stats.correct;
 
-      if(forceAdmin) value=100;
+      if(forceAdmin){
+        value=100;
+      }
 
-      const progress=Math.min(100,Math.round((value/a.target)*100));
+      const progress=Math.min(
+        100,
+        Math.round((value / a.target) * 100)
+      );
+
       const isUnlocked=forceAdmin || value>=a.target;
 
-      if(isUnlocked) unlocked++;
+      if(isUnlocked){
+        unlocked++;
+      }
+
+      const shownValue=Math.min(value,a.target);
 
       return `
         <div class="vipAchievement ${isUnlocked ? "unlocked" : "locked"}">
-          <div class="vipAchState ${isUnlocked ? "vipAchUnlocked" : "vipAchLocked"}">
-            ${isUnlocked ? "✓" : "🔒"}
+
+          <div class="vipAchIcon">
+            ${a.icon}
           </div>
 
-          <div class="vipAchIcon">${a.icon}</div>
-          <div class="vipAchName">${a.name}</div>
-          <div class="vipAchLevel">${a.level}</div>
+          <div class="vipAchMain">
 
-          <div class="vipAchReward">${a.reward}</div>
+            <div class="vipAchName">
+              ${a.name}
+            </div>
 
-          <div class="vipAchProgress">
-            <span style="width:${progress}%"></span>
+            <div class="vipAchLevel">
+              ${a.level}
+            </div>
+
+            <div class="vipAchProgress">
+              <span style="width:${progress}%"></span>
+            </div>
+
+            <div class="vipAchProgressText">
+              ${shownValue} / ${a.target}
+            </div>
+
           </div>
+
+          <div class="vipAchReward">
+            ${isUnlocked ? "🎁 " : "🔒 "}
+            ${a.reward}
+          </div>
+
+          <div class="vipAchState">
+            ${isUnlocked ? "✅" : "🔒"}
+          </div>
+
         </div>
       `;
+
     }).join("");
 
     if(count){
-      count.textContent=unlocked+" / "+ACHIEVEMENTS.length;
+      count.textContent=unlocked + " / " + ACHIEVEMENTS.length;
     }
   }
 
-  window.__zingoVIPAchievements={
-    refresh:function(){
-      const admin =
-        window.__zingoVIPAdmin === true;
-      renderAchievements(admin);
+  window.__zingoAchievements = {
+    refresh:function(forceAdmin){
+      renderAchievements(!!forceAdmin);
     }
   };
 
-  document.addEventListener("DOMContentLoaded",function(){
-    setTimeout(function(){ renderAchievements(false); },700);
-    setTimeout(function(){ renderAchievements(false); },1900);
-  });
+  function boot(){
+    renderAchievements(false);
+
+    setTimeout(function(){
+      renderAchievements(false);
+    },300);
+
+    setTimeout(function(){
+      renderAchievements(false);
+    },1000);
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",boot);
+  }else{
+    boot();
+  }
 
 })();
 
