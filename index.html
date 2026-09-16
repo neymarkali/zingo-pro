@@ -3306,6 +3306,256 @@ button{
 }
 </style>
 
+
+<style id="zingoVIPPlayerIdentityCSS">
+/* ===== ZINGO VIP PLAYER IDENTITY V1 ===== */
+
+.vip-player-frame{
+  position:relative;
+  display:inline-flex;
+  width:64px;
+  height:64px;
+  border-radius:50%;
+  padding:3px;
+  flex:0 0 auto;
+  isolation:isolate;
+}
+
+.vip-player-frame::before,
+.vip-player-frame::after{
+  content:"";
+  position:absolute;
+  inset:-4px;
+  border-radius:50%;
+  pointer-events:none;
+}
+
+.vip-player-avatar{
+  width:100%;
+  height:100%;
+  border-radius:50%;
+  overflow:hidden;
+  background:rgba(255,255,255,.08);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  position:relative;
+  z-index:2;
+  border:2px solid rgba(255,255,255,.35);
+}
+
+.vip-player-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}
+
+.vip-player-badge{
+  position:absolute;
+  right:-5px;
+  bottom:-3px;
+  width:23px;
+  height:23px;
+  border-radius:50%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:13px;
+  z-index:5;
+  background:#111;
+  border:2px solid #fff;
+  box-shadow:0 0 12px currentColor;
+}
+
+.vip-player-identity{
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+
+.vip-player-info{
+  min-width:0;
+}
+
+.vip-player-name{
+  display:flex;
+  align-items:center;
+  gap:6px;
+  flex-wrap:wrap;
+  font-weight:900;
+}
+
+.vip-player-title{
+  position:relative;
+  top:-3px;
+  display:inline-flex;
+  align-items:center;
+  padding:2px 7px;
+  border-radius:999px;
+  font-size:8px;
+  line-height:1;
+  font-weight:900;
+  letter-spacing:.3px;
+  white-space:nowrap;
+  border:1px solid currentColor;
+  background:rgba(0,0,0,.35);
+  box-shadow:0 0 9px currentColor;
+}
+
+/* Rookie */
+.vip-frame-rookie::before{
+  border:2px solid #8fbc8f;
+  box-shadow:0 0 10px rgba(143,188,143,.45);
+}
+
+/* Skilled */
+.vip-frame-skilled::before{
+  border:2px solid #58c7ff;
+  box-shadow:0 0 14px rgba(88,199,255,.65);
+}
+
+/* Pro */
+.vip-frame-pro::before{
+  border:2px solid #ff7138;
+  box-shadow:0 0 16px rgba(255,113,56,.65);
+}
+
+/* Elite */
+.vip-frame-elite::before{
+  border:2px solid #c78cff;
+  box-shadow:0 0 18px rgba(199,140,255,.7);
+}
+
+/* Master */
+.vip-frame-master::before{
+  border:3px solid #ffd76a;
+  box-shadow:
+    0 0 12px rgba(255,215,106,.9),
+    0 0 28px rgba(255,174,0,.65);
+  animation:vipMasterGlow 1.8s ease-in-out infinite;
+}
+
+/* Legend */
+.vip-frame-legend::before{
+  border:3px solid #fff1a6;
+  box-shadow:
+    0 0 10px #fff,
+    0 0 22px #ffd700,
+    0 0 42px rgba(255,180,0,.95);
+  animation:vipLegendFrame 1s ease-in-out infinite;
+}
+
+.vip-frame-legend::after{
+  inset:-9px;
+  border:1px dashed rgba(255,221,72,.9);
+  box-shadow:0 0 25px rgba(255,200,0,.8);
+  animation:vipLegendSpin 3s linear infinite;
+}
+
+.vip-title-rookie{color:#9ee89e}
+.vip-title-skilled{color:#58c7ff}
+.vip-title-pro{color:#ff7138}
+.vip-title-elite{color:#d49aff}
+.vip-title-master{color:#ffd76a}
+.vip-title-legend{
+  color:#ffe66d;
+  text-shadow:0 0 8px #ffd700,0 0 18px #ffb300;
+  animation:vipLegendFlash .65s infinite alternate;
+}
+
+.vip-frame-legend .vip-player-badge{
+  color:#ffe66d;
+  animation:vipBadgeLightning .5s infinite alternate;
+}
+
+@keyframes vipMasterGlow{
+  50%{filter:brightness(1.3);transform:scale(1.025)}
+}
+
+@keyframes vipLegendFrame{
+  0%,100%{filter:brightness(1)}
+  50%{filter:brightness(1.65)}
+}
+
+@keyframes vipLegendSpin{
+  to{transform:rotate(360deg)}
+}
+
+@keyframes vipLegendFlash{
+  from{filter:brightness(1)}
+  to{filter:brightness(1.8)}
+}
+
+@keyframes vipBadgeLightning{
+  from{transform:scale(1)}
+  to{transform:scale(1.18);filter:brightness(1.8)}
+}
+
+.vip-frame-legend .vip-player-avatar{
+  border-color:#ffe36b;
+  box-shadow:inset 0 0 15px rgba(255,215,0,.25);
+}
+
+/* profile frame selector */
+.vipFrameSelector{
+  margin-top:16px;
+  padding:14px;
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,215,100,.15);
+}
+
+.vipFrameSelector h4{
+  margin:0 0 10px;
+  color:#ffd76a;
+}
+
+.vipFrameGrid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+}
+
+.vipFrameChoice{
+  position:relative;
+  min-height:78px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(0,0,0,.2);
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:5px;
+  cursor:pointer;
+}
+
+.vipFrameChoice.locked{
+  opacity:.38;
+  filter:grayscale(.7);
+  cursor:not-allowed;
+}
+
+.vipFrameChoice.selected{
+  border-color:#ffd76a;
+  box-shadow:0 0 18px rgba(255,190,0,.35);
+}
+
+.vipFrameLock{
+  font-size:11px;
+  opacity:.8;
+}
+
+.vip-lb-avatar{
+  width:44px;
+  height:44px;
+}
+
+@media(max-width:420px){
+  .vipFrameGrid{grid-template-columns:repeat(2,1fr)}
+}
+</style>
 </head>
 
 <body>
@@ -5133,6 +5383,239 @@ document
 })();
 </script>
 
+
+<script id="zingoVIPPlayerIdentityJS">
+/* ===== ZINGO VIP PLAYER IDENTITY ENGINE V1 ===== */
+(function(){
+
+const VIP_LEVELS=[
+ {min:0,max:19,name:"Rookie",badge:"🌱",cls:"rookie",unlock:0},
+ {min:20,max:39,name:"Skilled",badge:"⚡",cls:"skilled",unlock:20},
+ {min:40,max:59,name:"Pro",badge:"🔥",cls:"pro",unlock:40},
+ {min:60,max:79,name:"Elite",badge:"👑",cls:"elite",unlock:60},
+ {min:80,max:94,name:"Master",badge:"💎",cls:"master",unlock:80},
+ {min:95,max:100,name:"Legend",badge:"🏆",cls:"legend",unlock:95}
+];
+
+const FRAME_NAMES={
+ rookie:"Rookie Frame",
+ skilled:"Skilled Frame",
+ pro:"Pro Frame",
+ elite:"Elite Frame",
+ master:"Master Frame",
+ legend:"Legend Frame"
+};
+
+function getLevel(points){
+  points=Math.max(0,Math.min(100,Number(points)||0));
+  return VIP_LEVELS.find(x=>points>=x.min&&points<=x.max)||VIP_LEVELS[0];
+}
+
+function getTelegramId(){
+  const q=new URLSearchParams(location.search);
+  return q.get("telegram_id") ||
+    (window.Telegram?.WebApp?.initDataUnsafe?.user?.id || 0);
+}
+
+function profilePoints(){
+  const p=document.querySelector("#page-profile .pstat strong");
+  if(!p) return 0;
+  return Number(String(p.textContent).replace(/[^\d]/g,""))||0;
+}
+
+function getProfileName(){
+  return document.getElementById("profileName")?.textContent?.trim()||"ZINGO PLAYER";
+}
+
+function isAdminData(obj){
+  return !!(
+    obj?.is_admin ||
+    obj?.isAdmin ||
+    obj?.admin ||
+    obj?.user?.is_admin ||
+    obj?.current_user?.is_admin ||
+    obj?.current_player?.is_admin
+  );
+}
+
+function renderFrame(el,level,src,name){
+  if(!el) return;
+
+  el.className="vip-player-frame vip-frame-"+level.cls;
+
+  el.innerHTML=`
+    <div class="vip-player-avatar">
+      ${src ? `<img src="${String(src).replace(/"/g,"&quot;")}" alt="">` : `<span style="font-size:22px">⚽</span>`}
+    </div>
+    <div class="vip-player-badge">${level.badge}</div>
+  `;
+
+  const info=el.parentElement?.querySelector(".vip-player-info");
+  if(info){
+    const n=info.querySelector(".vip-player-name");
+    if(n && !n.querySelector(".vip-player-title")){
+      n.insertAdjacentHTML(
+        "beforeend",
+        `<span class="vip-player-title vip-title-${level.cls}">${level.name}</span>`
+      );
+    }
+  }
+}
+
+function renderFrameSelector(points,isAdmin){
+  const grid=document.getElementById("vipFrameGrid");
+  if(!grid) return;
+
+  const current=getLevel(points);
+  const unlocked=level=>{
+    if(isAdmin) return true;
+    return points>=level.unlock;
+  };
+
+  grid.innerHTML=VIP_LEVELS.map(level=>{
+    const ok=unlocked(level);
+    const selected=level.cls===current.cls;
+    return `
+      <button
+        type="button"
+        class="vipFrameChoice ${ok?"":"locked"} ${selected?"selected":""}"
+        ${ok?'onclick="window.zingoSelectVIPFrame(\''+level.cls+'\')"':""}>
+        <span style="font-size:25px">${level.badge}</span>
+        <strong>${FRAME_NAMES[level.cls]}</strong>
+        <small>${ok?"مفتوح":"🔒 "+level.unlock+" نقطة"}</small>
+      </button>
+    `;
+  }).join("");
+}
+
+window.zingoSelectVIPFrame=function(cls){
+  const points=profilePoints();
+  const level=VIP_LEVELS.find(x=>x.cls===cls);
+  if(!level || points<level.unlock) return;
+
+  try{
+    localStorage.setItem("zingo_vip_frame",cls);
+  }catch(e){}
+
+  renderAll(window.__zingoVIPAdmin===true);
+};
+
+async function renderAll(forceAdmin=false){
+
+  let points=profilePoints();
+  let isAdmin=!!forceAdmin;
+
+  /*
+   * إذا الـAPI بيرجع is_admin، نعتمد عليه.
+   * وإذا الأدمن موجود بالنظام الخلفي، سيأخذ Legend تلقائياً.
+   */
+  try{
+    const id=getTelegramId();
+    if(id){
+      const r=await fetch("/api/pro_ranking?telegram_id="+encodeURIComponent(id));
+      const d=await r.json();
+
+      isAdmin=isAdmin || isAdminData(d);
+
+      if(Array.isArray(d.players)){
+        const me=d.players.find(x=>x.is_me);
+        if(me){
+          isAdmin=isAdmin || isAdminData(me);
+          if(me.points!=null) points=Number(me.points)||points;
+        }
+      }
+    }
+  }catch(e){}
+
+  if(isAdmin) points=100;
+
+  const level=getLevel(points);
+  window.__zingoVIPAdmin=isAdmin;
+
+  /* Main profile avatar */
+  const old=document.getElementById("profileAvatar");
+  if(old){
+    let img="";
+    const oldImg=old.querySelector("img");
+    if(oldImg) img=oldImg.src;
+
+    old.className="club-avatar vip-player-frame vip-frame-"+level.cls;
+
+    old.innerHTML=`
+      <div class="vip-player-avatar">
+        ${img ? `<img src="${img}" alt="">` : `<span style="font-size:27px">⚽</span>`}
+      </div>
+      <div class="vip-player-badge">${level.badge}</div>
+    `;
+  }
+
+  /* Name badge beside actual profile name */
+  const name=document.getElementById("profileName");
+  if(name){
+    const oldTitle=name.parentElement?.querySelector(".vip-player-title");
+    if(oldTitle) oldTitle.remove();
+
+    const span=document.createElement("span");
+    span.className="vip-player-title vip-title-"+level.cls;
+    span.textContent=level.name;
+
+    name.style.display="inline-flex";
+    name.style.alignItems="center";
+    name.style.gap="6px";
+    name.appendChild(span);
+  }
+
+  /* Rating box follows same level */
+  const ratingAvatar=document.getElementById("vipRatedAvatar");
+  if(ratingAvatar){
+    ratingAvatar.className="vipRatedAvatar vip-rated-"+level.cls;
+  }
+
+  const ratingTitle=document.getElementById("vipRatingTitleName");
+  if(ratingTitle){
+    ratingTitle.textContent=level.name;
+  }
+
+  const ratingBadge=document.getElementById("vipRatingBadge");
+  if(ratingBadge) ratingBadge.textContent=level.badge;
+
+  /* Frame selector */
+  renderFrameSelector(points,isAdmin);
+
+  /* Leaderboard */
+  const list=document.getElementById("leaderboardList");
+  if(list){
+    list.querySelectorAll(".lbRow").forEach(row=>{
+      const playerPoints=Number(
+        row.querySelector(".lbPoints")?.textContent?.replace(/[^\d]/g,"")
+      )||0;
+
+      const title=row.querySelector(".lbName");
+      if(title && !title.querySelector(".vip-player-title")){
+        const lv=isAdmin && row.classList.contains("me")
+          ? VIP_LEVELS[VIP_LEVELS.length-1]
+          : getLevel(playerPoints);
+
+        const badge=document.createElement("span");
+        badge.className="vip-player-title vip-title-"+lv.cls;
+        badge.textContent=lv.badge+" "+lv.name;
+        title.appendChild(badge);
+      }
+    });
+  }
+}
+
+window.__zingoVIPIdentity={
+  refresh:()=>renderAll(window.__zingoVIPAdmin===true)
+};
+
+document.addEventListener("DOMContentLoaded",()=>{
+  setTimeout(()=>renderAll(),500);
+  setTimeout(()=>renderAll(),1800);
+});
+
+})();
+</script>
 </body>
 </html>
 
