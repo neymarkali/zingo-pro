@@ -4541,7 +4541,81 @@ button{
     </div>
     <div id="vipAchCount" class="vipAchCount">0 / 6</div>
   </div>
-  <div class="vipAchievementGrid" id="vipAchievementGrid"></div>
+  <div class="vipAchievementGrid" id="vipAchievementGrid">
+
+  <div class="vipAchievement locked">
+    <div class="vipAchIcon">🌱</div>
+    <div class="vipAchMain">
+      <div class="vipAchName">البداية</div>
+      <div class="vipAchLevel">LEVEL 1</div>
+      <div class="vipAchProgress"><span style="width:0%"></span></div>
+      <div class="vipAchProgressText">0 / 1</div>
+    </div>
+    <div class="vipAchReward">🔒 🎨 إطار Rookie خاص</div>
+    <div class="vipAchState">🔒</div>
+  </div>
+
+  <div class="vipAchievement locked">
+    <div class="vipAchIcon">🎯</div>
+    <div class="vipAchMain">
+      <div class="vipAchName">القنّاص</div>
+      <div class="vipAchLevel">LEVEL 2</div>
+      <div class="vipAchProgress"><span style="width:0%"></span></div>
+      <div class="vipAchProgressText">0 / 5</div>
+    </div>
+    <div class="vipAchReward">🔒 🏷️ Badge القنّاص</div>
+    <div class="vipAchState">🔒</div>
+  </div>
+
+  <div class="vipAchievement locked">
+    <div class="vipAchIcon">🔥</div>
+    <div class="vipAchMain">
+      <div class="vipAchName">Sniper</div>
+      <div class="vipAchLevel">LEVEL 3</div>
+      <div class="vipAchProgress"><span style="width:0%"></span></div>
+      <div class="vipAchProgressText">0 / 10</div>
+    </div>
+    <div class="vipAchReward">🔒 ⚡ تأثير ناري للملف</div>
+    <div class="vipAchState">🔒</div>
+  </div>
+
+  <div class="vipAchievement locked">
+    <div class="vipAchIcon">👑</div>
+    <div class="vipAchMain">
+      <div class="vipAchName">Elite</div>
+      <div class="vipAchLevel">LEVEL 4</div>
+      <div class="vipAchProgress"><span style="width:0%"></span></div>
+      <div class="vipAchProgressText">0 / 25</div>
+    </div>
+    <div class="vipAchReward">🔒 🎟️ VIP لمدة 24 ساعة</div>
+    <div class="vipAchState">🔒</div>
+  </div>
+
+  <div class="vipAchievement locked">
+    <div class="vipAchIcon">💎</div>
+    <div class="vipAchMain">
+      <div class="vipAchName">Master</div>
+      <div class="vipAchLevel">LEVEL 5</div>
+      <div class="vipAchProgress"><span style="width:0%"></span></div>
+      <div class="vipAchProgressText">0 / 50</div>
+    </div>
+    <div class="vipAchReward">🔒 🎟️ VIP لمدة 3 أيام</div>
+    <div class="vipAchState">🔒</div>
+  </div>
+
+  <div class="vipAchievement locked">
+    <div class="vipAchIcon">🏆</div>
+    <div class="vipAchMain">
+      <div class="vipAchName">Legend</div>
+      <div class="vipAchLevel">LEVEL 6</div>
+      <div class="vipAchProgress"><span style="width:0%"></span></div>
+      <div class="vipAchProgressText">0 / 100</div>
+    </div>
+    <div class="vipAchReward">🔒 🎟️ VIP لمدة أسبوع + إطار Legend</div>
+    <div class="vipAchState">🔒</div>
+  </div>
+
+</div>
 </div>
 
 <button class="gold-btn save-profile" onclick="saveProfile()">
@@ -7113,7 +7187,8 @@ document.addEventListener("DOMContentLoaded", function() {
     }
   }
 
-  window.__zingoAchievements = {
+  console.log("🏆 ZINGO ACHIEVEMENTS ENGINE V2 LOADED");
+window.__zingoAchievements = {
     refresh:function(forceAdmin){
       renderAchievements(!!forceAdmin);
     }
