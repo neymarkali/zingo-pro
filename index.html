@@ -527,6 +527,50 @@ button{
   background:#0873f9;
   color:white;
 }
+
+
+/* ===== ZINGO VIP ACHIEVEMENTS VISIBILITY FIX ===== */
+.vipAchievements{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+  position:relative;
+  z-index:5;
+  width:100%;
+  margin:18px 0 22px;
+  padding:16px;
+  box-sizing:border-box;
+  border:1px solid rgba(212,175,55,.35);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(255,215,90,.09),rgba(10,10,12,.96));
+  overflow:visible;
+}
+
+.vipAchievementGrid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;
+  width:100%;
+}
+
+.vipAchievementCard{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+
+#profileModal .modal-box{
+  max-height:90vh;
+  overflow-y:auto !important;
+  overflow-x:hidden;
+}
+
+@media(max-width:520px){
+  .vipAchievementGrid{
+    grid-template-columns:1fr;
+  }
+}
+
 </style>
 
 <style>
