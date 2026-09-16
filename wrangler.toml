@@ -5,3 +5,8 @@ compatibility_date = "2026-09-14"
 [assets]
 directory = "."
 not_found_handling = "single-page-application"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "zingo-pro-db"
+database_id = "c01cf336-9b31-4773-9049-6225725d7f7d"
