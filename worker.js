@@ -23,9 +23,86 @@ async function getActivePro(env) {
   `).first();
 }
 
+async function getSubscription(env, telegramId) {
+  const id = String(telegramId || '').trim();
+
+  if (!id || id === '0') {
+    return null;
+  }
+
+  const row = await env.DB.prepare(`
+    SELECT
+      id,
+      telegram_id,
+      plan,
+      start_at,
+      end_at,
+      status,
+      payment_method
+    FROM subscriptions
+    WHERE telegram_id = ?
+      AND plan = 'vip'
+    ORDER BY id DESC
+    LIMIT 1
+  `).bind(id).first();
+
+  if (!row) {
+    return null;
+  }
+
+  const now = Date.now();
+  const start = row.start_at ? Date.parse(row.start_at) : NaN;
+  const end = row.end_at ? Date.parse(row.end_at) : NaN;
+
+  const active =
+    row.status === 'active' &&
+    Number.isFinite(start) &&
+    Number.isFinite(end) &&
+    start <= now &&
+    now <= end;
+
+  return {
+    active,
+    plan: row.plan,
+    status: row.status,
+    start_at: row.start_at,
+    end_at: row.end_at,
+    payment_method: row.payment_method || null
+  };
+}
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    if (url.pathname === '/api/subscription' && request.method === 'GET') {
+  try {
+    const telegramId = url.searchParams.get('telegram_id');
+
+    const vip = await getSubscription(env, telegramId);
+
+    return json({
+      ok: true,
+      vip: vip || {
+        active: false,
+        plan: 'vip',
+        status: 'none',
+        start_at: null,
+        end_at: null,
+        payment_method: null
+      }
+    });
+  } catch (e) {
+    console.error('subscription error:', e);
+
+    return json({
+      ok: false,
+      vip: {
+        active: false
+      },
+      error: 'subscription_lookup_failed'
+    }, 500);
+  }
+}
 
     if (request.method === "OPTIONS") {
       return new Response(null, {
