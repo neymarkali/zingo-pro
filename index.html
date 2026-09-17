@@ -6256,6 +6256,1333 @@ document.addEventListener("DOMContentLoaded",()=>{
 })();
 
 </script>
+</body>
+</html>
+
+</template>
+
+<style id="zingoVIP5SceneCSS">
+#zingoVIP5Scene{
+  position:fixed;
+  inset:0;
+  z-index:2147483647;
+  display:none;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 45%,rgba(255,174,30,.16),transparent 25%),
+    radial-gradient(circle at 50% 70%,rgba(255,190,50,.08),transparent 38%),
+    #020306;
+  pointer-events:none;
+  opacity:1;
+}
+
+#zingoVIP5Scene.active{
+  display:block;
+}
+
+#zingoVIP5Canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+}
+
+#zingoVIP5Vignette{
+  position:absolute;
+  inset:-5%;
+  background:
+    radial-gradient(ellipse at center,transparent 25%,rgba(0,0,0,.18) 55%,rgba(0,0,0,.92) 100%);
+  pointer-events:none;
+}
+
+.zingoVIP5Beam{
+  position:absolute;
+  left:50%;
+  top:-25%;
+  width:2px;
+  height:150%;
+  transform-origin:50% 50%;
+  background:linear-gradient(
+    to bottom,
+    transparent,
+    rgba(255,191,64,.0) 12%,
+    rgba(255,191,64,.32) 40%,
+    rgba(255,225,150,.9) 50%,
+    rgba(255,176,25,.18) 62%,
+    transparent
+  );
+  filter:blur(7px);
+  opacity:0;
+}
+
+.zingoVIP5Beam.b1{transform:rotate(-25deg) scaleX(20)}
+.zingoVIP5Beam.b2{transform:rotate(25deg) scaleX(16)}
+.zingoVIP5Beam.b3{transform:rotate(0deg) scaleX(10)}
+
+#zingoVIP5Scene.active .zingoVIP5Beam{
+  animation:zingoVIP5Beam 5s ease-out forwards;
+}
+
+#zingoVIP5Title{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) scale(.55);
+  font-family:Arial,Helvetica,sans-serif;
+  font-weight:1000;
+  font-size:clamp(70px,22vw,210px);
+  letter-spacing:.08em;
+  color:#fff;
+  text-shadow:
+    0 0 5px #fff,
+    0 0 18px #ffd76a,
+    0 0 45px #ffad18,
+    0 0 90px rgba(255,157,0,.75);
+  opacity:0;
+  white-space:nowrap;
+}
+
+#zingoVIP5Title.pro{
+  animation:zingoVIP5Pro 5s ease-out forwards;
+}
+
+#zingoVIP5Title.vip{
+  animation:zingoVIP5Vip 5s ease-out forwards;
+}
+
+#zingoVIP5Crown{
+  position:absolute;
+  left:50%;
+  top:30%;
+  transform:translate(-50%,-50%) scale(.1) rotate(-8deg);
+  font-size:clamp(45px,13vw,130px);
+  opacity:0;
+  filter:
+    drop-shadow(0 0 8px #fff)
+    drop-shadow(0 0 25px #ffd45a)
+    drop-shadow(0 0 55px #ff9d00);
+}
+
+#zingoVIP5Crown.show{
+  animation:zingoVIP5Crown 5s ease-out forwards;
+}
+
+#zingoVIP5Flash{
+  position:absolute;
+  inset:0;
+  background:#fff8dc;
+  opacity:0;
+  mix-blend-mode:screen;
+}
+
+#zingoVIP5Flash.fire{
+  animation:zingoVIP5Flash 5s ease-out forwards;
+}
+
+#zingoVIP5Ring{
+  position:absolute;
+  left:50%;
+  top:58%;
+  width:min(78vw,520px);
+  aspect-ratio:1;
+  transform:translate(-50%,-50%) scale(.1);
+  border:2px solid rgba(255,202,76,.9);
+  border-radius:50%;
+  box-shadow:
+    0 0 15px #ffc928,
+    0 0 50px rgba(255,166,0,.65),
+    inset 0 0 35px rgba(255,192,40,.3);
+  opacity:0;
+}
+
+#zingoVIP5Ring.fire{
+  animation:zingoVIP5Ring 5s ease-out forwards;
+}
+
+#zingoVIP5Sub{
+  position:absolute;
+  left:50%;
+  top:65%;
+  transform:translate(-50%,30px);
+  color:#ffe8a3;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:clamp(11px,3vw,20px);
+  letter-spacing:.42em;
+  white-space:nowrap;
+  opacity:0;
+  text-shadow:0 0 15px #ffb000;
+}
+
+#zingoVIP5Sub.fire{
+  animation:zingoVIP5Sub 5s ease-out forwards;
+}
+
+@keyframes zingoVIP5Beam{
+  0%,8%{opacity:0}
+  18%{opacity:.35}
+  38%{opacity:.75}
+  55%{opacity:1}
+  78%{opacity:.45}
+  100%{opacity:0}
+}
+
+@keyframes zingoVIP5Pro{
+  0%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  10%{opacity:1}
+  20%{opacity:1}
+  29%{opacity:1;transform:translate(-50%,-50%) scale(1.04)}
+  34%{opacity:.75;filter:blur(1px)}
+  39%{opacity:.18;transform:translate(-50%,-50%) scale(1.16);filter:blur(5px)}
+  44%,100%{opacity:0;transform:translate(-50%,-50%) scale(1.32);filter:blur(14px)}
+}
+
+@keyframes zingoVIP5Vip{
+  0%,55%{opacity:0;transform:translate(-50%,-50%) scale(.5)}
+  62%{opacity:.25;transform:translate(-50%,-50%) scale(.7)}
+  69%{opacity:.9;transform:translate(-50%,-50%) scale(1.08)}
+  76%{opacity:1;transform:translate(-50%,-50%) scale(.98)}
+  84%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  94%{opacity:1}
+  100%{opacity:0}
+}
+
+@keyframes zingoVIP5Crown{
+  0%,42%{opacity:0;transform:translate(-50%,-50%) scale(.1) rotate(-8deg)}
+  55%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(3deg)}
+  64%{opacity:1;transform:translate(-50%,-50%) scale(1) rotate(0)}
+  92%{opacity:1}
+  100%{opacity:0}
+}
+
+@keyframes zingoVIP5Ring{
+  0%,18%{opacity:0;transform:translate(-50%,-50%) scale(.1)}
+  28%{opacity:.3}
+  43%{opacity:.8;transform:translate(-50%,-50%) scale(.72)}
+  58%{opacity:1;transform:translate(-50%,-50%) scale(1.08)}
+  76%{opacity:.8;transform:translate(-50%,-50%) scale(1)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(1.35)}
+}
+
+@keyframes zingoVIP5Sub{
+  0%,65%{opacity:0;transform:translate(-50%,30px)}
+  76%{opacity:1;transform:translate(-50%,0)}
+  94%{opacity:1}
+  100%{opacity:0}
+}
+
+@keyframes zingoVIP5Flash{
+  0%,72%{opacity:0}
+  75%{opacity:.9}
+  78%{opacity:.12}
+  81%{opacity:.5}
+  84%{opacity:0}
+  100%{opacity:0}
+}
+
+/* ===== ZINGO VIP ACHIEVEMENTS V3 ===== */
+
+.vipAchievements{
+  margin:18px 0;
+  padding:18px;
+  border-radius:24px;
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 90% 0%,rgba(255,196,65,.13),transparent 34%),
+    linear-gradient(145deg,#11100b,#090b10 62%,#0c0d12);
+  border:1px solid rgba(224,174,67,.28);
+  box-shadow:0 18px 45px rgba(0,0,0,.38),inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.vipAchievements:before{
+  content:"";
+  position:absolute;
+  top:-90px;
+  right:-70px;
+  width:190px;
+  height:190px;
+  border-radius:50%;
+  background:rgba(255,194,55,.08);
+  filter:blur(25px);
+  pointer-events:none;
+}
+
+.vipAchievementsHead{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.vipAchievementsTitle{
+  color:#f5d77a;
+  font-size:18px;
+  font-weight:1000;
+}
+
+.vipAchievementsSub{
+  margin-top:4px;
+  color:#8e929b;
+  font-size:10px;
+  line-height:1.5;
+}
+
+.vipAchCount{
+  min-width:52px;
+  padding:7px 9px;
+  border-radius:999px;
+  text-align:center;
+  color:#f5d77a;
+  font-size:10px;
+  font-weight:1000;
+  background:rgba(218,170,58,.09);
+  border:1px solid rgba(218,170,58,.25);
+}
+
+.vipAchievementGrid{
+  display:flex !important;
+  flex-direction:column;
+  gap:10px;
+  width:100%;
+}
+
+.vipAchievement{
+  position:relative;
+  display:flex !important;
+  align-items:center;
+  gap:13px;
+  min-height:88px;
+  padding:12px;
+  border-radius:18px;
+  overflow:hidden;
+  background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+  border:1px solid rgba(255,255,255,.065);
+  transition:.25s ease;
+}
+
+.vipAchievement.locked{
+  opacity:.72;
+}
+
+.vipAchievement.unlocked{
+  opacity:1;
+  border-color:rgba(236,191,74,.42);
+  background:linear-gradient(135deg,rgba(211,165,48,.13),rgba(255,255,255,.025));
+  box-shadow:0 8px 25px rgba(190,145,35,.10),inset 0 0 20px rgba(255,205,80,.025);
+}
+
+.vipAchIcon{
+  flex:0 0 58px;
+  width:58px;
+  height:58px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:17px;
+  font-size:29px;
+  background:linear-gradient(145deg,#191b20,#0b0d11);
+  border:1px solid rgba(255,255,255,.09);
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.05);
+}
+
+.vipAchievement.unlocked .vipAchIcon{
+  border-color:rgba(236,191,74,.42);
+  background:radial-gradient(circle at 50% 35%,rgba(255,213,100,.16),transparent 55%),linear-gradient(145deg,#211b0d,#0d0e11);
+  box-shadow:0 0 20px rgba(220,170,50,.13);
+}
+
+.vipAchMain{
+  flex:1;
+  min-width:0;
+}
+
+.vipAchTop{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.vipAchName{
+  color:#f4f5f7;
+  font-size:13px;
+  font-weight:1000;
+}
+
+.vipAchievement.unlocked .vipAchName{
+  color:#f4d36b;
+}
+
+.vipAchLevel{
+  margin-top:2px;
+  color:#777d88;
+  font-size:8px;
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+.vipAchState{
+  width:28px;
+  height:28px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border-radius:9px;
+  background:rgba(255,255,255,.035);
+  font-size:12px;
+}
+
+.vipAchievement.unlocked .vipAchState{
+  color:#f5d36c;
+  background:rgba(222,174,56,.10);
+}
+
+.vipAchProgress{
+  height:5px;
+  margin-top:10px;
+  border-radius:999px;
+  overflow:hidden;
+  background:#1a1d23;
+}
+
+.vipAchProgress span{
+  display:block;
+  height:100%;
+  border-radius:inherit;
+  background:linear-gradient(90deg,#b88924,#f4d36b);
+  box-shadow:0 0 10px rgba(241,195,74,.25);
+}
+
+.vipAchMeta{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-top:7px;
+  color:#737985;
+  font-size:8px;
+}
+
+.vipAchMeta b{
+  color:#b9a05d;
+  font-weight:900;
+  text-align:left;
+}
+
+.vipAchievement.unlocked .vipAchMeta b{
+  color:#e7c763;
+}
+
+@media(max-width:520px){
+  .vipAchievements{
+    padding:14px;
+    border-radius:21px;
+  }
+
+  .vipAchievement{
+    min-height:84px;
+    padding:10px;
+    gap:10px;
+  }
+
+  .vipAchIcon{
+    flex-basis:52px;
+    width:52px;
+    height:52px;
+    font-size:25px;
+  }
+
+  .vipAchName{
+    font-size:12px;
+  }
+
+  .vipAchMeta{
+    font-size:7px;
+  }
+}
+
+/* ===== END ZINGO VIP ACHIEVEMENTS V3 ===== */
+
+
+
+/* ===== ZINGO VIP ACHIEVEMENTS GRID V4 ===== */
+
+.vipAchievementGrid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:12px !important;
+  width:100% !important;
+}
+
+.vipAchievement{
+  position:relative !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  text-align:center !important;
+  min-height:145px !important;
+  padding:18px 10px 12px !important;
+  border-radius:18px !important;
+  border:1px solid rgba(212,175,55,.30) !important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(212,175,55,.16),transparent 58%),
+    linear-gradient(145deg,rgba(24,20,8,.96),rgba(10,10,10,.98)) !important;
+  box-shadow:
+    0 8px 25px rgba(0,0,0,.35),
+    inset 0 1px 0 rgba(255,255,255,.04) !important;
+  cursor:pointer !important;
+  overflow:hidden !important;
+  transition:.22s ease !important;
+}
+
+.vipAchievement:hover{
+  transform:translateY(-2px) !important;
+  border-color:rgba(212,175,55,.65) !important;
+}
+
+.vipAchievement.unlocked{
+  border-color:rgba(212,175,55,.72) !important;
+  box-shadow:
+    0 10px 30px rgba(0,0,0,.42),
+    0 0 22px rgba(212,175,55,.13) !important;
+}
+
+.vipAchIcon{
+  width:62px !important;
+  height:62px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:0 auto 10px !important;
+  border-radius:18px !important;
+  font-size:34px !important;
+  background:radial-gradient(circle,rgba(212,175,55,.18),rgba(212,175,55,.035) 68%) !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+}
+
+.vipAchMain{
+  width:100% !important;
+}
+
+.vipAchTop{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  gap:5px !important;
+}
+
+.vipAchName{
+  color:#fff !important;
+  font-size:15px !important;
+  font-weight:800 !important;
+}
+
+.vipAchLevel{
+  color:#c9a646 !important;
+  font-size:10px !important;
+  font-weight:700 !important;
+  letter-spacing:.7px !important;
+}
+
+.vipAchState{
+  position:absolute !important;
+  top:9px !important;
+  right:10px !important;
+  width:22px !important;
+  height:22px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  border-radius:50% !important;
+  font-size:11px !important;
+  background:rgba(0,0,0,.38) !important;
+}
+
+.vipAchProgress,
+.vipAchMeta{
+  display:none !important;
+}
+
+.vipAchievement.open{
+  min-height:190px !important;
+}
+
+.vipAchievement.open .vipAchProgress{
+  display:block !important;
+  width:100% !important;
+  height:5px !important;
+  margin:14px 0 8px !important;
+  border-radius:99px !important;
+  overflow:hidden !important;
+  background:rgba(255,255,255,.08) !important;
+}
+
+.vipAchievement.open .vipAchProgress span{
+  display:block !important;
+  height:100% !important;
+  border-radius:99px !important;
+  background:linear-gradient(90deg,#a67c00,#f5d76e,#d4af37) !important;
+}
+
+.vipAchievement.open .vipAchMeta{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  gap:5px !important;
+  color:#aaa !important;
+  font-size:10px !important;
+}
+
+.vipAchievement.open .vipAchMeta b{
+  color:#d4af37 !important;
+}
+
+@media(max-width:430px){
+  .vipAchievementGrid{
+    gap:9px !important;
+  }
+
+  .vipAchievement{
+    min-height:132px !important;
+    padding:14px 7px 10px !important;
+  }
+
+  .vipAchIcon{
+    width:55px !important;
+    height:55px !important;
+    font-size:30px !important;
+  }
+
+  .vipAchievement.open{
+    min-height:180px !important;
+  }
+}
+
+
+/* ============================================================
+   ZINGO VIP ACHIEVEMENTS — FINAL GRID DESIGN
+   ============================================================ */
+
+#vipAchievements.vipAchievements{
+  width:100% !important;
+  margin:18px 0 !important;
+  padding:18px !important;
+  box-sizing:border-box !important;
+  border-radius:24px !important;
+  background:
+    radial-gradient(circle at 50% -20%,rgba(212,175,55,.18),transparent 45%),
+    linear-gradient(145deg,#17130a 0%,#0b0b0b 55%,#12100b 100%) !important;
+  border:1px solid rgba(212,175,55,.28) !important;
+  box-shadow:
+    0 15px 45px rgba(0,0,0,.45),
+    inset 0 1px rgba(255,255,255,.04) !important;
+}
+
+#vipAchievements .vipAchievementsHead{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:12px !important;
+  margin-bottom:16px !important;
+}
+
+#vipAchievements .vipAchievementsTitle{
+  color:#f1d477 !important;
+  font-size:19px !important;
+  font-weight:900 !important;
+}
+
+#vipAchievements .vipAchievementsSub{
+  margin-top:4px !important;
+  color:rgba(255,255,255,.55) !important;
+  font-size:11px !important;
+}
+
+#vipAchievements .vipAchCount{
+  flex-shrink:0 !important;
+  padding:7px 11px !important;
+  border-radius:12px !important;
+  color:#e4c45d !important;
+  background:rgba(212,175,55,.08) !important;
+  border:1px solid rgba(212,175,55,.25) !important;
+  font-size:11px !important;
+  font-weight:800 !important;
+}
+
+/* ===== 2 COLUMNS ===== */
+
+#vipAchievements #vipAchievementGrid.vipAchievementGrid{
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  grid-auto-rows:auto !important;
+  gap:12px !important;
+  width:100% !important;
+}
+
+/* ===== CARD ===== */
+
+#vipAchievements #vipAchievementGrid .vipAchievement{
+  position:relative !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:flex-start !important;
+  width:100% !important;
+  min-width:0 !important;
+  min-height:150px !important;
+  box-sizing:border-box !important;
+  padding:16px 9px 13px !important;
+  border-radius:20px !important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(212,175,55,.13),transparent 55%),
+    linear-gradient(145deg,#211b0d,#0e0e0e) !important;
+  border:1px solid rgba(212,175,55,.25) !important;
+  overflow:hidden !important;
+  cursor:pointer !important;
+  transition:
+    min-height .28s ease,
+    transform .2s ease,
+    border-color .2s ease,
+    box-shadow .2s ease !important;
+}
+
+#vipAchievements #vipAchievementGrid .vipAchievement:hover{
+  transform:translateY(-2px) !important;
+  border-color:rgba(212,175,55,.65) !important;
+}
+
+#vipAchievements #vipAchievementGrid .vipAchievement.open{
+  min-height:205px !important;
+  border-color:#d4af37 !important;
+  box-shadow:
+    0 0 25px rgba(212,175,55,.12),
+    inset 0 0 30px rgba(212,175,55,.035) !important;
+}
+
+/* ===== EMOJI ===== */
+
+#vipAchievements .vipAchIcon{
+  width:64px !important;
+  height:64px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  margin:0 0 10px !important;
+  border-radius:19px !important;
+  background:
+    radial-gradient(circle,rgba(212,175,55,.20),rgba(212,175,55,.025) 70%) !important;
+  border:1px solid rgba(212,175,55,.30) !important;
+  font-size:35px !important;
+  box-shadow:
+    inset 0 0 20px rgba(212,175,55,.06),
+    0 8px 20px rgba(0,0,0,.30) !important;
+}
+
+/* ===== NAME ===== */
+
+#vipAchievements .vipAchName{
+  color:#fff !important;
+  font-size:15px !important;
+  line-height:1.2 !important;
+  font-weight:900 !important;
+  text-align:center !important;
+}
+
+#vipAchievements .vipAchLevel{
+  margin-top:5px !important;
+  color:#c8a94e !important;
+  font-size:9px !important;
+  font-weight:800 !important;
+  letter-spacing:1px !important;
+}
+
+/* ===== LOCK ===== */
+
+#vipAchievements .vipAchievement.locked:after{
+  content:"🔒" !important;
+  position:absolute !important;
+  top:9px !important;
+  right:9px !important;
+  font-size:10px !important;
+  opacity:.65 !important;
+}
+
+/* ===== DETAILS HIDDEN ===== */
+
+#vipAchievements .vipAchDetails{
+  width:100% !important;
+  display:none !important;
+  margin-top:12px !important;
+}
+
+/* ===== DETAILS OPEN ===== */
+
+#vipAchievements .vipAchievement.open .vipAchDetails{
+  display:block !important;
+}
+
+#vipAchievements .vipAchProgress{
+  width:100% !important;
+  height:6px !important;
+  overflow:hidden !important;
+  border-radius:99px !important;
+  background:rgba(255,255,255,.08) !important;
+}
+
+#vipAchievements .vipAchProgress span{
+  display:block !important;
+  height:100% !important;
+  border-radius:99px !important;
+  background:
+    linear-gradient(90deg,#9d7200,#d4af37,#f5dc7c) !important;
+  box-shadow:0 0 10px rgba(212,175,55,.45) !important;
+}
+
+#vipAchievements .vipAchMeta{
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  gap:5px !important;
+  margin-top:8px !important;
+  color:rgba(255,255,255,.62) !important;
+  font-size:10px !important;
+  line-height:1.35 !important;
+}
+
+#vipAchievements .vipAchMeta b{
+  color:#d8b84f !important;
+  font-size:10px !important;
+}
+
+/* ===== MOBILE ===== */
+
+@media(max-width:430px){
+
+  #vipAchievements.vipAchievements{
+    padding:14px !important;
+    border-radius:21px !important;
+  }
+
+  #vipAchievements #vipAchievementGrid.vipAchievementGrid{
+    grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+    gap:9px !important;
+  }
+
+  #vipAchievements #vipAchievementGrid .vipAchievement{
+    min-height:137px !important;
+    padding:13px 6px 11px !important;
+    border-radius:17px !important;
+  }
+
+  #vipAchievements .vipAchIcon{
+    width:55px !important;
+    height:55px !important;
+    font-size:30px !important;
+    margin-bottom:8px !important;
+  }
+
+  #vipAchievements .vipAchName{
+    font-size:13px !important;
+  }
+
+  #vipAchievements #vipAchievementGrid .vipAchievement.open{
+    min-height:190px !important;
+  }
+}
+
+</style>
+<!-- ZINGO VIP 5 SECOND CINEMATIC START -->
+
+<style id="zingoVIPFinalCSS">
+#zingoVIPFinalScene{
+  position:fixed;
+  inset:0;
+  z-index:2147483647;
+  display:none;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 48%,rgba(170,125,35,.12),transparent 24%),
+    radial-gradient(circle at 50% 50%,#10100d 0%,#030404 48%,#000 100%);
+  pointer-events:auto;
+}
+
+#zingoVIPFinalScene.active{
+  display:block;
+}
+
+#zingoVIPFinalScene::before{
+  content:"";
+  position:absolute;
+  inset:-20%;
+  background:
+    radial-gradient(ellipse at center,transparent 38%,rgba(0,0,0,.7) 78%,#000 100%);
+  animation:zingoFinalVignette 6s ease forwards;
+}
+
+#zingoVIPFinalGlow{
+  position:absolute;
+  width:15vmax;
+  height:15vmax;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) scale(.1);
+  border-radius:50%;
+  background:radial-gradient(circle,#fff9d6 0%,#e8bd55 8%,rgba(218,165,55,.3) 28%,transparent 70%);
+  filter:blur(3px);
+  opacity:0;
+  animation:zingoFinalGlow 6s ease forwards;
+}
+
+#zingoVIPFinalShock{
+  position:absolute;
+  width:5vmax;
+  height:5vmax;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%) scale(.1);
+  border:1px solid rgba(255,218,125,.9);
+  border-radius:50%;
+  box-shadow:0 0 35px rgba(231,181,72,.7),inset 0 0 20px rgba(255,225,145,.3);
+  opacity:0;
+  animation:zingoFinalShock 6s ease forwards;
+}
+
+#zingoVIPFinalTitle{
+  position:absolute;
+  left:50%;
+  top:50%;
+  transform:translate(-50%,-50%);
+  margin:0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(58px,18vw,150px);
+  font-weight:900;
+  letter-spacing:.16em;
+  color:#f0f1ef;
+  text-shadow:0 3px 20px rgba(255,255,255,.12);
+  white-space:nowrap;
+  opacity:0;
+  animation:zingoFinalPRO 6s cubic-bezier(.2,.8,.2,1) forwards;
+}
+
+#zingoVIPFinalVIP{
+  position:absolute;
+  left:50%;
+  top:49%;
+  transform:translate(-50%,-50%) scale(.72);
+  margin:0;
+  font-family:Georgia,"Times New Roman",serif;
+  font-size:clamp(70px,22vw,190px);
+  font-weight:900;
+  letter-spacing:.12em;
+  color:#f4d47a;
+  white-space:nowrap;
+  opacity:0;
+  text-shadow:
+    0 0 4px #fff3bd,
+    0 0 18px rgba(240,190,67,.85),
+    0 0 55px rgba(203,143,25,.5);
+  animation:zingoFinalVIP 6s cubic-bezier(.16,.8,.18,1) forwards;
+}
+
+#zingoVIPFinalCrown{
+  position:absolute;
+  left:50%;
+  top:31%;
+  transform:translate(-50%,20px) scale(.45);
+  width:clamp(70px,20vw,145px);
+  height:auto;
+  opacity:0;
+  filter:
+    drop-shadow(0 0 5px rgba(255,231,145,.8))
+    drop-shadow(0 0 22px rgba(221,164,40,.55));
+  animation:zingoFinalCrown 6s cubic-bezier(.15,.8,.2,1) forwards;
+}
+
+#zingoVIPFinalWelcome{
+  position:absolute;
+  left:50%;
+  top:67%;
+  transform:translate(-50%,20px);
+  font-family:Arial,sans-serif;
+  font-size:clamp(12px,3.5vw,19px);
+  font-weight:600;
+  letter-spacing:.42em;
+  color:rgba(255,239,190,.9);
+  white-space:nowrap;
+  opacity:0;
+  animation:zingoFinalWelcome 6s ease forwards;
+}
+
+#zingoVIPFinalSkip{
+  position:absolute;
+  right:22px;
+  top:22px;
+  z-index:5;
+  padding:10px 17px;
+  border:1px solid rgba(224,188,103,.65);
+  border-radius:999px;
+  background:rgba(0,0,0,.55);
+  color:#f0d487;
+  font:700 13px Arial,sans-serif;
+  letter-spacing:.08em;
+  backdrop-filter:blur(8px);
+}
+
+.zingoFinalParticle{
+  position:absolute;
+  left:50%;
+  top:50%;
+  width:3px;
+  height:3px;
+  border-radius:50%;
+  background:#e8c35f;
+  box-shadow:0 0 7px #f3d987;
+  opacity:0;
+  animation:zingoFinalParticle 3.2s cubic-bezier(.15,.75,.2,1) forwards;
+  animation-delay:var(--d);
+}
+
+#zingoVIPFinalSweep{
+  position:absolute;
+  left:-30%;
+  top:-10%;
+  width:35%;
+  height:130%;
+  transform:rotate(20deg);
+  background:linear-gradient(90deg,transparent,rgba(255,225,150,.22),transparent);
+  filter:blur(8px);
+  opacity:0;
+  animation:zingoFinalSweep 6s ease forwards;
+}
+
+#zingoVIPFinalFlash{
+  position:absolute;
+  inset:0;
+  background:#fff9df;
+  opacity:0;
+  pointer-events:none;
+  animation:zingoFinalFlash 6s ease forwards;
+}
+
+@keyframes zingoFinalPRO{
+  0%,12%{opacity:0;transform:translate(-50%,-50%) scale(.9);filter:blur(8px)}
+  18%{opacity:1;transform:translate(-50%,-50%) scale(1);filter:blur(0)}
+  38%{opacity:1}
+  48%{opacity:.75;transform:translate(-50%,-50%) scale(1.08)}
+  53%{opacity:0;transform:translate(-50%,-50%) scale(1.25);filter:blur(12px)}
+  100%{opacity:0}
+}
+
+@keyframes zingoFinalVIP{
+  0%,47%{opacity:0;transform:translate(-50%,-50%) scale(.65);filter:blur(15px)}
+  58%{opacity:0;transform:translate(-50%,-50%) scale(.75);filter:blur(8px)}
+  68%{opacity:1;transform:translate(-50%,-50%) scale(1.08);filter:blur(0)}
+  77%{transform:translate(-50%,-50%) scale(.98)}
+  88%,100%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+}
+
+@keyframes zingoFinalCrown{
+  0%,52%{opacity:0;transform:translate(-50%,30px) scale(.35)}
+  63%{opacity:1;transform:translate(-50%,-8px) scale(1.08)}
+  72%,100%{opacity:1;transform:translate(-50%,0) scale(1)}
+}
+
+@keyframes zingoFinalWelcome{
+  0%,67%{opacity:0;transform:translate(-50%,20px)}
+  78%{opacity:1;transform:translate(-50%,0)}
+  100%{opacity:.9;transform:translate(-50%,0)}
+}
+
+@keyframes zingoFinalGlow{
+  0%,43%{opacity:0;transform:translate(-50%,-50%) scale(.1)}
+  50%{opacity:.9;transform:translate(-50%,-50%) scale(1.5)}
+  62%{opacity:.25;transform:translate(-50%,-50%) scale(5)}
+  100%{opacity:0;transform:translate(-50%,-50%) scale(8)}
+}
+
+@keyframes zingoFinalShock{
+  0%,43%{opacity:0;transform:translate(-50%,-50%) scale(.1)}
+  49%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+  62%{opacity:0;transform:translate(-50%,-50%) scale(12)}
+  100%{opacity:0}
+}
+
+@keyframes zingoFinalSweep{
+  0%,28%{opacity:0;left:-35%}
+  38%{opacity:1}
+  62%{opacity:.8;left:110%}
+  100%{opacity:0;left:140%}
+}
+
+@keyframes zingoFinalParticle{
+  0%{
+    opacity:0;
+    transform:translate(-50%,-50%) translate(var(--sx),var(--sy)) scale(.4);
+  }
+  12%{opacity:1}
+  48%{
+    opacity:1;
+    transform:translate(-50%,-50%) translate(0,0) scale(1.3);
+  }
+  54%{
+    opacity:1;
+    transform:translate(-50%,-50%) translate(var(--tx),var(--ty)) scale(1);
+  }
+  72%,100%{
+    opacity:0;
+    transform:translate(-50%,-50%) translate(var(--fx),var(--fy)) scale(.1);
+  }
+}
+
+@keyframes zingoFinalFlash{
+  0%,48%{opacity:0}
+  51%{opacity:.45}
+  54%{opacity:0}
+  100%{opacity:0}
+}
+
+@keyframes zingoFinalVignette{
+  0%,100%{opacity:1}
+  55%{opacity:.75}
+}
+
+@media (prefers-reduced-motion:reduce){
+  #zingoVIPFinalScene *{
+    animation-duration:1ms!important;
+  }
+}
+
+/* ===== ZINGO VIP ACHIEVEMENTS V2 ===== */
+.vipAchievements{
+  margin-top:20px;
+  padding:18px;
+  border:1px solid rgba(212,175,55,.32);
+  border-radius:22px;
+  background:
+    radial-gradient(circle at 100% 0%,rgba(212,175,55,.12),transparent 42%),
+    linear-gradient(145deg,rgba(255,215,90,.075),rgba(0,0,0,.28));
+  box-shadow:
+    0 12px 38px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.04);
+}
+
+.vipAchievementsHead{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  margin-bottom:15px;
+}
+
+.vipAchievementsTitle{
+  font-size:18px;
+  font-weight:950;
+  color:#f7d774;
+  letter-spacing:.2px;
+}
+
+.vipAchievementsSub{
+  margin-top:3px;
+  font-size:11px;
+  color:rgba(255,255,255,.52);
+}
+
+.vipAchCount{
+  min-width:52px;
+  padding:7px 10px;
+  text-align:center;
+  border:1px solid rgba(212,175,55,.3);
+  border-radius:12px;
+  background:rgba(212,175,55,.08);
+  color:#f5d76e;
+  font-size:11px;
+  font-weight:900;
+}
+
+.vipAchievementGrid{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.vipAchievement{
+  position:relative;
+  display:grid;
+  grid-template-columns:48px 1fr auto;
+  align-items:center;
+  gap:11px;
+  min-height:88px;
+  padding:12px;
+  border-radius:17px;
+  border:1px solid rgba(255,255,255,.075);
+  background:linear-gradient(135deg,rgba(255,255,255,.045),rgba(255,255,255,.018));
+  overflow:hidden;
+  transition:.25s ease;
+}
+
+.vipAchievement::before{
+  content:"";
+  position:absolute;
+  left:0;
+  top:0;
+  bottom:0;
+  width:3px;
+  background:rgba(255,255,255,.1);
+}
+
+.vipAchievement.unlocked{
+  border-color:rgba(212,175,55,.42);
+  background:
+    radial-gradient(circle at 0% 50%,rgba(212,175,55,.13),transparent 45%),
+    linear-gradient(135deg,rgba(212,175,55,.09),rgba(255,255,255,.025));
+  box-shadow:0 5px 20px rgba(212,175,55,.07);
+}
+
+.vipAchievement.unlocked::before{
+  background:linear-gradient(180deg,#fff0a6,#d4af37,#8d6714);
+}
+
+.vipAchievement.locked{
+  opacity:.58;
+}
+
+.vipAchIcon{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  width:45px;
+  height:45px;
+  border-radius:14px;
+  font-size:23px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.08);
+}
+
+.vipAchievement.unlocked .vipAchIcon{
+  border-color:rgba(212,175,55,.38);
+  background:rgba(212,175,55,.1);
+  box-shadow:0 0 18px rgba(212,175,55,.12);
+}
+
+.vipAchMain{
+  min-width:0;
+}
+
+.vipAchName{
+  font-size:13px;
+  font-weight:950;
+  color:#fff;
+}
+
+.vipAchLevel{
+  margin-top:2px;
+  font-size:9px;
+  font-weight:800;
+  color:#d9b84c;
+  letter-spacing:.7px;
+}
+
+.vipAchProgress{
+  position:relative;
+  height:5px;
+  margin-top:8px;
+  border-radius:99px;
+  background:rgba(255,255,255,.08);
+  overflow:hidden;
+}
+
+.vipAchProgress span{
+  display:block;
+  height:100%;
+  width:0;
+  border-radius:99px;
+  background:linear-gradient(90deg,#8d6714,#d4af37,#fff0a6);
+  box-shadow:0 0 11px rgba(245,215,110,.42);
+  transition:width .5s ease;
+}
+
+.vipAchProgressText{
+  margin-top:4px;
+  font-size:9px;
+  color:rgba(255,255,255,.48);
+}
+
+.vipAchReward{
+  min-width:94px;
+  max-width:110px;
+  padding:7px 8px;
+  text-align:center;
+  border-radius:11px;
+  border:1px solid rgba(212,175,55,.2);
+  background:rgba(212,175,55,.055);
+  color:#f1d77a;
+  font-size:9px;
+  font-weight:800;
+  line-height:1.35;
+}
+
+.vipAchievement.locked .vipAchReward{
+  color:rgba(255,255,255,.42);
+  border-color:rgba(255,255,255,.08);
+  background:rgba(255,255,255,.025);
+}
+
+.vipAchState{
+  position:absolute;
+  top:7px;
+  right:7px;
+  font-size:10px;
+}
+
+.vipAchievement.locked .vipAchState{
+  opacity:.8;
+}
+
+@media(max-width:380px){
+  .vipAchievement{
+    grid-template-columns:42px 1fr;
+  }
+
+  .vipAchIcon{
+    width:40px;
+    height:40px;
+  }
+
+  .vipAchReward{
+    grid-column:2;
+    max-width:none;
+    text-align:right;
+    margin-top:-4px;
+  }
+}
+
+/* ===== ZINGO VIP ACHIEVEMENTS FORCE RENDER V2 ===== */
+/* removed: duplicate broken renderer */
+
+})();
+</script>
+
+<script>
+/* ZINGO VIP LEADERBOARD FORCE LOAD */
+(function () {
+  function forceLoadLeaderboard() {
+    if (typeof window.loadLeaderboard === "function") {
+      window.loadLeaderboard();
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", function () {
+    setTimeout(forceLoadLeaderboard, 800);
+    setTimeout(forceLoadLeaderboard, 2000);
+  });
+})();
+</script>
+
+</body>
+
 
 <script>
 async function loadLeaderboard() {
@@ -6347,6 +7674,229 @@ document.addEventListener("DOMContentLoaded", function() {
         refresh.addEventListener("click", loadLeaderboard);
     }
 });
+
+/* ZINGO VIP FRAME MODAL HOOK */
+(function(){
+  const originalOpenProfile = window.openProfile;
+
+  if(typeof originalOpenProfile !== "function") return;
+
+  window.openProfile = function(){
+    originalOpenProfile.apply(this, arguments);
+
+    setTimeout(function(){
+      if(
+        window.__zingoVIPIdentity &&
+        typeof window.__zingoVIPIdentity.refresh === "function"
+      ){
+        window.__zingoVIPIdentity.refresh();
+      }
+    }, 100);
+  };
+})();
+
+
+/* ===== ZINGO VIP ACHIEVEMENTS ENGINE V4 ===== */
+
+(function(){
+
+  const ACHIEVEMENTS = [
+    {id:"first",icon:"🌱",name:"البداية",level:"LEVEL 1",target:1,type:"correct",reward:"🎁 إطار Rookie خاص"},
+    {id:"hot",icon:"🎯",name:"القنّاص",level:"LEVEL 2",target:5,type:"correct",reward:"🎁 Badge القنّاص"},
+    {id:"sniper",icon:"🔥",name:"Sniper",level:"LEVEL 3",target:10,type:"correct",reward:"🎁 تأثير ناري للملف"},
+    {id:"elite",icon:"👑",name:"Elite",level:"LEVEL 4",target:25,type:"correct",reward:"🎁 VIP لمدة 24 ساعة"},
+    {id:"master",icon:"💎",name:"Master",level:"LEVEL 5",target:50,type:"correct",reward:"🎁 VIP لمدة 3 أيام"},
+    {id:"legend",icon:"🏆",name:"Legend",level:"LEVEL 6",target:100,type:"points",reward:"🎁 VIP أسبوع + إطار Legend"}
+  ];
+
+  function getStats(){
+    let points = 0;
+    let correct = 0;
+
+    try{
+      if(window.__zingoVIPProfile){
+        const p = window.__zingoVIPProfile;
+        points = Number(p.points ?? p.total_points ?? p.rating ?? 0);
+        correct = Number(p.correct ?? p.correct_predictions ?? p.correct_count ?? 0);
+      }
+    }catch(e){}
+
+    try{
+      document.querySelectorAll(".pstat strong").forEach(function(el){
+        const text = (el.textContent || "").trim();
+        if(!points && /^[0-9]+$/.test(text)){
+          points = Number(text);
+        }
+      });
+    }catch(e){}
+
+    return {
+      points:Math.max(0,points),
+      correct:Math.max(0,correct)
+    };
+  }
+
+  function bindClicks(){
+    const cards = document.querySelectorAll("#vipAchievementGrid .vipAchievement");
+
+    cards.forEach(function(card){
+      card.addEventListener("click",function(){
+        const wasOpen = card.classList.contains("open");
+
+        cards.forEach(function(other){
+          other.classList.remove("open");
+        });
+
+        if(!wasOpen){
+          card.classList.add("open");
+        }
+      });
+    });
+  }
+
+  function renderAchievements(){
+
+    const grid = document.getElementById("vipAchievementGrid");
+    const count = document.getElementById("vipAchCount");
+
+    if(!grid) return;
+
+    const stats = getStats();
+    let unlocked = 0;
+
+    grid.innerHTML = ACHIEVEMENTS.map(function(a){
+
+      const value = a.type === "points"
+        ? stats.points
+        : stats.correct;
+
+      const progress = Math.min(100,(value / a.target) * 100);
+      const isUnlocked = value >= a.target;
+
+      if(isUnlocked) unlocked++;
+
+      return `
+        <div class="vipAchievement ${isUnlocked ? "unlocked" : "locked"}" data-achievement="${a.id}">
+
+          <div class="vipAchIcon">${a.icon}</div>
+
+          <div class="vipAchMain">
+
+            <div class="vipAchTop">
+
+              <div>
+                <div class="vipAchName">${a.name}</div>
+                <div class="vipAchLevel">${a.level}</div>
+              </div>
+
+              <div class="vipAchState">+</div>
+
+            </div>
+
+            <div class="vipAchProgress">
+              <span style="width:${progress}%"></span>
+            </div>
+
+            <div class="vipAchMeta">
+              <span>
+                ${Math.min(value,a.target)} / ${a.target}
+                ${a.type === "points" ? "نقطة" : "صحيحة"}
+              </span>
+              <b>${a.reward}</b>
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+    if(count){
+      count.textContent = unlocked + " / " + ACHIEVEMENTS.length;
+    }
+
+    bindClicks();
+  }
+
+  function refresh(){
+    renderAchievements();
+  }
+
+  window.__zingoAchievements = {
+    refresh:refresh,
+    render:renderAchievements
+  };
+
+  function boot(){
+    renderAchievements();
+    setTimeout(renderAchievements,500);
+    setTimeout(renderAchievements,1500);
+    setTimeout(renderAchievements,3000);
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded",boot);
+  }else{
+    boot();
+  }
+
+  console.log("🏆 ZINGO ACHIEVEMENTS ENGINE V4 LOADED");
+
+})();
+
+/* ===== ZINGO VIP ACHIEVEMENTS FINAL INTERACTION ===== */
+
+(function(){
+
+  function bindZingoAchievements(){
+
+    const grid=document.getElementById("vipAchievementGrid");
+    if(!grid) return;
+
+    const cards=grid.querySelectorAll(".vipAchievement");
+
+    cards.forEach(function(card){
+
+      if(card.dataset.bound==="1") return;
+
+      card.dataset.bound="1";
+
+      card.addEventListener("click",function(){
+
+        const isOpen=card.classList.contains("open");
+
+        cards.forEach(function(item){
+          item.classList.remove("open");
+        });
+
+        if(!isOpen){
+          card.classList.add("open");
+        }
+
+      });
+
+    });
+
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",bindZingoAchievements);
+  }else{
+    bindZingoAchievements();
+  }
+
+  setTimeout(bindZingoAchievements,500);
+  setTimeout(bindZingoAchievements,1500);
+
+  window.__zingoAchievementFinal={
+    refresh:bindZingoAchievements
+  };
+
+})();
+
+/* ===== END FINAL ACHIEVEMENTS ===== */
+
 </script>
-</body>
+
 </html>
