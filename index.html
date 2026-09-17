@@ -883,6 +883,43 @@ button{
 
 </div>
 
+<div id="zingoVIP5Scene" aria-hidden="true">
+  <div class="zvCinematicBg"></div>
+  <div class="zvCinematicVignette"></div>
+  <div class="zvOrbit zvOrbit1"></div><div class="zvOrbit zvOrbit2"></div><div class="zvOrbit zvOrbit3"></div>
+  <div class="zvPieces" id="zvPieces"></div>
+  <div class="zvImpact" id="zvImpact"></div>
+  <div class="zvLogo" id="zvLogo">PRO</div>
+  <div class="zvVIPLogo" id="zvVIPLogo">VIP</div>
+  <div class="zvCrown">♛</div>
+  <div class="zvSubtitle">ROYAL UPGRADE</div>
+  <button id="zingoVIP5Skip" type="button">تخطي</button>
+  <canvas id="zingoVIP5Canvas"></canvas>
+</div>
+<style id="zingoRoyalCinematicCSS">
+#zingoVIP5Scene{position:fixed;inset:0;z-index:2147483647;display:none;overflow:hidden;background:#020202;isolation:isolate;font-family:Arial,sans-serif}
+#zingoVIP5Scene.active{display:block}
+#zingoVIP5Canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2}
+.zvCinematicBg{position:absolute;inset:-20%;background:radial-gradient(circle at 50% 48%,rgba(202,151,44,.18),transparent 20%),radial-gradient(circle at 50% 50%,#17130b 0%,#050504 42%,#000 78%);animation:zvBg 5.4s ease forwards}
+.zvCinematicVignette{position:absolute;inset:0;background:radial-gradient(circle,transparent 30%,rgba(0,0,0,.72) 78%,#000 100%);z-index:6}
+.zvOrbit{position:absolute;left:50%;top:50%;width:min(78vw,520px);height:min(25vw,165px);border:1px solid rgba(239,196,92,.3);border-radius:50%;transform:translate(-50%,-50%) rotate(-12deg);box-shadow:0 0 28px rgba(225,171,50,.18);z-index:1;opacity:0;animation:zvOrbit 5s ease forwards}
+.zvOrbit2{transform:translate(-50%,-50%) rotate(36deg) scale(.8);animation-delay:.25s}.zvOrbit3{transform:translate(-50%,-50%) rotate(78deg) scale(.65);animation-delay:.5s}
+.zvLogo,.zvVIPLogo{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-family:Georgia,serif;font-weight:900;letter-spacing:.13em;z-index:4;white-space:nowrap}
+.zvLogo{font-size:clamp(72px,22vw,180px);color:#e8edf2;text-shadow:0 4px 28px rgba(255,255,255,.12);animation:zvPRO 5.2s cubic-bezier(.2,.8,.2,1) forwards}
+.zvVIPLogo{font-size:clamp(82px,25vw,205px);color:#f4d47a;text-shadow:0 0 8px #fff2bb,0 0 30px rgba(239,183,53,.9),0 0 90px rgba(218,149,25,.45);opacity:0;animation:zvVIP 5.2s cubic-bezier(.16,.8,.18,1) forwards}
+.zvCrown{position:absolute;left:50%;top:28%;transform:translate(-50%,30px) scale(.35);font-size:clamp(65px,17vw,140px);color:#f5d77f;text-shadow:0 0 25px rgba(240,185,51,.9);z-index:4;opacity:0;animation:zvCrown 5.2s ease forwards}
+.zvSubtitle{position:absolute;left:50%;top:69%;transform:translate(-50%,20px);z-index:4;color:#f6e3ad;font-size:clamp(11px,3vw,18px);letter-spacing:.42em;opacity:0;animation:zvSub 5.2s ease forwards;white-space:nowrap}
+#zingoVIP5Skip{position:absolute;right:18px;top:18px;z-index:10;border:1px solid rgba(241,205,116,.65);border-radius:999px;background:rgba(0,0,0,.58);color:#f3d681;padding:10px 18px;font-weight:800;backdrop-filter:blur(8px)}
+.zvPiece{position:absolute;width:clamp(34px,9vw,68px);height:clamp(14px,3vw,24px);border:1px solid rgba(255,239,182,.7);border-radius:5px;background:linear-gradient(135deg,#fff2b8,#c89225 45%,#6d4810);box-shadow:0 0 12px rgba(238,184,59,.55);z-index:3;opacity:0}
+.zvPiece.fromL{left:-10vw}.zvPiece.fromR{right:-10vw}
+@keyframes zvBg{0%{transform:scale(1.15)}100%{transform:scale(1)}}
+@keyframes zvOrbit{0%,12%{opacity:0;transform:translate(-50%,-50%) rotate(-12deg) scale(.55)}25%{opacity:1}75%{opacity:.75}100%{opacity:0;transform:translate(-50%,-50%) rotate(85deg) scale(1.4)}}
+@keyframes zvPRO{0%,8%{opacity:0;transform:translate(-50%,-50%) scale(.72);filter:blur(10px)}16%{opacity:1;filter:blur(0)}55%{opacity:1;transform:translate(-50%,-50%) scale(1)}67%{opacity:.15;transform:translate(-50%,-50%) scale(1.16);filter:blur(8px)}100%{opacity:0}}
+@keyframes zvVIP{0%,57%{opacity:0;transform:translate(-50%,-50%) scale(.62);filter:blur(14px)}68%{opacity:1;transform:translate(-50%,-50%) scale(1.1);filter:blur(0)}78%{transform:translate(-50%,-50%) scale(.98)}100%{opacity:1;transform:translate(-50%,-50%) scale(1)}}
+@keyframes zvCrown{0%,62%{opacity:0;transform:translate(-50%,30px) scale(.35)}72%{opacity:1;transform:translate(-50%,-6px) scale(1.08)}100%{opacity:1;transform:translate(-50%,0) scale(1)}}
+@keyframes zvSub{0%,70%{opacity:0;transform:translate(-50%,20px)}82%{opacity:1;transform:translate(-50%,0)}100%{opacity:.92;transform:translate(-50%,0)}}
+@media(prefers-reduced-motion:reduce){#zingoVIP5Scene *{animation-duration:1ms!important}}
+</style>
 <script id="zingoVIP5SceneJS">
 (function(){
 
@@ -1263,96 +1300,57 @@ button{
 
 <script id="zingoUnifiedModeScript">
 (function(){
-
-  let vipLoaded = false;
-
-
-
-
-
-  window.switchZingoMode = function(mode){
-
-    const proLayer = document.getElementById("zingoProLayer");
-    const vipLayer = document.getElementById("zingoVipLayer");
-    const proBtn = document.getElementById("zingoProBtn");
-    const vipBtn = document.getElementById("zingoVipBtn");
-    const frame = document.getElementById("zingoVipFrame");
-    const source = document.getElementById("zingoVipSource");
-    const glow = document.getElementById("zingoVipTransitionGlow");
-
-    if(!proLayer || !vipLayer || !proBtn || !vipBtn || !frame || !source){
-      console.error("ZINGO MODE ERROR");
-      return;
+  let vipLoaded=false;
+  let cinematicBusy=false;
+  const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  function telegramId(){
+    try{const u=window.Telegram?.WebApp?.initDataUnsafe?.user; if(u?.id)return String(u.id)}catch(e){}
+    return new URLSearchParams(location.search).get('telegram_id')||'0';
+  }
+  async function subscription(){
+    try{const r=await fetch('/api/subscription?telegram_id='+encodeURIComponent(telegramId()),{cache:'no-store'});return await r.json()}catch(e){return {ok:false}}
+  }
+  function cinematic(){
+    const scene=document.getElementById('zingoVIP5Scene');
+    const skip=document.getElementById('zingoVIP5Skip');
+    const pieces=document.getElementById('zvPieces');
+    if(!scene)return Promise.resolve();
+    pieces.innerHTML='';
+    for(let i=0;i<14;i++){
+      const el=document.createElement('i'); el.className='zvPiece '+(i%2?'fromR':'fromL');
+      el.style.top=(25+Math.random()*50)+'%';
+      el.style.animation=`zvPieceFly 1.65s cubic-bezier(.15,.8,.2,1) ${.25+(i%7)*.18}s forwards`;
+      el.style.setProperty('--tx',(Math.random()*22-11)+'vw');
+      pieces.appendChild(el);
     }
-
-    const isVIP = mode === "vip";
-
-    if(isVIP){
-      // ===== ZINGO ROYAL VIP CINEMATIC ONLY =====
-      try{
-        if(typeof window.__zingoRoyalVIP === "function"){
-          window.__zingoRoyalVIP();
-        }
-      }catch(e){
-        console.error("VIP cinematic:", e);
-      }
-
-      proLayer.classList.remove("zingo-pro-enter");
-      proLayer.classList.add("zingo-pro-exit");
-
-      setTimeout(function(){
-        proLayer.style.display = "none";
-        vipLayer.style.display = "block";
-
-        vipLayer.classList.remove("zingo-vip-exit");
-        void vipLayer.offsetWidth;
-        vipLayer.classList.add("zingo-vip-enter");
-
-        if(!vipLoaded){
-          frame.srcdoc = source.innerHTML;
-          vipLoaded = true;
-        }
-
-        proBtn.classList.remove("active-pro");
-        vipBtn.classList.add("active-vip");
-
-        window.scrollTo({
-          top: 0,
-          behavior: "smooth"
-        });
-      }, 180);
-
-      return;
+    if(!document.getElementById('zvPieceKeyframes')){
+      const st=document.createElement('style');st.id='zvPieceKeyframes';st.textContent='@keyframes zvPieceFly{0%{opacity:0;transform:translateX(0) rotate(0) scale(.55)}12%{opacity:1}72%{opacity:1}100%{opacity:0;transform:translateX(calc(var(--tx) + 50vw)) translateY(calc(50vh - var(--top,0px))) rotate(220deg) scale(1)}}';document.head.appendChild(st);
     }
-
-    vipLayer.classList.remove("zingo-vip-enter");
-    vipLayer.classList.add("zingo-vip-exit");
-
-    setTimeout(function(){
-
-      vipLayer.style.display = "none";
-
-      proLayer.style.display = "block";
-      proLayer.classList.remove("zingo-pro-exit");
-      void proLayer.offsetWidth;
-      proLayer.classList.add("zingo-pro-enter");
-
-      vipBtn.classList.remove("active-vip");
-      proBtn.classList.add("active-pro");
-
-      window.scrollTo({
-        top:0,
-        behavior:"smooth"
-      });
-
-    }, 180);
-
+    scene.classList.add('active'); scene.setAttribute('aria-hidden','false');
+    let resolved=false,timer;
+    return new Promise(resolve=>{
+      const finish=()=>{if(resolved)return;resolved=true;clearTimeout(timer);scene.classList.remove('active');scene.setAttribute('aria-hidden','true');pieces.innerHTML='';if(skip)skip.onclick=null;resolve()};
+      if(skip)skip.onclick=finish;
+      timer=setTimeout(finish,5200);
+    });
+  }
+  window.switchZingoMode=async function(mode){
+    const proLayer=document.getElementById('zingoProLayer'),vipLayer=document.getElementById('zingoVipLayer'),proBtn=document.getElementById('zingoProBtn'),vipBtn=document.getElementById('zingoVipBtn'),frame=document.getElementById('zingoVipFrame'),source=document.getElementById('zingoVipSource');
+    if(!proLayer||!vipLayer||!proBtn||!vipBtn||!frame||!source)return;
+    if(mode==='vip'){
+      if(cinematicBusy)return;
+      cinematicBusy=true;
+      const sub=await subscription();
+      if(!sub?.ok || !sub.vip?.active){ cinematicBusy=false; alert('🔒 VIP غير فعال حاليًا.'); return; }
+      try{await cinematic()}catch(e){console.error(e)}
+      proLayer.style.display='none'; vipLayer.style.display='block'; vipLayer.classList.remove('zingo-vip-exit'); void vipLayer.offsetWidth; vipLayer.classList.add('zingo-vip-enter');
+      if(!vipLoaded){frame.srcdoc=source.innerHTML;vipLoaded=true}
+      proBtn.classList.remove('active-pro');vipBtn.classList.add('active-vip');localStorage.setItem('zingo_last_mode','vip');window.scrollTo({top:0,behavior:'instant'});cinematicBusy=false;return;
+    }
+    vipLayer.classList.remove('zingo-vip-enter');vipLayer.classList.add('zingo-vip-exit');
+    await sleep(180);vipLayer.style.display='none';proLayer.style.display='block';proLayer.classList.remove('zingo-pro-exit');void proLayer.offsetWidth;proLayer.classList.add('zingo-pro-enter');vipBtn.classList.remove('active-vip');proBtn.classList.add('active-pro');localStorage.setItem('zingo_last_mode','pro');window.scrollTo({top:0,behavior:'instant'});
   };
-
-  document.addEventListener("DOMContentLoaded", function(){
-    window.switchZingoMode("pro");
-  });
-
+  document.addEventListener('DOMContentLoaded',()=>window.switchZingoMode('pro'));
 })();
 </script>
 
