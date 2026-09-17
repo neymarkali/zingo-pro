@@ -315,15 +315,20 @@ if (url.pathname === "/api/db/query" || url.pathname === "/api/xdb") {
 
         const rows = ranking.results || [];
 
-        const players = rows.map((player, index) => ({
+        const players = rows.map((player, index) => {
+        const playerId = Number(player.telegram_id);
+        const isMe = playerId === telegramId;
+
+        return {
           rank: Number(player.rank || index + 1),
-          telegram_id: Number(player.telegram_id),
-          name:
-            Number(player.telegram_id) === telegramId
-              ? "أنت"
-              : `لاعب ${String(player.telegram_id).slice(-4)}`,
+          telegram_id: playerId,
+          name: isMe
+            ? "أنت"
+            : `لاعب ${String(playerId).slice(-4)}`,
           points: Number(player.points || 0),
-        }));
+          is_me: isMe,
+        };
+      });
 
         const current = players.find(
           (player) => player.telegram_id === telegramId
