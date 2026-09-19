@@ -2053,6 +2053,7 @@ async function submitPredictions(){
 
       // 1X2 = نقطتان
       const response1x2 = await fetch("/api/pro_submit", {
+        headers: zingoAuthHeaders(),
         method:"POST",
         headers:{
           "Content-Type":"application/json"
@@ -2075,6 +2076,7 @@ async function submitPredictions(){
 
       // BTTS = نقطة واحدة
       const responseBTTS = await fetch("/api/pro_submit", {
+        headers: zingoAuthHeaders(),
         method:"POST",
         headers:{
           "Content-Type":"application/json"
@@ -6116,7 +6118,7 @@ async function renderAll(forceAdmin=false){
   try{
     const id=getTelegramId();
     if(id){
-      const r=await fetch("/api/pro_ranking?telegram_id="+encodeURIComponent(id));
+      const r=await fetch("/api/pro_ranking?telegram_id="+encodeURIComponent(id),{headers:zingoAuthHeaders()});
       const d=await r.json();
 
       isAdmin=isAdmin || isAdminData(d);
@@ -7571,7 +7573,8 @@ async function loadLeaderboard() {
         list.innerHTML = '<div class="lbEmpty">جاري تحميل الترتيب...</div>';
 
         const res = await fetch(
-            "/api/pro_ranking?telegram_id=" + encodeURIComponent(telegramId)
+            "/api/pro_ranking?telegram_id=" + encodeURIComponent(telegramId),
+            {headers:zingoAuthHeaders()}
         );
 
         const data = await res.json();
@@ -9139,7 +9142,7 @@ async function checkVIP(){
     const r = await fetch(
       "/api/subscription?telegram_id=" +
       encodeURIComponent(telegramId()),
-      {cache:"no-store"}
+      {headers:zingoAuthHeaders(),cache:"no-store"}
     );
 
     const d = await r.json();
