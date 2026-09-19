@@ -7544,6 +7544,330 @@ document.addEventListener("DOMContentLoaded",()=>{
 </script>
 
 
+
+<!-- END ZINGO VIP MASTER CONTROLLER -->
+
+</body>
+
+
+<script>
+async function loadLeaderboard() {
+    const list = document.getElementById("leaderboardList");
+    const myRank = document.getElementById("myRank");
+
+    if (!list) return;
+
+    const params = new URLSearchParams(window.location.search);
+    const telegramId =
+        params.get("telegram_id") ||
+        (window.Telegram &&
+         Telegram.WebApp &&
+         Telegram.WebApp.initDataUnsafe &&
+         Telegram.WebApp.initDataUnsafe.user
+            ? Telegram.WebApp.initDataUnsafe.user.id
+            : 0);
+
+    try {
+        list.innerHTML = '<div class="lbEmpty">جاري تحميل الترتيب...</div>';
+
+        const res = await fetch(
+            "/api/pro_ranking?telegram_id=" + encodeURIComponent(telegramId)
+        );
+
+        const data = await res.json();
+
+        if (!data.ok) {
+            throw new Error(data.error || "Leaderboard error");
+        }
+
+        if (!data.players || !data.players.length) {
+            list.innerHTML =
+                '<div class="lbEmpty">لا يوجد لاعبين حاليًا</div>';
+            myRank.style.display = "none";
+            return;
+        }
+
+        if (data.current_rank) {
+            myRank.style.display = "block";
+            myRank.innerHTML =
+                "ترتيبك الحالي: <strong>#" +
+                data.current_rank +
+                "</strong> من " +
+                data.total_players;
+        } else {
+            myRank.style.display = "none";
+        }
+
+        list.innerHTML = data.players.map(function(player) {
+            let medal = "";
+            if (player.rank === 1) medal = "🥇";
+            else if (player.rank === 2) medal = "🥈";
+            else if (player.rank === 3) medal = "🥉";
+
+            return `
+                <div class="lbRow ${player.is_me ? "me" : ""}">
+                    <div class="lbRank">${medal || "#" + player.rank}</div>
+                    <div class="lbName">
+                        ${escapeLeaderboardText(player.name)}
+                        ${player.is_me ? " <strong>— أنت</strong>" : ""}
+                    </div>
+                    <div class="lbPoints">${player.points} نقطة</div>
+                </div>
+            `;
+        }).join("");
+
+    } catch (err) {
+        list.innerHTML =
+            '<div class="lbEmpty">تعذر تحميل الترتيب، حاول مرة ثانية.</div>';
+        console.error("PRO leaderboard:", err);
+    }
+}
+
+function escapeLeaderboardText(text) {
+    return String(text ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    loadLeaderboard();
+
+    const refresh = document.getElementById("lbRefresh");
+    if (refresh) {
+        refresh.addEventListener("click", loadLeaderboard);
+    }
+});
+
+/* ZINGO VIP FRAME MODAL HOOK */
+(function(){
+  const originalOpenProfile = window.openProfile;
+
+  if(typeof originalOpenProfile !== "function") return;
+
+  window.openProfile = function(){
+    originalOpenProfile.apply(this, arguments);
+
+    setTimeout(function(){
+      if(
+        window.__zingoVIPIdentity &&
+        typeof window.__zingoVIPIdentity.refresh === "function"
+      ){
+        window.__zingoVIPIdentity.refresh();
+      }
+    }, 100);
+  };
+})();
+
+
+/* ===== ZINGO VIP ACHIEVEMENTS ENGINE V4 ===== */
+
+(function(){
+
+  const ACHIEVEMENTS = [
+    {id:"first",icon:"🌱",name:"البداية",level:"LEVEL 1",target:1,type:"correct",reward:"🎁 إطار Rookie خاص"},
+    {id:"hot",icon:"🎯",name:"القنّاص",level:"LEVEL 2",target:5,type:"correct",reward:"🎁 Badge القنّاص"},
+    {id:"sniper",icon:"🔥",name:"Sniper",level:"LEVEL 3",target:10,type:"correct",reward:"🎁 تأثير ناري للملف"},
+    {id:"elite",icon:"👑",name:"Elite",level:"LEVEL 4",target:25,type:"correct",reward:"🎁 VIP لمدة 24 ساعة"},
+    {id:"master",icon:"💎",name:"Master",level:"LEVEL 5",target:50,type:"correct",reward:"🎁 VIP لمدة 3 أيام"},
+    {id:"legend",icon:"🏆",name:"Legend",level:"LEVEL 6",target:100,type:"points",reward:"🎁 VIP أسبوع + إطار Legend"}
+  ];
+
+  function getStats(){
+    let points = 0;
+    let correct = 0;
+
+    try{
+      if(window.__zingoVIPProfile){
+        const p = window.__zingoVIPProfile;
+        points = Number(p.points ?? p.total_points ?? p.rating ?? 0);
+        correct = Number(p.correct ?? p.correct_predictions ?? p.correct_count ?? 0);
+      }
+    }catch(e){}
+
+    try{
+      document.querySelectorAll(".pstat strong").forEach(function(el){
+        const text = (el.textContent || "").trim();
+        if(!points && /^[0-9]+$/.test(text)){
+          points = Number(text);
+        }
+      });
+    }catch(e){}
+
+    return {
+      points:Math.max(0,points),
+      correct:Math.max(0,correct)
+    };
+  }
+
+  function bindClicks(){
+    const cards = document.querySelectorAll("#vipAchievementGrid .vipAchievement");
+
+    cards.forEach(function(card){
+      card.addEventListener("click",function(){
+        const wasOpen = card.classList.contains("open");
+
+        cards.forEach(function(other){
+          other.classList.remove("open");
+        });
+
+        if(!wasOpen){
+          card.classList.add("open");
+        }
+      });
+    });
+  }
+
+  function renderAchievements(){
+
+    const grid = document.getElementById("vipAchievementGrid");
+    const count = document.getElementById("vipAchCount");
+
+    if(!grid) return;
+
+    const stats = getStats();
+    let unlocked = 0;
+
+    grid.innerHTML = ACHIEVEMENTS.map(function(a){
+
+      const value = a.type === "points"
+        ? stats.points
+        : stats.correct;
+
+      const progress = Math.min(100,(value / a.target) * 100);
+      const isUnlocked = value >= a.target;
+
+      if(isUnlocked) unlocked++;
+
+      return `
+        <div class="vipAchievement ${isUnlocked ? "unlocked" : "locked"}" data-achievement="${a.id}">
+
+          <div class="vipAchIcon">${a.icon}</div>
+
+          <div class="vipAchMain">
+
+            <div class="vipAchTop">
+
+              <div>
+                <div class="vipAchName">${a.name}</div>
+                <div class="vipAchLevel">${a.level}</div>
+              </div>
+
+              <div class="vipAchState">+</div>
+
+            </div>
+
+            <div class="vipAchProgress">
+              <span style="width:${progress}%"></span>
+            </div>
+
+            <div class="vipAchMeta">
+              <span>
+                ${Math.min(value,a.target)} / ${a.target}
+                ${a.type === "points" ? "نقطة" : "صحيحة"}
+              </span>
+              <b>${a.reward}</b>
+            </div>
+
+          </div>
+
+        </div>
+      `;
+
+    }).join("");
+
+    if(count){
+      count.textContent = unlocked + " / " + ACHIEVEMENTS.length;
+    }
+
+    bindClicks();
+  }
+
+  function refresh(){
+    renderAchievements();
+  }
+
+  window.__zingoAchievements = {
+    refresh:refresh,
+    render:renderAchievements
+  };
+
+  function boot(){
+    renderAchievements();
+    setTimeout(renderAchievements,500);
+    setTimeout(renderAchievements,1500);
+    setTimeout(renderAchievements,3000);
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded",boot);
+  }else{
+    boot();
+  }
+
+  console.log("🏆 ZINGO ACHIEVEMENTS ENGINE V4 LOADED");
+
+})();
+
+/* ===== ZINGO VIP ACHIEVEMENTS FINAL INTERACTION ===== */
+
+(function(){
+
+  function bindZingoAchievements(){
+
+    const grid=document.getElementById("vipAchievementGrid");
+    if(!grid) return;
+
+    const cards=grid.querySelectorAll(".vipAchievement");
+
+    cards.forEach(function(card){
+
+      if(card.dataset.bound==="1") return;
+
+      card.dataset.bound="1";
+
+      card.addEventListener("click",function(){
+
+        const isOpen=card.classList.contains("open");
+
+        cards.forEach(function(item){
+          item.classList.remove("open");
+        });
+
+        if(!isOpen){
+          card.classList.add("open");
+        }
+
+      });
+
+    });
+
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",bindZingoAchievements);
+  }else{
+    bindZingoAchievements();
+  }
+
+  setTimeout(bindZingoAchievements,500);
+  setTimeout(bindZingoAchievements,1500);
+
+  window.__zingoAchievementFinal={
+    refresh:bindZingoAchievements
+  };
+
+})();
+
+/* ===== END FINAL ACHIEVEMENTS ===== */
+
+</script>
+
+</html>
+</template>
+
 <!-- ZINGO ROYAL VIP ASCENSION FINAL -->
 
 <style id="ZINGO_ROYAL_ASCENSION_FINAL_CSS">
@@ -8699,6 +9023,7 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 
 <!-- ZINGO VIP MASTER CONTROLLER -->
+
 <script id="zingoVipMasterController">
 (function(){
 
@@ -9033,324 +9358,6 @@ document.addEventListener("DOMContentLoaded",()=>{
 
 })();
 </script>
-<!-- END ZINGO VIP MASTER CONTROLLER -->
 
 </body>
-
-
-<script>
-async function loadLeaderboard() {
-    const list = document.getElementById("leaderboardList");
-    const myRank = document.getElementById("myRank");
-
-    if (!list) return;
-
-    const params = new URLSearchParams(window.location.search);
-    const telegramId =
-        params.get("telegram_id") ||
-        (window.Telegram &&
-         Telegram.WebApp &&
-         Telegram.WebApp.initDataUnsafe &&
-         Telegram.WebApp.initDataUnsafe.user
-            ? Telegram.WebApp.initDataUnsafe.user.id
-            : 0);
-
-    try {
-        list.innerHTML = '<div class="lbEmpty">جاري تحميل الترتيب...</div>';
-
-        const res = await fetch(
-            "/api/pro_ranking?telegram_id=" + encodeURIComponent(telegramId)
-        );
-
-        const data = await res.json();
-
-        if (!data.ok) {
-            throw new Error(data.error || "Leaderboard error");
-        }
-
-        if (!data.players || !data.players.length) {
-            list.innerHTML =
-                '<div class="lbEmpty">لا يوجد لاعبين حاليًا</div>';
-            myRank.style.display = "none";
-            return;
-        }
-
-        if (data.current_rank) {
-            myRank.style.display = "block";
-            myRank.innerHTML =
-                "ترتيبك الحالي: <strong>#" +
-                data.current_rank +
-                "</strong> من " +
-                data.total_players;
-        } else {
-            myRank.style.display = "none";
-        }
-
-        list.innerHTML = data.players.map(function(player) {
-            let medal = "";
-            if (player.rank === 1) medal = "🥇";
-            else if (player.rank === 2) medal = "🥈";
-            else if (player.rank === 3) medal = "🥉";
-
-            return `
-                <div class="lbRow ${player.is_me ? "me" : ""}">
-                    <div class="lbRank">${medal || "#" + player.rank}</div>
-                    <div class="lbName">
-                        ${escapeLeaderboardText(player.name)}
-                        ${player.is_me ? " <strong>— أنت</strong>" : ""}
-                    </div>
-                    <div class="lbPoints">${player.points} نقطة</div>
-                </div>
-            `;
-        }).join("");
-
-    } catch (err) {
-        list.innerHTML =
-            '<div class="lbEmpty">تعذر تحميل الترتيب، حاول مرة ثانية.</div>';
-        console.error("PRO leaderboard:", err);
-    }
-}
-
-function escapeLeaderboardText(text) {
-    return String(text ?? "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-}
-
-document.addEventListener("DOMContentLoaded", function() {
-    loadLeaderboard();
-
-    const refresh = document.getElementById("lbRefresh");
-    if (refresh) {
-        refresh.addEventListener("click", loadLeaderboard);
-    }
-});
-
-/* ZINGO VIP FRAME MODAL HOOK */
-(function(){
-  const originalOpenProfile = window.openProfile;
-
-  if(typeof originalOpenProfile !== "function") return;
-
-  window.openProfile = function(){
-    originalOpenProfile.apply(this, arguments);
-
-    setTimeout(function(){
-      if(
-        window.__zingoVIPIdentity &&
-        typeof window.__zingoVIPIdentity.refresh === "function"
-      ){
-        window.__zingoVIPIdentity.refresh();
-      }
-    }, 100);
-  };
-})();
-
-
-/* ===== ZINGO VIP ACHIEVEMENTS ENGINE V4 ===== */
-
-(function(){
-
-  const ACHIEVEMENTS = [
-    {id:"first",icon:"🌱",name:"البداية",level:"LEVEL 1",target:1,type:"correct",reward:"🎁 إطار Rookie خاص"},
-    {id:"hot",icon:"🎯",name:"القنّاص",level:"LEVEL 2",target:5,type:"correct",reward:"🎁 Badge القنّاص"},
-    {id:"sniper",icon:"🔥",name:"Sniper",level:"LEVEL 3",target:10,type:"correct",reward:"🎁 تأثير ناري للملف"},
-    {id:"elite",icon:"👑",name:"Elite",level:"LEVEL 4",target:25,type:"correct",reward:"🎁 VIP لمدة 24 ساعة"},
-    {id:"master",icon:"💎",name:"Master",level:"LEVEL 5",target:50,type:"correct",reward:"🎁 VIP لمدة 3 أيام"},
-    {id:"legend",icon:"🏆",name:"Legend",level:"LEVEL 6",target:100,type:"points",reward:"🎁 VIP أسبوع + إطار Legend"}
-  ];
-
-  function getStats(){
-    let points = 0;
-    let correct = 0;
-
-    try{
-      if(window.__zingoVIPProfile){
-        const p = window.__zingoVIPProfile;
-        points = Number(p.points ?? p.total_points ?? p.rating ?? 0);
-        correct = Number(p.correct ?? p.correct_predictions ?? p.correct_count ?? 0);
-      }
-    }catch(e){}
-
-    try{
-      document.querySelectorAll(".pstat strong").forEach(function(el){
-        const text = (el.textContent || "").trim();
-        if(!points && /^[0-9]+$/.test(text)){
-          points = Number(text);
-        }
-      });
-    }catch(e){}
-
-    return {
-      points:Math.max(0,points),
-      correct:Math.max(0,correct)
-    };
-  }
-
-  function bindClicks(){
-    const cards = document.querySelectorAll("#vipAchievementGrid .vipAchievement");
-
-    cards.forEach(function(card){
-      card.addEventListener("click",function(){
-        const wasOpen = card.classList.contains("open");
-
-        cards.forEach(function(other){
-          other.classList.remove("open");
-        });
-
-        if(!wasOpen){
-          card.classList.add("open");
-        }
-      });
-    });
-  }
-
-  function renderAchievements(){
-
-    const grid = document.getElementById("vipAchievementGrid");
-    const count = document.getElementById("vipAchCount");
-
-    if(!grid) return;
-
-    const stats = getStats();
-    let unlocked = 0;
-
-    grid.innerHTML = ACHIEVEMENTS.map(function(a){
-
-      const value = a.type === "points"
-        ? stats.points
-        : stats.correct;
-
-      const progress = Math.min(100,(value / a.target) * 100);
-      const isUnlocked = value >= a.target;
-
-      if(isUnlocked) unlocked++;
-
-      return `
-        <div class="vipAchievement ${isUnlocked ? "unlocked" : "locked"}" data-achievement="${a.id}">
-
-          <div class="vipAchIcon">${a.icon}</div>
-
-          <div class="vipAchMain">
-
-            <div class="vipAchTop">
-
-              <div>
-                <div class="vipAchName">${a.name}</div>
-                <div class="vipAchLevel">${a.level}</div>
-              </div>
-
-              <div class="vipAchState">+</div>
-
-            </div>
-
-            <div class="vipAchProgress">
-              <span style="width:${progress}%"></span>
-            </div>
-
-            <div class="vipAchMeta">
-              <span>
-                ${Math.min(value,a.target)} / ${a.target}
-                ${a.type === "points" ? "نقطة" : "صحيحة"}
-              </span>
-              <b>${a.reward}</b>
-            </div>
-
-          </div>
-
-        </div>
-      `;
-
-    }).join("");
-
-    if(count){
-      count.textContent = unlocked + " / " + ACHIEVEMENTS.length;
-    }
-
-    bindClicks();
-  }
-
-  function refresh(){
-    renderAchievements();
-  }
-
-  window.__zingoAchievements = {
-    refresh:refresh,
-    render:renderAchievements
-  };
-
-  function boot(){
-    renderAchievements();
-    setTimeout(renderAchievements,500);
-    setTimeout(renderAchievements,1500);
-    setTimeout(renderAchievements,3000);
-  }
-
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded",boot);
-  }else{
-    boot();
-  }
-
-  console.log("🏆 ZINGO ACHIEVEMENTS ENGINE V4 LOADED");
-
-})();
-
-/* ===== ZINGO VIP ACHIEVEMENTS FINAL INTERACTION ===== */
-
-(function(){
-
-  function bindZingoAchievements(){
-
-    const grid=document.getElementById("vipAchievementGrid");
-    if(!grid) return;
-
-    const cards=grid.querySelectorAll(".vipAchievement");
-
-    cards.forEach(function(card){
-
-      if(card.dataset.bound==="1") return;
-
-      card.dataset.bound="1";
-
-      card.addEventListener("click",function(){
-
-        const isOpen=card.classList.contains("open");
-
-        cards.forEach(function(item){
-          item.classList.remove("open");
-        });
-
-        if(!isOpen){
-          card.classList.add("open");
-        }
-
-      });
-
-    });
-
-  }
-
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",bindZingoAchievements);
-  }else{
-    bindZingoAchievements();
-  }
-
-  setTimeout(bindZingoAchievements,500);
-  setTimeout(bindZingoAchievements,1500);
-
-  window.__zingoAchievementFinal={
-    refresh:bindZingoAchievements
-  };
-
-})();
-
-/* ===== END FINAL ACHIEVEMENTS ===== */
-
-</script>
-
 </html>
