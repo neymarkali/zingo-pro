@@ -7701,30 +7701,7 @@ document.addEventListener("DOMContentLoaded",()=>{
   window.__zingoRoyalAscension=play;
   function boot(){const s=scene();if(s){s.addEventListener('click',e=>{if(e.target===s)e.preventDefault()})}}
   if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',boot);else boot();
-  // Final controller: preserves subscription gate and loads the existing VIP srcdoc only once.
-  let vipLoaded=false, switching=false;
-  const original=window.switchZingoMode;
-  window.switchZingoMode=async function(mode){
-    if(switching)return; switching=true;
-    const pro=document.getElementById('zingoProLayer'),vip=document.getElementById('zingoVipLayer'),pb=document.getElementById('zingoProBtn'),vb=document.getElementById('zingoVipBtn'),frame=document.getElementById('zingoVipFrame'),source=document.getElementById('zingoVipSource');
-    if(!pro||!vip||!pb||!vb||!frame||!source){switching=false;return}
-    if(mode==='vip'){
-      try{
-        const u=window.Telegram?.WebApp?.initDataUnsafe?.user?.id || new URLSearchParams(location.search).get('telegram_id') || '0';
-        const r=await fetch('/api/subscription?telegram_id='+encodeURIComponent(u),{cache:'no-store'}); const d=await r.json();
-        if(!d?.ok || !d?.vip?.active){alert('🔒 VIP غير فعال حاليًا.');switching=false;return}
-      }catch(e){alert('تعذر التحقق من اشتراك VIP.');switching=false;return}
-      await play();
-      pro.style.display='none';vip.style.display='block';vip.classList.remove('zingo-vip-exit');void vip.offsetWidth;vip.classList.add('zingo-vip-enter');
-      if(!vipLoaded){frame.srcdoc=source.innerHTML;vipLoaded=true}
-      pb.classList.remove('active-pro');vb.classList.add('active-vip');localStorage.setItem('zingo_last_mode','vip');window.scrollTo({top:0,behavior:'instant'});
-    }else{
-      vip.classList.remove('zingo-vip-enter');vip.classList.add('zingo-vip-exit');await sleep(180);vip.style.display='none';pro.style.display='block';pro.classList.remove('zingo-pro-exit');void pro.offsetWidth;pro.classList.add('zingo-pro-enter');vb.classList.remove('active-vip');pb.classList.add('active-pro');localStorage.setItem('zingo_last_mode','pro');window.scrollTo({top:0,behavior:'instant'});
-    }
-    switching=false;
-  };
-})();
-</script>
+  </script>
 
 
 <!-- ZINGO VIP FINAL MASTER FIX -->
@@ -8801,6 +8778,274 @@ html, body {
 })();
 </script>
 <!-- END ZINGO VIP AUTO MODE FINAL FIX -->
+
+
+<!-- ZINGO VIP MASTER CONTROLLER -->
+<script id="zingoVipMasterController">
+(function(){
+
+  let vipLoaded = false;
+  let switching = false;
+
+  function getEl(id){
+    return document.getElementById(id);
+  }
+
+  function showPRO(){
+    const pro = getEl("zingoProLayer");
+    const vip = getEl("zingoVipLayer");
+    const pb  = getEl("zingoProBtn");
+    const vb  = getEl("zingoVipBtn");
+
+    if(!pro || !vip) return;
+
+    pro.style.display = "block";
+    vip.style.display = "none";
+
+    pro.classList.remove("zingo-pro-exit");
+    vip.classList.remove("zingo-vip-enter");
+
+    if(pb) pb.classList.add("active-pro");
+    if(vb) vb.classList.remove("active-vip");
+
+    document.body.classList.remove("zingo-vip-active");
+
+    console.log("ZINGO MODE: PRO");
+  }
+
+  async function checkVIP(){
+
+    try{
+      const u =
+        window.Telegram?.WebApp?.initDataUnsafe?.user?.id ||
+        new URLSearchParams(location.search).get("telegram_id") ||
+        "0";
+
+      const r = await fetch(
+        "/api/subscription?telegram_id=" +
+        encodeURIComponent(u),
+        {cache:"no-store"}
+      );
+
+      const d = await r.json();
+
+      console.log("VIP SUBSCRIPTION:", d);
+
+      return !!(d && d.ok && d.vip && d.vip.active);
+
+    }catch(e){
+
+      console.error("VIP subscription check failed:", e);
+
+      return false;
+    }
+  }
+
+  function openVIP(){
+
+    const pro = getEl("zingoProLayer");
+    const vip = getEl("zingoVipLayer");
+    const pb  = getEl("zingoProBtn");
+    const vb  = getEl("zingoVipBtn");
+    const frame = getEl("zingoVipFrame");
+    const source = getEl("zingoVipSource");
+
+    if(!pro || !vip){
+      console.error("VIP LAYERS NOT FOUND");
+      return;
+    }
+
+    pro.style.display = "none";
+    vip.style.display = "block";
+
+    vip.classList.remove("zingo-vip-exit");
+    void vip.offsetWidth;
+    vip.classList.add("zingo-vip-enter");
+
+    if(pb) pb.classList.remove("active-pro");
+    if(vb) vb.classList.add("active-vip");
+
+    document.body.classList.add("zingo-vip-active");
+
+    if(frame && source && !vipLoaded){
+
+      frame.srcdoc = source.innerHTML;
+      vipLoaded = true;
+
+      console.log("VIP SRC loaded");
+    }
+
+    console.log("ZINGO MODE: VIP");
+  }
+
+  function playCinema(){
+
+    return new Promise(resolve => {
+
+      const scene = getEl("zingoRoyalAscension");
+
+      if(!scene){
+        console.warn("Royal cinematic not found");
+        resolve();
+        return;
+      }
+
+      const skip = scene.querySelector(".ra-skip");
+
+      let finished = false;
+      let timer = null;
+
+      function finish(){
+
+        if(finished) return;
+        finished = true;
+
+        if(timer) clearTimeout(timer);
+
+        scene.classList.remove("active");
+        scene.setAttribute("aria-hidden","true");
+
+        if(skip){
+          skip.onclick = null;
+        }
+
+        console.log("VIP CINEMATIC FINISHED");
+
+        resolve();
+      }
+
+      /*
+       * إعادة تشغيل الأنيميشن من الصفر
+       */
+      scene.classList.remove("active");
+      scene.setAttribute("aria-hidden","true");
+
+      void scene.offsetWidth;
+
+      /*
+       * زر التخطي أهم شيء:
+       * نربطه مباشرة هنا، بدون الاعتماد على Controller قديم.
+       */
+      if(skip){
+
+        skip.onclick = function(e){
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          console.log("VIP CINEMATIC SKIPPED");
+
+          finish();
+        };
+
+        skip.ontouchend = function(e){
+
+          e.preventDefault();
+          e.stopPropagation();
+
+          console.log("VIP CINEMATIC SKIPPED TOUCH");
+
+          finish();
+        };
+      }
+
+      scene.classList.add("active");
+      scene.setAttribute("aria-hidden","false");
+
+      /*
+       * الصوت إن كان موجودًا
+       */
+      try{
+        if(typeof window.__zingoRoyalVIP === "function"){
+          /*
+           * لا نستدعيه هنا لأنه قد يشغل Controller قديم.
+           * المشهد نفسه يعمل بالـCSS.
+           */
+        }
+      }catch(e){}
+
+      /*
+       * مدة المشهد الحالي 7.8 ثواني.
+       * بعدها ندخل VIP تلقائيًا.
+       */
+      timer = setTimeout(finish, 8000);
+
+      console.log("VIP CINEMATIC STARTED");
+    });
+  }
+
+  window.switchZingoMode = async function(mode){
+
+    if(switching) return;
+
+    if(mode !== "vip"){
+      showPRO();
+      return;
+    }
+
+    switching = true;
+
+    try{
+
+      const active = await checkVIP();
+
+      if(!active){
+
+        alert("🔒 VIP غير فعال حاليًا.");
+
+        showPRO();
+
+        return;
+      }
+
+      /*
+       * أولاً السينمائية.
+       */
+      await playCinema();
+
+      /*
+       * بعدها VIP.
+       */
+      openVIP();
+
+    }catch(e){
+
+      console.error("VIP MODE ERROR:", e);
+
+      showPRO();
+
+    }finally{
+
+      switching = false;
+    }
+  };
+
+  /*
+   * ضمان عمل أزرار الـHTML حتى لو onclick القديم موجود.
+   */
+  document.addEventListener("DOMContentLoaded", function(){
+
+    const proBtn = getEl("zingoProBtn");
+    const vipBtn = getEl("zingoVipBtn");
+
+    if(proBtn){
+      proBtn.addEventListener("click", function(){
+        window.switchZingoMode("pro");
+      });
+    }
+
+    if(vipBtn){
+      vipBtn.addEventListener("click", function(){
+        window.switchZingoMode("vip");
+      });
+    }
+
+    console.log("ZINGO VIP MASTER CONTROLLER READY");
+  });
+
+})();
+</script>
+<!-- END ZINGO VIP MASTER CONTROLLER -->
 
 </body>
 
