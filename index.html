@@ -9359,5 +9359,208 @@ document.addEventListener("DOMContentLoaded", function() {
 })();
 </script>
 
+
+<!-- ZINGO VIP SWITCH GLOBAL BRIDGE -->
+<script id="zingoVipGlobalBridge">
+(function(){
+  "use strict";
+
+  function getId(id){
+    return document.getElementById(id);
+  }
+
+  async function vipCheck(){
+    try{
+      const id =
+        window.Telegram?.WebApp?.initDataUnsafe?.user?.id ||
+        new URLSearchParams(location.search).get("telegram_id") ||
+        "0";
+
+      const r = await fetch(
+        "/api/subscription?telegram_id=" + encodeURIComponent(id),
+        {cache:"no-store"}
+      );
+
+      const d = await r.json();
+
+      return !!(d && d.ok && d.vip && d.vip.active);
+    }catch(e){
+      console.error("VIP CHECK ERROR:", e);
+      return false;
+    }
+  }
+
+  function openVip(){
+    const pro = getId("zingoProLayer");
+    const vip = getId("zingoVipLayer");
+    const pb  = getId("zingoProBtn");
+    const vb  = getId("zingoVipBtn");
+
+    if(!vip){
+      console.error("ZINGO VIP LAYER NOT FOUND");
+      return;
+    }
+
+    if(pro) pro.style.display = "none";
+
+    vip.style.display = "block";
+    vip.classList.remove("zingo-vip-enter");
+    void vip.offsetWidth;
+    vip.classList.add("zingo-vip-enter");
+
+    if(pb) pb.classList.remove("active-pro");
+    if(vb) vb.classList.add("active-vip");
+
+    document.body.classList.add("zingo-vip-active");
+
+    const frame = getId("zingoVipFrame");
+    const source = getId("zingoVipSource");
+
+    if(frame && source && !frame.srcdoc){
+      frame.srcdoc = source.innerHTML;
+    }
+
+    window.scrollTo(0,0);
+
+    console.log("ZINGO MODE: VIP");
+  }
+
+  function openPro(){
+    const pro = getId("zingoProLayer");
+    const vip = getId("zingoVipLayer");
+    const pb  = getId("zingoProBtn");
+    const vb  = getId("zingoVipBtn");
+
+    if(vip) vip.style.display = "none";
+    if(pro) pro.style.display = "block";
+
+    if(pb) pb.classList.add("active-pro");
+    if(vb) vb.classList.remove("active-vip");
+
+    document.body.classList.remove("zingo-vip-active");
+
+    console.log("ZINGO MODE: PRO");
+  }
+
+  function cinema(){
+    return new Promise(function(resolve){
+
+      const scene = getId("zingoRoyalAscension");
+
+      if(!scene){
+        console.warn("ROYAL CINEMATIC NOT FOUND");
+        resolve();
+        return;
+      }
+
+      let done = false;
+
+      function finish(){
+        if(done) return;
+        done = true;
+
+        scene.classList.remove("active");
+        scene.setAttribute("aria-hidden","true");
+
+        resolve();
+      }
+
+      const skip = scene.querySelector(".ra-skip");
+
+      if(skip){
+        skip.onclick = function(e){
+          e.preventDefault();
+          e.stopPropagation();
+          console.log("VIP CINEMATIC SKIPPED");
+          finish();
+        };
+      }
+
+      scene.classList.remove("active");
+      void scene.offsetWidth;
+      scene.classList.add("active");
+      scene.setAttribute("aria-hidden","false");
+
+      console.log("VIP CINEMATIC STARTED");
+
+      setTimeout(finish, 8000);
+    });
+  }
+
+  let switching = false;
+
+  window.switchZingoMode = async function(mode){
+
+    if(switching) return;
+
+    if(mode !== "vip"){
+      openPro();
+      return;
+    }
+
+    switching = true;
+
+    try{
+
+      const active = await vipCheck();
+
+      if(!active){
+        alert("🔒 VIP غير فعال حاليًا.");
+        openPro();
+        return;
+      }
+
+      await cinema();
+
+      openVip();
+
+    }catch(e){
+
+      console.error("ZINGO VIP SWITCH ERROR:",e);
+      openPro();
+
+    }finally{
+
+      switching = false;
+
+    }
+  };
+
+  // إعادة ربط الأزرار مباشرة حتى لو كانت onclick الأصلية لم تعمل
+  function bind(){
+
+    const pro = getId("zingoProBtn");
+    const vip = getId("zingoVipBtn");
+
+    if(pro){
+      pro.onclick = function(e){
+        e.preventDefault();
+        window.switchZingoMode("pro");
+      };
+    }
+
+    if(vip){
+      vip.onclick = function(e){
+        e.preventDefault();
+        window.switchZingoMode("vip");
+      };
+    }
+
+    console.log(
+      "ZINGO VIP GLOBAL BRIDGE READY:",
+      typeof window.switchZingoMode
+    );
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded",bind,{once:true});
+  }else{
+    bind();
+  }
+
+})();
+</script>
+<!-- END ZINGO VIP SWITCH GLOBAL BRIDGE -->
+
 </body>
 </html>
