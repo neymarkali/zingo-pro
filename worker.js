@@ -5,7 +5,7 @@ function json(data, status = 200) {
       "Content-Type": "application/json; charset=utf-8",
       "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type",
+      "Access-Control-Allow-Headers": "Content-Type, X-Telegram-Init-Data",
     },
   });
 }
@@ -29,6 +29,193 @@ const ZINGO_ADMIN_IDS = new Set([
 
 function isZingoAdmin(telegramId) {
   return ZINGO_ADMIN_IDS.has(String(telegramId || "").trim());
+}
+
+
+function bytesToHex(bytes) {
+  return Array.from(bytes)
+    .map(b => b.toString(16).padStart(2, "0"))
+    .join("");
+}
+
+function safeEqual(a, b) {
+  if (typeof a !== "string" || typeof b !== "string") return false;
+  if (a.length !== b.length) return false;
+
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) {
+    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  }
+
+  return diff === 0;
+}
+
+async function hmacSha256(key, message) {
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    key,
+    { name: "HMAC", hash: "SHA-256" },
+    false,
+    ["sign"]
+  );
+
+  return new Uint8Array(
+    await crypto.subtle.sign(
+      "HMAC",
+      cryptoKey,
+      new TextEncoder().encode(message)
+    )
+  );
+}
+
+async function verifyTelegramInitData(request, env) {
+  const initData =
+    request.headers.get("X-Telegram-Init-Data") || "";
+
+  if (!initData) {
+    return {
+      ok: false,
+      status: 401,
+      error: "telegram_init_data_missing"
+    };
+  }
+
+  if (!env.TELEGRAM_BOT_TOKEN) {
+    console.error("TELEGRAM_BOT_TOKEN is not configured");
+
+    return {
+      ok: false,
+      status: 500,
+      error: "telegram_auth_not_configured"
+    };
+  }
+
+  try {
+    const params = new URLSearchParams(initData);
+    const receivedHash = params.get("hash");
+
+    if (!receivedHash) {
+      return {
+        ok: false,
+        status: 401,
+        error: "telegram_hash_missing"
+      };
+    }
+
+    params.delete("hash");
+
+    const dataCheckString = Array.from(params.entries())
+      .sort((a, b) => a[0].localeCompare(b[0]))
+      .map(([key, value]) => `${key}=${value}`)
+      .join("\n");
+
+    const botToken = new TextEncoder().encode(
+      env.TELEGRAM_BOT_TOKEN
+    );
+
+    const secretKey = await hmacSha256(
+      new TextEncoder().encode("WebAppData"),
+      env.TELEGRAM_BOT_TOKEN
+    );
+
+    const calculatedHash = bytesToHex(
+      await hmacSha256(secretKey, dataCheckString)
+    );
+
+    if (
+      !safeEqual(
+        calculatedHash,
+        receivedHash.toLowerCase()
+      )
+    ) {
+      return {
+        ok: false,
+        status: 401,
+        error: "telegram_init_data_invalid"
+      };
+    }
+
+    const authDate = Number(
+      params.get("auth_date") || 0
+    );
+
+    const now = Math.floor(Date.now() / 1000);
+
+    if (
+      !Number.isFinite(authDate) ||
+      authDate <= 0 ||
+      Math.abs(now - authDate) > 86400
+    ) {
+      return {
+        ok: false,
+        status: 401,
+        error: "telegram_init_data_expired"
+      };
+    }
+
+    let user;
+
+    try {
+      user = JSON.parse(
+        params.get("user") || "null"
+      );
+    } catch {
+      user = null;
+    }
+
+    if (!user || !user.id) {
+      return {
+        ok: false,
+        status: 401,
+        error: "telegram_user_missing"
+      };
+    }
+
+    return {
+      ok: true,
+      user: {
+        id: String(user.id),
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+        username: user.username || ""
+      }
+    };
+
+  } catch (error) {
+    console.error(
+      "Telegram authentication error:",
+      error
+    );
+
+    return {
+      ok: false,
+      status: 401,
+      error: "telegram_auth_failed"
+    };
+  }
+}
+
+async function requireTelegramUser(request, env) {
+  const result =
+    await verifyTelegramInitData(request, env);
+
+  if (!result.ok) {
+    return {
+      ok: false,
+      response: json(
+        {
+          ok: false,
+          error: result.error
+        },
+        result.status
+      )
+    };
+  }
+
+  return {
+    ok: true,
+    user: result.user
+  };
 }
 
 async function getSubscription(env, telegramId) {
@@ -98,7 +285,9 @@ export default {
 
     if (url.pathname === '/api/subscription' && request.method === 'GET') {
   try {
-    const telegramId = url.searchParams.get('telegram_id');
+    const auth = await requireTelegramUser(request, env);
+    if (!auth.ok) return auth.response;
+    const telegramId = auth.user.id;
 
     const vip = await getSubscription(env, telegramId);
 
@@ -131,7 +320,7 @@ export default {
         headers: {
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type",
+          "Access-Control-Allow-Headers": "Content-Type, X-Telegram-Init-Data",
         },
       });
     }
@@ -202,7 +391,9 @@ if (url.pathname === "/api/db/query" || url.pathname === "/api/xdb") {
       }
 
       if (url.pathname === "/api/pro_round") {
-        const telegramId = Number(url.searchParams.get("telegram_id") || 0);
+        const auth = await requireTelegramUser(request, env);
+        if (!auth.ok) return auth.response;
+        const telegramId = Number(auth.user.id);
 
         const competition = await getActivePro(env);
 
@@ -268,7 +459,10 @@ if (url.pathname === "/api/db/query" || url.pathname === "/api/xdb") {
       ) {
         const body = await request.json();
 
-        const telegramId = Number(body.telegram_id || 0);
+        const auth = await requireTelegramUser(request, env);
+        if (!auth.ok) return auth.response;
+
+        const telegramId = Number(auth.user.id);
         const competitionMatchId = Number(
           body.competition_match_id || 0
         );
@@ -383,7 +577,9 @@ if (url.pathname === "/api/db/query" || url.pathname === "/api/xdb") {
       // RANKING
       // =========================
       if (url.pathname === "/api/pro_ranking") {
-        const telegramId = Number(url.searchParams.get("telegram_id") || 0);
+        const auth = await requireTelegramUser(request, env);
+        if (!auth.ok) return auth.response;
+        const telegramId = Number(auth.user.id);
 
         const competition = await getActivePro(env);
 
