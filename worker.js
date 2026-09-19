@@ -23,11 +23,32 @@ async function getActivePro(env) {
   `).first();
 }
 
+const ZINGO_ADMIN_IDS = new Set([
+  "994708968"
+]);
+
+function isZingoAdmin(telegramId) {
+  return ZINGO_ADMIN_IDS.has(String(telegramId || "").trim());
+}
+
 async function getSubscription(env, telegramId) {
   const id = String(telegramId || '').trim();
 
   if (!id || id === '0') {
     return null;
+  }
+
+  // ZINGO ADMIN: unrestricted PRO/VIP access.
+  // Server-side check: subscription expiry cannot block the admin account.
+  if (isZingoAdmin(id)) {
+    return {
+      active: true,
+      plan: 'vip',
+      status: 'admin',
+      start_at: '2000-01-01T00:00:00.000Z',
+      end_at: '2999-12-31T23:59:59.999Z',
+      payment_method: 'admin'
+    };
   }
 
   const row = await env.DB.prepare(`
@@ -70,6 +91,7 @@ async function getSubscription(env, telegramId) {
     payment_method: row.payment_method || null
   };
 }
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
