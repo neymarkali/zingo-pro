@@ -159,7 +159,7 @@ h2{font-size:19px;margin:0 0 12px}
 
 .bottom-nav{
   position:fixed;left:10px;right:10px;bottom:calc(9px + env(safe-area-inset-bottom));
-  z-index:50;display:grid;grid-template-columns:repeat(5,1fr);
+  z-index:50;display:grid;grid-template-columns:repeat(6,1fr);
   padding:7px;border:1px solid var(--line);border-radius:21px;
   background:rgba(8,11,16,.9);backdrop-filter:blur(24px);
   box-shadow:0 18px 55px rgba(0,0,0,.55)
@@ -782,7 +782,18 @@ function render(){
   window.Zingo={
     go(page){
       state.page=page;
-      render();
+
+      if(page==="settings"){
+        if(typeof window.zingoSettings==="function"){
+          window.zingoSettings();
+        }else{
+          console.warn("Zingo: settings page is not available");
+          render();
+        }
+      }else{
+        render();
+      }
+
       window.scrollTo({top:0,behavior:"smooth"});
     },
 
