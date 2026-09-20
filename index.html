@@ -1632,10 +1632,12 @@ function profileAvatar(profile){
 window.zingoProfileCard=profileCard;
 
 function profileCard(){
-  const p=getProfile();
-  const u=state.user || tg?.initDataUnsafe?.user || {};
-  const avatar=profileAvatar(p);
-  const vip=state.mode==="vip";
+  const zState=window.__zingoState || {};
+  const p=typeof getProfile==="function" ? getProfile() : (window.__zingoProfile || {});
+  const tgUser=window.Telegram?.WebApp?.initDataUnsafe?.user || {};
+  const u=zState.user || tgUser || {};
+  const avatar=typeof profileAvatar==="function" ? profileAvatar(p) : "";
+  const vip=String(zState.mode || "pro").toLowerCase()==="vip";
 
   return `
     <div class="card card-pad">
@@ -1648,22 +1650,28 @@ function profileCard(){
               src="${esc(avatar)}"
               alt=""
             >`
-          : `<div class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
-                  style="display:grid;place-items:center;font-size:38px">
-                  ◇
-             </div>`
+          : `<div
+              class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+              style="display:grid;place-items:center;font-size:38px"
+            >
+              ◇
+            </div>`
         }
       </div>
 
       <div style="text-align:center">
-        <div class="eyebrow">${vip ? "BLACK DIAMOND PLAYER" : "PLAYER IDENTITY"}</div>
+        <div class="eyebrow">
+          ${vip ? "BLACK DIAMOND PLAYER" : "PLAYER IDENTITY"}
+        </div>
+
         <h2 style="margin-top:8px">
           ${esc(p.display_name || u.first_name || "Player")}
         </h2>
+
         ${
-          p.club_id && clubById(p.club_id)
-          ? `<div class="muted">${esc(clubById(p.club_id)[1])}</div>`
-          : ""
+          p.club_id && typeof clubById==="function" && clubById(p.club_id)
+            ? `<div class="muted">${esc(clubById(p.club_id)[1])}</div>`
+            : ""
         }
       </div>
 
@@ -1686,9 +1694,14 @@ window.zingoOpenProfileEditor=async function(){
   await loadZingoProfile();
 
   const p=getProfile();
+  const zState=window.__zingoState || {};
+  const currentMode=String(zState.mode || "pro").toLowerCase();
 
   const app=document.getElementById("app");
   if(!app) return;
+
+  const avatar=profileAvatar(p);
+  const vip=currentMode==="vip";
 
   app.innerHTML=`
     <div class="page">
@@ -1704,16 +1717,20 @@ window.zingoOpenProfileEditor=async function(){
 
         <div class="zingo-avatar-wrap">
           ${
-            profileAvatar(p)
-            ? `<img id="zingoAvatarPreview"
-                    class="zingo-avatar ${state.mode==="vip"?"zingo-vip-crest":""}"
-                    src="${esc(profileAvatar(p))}"
-                    alt="">`
-            : `<div id="zingoAvatarPreview"
-                    class="zingo-avatar ${state.mode==="vip"?"zingo-vip-crest":""}"
-                    style="display:grid;place-items:center;font-size:38px">
-                    ◇
-               </div>`
+            avatar
+            ? `<img
+                id="zingoAvatarPreview"
+                class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+                src="${esc(avatar)}"
+                alt=""
+              >`
+            : `<div
+                id="zingoAvatarPreview"
+                class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+                style="display:grid;place-items:center;font-size:38px"
+              >
+                ◇
+              </div>`
           }
         </div>
 
@@ -1728,7 +1745,10 @@ window.zingoOpenProfileEditor=async function(){
         </label>
 
         <label>
-          <div class="eyebrow" style="margin-bottom:7px">اسم اللاعب</div>
+          <div class="eyebrow" style="margin-bottom:7px">
+            اسم اللاعب
+          </div>
+
           <input
             id="zingoDisplayName"
             class="zingo-profile-input"
@@ -1737,59 +1757,78 @@ window.zingoOpenProfileEditor=async function(){
             placeholder="اكتب اسمك"
             autocomplete="off"
           >
+
           <div class="muted" style="margin-top:6px;font-size:10px">
             الاسم يجب أن يكون فريداً بين اللاعبين.
           </div>
         </label>
 
         <div>
-          <div class="eyebrow">النادي المفضل</div>
+
+          <div class="eyebrow">
+            النادي المفضل
+          </div>
 
           ${
             CLUBS.map(league=>`
-              <div class="zingo-league-title">${esc(league.league)}</div>
+              <div class="zingo-league-title">
+                ${esc(league.league)}
+              </div>
 
               <div class="zingo-club-grid">
-
                 ${
                   league.clubs.map(c=>`
                     <button
                       type="button"
-                      class="zingo-club ${p.club_id===c[0]?"active":""}"
+                      class="zingo-club ${p.club_id===c[0] ? "active" : ""}"
                       data-club="${esc(c[0])}"
                     >
-                      <img src="${esc(c[2])}" alt="">
+                      <img
+                        src="${esc(c[2])}"
+                        alt=""
+                      >
                       <span>${esc(c[1])}</span>
                     </button>
                   `).join("")
                 }
-
               </div>
-          `).join("")
+            `).join("")
           }
 
         </div>
 
         <div>
-          <div class="eyebrow">لغة الواجهة</div>
+
+          <div class="eyebrow">
+            لغة الواجهة
+          </div>
+
           <div style="display:flex;gap:8px;margin-top:8px">
+
             <button
               id="zingoProfileLangAR"
               class="btn"
               type="button"
               onclick="window.zingoSelectProfileLanguage('ar')"
-            >العربية</button>
+            >
+              العربية
+            </button>
 
             <button
               id="zingoProfileLangEN"
               class="btn"
               type="button"
               onclick="window.zingoSelectProfileLanguage('en')"
-            >EN</button>
+            >
+              EN
+            </button>
+
           </div>
+
         </div>
 
         <div style="display:flex;gap:8px">
+
           <button
             class="btn primary"
             type="button"
@@ -1801,13 +1840,17 @@ window.zingoOpenProfileEditor=async function(){
           <button
             class="btn"
             type="button"
-            onclick="render()"
+            onclick="window.Zingo?.go ? window.Zingo.go('profile') : render()"
           >
             إلغاء
           </button>
+
         </div>
 
-        <div id="zingoProfileMessage" class="muted"></div>
+        <div
+          id="zingoProfileMessage"
+          class="muted"
+        ></div>
 
       </section>
     </div>
@@ -1816,17 +1859,22 @@ window.zingoOpenProfileEditor=async function(){
   let selectedClub=p.club_id || "";
 
   document.querySelectorAll("[data-club]").forEach(btn=>{
+
     btn.addEventListener("click",()=>{
 
       selectedClub=btn.dataset.club;
 
-      document.querySelectorAll("[data-club]")
-        .forEach(x=>x.classList.toggle(
-          "active",
-          x.dataset.club===selectedClub
-        ));
+      document
+        .querySelectorAll("[data-club]")
+        .forEach(x=>{
+          x.classList.toggle(
+            "active",
+            x.dataset.club===selectedClub
+          );
+        });
 
     });
+
   });
 
   document
@@ -1844,6 +1892,7 @@ window.zingoOpenProfileEditor=async function(){
           const reader=new FileReader();
 
           reader.onload=()=>{
+
             img.onload=()=>{
 
               const max=512;
@@ -1852,111 +1901,210 @@ window.zingoOpenProfileEditor=async function(){
               let h=img.height;
 
               if(w>max || h>max){
-                const scale=Math.min(max/w,max/h);
+
+                const scale=Math.min(
+                  max/w,
+                  max/h
+                );
+
                 w=Math.round(w*scale);
                 h=Math.round(h*scale);
+
               }
 
               const canvas=document.createElement("canvas");
+
               canvas.width=w;
               canvas.height=h;
 
               const ctx=canvas.getContext("2d");
-              ctx.drawImage(img,0,0,w,h);
+
+              if(!ctx){
+                reject(new Error("Canvas unavailable"));
+                return;
+              }
+
+              ctx.drawImage(
+                img,
+                0,
+                0,
+                w,
+                h
+              );
 
               resolve(
-                canvas.toDataURL("image/jpeg",.78)
+                canvas.toDataURL(
+                  "image/jpeg",
+                  .78
+                )
               );
+
             };
 
             img.onerror=reject;
             img.src=reader.result;
+
           };
 
           reader.onerror=reject;
           reader.readAsDataURL(file);
+
         });
 
         window.__zingoProfileDraftAvatar=data;
 
-        const preview=document.getElementById("zingoAvatarPreview");
+        const preview=document.getElementById(
+          "zingoAvatarPreview"
+        );
 
         if(preview){
+
           if(preview.tagName==="IMG"){
+
             preview.src=data;
+
           }else{
-            preview.outerHTML=
-              `<img id="zingoAvatarPreview"
-                    class="zingo-avatar ${state.mode==="vip"?"zingo-vip-crest":""}"
-                    src="${esc(data)}"
-                    alt="">`;
+
+            preview.outerHTML=`
+              <img
+                id="zingoAvatarPreview"
+                class="zingo-avatar ${
+                  String(
+                    (window.__zingoState || {}).mode || "pro"
+                  ).toLowerCase()==="vip"
+                    ? "zingo-vip-crest"
+                    : ""
+                }"
+                src="${esc(data)}"
+                alt=""
+              >
+            `;
+
           }
+
         }
 
       }catch(err){
-        console.error(err);
+
+        console.error(
+          "ZINGO AVATAR ERROR:",
+          err
+        );
+
         alert("تعذر قراءة الصورة");
+
       }
 
     });
 
   window.__zingoProfileDraftClub=selectedClub;
 
-  window.__zingoProfileDraftLanguage =
+  window.__zingoProfileDraftLanguage=
     localStorage.getItem("zingo_language") || "ar";
 
   window.zingoSelectProfileLanguage=function(lang){
+
     lang=lang==="en" ? "en" : "ar";
 
     window.__zingoProfileDraftLanguage=lang;
 
-    const ar=document.getElementById("zingoProfileLangAR");
-    const en=document.getElementById("zingoProfileLangEN");
+    const ar=document.getElementById(
+      "zingoProfileLangAR"
+    );
 
-    if(ar) ar.classList.toggle("primary",lang==="ar");
-    if(en) en.classList.toggle("primary",lang==="en");
+    const en=document.getElementById(
+      "zingoProfileLangEN"
+    );
+
+    if(ar){
+      ar.classList.toggle(
+        "primary",
+        lang==="ar"
+      );
+    }
+
+    if(en){
+      en.classList.toggle(
+        "primary",
+        lang==="en"
+      );
+    }
+
   };
 
   window.zingoSelectProfileLanguage(
     window.__zingoProfileDraftLanguage
   );
+
 };
+
 
 window.zingoSaveProfile=async function(){
 
-  const input=document.getElementById("zingoDisplayName");
-  const msg=document.getElementById("zingoProfileMessage");
+  const input=document.getElementById(
+    "zingoDisplayName"
+  );
+
+  const msg=document.getElementById(
+    "zingoProfileMessage"
+  );
 
   const name=(input?.value || "").trim();
-  const avatar=window.__zingoProfileDraftAvatar || getProfile().avatar_data || "";
-  const club=document.querySelector("[data-club].active")?.dataset.club
+
+  const avatar=
+    window.__zingoProfileDraftAvatar
+    || getProfile().avatar_data
+    || "";
+
+  const club=
+    document.querySelector(
+      "[data-club].active"
+    )?.dataset.club
     || getProfile().club_id
     || "";
 
   if(!name){
-    if(msg) msg.textContent="اكتب اسم اللاعب أولاً";
+
+    if(msg){
+      msg.textContent=
+        "اكتب اسم اللاعب أولاً";
+    }
+
     return;
   }
 
   try{
 
-    if(msg) msg.textContent="جارٍ الحفظ...";
+    if(msg){
+      msg.textContent=
+        "جارٍ الحفظ...";
+    }
 
-    const result=await profileApi("/api/profile/update",{
-      method:"POST",
-      body:JSON.stringify({
-        display_name:name,
-        avatar_data:avatar,
-        club_id:club
-      })
-    });
+    const result=await profileApi(
+      "/api/profile/update",
+      {
+        method:"POST",
 
-    window.__zingoProfile=result.profile || {};
+        body:JSON.stringify({
+          display_name:name,
+          avatar_data:avatar,
+          club_id:club
+        })
+      }
+    );
 
-    const selectedLanguage =
-      window.__zingoProfileDraftLanguage === "en" ? "en" : "ar";
+    window.__zingoProfile=
+      result.profile || {};
 
-    localStorage.setItem("zingo_language",selectedLanguage);
+    const selectedLanguage=
+      window.__zingoProfileDraftLanguage==="en"
+        ? "en"
+        : "ar";
+
+    localStorage.setItem(
+      "zingo_language",
+      selectedLanguage
+    );
 
     window.__zingoProfileDraftAvatar="";
     window.__zingoProfileDraftClub="";
@@ -1966,22 +2114,53 @@ window.zingoSaveProfile=async function(){
       window.zingoI18n &&
       typeof window.zingoI18n.setLanguage==="function"
     ){
-      window.zingoI18n.setLanguage(selectedLanguage);
+
+      window.zingoI18n.setLanguage(
+        selectedLanguage
+      );
+
     }
 
     if(typeof toast==="function"){
-      toast("تم تحديث الملف الشخصي");
+
+      toast(
+        "تم تحديث الملف الشخصي"
+      );
+
     }
 
-    render();
+    if(
+      window.Zingo &&
+      typeof window.Zingo.go==="function"
+    ){
+
+      window.Zingo.go("profile");
+
+    }else if(typeof render==="function"){
+
+      render();
+
+    }
 
   }catch(e){
 
-    if(msg) msg.textContent=e.message || "تعذر حفظ الملف الشخصي";
+    console.error(
+      "ZINGO PROFILE SAVE ERROR:",
+      e
+    );
+
+    if(msg){
+
+      msg.textContent=
+        e.message ||
+        "تعذر حفظ الملف الشخصي";
+
+    }
 
   }
 
 };
+
 
 window.zingoSettings=function(){
 
