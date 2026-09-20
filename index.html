@@ -789,8 +789,10 @@ function render(){
   }
 window.Zingo={
     go(page){
+      console.log("ZINGO NAV CLICK:", page);
       if(page==="player") page="profile";
       state.page=page;
+      console.log("ZINGO NAV STATE:", state.page);
 
       if(page==="settings"){
         if(typeof window.zingoSettings==="function"){
