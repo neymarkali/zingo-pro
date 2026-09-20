@@ -644,41 +644,77 @@ html[dir="ltr"] body{text-align:left}
 
 function profile(){
 
-  const u=state.user || tg?.initDataUnsafe?.user || {};
+  const u=window.__zingoTelegramUser
+    || window.Telegram?.WebApp?.initDataUnsafe?.user
+    || {};
+
   const p=window.__zingoProfile || {};
-  const club=p.club_id && window.zingoClubById
+
+  const mode=String(
+    window.__zingoMode
+    || document.body.classList.contains("vip-world") && "vip"
+    || "pro"
+  ).toLowerCase();
+
+  const subscription=window.__zingoSubscription || {};
+  const club=p.club_id && typeof window.zingoClubById==="function"
     ? window.zingoClubById(p.club_id)
     : null;
 
-  return shell(`
-    <div class="page-head">
-      <div>
-        <div class="eyebrow">PLAYER HUB</div>
-        <h1>${esc(p.display_name || u.first_name || "Player")}</h1>
+  const profileCardHtml=
+    typeof window.zingoProfileCard==="function"
+      ? window.zingoProfileCard()
+      : `
+        <div class="card card-pad">
+          <div class="eyebrow">TELEGRAM IDENTITY</div>
+          <h2 style="margin-top:8px">
+            ${esc(p.display_name || u.first_name || "Player")}
+          </h2>
+          ${
+            club
+              ? `<div class="muted">${esc(club[1])}</div>`
+              : ""
+          }
+        </div>
+      `;
+
+  const plan=
+    subscription?.plan
+    || subscription?.subscription?.plan
+    || "PRO";
+
+  return `
+    <div class="page">
+
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">PLAYER HUB</div>
+          <h1>${esc(p.display_name || u.first_name || "Player")}</h1>
+        </div>
       </div>
+
+      ${profileCardHtml}
+
+      <div class="section grid">
+
+        <div class="card stat">
+          <div class="stat-label">Mode</div>
+          <div class="stat-value">
+            ${esc(mode.toUpperCase())}
+          </div>
+        </div>
+
+        <div class="card stat">
+          <div class="stat-label">Access</div>
+          <div class="stat-value">
+            ${esc(String(plan).toUpperCase())}
+          </div>
+        </div>
+
+      </div>
+
     </div>
-
-    ${window.zingoProfileCard ? window.zingoProfileCard() : `
-      <div class="card card-pad">
-        <div class="eyebrow">TELEGRAM IDENTITY</div>
-        <h2 style="margin-top:8px">
-          ${esc(p.display_name || u.first_name || "Player")}
-        </h2>
-      </div>
-    `}
-
-    <div class="section grid">
-      <div class="card stat">
-        <div class="stat-label">Mode</div>
-        <div class="stat-value">${state.mode.toUpperCase()}</div>
-      </div>
-
-      <div class="card stat">
-        <div class="stat-label">Access</div>
-        <div class="stat-value">${state.subscription?.plan || "PRO"}</div>
-      </div>
-    </div>
-  `);
+  `;
 }
 
 function render(){
@@ -827,26 +863,15 @@ window.Zingo={
           render();
         }
       }catch(error){
-        console.error("ZINGO ROUTE ERROR:",error);
-        console.error("ZINGO ROUTE ERROR MESSAGE:",error?.message);
-        console.error("ZINGO ROUTE ERROR STACK:",error?.stack);
-
-        const app=document.getElementById("app");
-
-        if(app && page==="profile"){
-          app.innerHTML=`
-            <div class="page">
-              <div class="card card-pad">
-                <div class="eyebrow">PROFILE ERROR</div>
-                <h2 style="margin-top:10px">تعذر فتح الملف الشخصي</h2>
-                <div class="muted" style="margin-top:12px;white-space:pre-wrap;word-break:break-word">
-                  ${String(error?.message || error)}
-                </div>
-              </div>
-            </div>
-          `;
+      console.error("ZINGO ROUTE ERROR:",error);
+      try{
+        if(page==="profile" && typeof profile==="function"){
+          document.getElementById("app").innerHTML=profile();
         }
+      }catch(profileError){
+        console.error("ZINGO PROFILE ERROR:",profileError);
       }
+    }
 
       window.scrollTo({top:0,behavior:"smooth"});
     },
