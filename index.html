@@ -345,6 +345,9 @@ html[dir="ltr"] body{text-align:left}
     loading: true
   };
 
+  // Shared state bridge for profile functions defined outside this IIFE.
+  window.__zingoState = state;
+
   const API = {
     subscription: "/api/subscription",
     round: "/api/pro_round",
