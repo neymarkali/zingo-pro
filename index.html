@@ -827,6 +827,44 @@ document.addEventListener("click",function(e){
 },true);
 /* END PROFILE NAV DIRECT ROUTE */
 
+
+/* TEMP PROFILE HIT TEST */
+(function(){
+  function inspectProfilePoint(e){
+    const btn=[...document.querySelectorAll(".nav-btn")].find(
+      b => /الملف الشخصي|Profile/.test((b.textContent||"").trim())
+    );
+    if(!btn) return;
+
+    const r=btn.getBoundingClientRect();
+    const t=e.touches ? e.touches[0] : e;
+    if(!t) return;
+
+    if(t.clientX>=r.left && t.clientX<=r.right &&
+       t.clientY>=r.top && t.clientY<=r.bottom){
+
+      const top=document.elementFromPoint(t.clientX,t.clientY);
+
+      console.log("PROFILE HIT TEST",{
+        target:top,
+        targetClass:top?.className,
+        targetId:top?.id,
+        button:btn,
+        buttonRect:{
+          left:r.left,top:r.top,right:r.right,bottom:r.bottom
+        }
+      });
+
+      btn.style.outline="3px solid red";
+      setTimeout(()=>btn.style.outline="",1500);
+    }
+  }
+
+  document.addEventListener("pointerdown",inspectProfilePoint,true);
+  document.addEventListener("touchstart",inspectProfilePoint,true);
+})();
+ /* END TEMP PROFILE HIT TEST */
+
 window.Zingo={
     go(page){
       if(page==="player") page="profile";
