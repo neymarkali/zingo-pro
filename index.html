@@ -292,6 +292,10 @@ h2{font-size:19px;margin:0 0 12px}
   .bottom-nav{max-width:680px;margin:auto}
   .page{padding-top:26px}
 }
+/* ZINGO_LANGUAGE_DIRECTION_V1 */
+html[dir="rtl"] body{text-align:right}
+html[dir="ltr"] body{text-align:left}
+.bottom-nav{direction:rtl}
 </style>
 </head>
 
@@ -400,11 +404,26 @@ h2{font-size:19px;margin:0 0 12px}
   }
 
   function nav(items){
+    const ar=localStorage.getItem("zingo_language")!=="en";
+    const labels={
+      home:ar?"الرئيسية":"Home",
+      matches:ar?"المباريات":"Matches",
+      predict:ar?"التوقعات":"Predictions",
+      stats:ar?"الإحصائيات":"Stats",
+      profile:ar?"الملف الشخصي":"Profile",
+      analysis:ar?"التحليل":"Analysis",
+      rewards:ar?"المكافآت":"Rewards"
+    };
+
     return `
       <nav class="bottom-nav">
         ${items.map(x=>`
-          <button class="nav-btn ${state.page===x.id?"active":""}" onclick="window.Zingo.go('${x.id}')">
-            <span class="nav-icon">${x.icon}</span>${x.label}
+          <button
+            type="button"
+            class="nav-btn ${state.page===x.id?"active":""}"
+            onclick="window.Zingo.go('${x.id}');return false"
+          >
+            <span class="nav-icon">${x.icon}</span>${labels[x.id]||x.label}
           </button>`).join("")}
       </nav>`;
   }
@@ -434,17 +453,17 @@ h2{font-size:19px;margin:0 0 12px}
       <main class="page">${content}</main>
 
       ${nav(vip ? [
-        {id:"home",icon:"◆",label:"COMMAND"},
-        {id:"predict",icon:"⌁",label:"COCKPIT"},
-        {id:"analysis",icon:"◈",label:"ANALYSIS"},
-        {id:"rewards",icon:"♛",label:"ROYAL"},
-        {id:"profile",icon:"◇",label:"PLAYER"}
+        {id:"home",icon:"◆",label:"Home"},
+        {id:"predict",icon:"⌁",label:"Predictions"},
+        {id:"analysis",icon:"◈",label:"Analysis"},
+        {id:"rewards",icon:"♛",label:"Rewards"},
+        {id:"profile",icon:"◇",label:"Profile"}
       ] : [
-        {id:"home",icon:"⌂",label:"HOME"},
-        {id:"matches",icon:"◉",label:"MATCHES"},
-        {id:"predict",icon:"⌁",label:"PREDICT"},
-        {id:"stats",icon:"▦",label:"STATS"},
-        {id:"profile",icon:"◇",label:"PLAYER"}
+        {id:"home",icon:"⌂",label:"Home"},
+        {id:"matches",icon:"◉",label:"Matches"},
+        {id:"predict",icon:"⌁",label:"Predictions"},
+        {id:"stats",icon:"▦",label:"Stats"},
+        {id:"profile",icon:"◇",label:"Profile"}
       ])}
     `;
   }
@@ -789,18 +808,11 @@ function render(){
   }
 window.Zingo={
     go(page){
-      console.log("ZINGO NAV CLICK:", page);
       if(page==="player") page="profile";
       state.page=page;
-      console.log("ZINGO NAV STATE:", state.page);
 
-      if(page==="settings"){
-        if(typeof window.zingoSettings==="function"){
-          window.zingoSettings();
-        }else{
-          console.warn("Zingo: settings page is not available");
-          render();
-        }
+      if(page==="settings" && typeof window.zingoSettings==="function"){
+        window.zingoSettings();
       }else{
         render();
       }
@@ -809,6 +821,7 @@ window.Zingo={
     },
 
     pick,
+
     savePrediction,
     selectMatch,
 
