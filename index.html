@@ -891,6 +891,97 @@ window.Zingo={
 
   const dict = {
 
+    "AAA ESPORTS COMMAND CENTER":"مركز قيادة AAA للرياضات الإلكترونية",
+    "GAMING COMMAND CENTER":"مركز قيادة الألعاب",
+    "VIP COMMAND CENTER":"مركز قيادة VIP",
+    "ULTRA EXCLUSIVE / VIP":"حصري للغاية / VIP",
+    "AAA ESPORTS / PRO":"AAA ESPORTS / PRO",
+
+    "Welcome back":"مرحبًا بعودتك",
+    "Welcome to the Black Diamond":"مرحبًا بك في Black Diamond",
+
+    "Your game. Your rank. Your call.":"لعبتك. رتبتك. قرارك.",
+    "Your private prediction cockpit.":"قمرة توقعاتك الخاصة.",
+    "Track matches, make predictions, earn XP and climb the championship system.":"تابع المباريات، ضع التوقعات، اكسب XP واصعد في نظام البطولة.",
+    "A living VIP environment built around your predictions, analysis, royal rank and exclusive rewards.":"بيئة VIP متكاملة مبنية حول توقعاتك وتحليلك ورتبتك الملكية ومكافآتك الحصرية.",
+
+    "PRO RANK":"رتبة PRO",
+    "Current division":"القسم الحالي",
+    "Season progress":"تقدم الموسم",
+    "Total saved":"إجمالي المحفوظ",
+    "Championship":"البطولة",
+    "Royal":"ROYAL",
+    "Leaderboard":"المتصدرون",
+
+    "Live Cockpit":"القمرة المباشرة",
+    "Match Center":"مركز المباريات",
+    "ACTIVE":"نشطة",
+    "UPCOMING":"قادمة",
+    "PREDICT":"توقع",
+    "MAKE PREDICTION":"إنشاء توقع",
+    "VIEW STATS":"عرض الإحصائيات",
+    "OPEN COCKPIT":"فتح القمرة",
+    "ROYAL REWARDS":"المكافآت الملكية",
+
+    "PRO MATCH CENTER":"مركز مباريات PRO",
+    "No active matches available right now.":"لا توجد مباريات نشطة حاليًا.",
+    "No matches available.":"لا توجد مباريات متاحة.",
+    "ACTIVE MATCH":"مباراة نشطة",
+
+    "PRO PREDICTIONS":"توقعات PRO",
+    "VIP PREDICTION COCKPIT":"قمرة توقعات VIP",
+    "Cockpit":"القمرة",
+    "Make your call":"ضع توقعك",
+    "WINNER":"الفائز",
+    "GOALS":"الأهداف",
+    "SCORE":"النتيجة",
+    "HOME":"صاحب الأرض",
+    "AWAY":"الضيف",
+    "DRAW":"تعادل",
+    "SAVE PREDICTION":"حفظ التوقع",
+    "PREDICTION SAVED":"تم حفظ التوقع",
+    "RULES":"القواعد",
+    "Select your prediction for each market, then save it before the prediction window closes.":"اختر توقعك لكل سوق، ثم احفظه قبل انتهاء نافذة التوقع.",
+    "Each prediction is stored individually. Results become visible after the match is settled.":"يتم حفظ كل توقع بشكل مستقل، وتظهر النتيجة بعد حسم المباراة.",
+
+    "PLAYER HUB":"الملف الشخصي",
+    "TELEGRAM IDENTITY":"هوية تيليجرام",
+    "PLAYER IDENTITY":"هوية اللاعب",
+    "BLACK DIAMOND PLAYER":"لاعب Black Diamond",
+
+    "Stats":"الإحصائيات",
+    "Accuracy":"الدقة",
+    "Awaiting settled data":"بانتظار البيانات النهائية",
+    "Wins":"الانتصارات",
+    "Season":"الموسم",
+    "Progress":"التقدم",
+    "Season Progress":"تقدم الموسم",
+    "Analysis Center":"مركز التحليل",
+    "ADVANCED ANALYSIS":"التحليل المتقدم",
+    "Private intelligence layer.":"طبقة استخبارات خاصة.",
+    "This is the dedicated VIP architecture layer for advanced match intelligence, deeper statistics and future analysis modules.":"هذه طبقة VIP مخصصة للتحليل المتقدم للمباريات والإحصائيات الأعمق ووحدات التحليل المستقبلية.",
+    "VIP MODULE":"وحدة VIP",
+    "Module architecture ready for live data.":"بنية الوحدة جاهزة للبيانات المباشرة.",
+
+    "REWARDS SYSTEM":"نظام المكافآت",
+    "Royal Vault":"الخزنة الملكية",
+    "Rewards":"المكافآت",
+    "Exclusive rewards await.":"مكافآت حصرية بانتظارك.",
+    "Build your reward profile.":"طوّر ملف مكافآتك.",
+    "Points, badges, rank progression and future reward modules live here.":"النقاط والشارات وتطور الرتبة ووحدات المكافآت المستقبلية موجودة هنا.",
+    "Badges":"الشارات",
+    "System ready":"النظام جاهز",
+    "Achievements":"الإنجازات",
+
+    "Momentum Engine":"محرك الزخم",
+    "Team Form":"مستوى الفريق",
+    "Goal Patterns":"أنماط الأهداف",
+    "Market Intelligence":"ذكاء الأسواق",
+
+    "ROYAL ASCENSION":"ROYAL ASCENSION",
+
+
+
     "Home":"الرئيسية",
     "Dashboard":"لوحة القيادة",
     "Command Center":"مركز القيادة",
@@ -987,6 +1078,15 @@ window.Zingo={
     "Choose language":"اختر اللغة",
 
     "ROYAL ASCENSION":"ROYAL ASCENSION",
+    "SKIP":"تخطي",
+    "Away":"الضيف",
+    "OVER 1.5":"أكثر من 1.5",
+    "UNDER 1.5":"أقل من 1.5",
+    "OVER 2.5":"أكثر من 2.5",
+    "UNDER 2.5":"أقل من 2.5",
+    "VIP access required":"يتطلب دخول VIP",
+    "Request failed":"فشل الطلب",
+    "Black Diamond Access":"دخول Black Diamond",
     "PRO → BLACK DIAMOND VIP":"PRO → BLACK DIAMOND VIP"
 
   };
@@ -1872,7 +1972,7 @@ window.zingoSettings=function(){
           <div>
             <strong>VIP</strong>
             <div class="muted">
-              ${state.subscription?.active ? "Black Diamond Access" : "الوصول إلى VIP"}
+              ${state.subscription?.active ? "Black Diamond Access" : "VIP Access"}
             </div>
           </div>
 
