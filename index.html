@@ -402,19 +402,11 @@ h2{font-size:19px;margin:0 0 12px}
   function nav(items){
     return `
       <nav class="bottom-nav">
-        ${items.map(item=>`
-          <button
-            type="button"
-            class="nav-item ${state.page===item.id ? "active" : ""}"
-            data-page="${esc(item.id)}"
-            onclick="window.Zingo.go('${esc(item.id)}')"
-          >
-            <span class="nav-icon">${item.icon}</span>
-            <span>${item.label}</span>
-          </button>
-        `).join("")}
-      </nav>
-    `;
+        ${items.map(x=>`
+          <button class="nav-btn ${state.page===x.id?"active":""}" onclick="window.Zingo.go('${x.id}')">
+            <span class="nav-icon">${x.icon}</span>${x.label}
+          </button>`).join("")}
+      </nav>`;
   }
 
   function shell(content){
