@@ -1855,5 +1855,69 @@ window.zingoSettings=function(){
 })();
 </script>
 
+
+<!-- ZINGO PLAYER BUTTON LINK V1 -->
+<script>
+(function(){
+  function openZingoPlayerProfile(){
+    try {
+      if (typeof window.zingoProfileCard === "function") {
+        const app = document.getElementById("app");
+        if (app) {
+          app.innerHTML = window.zingoProfileCard();
+          return true;
+        }
+      }
+
+      if (typeof window.profile === "function") {
+        window.profile();
+        return true;
+      }
+
+      if (typeof window.navigate === "function") {
+        window.navigate("profile");
+        return true;
+      }
+
+      location.hash = "#profile";
+      return true;
+    } catch(e) {
+      console.error("ZINGO PLAYER PROFILE ERROR:", e);
+      return false;
+    }
+  }
+
+  document.addEventListener("click", function(e){
+    const el = e.target.closest("button,a,[role='button'],[data-page]");
+    if (!el) return;
+
+    const text = (el.innerText || el.textContent || "").trim().toLowerCase();
+    const id = (el.id || "").toLowerCase();
+    const page = (el.getAttribute("data-page") || "").toLowerCase();
+
+    const isPlayer =
+      id.includes("player") ||
+      id.includes("profile") ||
+      page === "profile" ||
+      page === "player" ||
+      text === "player" ||
+      text === "profile" ||
+      text.includes("player profile") ||
+      text.includes("ملف اللاعب") ||
+      text.includes("البروفايل");
+
+    if (!isPlayer) return;
+
+    e.preventDefault();
+    e.stopPropagation();
+
+    openZingoPlayerProfile();
+  }, true);
+
+  window.openZingoPlayerProfile = openZingoPlayerProfile;
+})();
+</script>
+<!-- END ZINGO PLAYER BUTTON LINK V1 -->
+
 </body>
 </html>
