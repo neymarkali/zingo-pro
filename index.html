@@ -827,63 +827,6 @@ function render(){
 })();
 </script>
 
-<style>
-/* ZINGO BILINGUAL I18N V1 */
-html[dir="rtl"] body{
-  direction:rtl;
-}
-html[dir="ltr"] body{
-  direction:ltr;
-}
-#zingoLanguageSwitch{
-  position:fixed;
-  top:12px;
-  right:12px;
-  z-index:99999;
-  display:flex;
-  align-items:center;
-  gap:3px;
-  padding:4px;
-  border:1px solid rgba(255,255,255,.12);
-  border-radius:999px;
-  background:rgba(8,10,16,.78);
-  backdrop-filter:blur(14px);
-  box-shadow:0 8px 30px rgba(0,0,0,.28);
-}
-html[dir="rtl"] #zingoLanguageSwitch{
-  right:auto;
-  left:12px;
-}
-#zingoLanguageSwitch button{
-  border:0;
-  min-width:38px;
-  height:28px;
-  padding:0 9px;
-  border-radius:999px;
-  background:transparent;
-  color:rgba(255,255,255,.55);
-  font-size:11px;
-  font-weight:800;
-  cursor:pointer;
-}
-#zingoLanguageSwitch button.active{
-  background:rgba(255,255,255,.12);
-  color:#fff;
-}
-.zingo-i18n-fade{
-  animation:zingoI18nFade .16s ease;
-}
-@keyframes zingoI18nFade{
-  from{opacity:.65}
-  to{opacity:1}
-}
-</style>
-
-<div id="zingoLanguageSwitch" aria-label="Language">
-  <button id="zingoLangAR" type="button">AR</button>
-  <button id="zingoLangEN" type="button">EN</button>
-</div>
-
 <script id="zingoI18nSystem">
 /* ZINGO BILINGUAL I18N V1 */
 
@@ -1069,7 +1012,7 @@ html[dir="rtl"] #zingoLanguageSwitch{
     capture();
 
     document.querySelectorAll(
-      "#zingoLanguageSwitch,script,style"
+      "script,style"
     ).forEach(()=>{});
 
     const walker = document.createTreeWalker(
@@ -1117,7 +1060,6 @@ html[dir="rtl"] #zingoLanguageSwitch{
     });
 
     document.querySelectorAll("[aria-label]").forEach(el=>{
-      if(el.id==="zingoLanguageSwitch") return;
 
       if(!el.dataset.zingoOriginalAria){
         el.dataset.zingoOriginalAria=el.getAttribute("aria-label") || "";
@@ -1182,7 +1124,8 @@ html[dir="rtl"] #zingoLanguageSwitch{
 
       if(added){
         capture();
-        apply(saved);
+        const current=localStorage.getItem("zingo_language") || "ar";
+        apply(current);
       }
     });
 
@@ -1643,6 +1586,25 @@ window.zingoOpenProfileEditor=async function(){
 
         </div>
 
+        <div>
+          <div class="eyebrow">لغة الواجهة</div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button
+              id="zingoProfileLangAR"
+              class="btn"
+              type="button"
+              onclick="window.zingoSelectProfileLanguage('ar')"
+            >العربية</button>
+
+            <button
+              id="zingoProfileLangEN"
+              class="btn"
+              type="button"
+              onclick="window.zingoSelectProfileLanguage('en')"
+            >EN</button>
+          </div>
+        </div>
+
         <div style="display:flex;gap:8px">
           <button
             class="btn primary"
@@ -1755,6 +1717,25 @@ window.zingoOpenProfileEditor=async function(){
     });
 
   window.__zingoProfileDraftClub=selectedClub;
+
+  window.__zingoProfileDraftLanguage =
+    localStorage.getItem("zingo_language") || "ar";
+
+  window.zingoSelectProfileLanguage=function(lang){
+    lang=lang==="en" ? "en" : "ar";
+
+    window.__zingoProfileDraftLanguage=lang;
+
+    const ar=document.getElementById("zingoProfileLangAR");
+    const en=document.getElementById("zingoProfileLangEN");
+
+    if(ar) ar.classList.toggle("primary",lang==="ar");
+    if(en) en.classList.toggle("primary",lang==="en");
+  };
+
+  window.zingoSelectProfileLanguage(
+    window.__zingoProfileDraftLanguage
+  );
 };
 
 window.zingoSaveProfile=async function(){
@@ -1788,8 +1769,21 @@ window.zingoSaveProfile=async function(){
 
     window.__zingoProfile=result.profile || {};
 
+    const selectedLanguage =
+      window.__zingoProfileDraftLanguage === "en" ? "en" : "ar";
+
+    localStorage.setItem("zingo_language",selectedLanguage);
+
     window.__zingoProfileDraftAvatar="";
     window.__zingoProfileDraftClub="";
+    window.__zingoProfileDraftLanguage="";
+
+    if(
+      window.zingoI18n &&
+      typeof window.zingoI18n.setLanguage==="function"
+    ){
+      window.zingoI18n.setLanguage(selectedLanguage);
+    }
 
     if(typeof toast==="function"){
       toast("تم تحديث الملف الشخصي");
@@ -1810,8 +1804,6 @@ window.zingoSettings=function(){
   const app=document.getElementById("app");
   if(!app) return;
 
-  const lang=localStorage.getItem("zingo_language") || "ar";
-
   app.innerHTML=`
     <div class="page">
 
@@ -1823,27 +1815,7 @@ window.zingoSettings=function(){
       </div>
 
       <section class="card card-pad zingo-settings-card">
-
-        <div class="zingo-setting-row">
-          <div>
-            <strong>اللغة</strong>
-            <div class="muted">لغة واجهة Zingo</div>
-          </div>
-
-          <div class="zingo-language-pills">
-            <button
-              class="${lang==="ar"?"active":""}"
-              onclick="window.zingoSetLanguage('ar')"
-            >العربية</button>
-
-            <button
-              class="${lang==="en"?"active":""}"
-              onclick="window.zingoSetLanguage('en')"
-            >EN</button>
-          </div>
-        </div>
-
-        <div class="zingo-setting-row">
+<div class="zingo-setting-row">
           <div>
             <strong>الملف الشخصي</strong>
             <div class="muted">الاسم، الصورة، والنادي</div>
@@ -1878,20 +1850,7 @@ window.zingoSettings=function(){
   `;
 };
 
-window.zingoSetLanguage=function(lang){
 
-  localStorage.setItem("zingo_language",lang);
-
-  document.documentElement.lang=lang;
-  document.documentElement.dir=lang==="ar"?"rtl":"ltr";
-
-  if(window.zingoI18n?.setLanguage){
-    window.zingoI18n.setLanguage(lang);
-  }else{
-    render();
-  }
-
-};
 
 })();
 </script>
