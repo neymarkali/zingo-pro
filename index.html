@@ -424,7 +424,7 @@ html[dir="ltr"] body{text-align:left}
           <button
             type="button"
             class="nav-btn ${state.page===x.id?"active":""}"
-            onclick="event.preventDefault();event.stopPropagation();if(\'${x.id}\'===\'profile\'){alert(\'PROFILE CLICKED\');}window.Zingo.go(\'${x.id}\');return false"
+            onclick="event.preventDefault();event.stopPropagation();window.Zingo.go(\'${x.id}\');return false"
           >
             <span class="nav-icon">${x.icon}</span>${labels[x.id]||x.label}
           </button>`).join("")}
@@ -810,21 +810,22 @@ function render(){
     }catch(e){}
   }
 
-/* TEMP PROFILE CLICK DEBUG */
+
+
+
+/* PROFILE NAV DIRECT ROUTE */
 document.addEventListener("click",function(e){
   const btn=e.target.closest(".nav-btn");
   if(!btn) return;
 
-  const label=(btn.textContent||"").trim();
-  console.log("ZINGO NAV CLICK DEBUG:",label);
-
-  if(label.includes("الملف الشخصي") || label.includes("Profile")){
-    btn.setAttribute("data-profile-click","YES");
-    btn.style.outline="2px solid red";
-    setTimeout(()=>btn.style.outline="",1200);
+  const text=(btn.textContent||"").trim();
+  if(text==="الملف الشخصي" || text==="Profile"){
+    e.preventDefault();
+    e.stopImmediatePropagation();
+    window.Zingo?.go("profile");
   }
 },true);
-/* END TEMP PROFILE CLICK DEBUG */
+/* END PROFILE NAV DIRECT ROUTE */
 
 window.Zingo={
     go(page){
