@@ -419,14 +419,12 @@ html[dir="ltr"] body{text-align:left}
     };
 
     return `
-      <nav class="bottom-nav">
+      <nav class="bottom-nav" data-zingo-bottom-nav="1">
         ${items.map(x=>`
           <button
             type="button"
             class="nav-btn ${state.page===x.id?"active":""}"
             data-zingo-route="${x.id}"
-            onpointerdown="event.preventDefault();event.stopPropagation();window.zingoNav('${x.id}')"
-            onclick="event.preventDefault();event.stopPropagation();return false"
           >
             <span class="nav-icon">${x.icon}</span>${labels[x.id]||x.label}
           </button>`).join("")}
@@ -815,12 +813,54 @@ function render(){
 
 
 
-window.zingoNav=function(page){
-  if(page==="player") page="profile";
-  if(window.Zingo && typeof window.Zingo.go==="function"){
-    window.Zingo.go(page);
+/* ZINGO BOTTOM NAV ABSOLUTE ROUTER */
+(function(){
+  if(window.__zingoBottomNavAbsoluteRouter) return;
+  window.__zingoBottomNavAbsoluteRouter=true;
+
+  function routeFromPoint(x,y){
+    const nav=document.querySelector(".bottom-nav[data-zingo-bottom-nav]");
+    if(!nav) return false;
+
+    const buttons=[...nav.querySelectorAll(".nav-btn[data-zingo-route]")];
+    for(const btn of buttons){
+      const r=btn.getBoundingClientRect();
+      if(x>=r.left && x<=r.right && y>=r.top && y<=r.bottom){
+        const page=btn.getAttribute("data-zingo-route");
+        if(page && window.Zingo && typeof window.Zingo.go==="function"){
+          window.Zingo.go(page==="player" ? "profile" : page);
+          return true;
+        }
+      }
+    }
+    return false;
   }
-};
+
+  function handle(e){
+    const point=e.touches && e.touches[0] ? e.touches[0] : e;
+    if(!point) return;
+
+    const target=e.target && e.target.closest
+      ? e.target.closest(".nav-btn[data-zingo-route]")
+      : null;
+
+    const page=target?.getAttribute("data-zingo-route");
+
+    if(page && window.Zingo && typeof window.Zingo.go==="function"){
+      e.preventDefault();
+      e.stopPropagation();
+      window.Zingo.go(page==="player" ? "profile" : page);
+      return;
+    }
+
+    routeFromPoint(point.clientX,point.clientY);
+  }
+
+  document.addEventListener("pointerup",handle,true);
+  document.addEventListener("touchend",handle,true);
+  document.addEventListener("click",handle,true);
+})();
+ /* END ZINGO BOTTOM NAV ABSOLUTE ROUTER */
 
 window.Zingo={
     go(page){
