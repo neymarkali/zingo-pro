@@ -402,11 +402,19 @@ h2{font-size:19px;margin:0 0 12px}
   function nav(items){
     return `
       <nav class="bottom-nav">
-        ${items.map(x=>`
-          <button class="nav-btn ${state.page===x.id?"active":""}" onclick="window.Zingo.go('${x.id}')">
-            <span class="nav-icon">${x.icon}</span>${x.label}
-          </button>`).join("")}
-      </nav>`;
+        ${items.map(item=>`
+          <button
+            type="button"
+            class="nav-item ${state.page===item.id ? "active" : ""}"
+            data-page="${esc(item.id)}"
+            onclick="window.Zingo.go('${esc(item.id)}')"
+          >
+            <span class="nav-icon">${item.icon}</span>
+            <span>${item.label}</span>
+          </button>
+        `).join("")}
+      </nav>
+    `;
   }
 
   function shell(content){
@@ -787,16 +795,9 @@ function render(){
       if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("heavy");
     }catch(e){}
   }
-
-  /* ZINGO CANONICAL PLAYER ROUTE V1 */
-  window.openZingoPlayer=function(){
-    state.page="profile";
-    render();
-    window.scrollTo({top:0,behavior:"smooth"});
-  };
-
-  window.Zingo={
+window.Zingo={
     go(page){
+      if(page==="player") page="profile";
       state.page=page;
 
       if(page==="settings"){
