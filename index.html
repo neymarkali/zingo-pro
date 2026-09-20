@@ -791,5 +791,385 @@ h2{font-size:19px;margin:0 0 12px}
   loadData();
 })();
 </script>
+
+<style>
+/* ZINGO BILINGUAL I18N V1 */
+html[dir="rtl"] body{
+  direction:rtl;
+}
+html[dir="ltr"] body{
+  direction:ltr;
+}
+#zingoLanguageSwitch{
+  position:fixed;
+  top:12px;
+  right:12px;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  gap:3px;
+  padding:4px;
+  border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;
+  background:rgba(8,10,16,.78);
+  backdrop-filter:blur(14px);
+  box-shadow:0 8px 30px rgba(0,0,0,.28);
+}
+html[dir="rtl"] #zingoLanguageSwitch{
+  right:auto;
+  left:12px;
+}
+#zingoLanguageSwitch button{
+  border:0;
+  min-width:38px;
+  height:28px;
+  padding:0 9px;
+  border-radius:999px;
+  background:transparent;
+  color:rgba(255,255,255,.55);
+  font-size:11px;
+  font-weight:800;
+  cursor:pointer;
+}
+#zingoLanguageSwitch button.active{
+  background:rgba(255,255,255,.12);
+  color:#fff;
+}
+.zingo-i18n-fade{
+  animation:zingoI18nFade .16s ease;
+}
+@keyframes zingoI18nFade{
+  from{opacity:.65}
+  to{opacity:1}
+}
+</style>
+
+<div id="zingoLanguageSwitch" aria-label="Language">
+  <button id="zingoLangAR" type="button">AR</button>
+  <button id="zingoLangEN" type="button">EN</button>
+</div>
+
+<script id="zingoI18nSystem">
+/* ZINGO BILINGUAL I18N V1 */
+
+(function(){
+
+  const KEEP = new Set([
+    "ZINGO",
+    "ZINGO PRO",
+    "ZINGO VIP",
+    "PRO",
+    "VIP",
+    "BLACK DIAMOND",
+    "ROYAL ASCENSION",
+    "COMMAND CENTER",
+    "PREDICTION COCKPIT",
+    "AAA ESPORTS",
+    "XP",
+    "HUD",
+    "VFX",
+    "AR",
+    "EN"
+  ]);
+
+  const dict = {
+
+    "Home":"الرئيسية",
+    "Dashboard":"لوحة القيادة",
+    "Command Center":"مركز القيادة",
+    "Matches":"المباريات",
+    "Match Center":"مركز المباريات",
+    "Predictions":"التوقعات",
+    "Prediction":"التوقع",
+    "Prediction Cockpit":"قمرة التوقعات",
+    "Markets":"الأسواق",
+    "Winner":"الفائز",
+    "Goals":"الأهداف",
+    "Score":"النتيجة",
+    "Stats":"الإحصائيات",
+    "History":"السجل",
+    "Results":"النتائج",
+    "Profile":"الملف الشخصي",
+    "Achievements":"الإنجازات",
+    "Rewards":"المكافآت",
+    "Competition":"البطولة",
+    "Leaderboard":"لوحة المتصدرين",
+    "Championship Leaderboard":"لوحة أبطال البطولة",
+    "Player Hub":"مركز اللاعب",
+    "Rank":"الرتبة",
+    "XP":"XP",
+    "Points":"النقاط",
+    "Missions":"المهمات",
+    "Rewards":"المكافآت",
+    "Save Prediction":"حفظ التوقع",
+    "Saved":"تم الحفظ",
+    "Save":"حفظ",
+    "Edit":"تعديل",
+    "Cancel":"إلغاء",
+    "Confirm":"تأكيد",
+    "Back":"رجوع",
+    "Next":"التالي",
+    "Close":"إغلاق",
+    "Skip":"تخطي",
+    "Start":"ابدأ",
+    "Continue":"متابعة",
+    "Loading":"جارٍ التحميل...",
+    "Loading...":"جارٍ التحميل...",
+    "No matches":"لا توجد مباريات",
+    "No active matches":"لا توجد مباريات نشطة",
+    "Rules":"القواعد",
+    "Your Prediction":"توقعك",
+    "Your Predictions":"توقعاتك",
+    "Prediction saved":"تم حفظ التوقع",
+    "Prediction submitted":"تم إرسال التوقع",
+    "Choose your prediction":"اختر توقعك",
+    "Select a match":"اختر مباراة",
+    "Select":"اختيار",
+    "Selected":"تم الاختيار",
+    "Overview":"نظرة عامة",
+    "Analysis":"التحليل",
+    "Advanced Analysis Center":"مركز التحليل المتقدم",
+    "Royal Rewards":"المكافآت الملكية",
+    "Royal Rank":"الرتبة الملكية",
+    "VIP Command Center":"مركز قيادة VIP",
+    "Black Diamond":"Black Diamond",
+    "Premium":"VIP",
+    "Upgrade":"ترقية",
+    "Upgrade to VIP":"الترقية إلى VIP",
+    "Access":"الدخول",
+    "VIP Access":"دخول VIP",
+    "Locked":"مغلق",
+    "Unlocked":"مفتوح",
+    "Exclusive":"حصري",
+    "Elite":"نخبة",
+    "Player":"اللاعب",
+    "Players":"اللاعبون",
+    "Season":"الموسم",
+    "Division":"القسم",
+    "Status":"الحالة",
+    "Active":"نشط",
+    "Upcoming":"قادمة",
+    "Finished":"منتهية",
+    "Live":"مباشر",
+    "Win":"فوز",
+    "Loss":"خسارة",
+    "Draw":"تعادل",
+    "Total":"الإجمالي",
+    "Today":"اليوم",
+    "Recent":"الأخيرة",
+    "Welcome":"أهلًا بك",
+    "Welcome back":"مرحبًا بعودتك",
+    "Good luck":"بالتوفيق",
+    "Leaderboard":"المتصدرون",
+    "History & Results":"السجل والنتائج",
+    "Stats & History":"الإحصائيات والسجل",
+    "Settings":"الإعدادات",
+    "Language":"اللغة",
+    "Arabic":"العربية",
+    "English":"English",
+    "Choose language":"اختر اللغة",
+
+    "ROYAL ASCENSION":"ROYAL ASCENSION",
+    "PRO → BLACK DIAMOND VIP":"PRO → BLACK DIAMOND VIP"
+
+  };
+
+  const originals = new WeakMap();
+
+  function clean(v){
+    return v.replace(/\s+/g," ").trim();
+  }
+
+  function translateText(text, lang){
+    const key = clean(text);
+    if(!key || KEEP.has(key)) return null;
+
+    if(lang === "ar"){
+      return dict[key] || null;
+    }
+
+    return null;
+  }
+
+  function shouldSkip(el){
+    if(!el || !el.parentElement) return true;
+
+    const tag = el.parentElement.tagName;
+
+    return [
+      "SCRIPT",
+      "STYLE",
+      "NOSCRIPT",
+      "TEXTAREA",
+      "INPUT"
+    ].includes(tag);
+  }
+
+  function capture(root=document.body){
+    if(!root) return;
+
+    const walker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT
+    );
+
+    const nodes=[];
+
+    while(walker.nextNode()){
+      const n=walker.currentNode;
+      if(!shouldSkip(n)) nodes.push(n);
+    }
+
+    nodes.forEach(n=>{
+      if(!originals.has(n)){
+        originals.set(n,n.nodeValue);
+      }
+    });
+  }
+
+  function apply(lang){
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+
+    capture();
+
+    document.querySelectorAll(
+      "#zingoLanguageSwitch,script,style"
+    ).forEach(()=>{});
+
+    const walker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT
+    );
+
+    const nodes=[];
+
+    while(walker.nextNode()){
+      const n=walker.currentNode;
+      if(!shouldSkip(n)) nodes.push(n);
+    }
+
+    nodes.forEach(n=>{
+      const original=originals.get(n);
+      if(original == null) return;
+
+      const key=clean(original);
+
+      if(lang === "en"){
+        n.nodeValue=original;
+        return;
+      }
+
+      const translated=translateText(original,lang);
+
+      if(translated){
+        n.nodeValue=original.replace(key,translated);
+      }
+    });
+
+    document.querySelectorAll("[placeholder]").forEach(el=>{
+      if(!el.dataset.zingoOriginalPlaceholder){
+        el.dataset.zingoOriginalPlaceholder=el.getAttribute("placeholder") || "";
+      }
+
+      const original=el.dataset.zingoOriginalPlaceholder;
+      const translated=lang==="ar" ? translateText(original,lang) : null;
+
+      el.setAttribute(
+        "placeholder",
+        translated || original
+      );
+    });
+
+    document.querySelectorAll("[aria-label]").forEach(el=>{
+      if(el.id==="zingoLanguageSwitch") return;
+
+      if(!el.dataset.zingoOriginalAria){
+        el.dataset.zingoOriginalAria=el.getAttribute("aria-label") || "";
+      }
+
+      const original=el.dataset.zingoOriginalAria;
+      const translated=lang==="ar" ? translateText(original,lang) : null;
+
+      if(translated){
+        el.setAttribute("aria-label",translated);
+      }else if(lang==="en"){
+        el.setAttribute("aria-label",original);
+      }
+    });
+
+    document.querySelectorAll(
+      "#zingoLangAR,#zingoLangEN"
+    ).forEach(b=>b.classList.remove("active"));
+
+    document
+      .getElementById(lang==="ar" ? "zingoLangAR" : "zingoLangEN")
+      ?.classList.add("active");
+
+    document.body.classList.remove("zingo-i18n-fade");
+    void document.body.offsetWidth;
+    document.body.classList.add("zingo-i18n-fade");
+
+    localStorage.setItem("zingo_language",lang);
+
+    window.dispatchEvent(
+      new CustomEvent("zingo:language-change",{
+        detail:{language:lang}
+      })
+    );
+  }
+
+  function init(){
+
+    capture();
+
+    const saved=localStorage.getItem("zingo_language") || "ar";
+
+    document
+      .getElementById("zingoLangAR")
+      ?.addEventListener("click",()=>apply("ar"));
+
+    document
+      .getElementById("zingoLangEN")
+      ?.addEventListener("click",()=>apply("en"));
+
+    apply(saved);
+
+    const observer=new MutationObserver(mutations=>{
+      let added=false;
+
+      for(const m of mutations){
+        if(m.addedNodes && m.addedNodes.length){
+          added=true;
+          break;
+        }
+      }
+
+      if(added){
+        capture();
+        apply(saved);
+      }
+    });
+
+    observer.observe(document.body,{
+      childList:true,
+      subtree:true
+    });
+
+    window.zingoI18n={
+      setLanguage:apply,
+      getLanguage:()=>localStorage.getItem("zingo_language") || "ar"
+    };
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",init);
+  }else{
+    init();
+  }
+
+})();
+</script>
+
 </body>
 </html>
