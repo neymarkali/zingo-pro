@@ -813,84 +813,61 @@ function render(){
 
 
 
+/* ZINGO BOTTOM NAV ABSOLUTE ROUTER */
+(function(){
+  if(window.__zingoBottomNavAbsoluteRouter) return;
+  window.__zingoBottomNavAbsoluteRouter=true;
+
+  function routeFromPoint(x,y){
+    const nav=document.querySelector(".bottom-nav[data-zingo-bottom-nav]");
+    if(!nav) return false;
+
+    const buttons=[...nav.querySelectorAll(".nav-btn[data-zingo-route]")];
+    for(const btn of buttons){
+      const r=btn.getBoundingClientRect();
+      if(x>=r.left && x<=r.right && y>=r.top && y<=r.bottom){
+        const page=btn.getAttribute("data-zingo-route");
+        if(page && window.Zingo && typeof window.Zingo.go==="function"){
+          window.Zingo.go(page==="player" ? "profile" : page);
+          return true;
+        }
+      }
+    }
+    return false;
+  }
+
+  function handle(e){
+    const point=e.touches && e.touches[0] ? e.touches[0] : e;
+    if(!point) return;
+
+    const target=e.target && e.target.closest
+      ? e.target.closest(".nav-btn[data-zingo-route]")
+      : null;
+
+    const page=target?.getAttribute("data-zingo-route");
+
+    if(page && window.Zingo && typeof window.Zingo.go==="function"){
+      e.preventDefault();
+      e.stopPropagation();
+      window.Zingo.go(page==="player" ? "profile" : page);
+      return;
+    }
+
+    routeFromPoint(point.clientX,point.clientY);
+  }
+
+  document.addEventListener("pointerup",handle,true);
+  document.addEventListener("touchend",handle,true);
+  document.addEventListener("click",handle,true);
+})();
+ /* END ZINGO BOTTOM NAV ABSOLUTE ROUTER */
+
 window.Zingo={
     go(page){
       if(page==="player") page="profile";
       state.page=page;
 
       try{
-        if(page==="profile"){
-          const app=document.getElementById("app");
-          if(!app) throw new Error("ZINGO APP ELEMENT NOT FOUND");
-
-          const u=state.user || tg?.initDataUnsafe?.user || {};
-          const p=window.__zingoProfile || {};
-          const name=esc(p.display_name || u.first_name || "Player");
-          const access=esc(state.subscription?.plan || "PRO");
-
-          document.body.classList.toggle("vip-world",state.mode==="vip");
-
-          app.innerHTML=`
-            <div class="topbar">
-              <div class="topbar-inner">
-                <div class="brand">
-                  <div class="logo">Z</div>
-                  <div>
-                    <div class="brand-title">ZINGO</div>
-                    <div class="brand-sub">${state.mode==="vip"?"BLACK DIAMOND":"AAA ESPORTS COMMAND CENTER"}</div>
-                  </div>
-                </div>
-                <div class="mode-switch">
-                  <button class="mode-btn ${state.mode!=="vip"?"active pro":""}" onclick="window.Zingo.setMode('pro')">PRO</button>
-                  <button class="mode-btn ${state.mode==="vip"?"active vip":""}" onclick="window.Zingo.setMode('vip')">VIP</button>
-                </div>
-              </div>
-            </div>
-
-            <main class="page">
-              <div class="page-head">
-                <div>
-                  <div class="eyebrow">PLAYER HUB</div>
-                  <h1>${name}</h1>
-                </div>
-              </div>
-
-              <div class="card card-pad">
-                <div class="eyebrow">TELEGRAM IDENTITY</div>
-                <h2 style="margin-top:8px">${name}</h2>
-              </div>
-
-              <div class="section grid">
-                <div class="card stat">
-                  <div class="stat-label">Mode</div>
-                  <div class="stat-value">${state.mode.toUpperCase()}</div>
-                </div>
-                <div class="card stat">
-                  <div class="stat-label">Access</div>
-                  <div class="stat-value">${access}</div>
-                </div>
-              </div>
-            </main>
-
-            ${nav(state.mode==="vip" ? [
-              {id:"home",icon:"◆",label:"Home"},
-              {id:"predict",icon:"⌁",label:"Predictions"},
-              {id:"analysis",icon:"◈",label:"Analysis"},
-              {id:"rewards",icon:"♛",label:"Rewards"},
-              {id:"profile",icon:"◇",label:"Profile"}
-            ] : [
-              {id:"home",icon:"⌂",label:"Home"},
-              {id:"matches",icon:"◉",label:"Matches"},
-              {id:"predict",icon:"⌁",label:"Predictions"},
-              {id:"stats",icon:"▦",label:"Stats"},
-              {id:"profile",icon:"◇",label:"Profile"}
-            ])}
-          `;
-
-          window.scrollTo({top:0,behavior:"smooth"});
-          return;
-        }
-
         if(page==="settings" && typeof window.zingoSettings==="function"){
           window.zingoSettings();
         }else{
@@ -898,6 +875,13 @@ window.Zingo={
         }
       }catch(error){
         console.error("ZINGO ROUTE ERROR:",error);
+        try{
+          if(page==="profile" && typeof profile==="function"){
+            document.getElementById("app").innerHTML=profile();
+          }
+        }catch(profileError){
+          console.error("ZINGO PROFILE ERROR:",profileError);
+        }
       }
 
       window.scrollTo({top:0,behavior:"smooth"});
