@@ -663,13 +663,13 @@ function render(){
       if(state.page==="predict") content=predict();
       else if(state.page==="analysis") content=analysis();
       else if(state.page==="rewards") content=rewards();
-      else if(state.page==="profile") content=profile();
+      else if(state.page==="profile" || state.page==="player") content=profile();
       else content=home();
     }else{
       if(state.page==="matches") content=matchesPage();
       else if(state.page==="predict") content=predict();
       else if(state.page==="stats") content=stats();
-      else if(state.page==="profile") content=profile();
+      else if(state.page==="profile" || state.page==="player") content=profile();
       else content=home();
     }
 
@@ -700,6 +700,15 @@ function render(){
     }
 
     state.user=tg?.initDataUnsafe?.user || null;
+
+    // Player Identity is part of normal app state.
+    // Failure must never block the application.
+    try{
+      await loadZingoProfile();
+    }catch(e){
+      console.warn("player profile:",e.message);
+    }
+
     state.loading=false;
     render();
   }
@@ -778,6 +787,13 @@ function render(){
       if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("heavy");
     }catch(e){}
   }
+
+  /* ZINGO CANONICAL PLAYER ROUTE V1 */
+  window.openZingoPlayer=function(){
+    state.page="profile";
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  };
 
   window.Zingo={
     go(page){
@@ -1856,68 +1872,7 @@ window.zingoSettings=function(){
 </script>
 
 
-<!-- ZINGO PLAYER BUTTON LINK V1 -->
-<script>
-(function(){
-  function openZingoPlayerProfile(){
-    try {
-      if (typeof window.zingoProfileCard === "function") {
-        const app = document.getElementById("app");
-        if (app) {
-          app.innerHTML = window.zingoProfileCard();
-          return true;
-        }
-      }
 
-      if (typeof window.profile === "function") {
-        window.profile();
-        return true;
-      }
-
-      if (typeof window.navigate === "function") {
-        window.navigate("profile");
-        return true;
-      }
-
-      location.hash = "#profile";
-      return true;
-    } catch(e) {
-      console.error("ZINGO PLAYER PROFILE ERROR:", e);
-      return false;
-    }
-  }
-
-  document.addEventListener("click", function(e){
-    const el = e.target.closest("button,a,[role='button'],[data-page]");
-    if (!el) return;
-
-    const text = (el.innerText || el.textContent || "").trim().toLowerCase();
-    const id = (el.id || "").toLowerCase();
-    const page = (el.getAttribute("data-page") || "").toLowerCase();
-
-    const isPlayer =
-      id.includes("player") ||
-      id.includes("profile") ||
-      page === "profile" ||
-      page === "player" ||
-      text === "player" ||
-      text === "profile" ||
-      text.includes("player profile") ||
-      text.includes("ملف اللاعب") ||
-      text.includes("البروفايل");
-
-    if (!isPlayer) return;
-
-    e.preventDefault();
-    e.stopPropagation();
-
-    openZingoPlayerProfile();
-  }, true);
-
-  window.openZingoPlayerProfile = openZingoPlayerProfile;
-})();
-</script>
-<!-- END ZINGO PLAYER BUTTON LINK V1 -->
 
 </body>
 </html>
