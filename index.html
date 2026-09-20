@@ -424,7 +424,9 @@ html[dir="ltr"] body{text-align:left}
           <button
             type="button"
             class="nav-btn ${state.page===x.id?"active":""}"
-            onclick="event.preventDefault();event.stopPropagation();window.Zingo.go(\'${x.id}\');return false"
+            data-zingo-route="${x.id}"
+            onpointerdown="event.preventDefault();event.stopPropagation();window.zingoNav('${x.id}')"
+            onclick="event.preventDefault();event.stopPropagation();return false"
           >
             <span class="nav-icon">${x.icon}</span>${labels[x.id]||x.label}
           </button>`).join("")}
@@ -813,22 +815,12 @@ function render(){
 
 
 
-/* PROFILE NAV DIRECT ROUTE */
-document.addEventListener("click",function(e){
-  const btn=e.target.closest(".nav-btn");
-  if(!btn) return;
-
-  const text=(btn.textContent||"").trim();
-  if(text.includes("الملف الشخصي") || text.includes("Profile")){
-    e.preventDefault();
-    e.stopImmediatePropagation();
-    window.Zingo?.go("profile");
+window.zingoNav=function(page){
+  if(page==="player") page="profile";
+  if(window.Zingo && typeof window.Zingo.go==="function"){
+    window.Zingo.go(page);
   }
-},true);
-/* END PROFILE NAV DIRECT ROUTE */
-
-
-
+};
 
 window.Zingo={
     go(page){
