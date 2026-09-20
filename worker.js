@@ -279,6 +279,105 @@ async function getSubscription(env, telegramId) {
   };
 }
 
+
+// ZINGO PLAYER IDENTITY V1
+
+async function ensureZingoProfiles(env) {
+  await env.DB.prepare(`
+    CREATE TABLE IF NOT EXISTS zingo_profiles (
+      id INTEGER PRIMARY KEY AUTOINCREMENT,
+      telegram_id TEXT NOT NULL UNIQUE,
+      display_name TEXT NOT NULL,
+      name_key TEXT NOT NULL UNIQUE,
+      avatar_data TEXT,
+      club_id TEXT,
+      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+    )
+  `).run();
+
+  await env.DB.prepare(`
+    CREATE UNIQUE INDEX IF NOT EXISTS idx_zingo_profiles_name_key
+    ON zingo_profiles(name_key)
+  `).run();
+}
+
+function normalizeZingoName(value) {
+  let s = String(value || "")
+    .normalize("NFKC")
+    .replace(/[\u200B-\u200D\uFEFF]/g, "")
+    .toLowerCase()
+    .trim();
+
+  s = s
+    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "")
+    .replace(/[إأآٱ]/g, "ا")
+    .replace(/ى/g, "ي")
+    .replace(/ؤ/g, "و")
+    .replace(/ئ/g, "ي")
+    .replace(/ة/g, "ه");
+
+  return s
+    .replace(/[\s_\-.'`~!@#$%^&*()+={}[\]|\\:;"<>?,/،؛؟]+/g, "")
+    .trim();
+}
+
+function isForbiddenZingoName(value) {
+  const key = normalizeZingoName(value);
+
+  if (!key) return true;
+
+  const blocked = new Set([
+    "zingo",
+    "زينغو",
+    "زينجو",
+    "زينقو",
+    "زينغ",
+    "z1ngo",
+    "zlngo",
+    "zinqo",
+    "zingoapp",
+    "zingopro",
+    "zingovip"
+  ]);
+
+  if (blocked.has(key)) return true;
+
+  const latin = key
+    .replace(/[0]/g, "o")
+    .replace(/[1|!]/g, "i")
+    .replace(/[3]/g, "e")
+    .replace(/[4@]/g, "a")
+    .replace(/[5]/g, "s")
+    .replace(/[7]/g, "t");
+
+  if (latin === "zingo") return true;
+
+  return false;
+}
+
+function validateZingoDisplayName(value) {
+  const name = String(value || "").normalize("NFKC").trim();
+
+  if (name.length < 2) {
+    return { ok:false, error:"الاسم يجب أن يحتوي على حرفين على الأقل" };
+  }
+
+  if (name.length > 24) {
+    return { ok:false, error:"الاسم يجب ألا يتجاوز 24 حرفاً" };
+  }
+
+  if (isForbiddenZingoName(name)) {
+    return { ok:false, error:"هذا الاسم غير مسموح" };
+  }
+
+  return {
+    ok:true,
+    name,
+    name_key:normalizeZingoName(name)
+  };
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
@@ -640,7 +739,165 @@ if (url.pathname === "/api/db/query" || url.pathname === "/api/xdb") {
       // =========================
       // TEST / HEALTH
       // =========================
-      if (url.pathname === "/api/health") {
+
+    // =========================
+    // ZINGO PLAYER PROFILE
+    // =========================
+
+    if (
+      (url.pathname === "/api/profile" ||
+       url.pathname === "/api/profile/update") &&
+      (request.method === "GET" || request.method === "POST")
+    ) {
+
+      const auth = await requireTelegramUser(request, env);
+      if (!auth.ok) return auth.response;
+
+      const telegramId = String(auth.user.id);
+
+      try {
+        await ensureZingoProfiles(env);
+
+        if (request.method === "GET") {
+
+          const profile = await env.DB.prepare(`
+            SELECT
+              telegram_id,
+              display_name,
+              avatar_data,
+              club_id,
+              created_at,
+              updated_at
+            FROM zingo_profiles
+            WHERE telegram_id = ?
+            LIMIT 1
+          `)
+          .bind(telegramId)
+          .first();
+
+          return json({
+            ok:true,
+            profile:profile || null
+          });
+        }
+
+        const body = await request.json();
+
+        const checked = validateZingoDisplayName(body?.display_name);
+
+        if (!checked.ok) {
+          return json({
+            ok:false,
+            error:checked.error
+          },400);
+        }
+
+        const avatar =
+          typeof body?.avatar_data === "string"
+            ? body.avatar_data.trim()
+            : "";
+
+        const clubId =
+          typeof body?.club_id === "string"
+            ? body.club_id.trim().slice(0,80)
+            : "";
+
+        if (avatar && avatar.length > 180000) {
+          return json({
+            ok:false,
+            error:"الصورة كبيرة جداً"
+          },413);
+        }
+
+        const existing = await env.DB.prepare(`
+          SELECT telegram_id
+          FROM zingo_profiles
+          WHERE name_key = ?
+          AND telegram_id != ?
+          LIMIT 1
+        `)
+        .bind(checked.name_key, telegramId)
+        .first();
+
+        if (existing) {
+          return json({
+            ok:false,
+            error:"هذا الاسم مستخدم من لاعب آخر"
+          },409);
+        }
+
+        try {
+
+          await env.DB.prepare(`
+            INSERT INTO zingo_profiles
+              (telegram_id,display_name,name_key,avatar_data,club_id)
+            VALUES (?,?,?,?,?)
+            ON CONFLICT(telegram_id)
+            DO UPDATE SET
+              display_name=excluded.display_name,
+              name_key=excluded.name_key,
+              avatar_data=excluded.avatar_data,
+              club_id=excluded.club_id,
+              updated_at=CURRENT_TIMESTAMP
+          `)
+          .bind(
+            telegramId,
+            checked.name,
+            checked.name_key,
+            avatar || null,
+            clubId || null
+          )
+          .run();
+
+        } catch (e) {
+
+          const msg = String(e?.message || "");
+
+          if (
+            msg.toLowerCase().includes("unique") ||
+            msg.toLowerCase().includes("constraint")
+          ) {
+            return json({
+              ok:false,
+              error:"هذا الاسم مستخدم من لاعب آخر"
+            },409);
+          }
+
+          throw e;
+        }
+
+        const profile = await env.DB.prepare(`
+          SELECT
+            telegram_id,
+            display_name,
+            avatar_data,
+            club_id,
+            created_at,
+            updated_at
+          FROM zingo_profiles
+          WHERE telegram_id = ?
+          LIMIT 1
+        `)
+        .bind(telegramId)
+        .first();
+
+        return json({
+          ok:true,
+          profile
+        });
+
+      } catch (e) {
+
+        console.error("profile error:",e);
+
+        return json({
+          ok:false,
+          error:"تعذر حفظ الملف الشخصي"
+        },500);
+      }
+    }
+
+    if (url.pathname === "/api/health") {
         const competition = await getActivePro(env);
 
         return json({

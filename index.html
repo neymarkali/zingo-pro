@@ -438,7 +438,7 @@ h2{font-size:19px;margin:0 0 12px}
         {id:"predict",icon:"⌁",label:"COCKPIT"},
         {id:"analysis",icon:"◈",label:"ANALYSIS"},
         {id:"rewards",icon:"♛",label:"ROYAL"},
-        {id:"profile",icon:"◇",label:"PROFILE"}
+        {id:"profile",icon:"◇",label:"PLAYER"},{id:"settings",icon:"⚙",label:"SETTINGS"}
       ] : [
         {id:"home",icon:"⌂",label:"HOME"},
         {id:"matches",icon:"◉",label:"MATCHES"},
@@ -617,23 +617,47 @@ h2{font-size:19px;margin:0 0 12px}
     `);
   }
 
-  function profile(){
-    const u=state.user || tg?.initDataUnsafe?.user || {};
-    return shell(`
-      <div class="page-head"><div><div class="eyebrow">PLAYER HUB</div><h1>${esc(u.first_name || "Player")}</h1></div></div>
+
+function profile(){
+
+  const u=state.user || tg?.initDataUnsafe?.user || {};
+  const p=window.__zingoProfile || {};
+  const club=p.club_id && window.zingoClubById
+    ? window.zingoClubById(p.club_id)
+    : null;
+
+  return shell(`
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">PLAYER HUB</div>
+        <h1>${esc(p.display_name || u.first_name || "Player")}</h1>
+      </div>
+    </div>
+
+    ${window.zingoProfileCard ? window.zingoProfileCard() : `
       <div class="card card-pad">
         <div class="eyebrow">TELEGRAM IDENTITY</div>
-        <h2 style="margin-top:8px">${esc(u.username ? "@"+u.username : "Telegram Player")}</h2>
-        <div class="muted" style="font-size:11px">ID: ${esc(u.id || userId() || "—")}</div>
+        <h2 style="margin-top:8px">
+          ${esc(p.display_name || u.first_name || "Player")}
+        </h2>
       </div>
-      <div class="section grid">
-        <div class="card stat"><div class="stat-label">Mode</div><div class="stat-value">${state.mode.toUpperCase()}</div></div>
-        <div class="card stat"><div class="stat-label">Access</div><div class="stat-value">${state.subscription?.plan || "PRO"}</div></div>
-      </div>
-    `);
-  }
+    `}
 
-  function render(){
+    <div class="section grid">
+      <div class="card stat">
+        <div class="stat-label">Mode</div>
+        <div class="stat-value">${state.mode.toUpperCase()}</div>
+      </div>
+
+      <div class="card stat">
+        <div class="stat-label">Access</div>
+        <div class="stat-value">${state.subscription?.plan || "PRO"}</div>
+      </div>
+    </div>
+  `);
+}
+
+function render(){
     let content;
     if(state.mode==="vip"){
       if(state.page==="predict") content=predict();
@@ -1167,6 +1191,696 @@ html[dir="rtl"] #zingoLanguageSwitch{
   }else{
     init();
   }
+
+})();
+</script>
+
+
+<style>
+/* ZINGO PLAYER IDENTITY UI V1 */
+
+.zingo-settings-card{
+  display:grid;
+  gap:12px;
+}
+
+.zingo-setting-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.zingo-setting-row:last-child{
+  border-bottom:0;
+}
+
+.zingo-profile-editor{
+  display:grid;
+  gap:14px;
+}
+
+.zingo-avatar-wrap{
+  width:108px;
+  height:108px;
+  margin:0 auto 4px;
+  position:relative;
+}
+
+.zingo-avatar{
+  width:100%;
+  height:100%;
+  border-radius:32px;
+  object-fit:cover;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.2),transparent 30%),
+    linear-gradient(145deg,#171b25,#05060a);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 18px 50px rgba(0,0,0,.38);
+}
+
+.zingo-vip-crest{
+  position:relative;
+  overflow:hidden;
+  animation:zingoCrestFloat 4.8s ease-in-out infinite;
+  box-shadow:
+    0 0 0 1px rgba(255,215,100,.2),
+    0 0 35px rgba(255,190,60,.2),
+    0 20px 60px rgba(0,0,0,.5);
+}
+
+.zingo-vip-crest::after{
+  content:"";
+  position:absolute;
+  inset:-50%;
+  background:linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255,255,255,.48) 48%,
+    rgba(255,215,120,.25) 52%,
+    transparent 65%
+  );
+  transform:translateX(-70%) rotate(8deg);
+  animation:zingoCrestShine 4.2s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes zingoCrestFloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-3px) rotate(.6deg)}
+}
+
+@keyframes zingoCrestShine{
+  0%,55%{transform:translateX(-75%) rotate(8deg)}
+  78%,100%{transform:translateX(75%) rotate(8deg)}
+}
+
+.zingo-club-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+
+.zingo-club{
+  min-height:74px;
+  padding:8px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.035);
+  color:inherit;
+  cursor:pointer;
+}
+
+.zingo-club.active{
+  border-color:rgba(255,205,80,.7);
+  background:rgba(255,190,50,.09);
+}
+
+.zingo-club img{
+  width:34px;
+  height:34px;
+  object-fit:contain;
+  display:block;
+  margin:auto;
+}
+
+.zingo-club span{
+  display:block;
+  margin-top:5px;
+  font-size:9px;
+  line-height:1.2;
+}
+
+.zingo-league-title{
+  margin:18px 0 8px;
+  font-size:10px;
+  letter-spacing:.12em;
+  opacity:.65;
+}
+
+.zingo-profile-input{
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.045);
+  color:inherit;
+  border-radius:12px;
+  padding:12px 13px;
+  outline:none;
+}
+
+.zingo-profile-input:focus{
+  border-color:rgba(255,205,80,.6);
+}
+
+.zingo-language-pills{
+  display:flex;
+  gap:6px;
+}
+
+.zingo-language-pills button{
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);
+  color:inherit;
+  padding:8px 13px;
+  border-radius:999px;
+  cursor:pointer;
+}
+
+.zingo-language-pills button.active{
+  background:rgba(255,205,80,.13);
+  border-color:rgba(255,205,80,.55);
+}
+
+@media(max-width:420px){
+  .zingo-club-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+</style>
+
+<script id="zingoPlayerIdentityUI">
+/* ZINGO PLAYER IDENTITY UI V1 */
+
+(function(){
+
+const CLUBS = [
+
+  {
+    league:"Premier League",
+    clubs:[
+      ["arsenal","Arsenal","https://images.fotmob.com/image_resources/logo/teamlogo/9825.png"],
+      ["chelsea","Chelsea","https://images.fotmob.com/image_resources/logo/teamlogo/8455.png"],
+      ["liverpool","Liverpool","https://images.fotmob.com/image_resources/logo/teamlogo/8650.png"],
+      ["mancity","Manchester City","https://images.fotmob.com/image_resources/logo/teamlogo/8456.png"],
+      ["manutd","Manchester United","https://images.fotmob.com/image_resources/logo/teamlogo/10260.png"],
+      ["tottenham","Tottenham","https://images.fotmob.com/image_resources/logo/teamlogo/8586.png"]
+    ]
+  },
+
+  {
+    league:"La Liga",
+    clubs:[
+      ["realmadrid","Real Madrid","https://images.fotmob.com/image_resources/logo/teamlogo/8633.png"],
+      ["barcelona","Barcelona","https://images.fotmob.com/image_resources/logo/teamlogo/8634.png"],
+      ["atletico","Atlético Madrid","https://images.fotmob.com/image_resources/logo/teamlogo/8636.png"],
+      ["sevilla","Sevilla","https://images.fotmob.com/image_resources/logo/teamlogo/8661.png"],
+      ["valencia","Valencia","https://images.fotmob.com/image_resources/logo/teamlogo/8678.png"],
+      ["bilbao","Athletic Club","https://images.fotmob.com/image_resources/logo/teamlogo/8315.png"]
+    ]
+  },
+
+  {
+    league:"Serie A",
+    clubs:[
+      ["inter","Inter","https://images.fotmob.com/image_resources/logo/teamlogo/8636.png"],
+      ["milan","AC Milan","https://images.fotmob.com/image_resources/logo/teamlogo/8564.png"],
+      ["juventus","Juventus","https://images.fotmob.com/image_resources/logo/teamlogo/9882.png"],
+      ["napoli","Napoli","https://images.fotmob.com/image_resources/logo/teamlogo/9875.png"],
+      ["roma","Roma","https://images.fotmob.com/image_resources/logo/teamlogo/8686.png"],
+      ["lazio","Lazio","https://images.fotmob.com/image_resources/logo/teamlogo/8543.png"]
+    ]
+  },
+
+  {
+    league:"Bundesliga",
+    clubs:[
+      ["bayern","Bayern Munich","https://images.fotmob.com/image_resources/logo/teamlogo/9823.png"],
+      ["dortmund","Borussia Dortmund","https://images.fotmob.com/image_resources/logo/teamlogo/9789.png"],
+      ["leverkusen","Bayer Leverkusen","https://images.fotmob.com/image_resources/logo/teamlogo/8178.png"],
+      ["leipzig","RB Leipzig","https://images.fotmob.com/image_resources/logo/teamlogo/178475.png"],
+      ["frankfurt","Eintracht Frankfurt","https://images.fotmob.com/image_resources/logo/teamlogo/9810.png"],
+      ["wolfsburg","Wolfsburg","https://images.fotmob.com/image_resources/logo/teamlogo/9831.png"]
+    ]
+  },
+
+  {
+    league:"Ligue 1",
+    clubs:[
+      ["psg","Paris Saint-Germain","https://images.fotmob.com/image_resources/logo/teamlogo/9847.png"],
+      ["marseille","Marseille","https://images.fotmob.com/image_resources/logo/teamlogo/8592.png"],
+      ["lyon","Lyon","https://images.fotmob.com/image_resources/logo/teamlogo/9746.png"],
+      ["monaco","Monaco","https://images.fotmob.com/image_resources/logo/teamlogo/9829.png"],
+      ["lille","Lille","https://images.fotmob.com/image_resources/logo/teamlogo/8639.png"],
+      ["nice","Nice","https://images.fotmob.com/image_resources/logo/teamlogo/9830.png"]
+    ]
+  }
+
+];
+
+function profileApi(path,options={}){
+  if(typeof api === "function"){
+    return api(path,options);
+  }
+
+  return fetch(path,{
+    ...options,
+    headers:{
+      "Content-Type":"application/json",
+      ...(typeof zingoAuthHeaders==="function" ? zingoAuthHeaders() : {}),
+      ...(options.headers || {})
+    }
+  }).then(async r=>{
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok || data.ok===false){
+      throw new Error(data.error || "Request failed");
+    }
+    return data;
+  });
+}
+
+function allClubs(){
+  return CLUBS.flatMap(x=>x.clubs);
+}
+
+function clubById(id){
+  return allClubs().find(x=>x[0]===id) || null;
+}
+
+function getProfile(){
+  return window.__zingoProfile || {};
+}
+
+async function loadZingoProfile(){
+  try{
+    const result=await profileApi("/api/profile");
+    window.__zingoProfile=result.profile || {};
+    return window.__zingoProfile;
+  }catch(e){
+    console.warn("profile:",e.message);
+    return {};
+  }
+}
+
+window.zingoClubById=clubById;
+
+function profileAvatar(profile){
+  const p=profile || {};
+  const club=clubById(p.club_id);
+
+  if(p.avatar_data){
+    return p.avatar_data;
+  }
+
+  if(club){
+    return club[2];
+  }
+
+  return "";
+}
+
+window.zingoProfileCard=profileCard;
+
+function profileCard(){
+  const p=getProfile();
+  const u=state.user || tg?.initDataUnsafe?.user || {};
+  const avatar=profileAvatar(p);
+  const vip=state.mode==="vip";
+
+  return `
+    <div class="card card-pad">
+
+      <div class="zingo-avatar-wrap">
+        ${
+          avatar
+          ? `<img
+              class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+              src="${esc(avatar)}"
+              alt=""
+            >`
+          : `<div class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+                  style="display:grid;place-items:center;font-size:38px">
+                  ◇
+             </div>`
+        }
+      </div>
+
+      <div style="text-align:center">
+        <div class="eyebrow">${vip ? "BLACK DIAMOND PLAYER" : "PLAYER IDENTITY"}</div>
+        <h2 style="margin-top:8px">
+          ${esc(p.display_name || u.first_name || "Player")}
+        </h2>
+        ${
+          p.club_id && clubById(p.club_id)
+          ? `<div class="muted">${esc(clubById(p.club_id)[1])}</div>`
+          : ""
+        }
+      </div>
+
+      <div style="margin-top:16px">
+        <button
+          class="btn primary"
+          type="button"
+          onclick="window.zingoOpenProfileEditor()"
+        >
+          تعديل الملف الشخصي
+        </button>
+      </div>
+
+    </div>
+  `;
+}
+
+window.zingoOpenProfileEditor=async function(){
+
+  await loadZingoProfile();
+
+  const p=getProfile();
+
+  const app=document.getElementById("app");
+  if(!app) return;
+
+  app.innerHTML=`
+    <div class="page">
+
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">PLAYER IDENTITY</div>
+          <h1>تعديل الملف الشخصي</h1>
+        </div>
+      </div>
+
+      <section class="card card-pad zingo-profile-editor">
+
+        <div class="zingo-avatar-wrap">
+          ${
+            profileAvatar(p)
+            ? `<img id="zingoAvatarPreview"
+                    class="zingo-avatar ${state.mode==="vip"?"zingo-vip-crest":""}"
+                    src="${esc(profileAvatar(p))}"
+                    alt="">`
+            : `<div id="zingoAvatarPreview"
+                    class="zingo-avatar ${state.mode==="vip"?"zingo-vip-crest":""}"
+                    style="display:grid;place-items:center;font-size:38px">
+                    ◇
+               </div>`
+          }
+        </div>
+
+        <label class="btn">
+          تغيير الصورة
+          <input
+            id="zingoAvatarInput"
+            type="file"
+            accept="image/*"
+            hidden
+          >
+        </label>
+
+        <label>
+          <div class="eyebrow" style="margin-bottom:7px">اسم اللاعب</div>
+          <input
+            id="zingoDisplayName"
+            class="zingo-profile-input"
+            maxlength="24"
+            value="${esc(p.display_name || "")}"
+            placeholder="اكتب اسمك"
+            autocomplete="off"
+          >
+          <div class="muted" style="margin-top:6px;font-size:10px">
+            الاسم يجب أن يكون فريداً بين اللاعبين.
+          </div>
+        </label>
+
+        <div>
+          <div class="eyebrow">النادي المفضل</div>
+
+          ${
+            CLUBS.map(league=>`
+              <div class="zingo-league-title">${esc(league.league)}</div>
+
+              <div class="zingo-club-grid">
+
+                ${
+                  league.clubs.map(c=>`
+                    <button
+                      type="button"
+                      class="zingo-club ${p.club_id===c[0]?"active":""}"
+                      data-club="${esc(c[0])}"
+                    >
+                      <img src="${esc(c[2])}" alt="">
+                      <span>${esc(c[1])}</span>
+                    </button>
+                  `).join("")
+                }
+
+              </div>
+          `).join("")
+          }
+
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button
+            class="btn primary"
+            type="button"
+            onclick="window.zingoSaveProfile()"
+          >
+            حفظ
+          </button>
+
+          <button
+            class="btn"
+            type="button"
+            onclick="render()"
+          >
+            إلغاء
+          </button>
+        </div>
+
+        <div id="zingoProfileMessage" class="muted"></div>
+
+      </section>
+    </div>
+  `;
+
+  let selectedClub=p.club_id || "";
+
+  document.querySelectorAll("[data-club]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+
+      selectedClub=btn.dataset.club;
+
+      document.querySelectorAll("[data-club]")
+        .forEach(x=>x.classList.toggle(
+          "active",
+          x.dataset.club===selectedClub
+        ));
+
+    });
+  });
+
+  document
+    .getElementById("zingoAvatarInput")
+    ?.addEventListener("change",async e=>{
+
+      const file=e.target.files?.[0];
+      if(!file) return;
+
+      try{
+
+        const data=await new Promise((resolve,reject)=>{
+
+          const img=new Image();
+          const reader=new FileReader();
+
+          reader.onload=()=>{
+            img.onload=()=>{
+
+              const max=512;
+
+              let w=img.width;
+              let h=img.height;
+
+              if(w>max || h>max){
+                const scale=Math.min(max/w,max/h);
+                w=Math.round(w*scale);
+                h=Math.round(h*scale);
+              }
+
+              const canvas=document.createElement("canvas");
+              canvas.width=w;
+              canvas.height=h;
+
+              const ctx=canvas.getContext("2d");
+              ctx.drawImage(img,0,0,w,h);
+
+              resolve(
+                canvas.toDataURL("image/jpeg",.78)
+              );
+            };
+
+            img.onerror=reject;
+            img.src=reader.result;
+          };
+
+          reader.onerror=reject;
+          reader.readAsDataURL(file);
+        });
+
+        window.__zingoProfileDraftAvatar=data;
+
+        const preview=document.getElementById("zingoAvatarPreview");
+
+        if(preview){
+          if(preview.tagName==="IMG"){
+            preview.src=data;
+          }else{
+            preview.outerHTML=
+              `<img id="zingoAvatarPreview"
+                    class="zingo-avatar ${state.mode==="vip"?"zingo-vip-crest":""}"
+                    src="${esc(data)}"
+                    alt="">`;
+          }
+        }
+
+      }catch(err){
+        console.error(err);
+        alert("تعذر قراءة الصورة");
+      }
+
+    });
+
+  window.__zingoProfileDraftClub=selectedClub;
+};
+
+window.zingoSaveProfile=async function(){
+
+  const input=document.getElementById("zingoDisplayName");
+  const msg=document.getElementById("zingoProfileMessage");
+
+  const name=(input?.value || "").trim();
+  const avatar=window.__zingoProfileDraftAvatar || getProfile().avatar_data || "";
+  const club=document.querySelector("[data-club].active")?.dataset.club
+    || getProfile().club_id
+    || "";
+
+  if(!name){
+    if(msg) msg.textContent="اكتب اسم اللاعب أولاً";
+    return;
+  }
+
+  try{
+
+    if(msg) msg.textContent="جارٍ الحفظ...";
+
+    const result=await profileApi("/api/profile/update",{
+      method:"POST",
+      body:JSON.stringify({
+        display_name:name,
+        avatar_data:avatar,
+        club_id:club
+      })
+    });
+
+    window.__zingoProfile=result.profile || {};
+
+    window.__zingoProfileDraftAvatar="";
+    window.__zingoProfileDraftClub="";
+
+    if(typeof toast==="function"){
+      toast("تم تحديث الملف الشخصي");
+    }
+
+    render();
+
+  }catch(e){
+
+    if(msg) msg.textContent=e.message || "تعذر حفظ الملف الشخصي";
+
+  }
+
+};
+
+window.zingoSettings=function(){
+
+  const app=document.getElementById("app");
+  if(!app) return;
+
+  const lang=localStorage.getItem("zingo_language") || "ar";
+
+  app.innerHTML=`
+    <div class="page">
+
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">SYSTEM</div>
+          <h1>الإعدادات</h1>
+        </div>
+      </div>
+
+      <section class="card card-pad zingo-settings-card">
+
+        <div class="zingo-setting-row">
+          <div>
+            <strong>اللغة</strong>
+            <div class="muted">لغة واجهة Zingo</div>
+          </div>
+
+          <div class="zingo-language-pills">
+            <button
+              class="${lang==="ar"?"active":""}"
+              onclick="window.zingoSetLanguage('ar')"
+            >العربية</button>
+
+            <button
+              class="${lang==="en"?"active":""}"
+              onclick="window.zingoSetLanguage('en')"
+            >EN</button>
+          </div>
+        </div>
+
+        <div class="zingo-setting-row">
+          <div>
+            <strong>الملف الشخصي</strong>
+            <div class="muted">الاسم، الصورة، والنادي</div>
+          </div>
+
+          <button
+            class="btn"
+            onclick="window.zingoOpenProfileEditor()"
+          >
+            تعديل
+          </button>
+        </div>
+
+        <div class="zingo-setting-row">
+          <div>
+            <strong>VIP</strong>
+            <div class="muted">
+              ${state.subscription?.active ? "Black Diamond Access" : "الوصول إلى VIP"}
+            </div>
+          </div>
+
+          <button
+            class="btn"
+            onclick="window.switchZingoMode ? window.switchZingoMode('vip') : (state.mode='vip',state.page='home',render())"
+          >
+            VIP
+          </button>
+        </div>
+
+      </section>
+    </div>
+  `;
+};
+
+window.zingoSetLanguage=function(lang){
+
+  localStorage.setItem("zingo_language",lang);
+
+  document.documentElement.lang=lang;
+  document.documentElement.dir=lang==="ar"?"rtl":"ltr";
+
+  if(window.zingoI18n?.setLanguage){
+    window.zingoI18n.setLanguage(lang);
+  }else{
+    render();
+  }
+
+};
 
 })();
 </script>
