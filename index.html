@@ -646,38 +646,66 @@ html[dir="ltr"] body{text-align:left}
 
 
 function profile(){
-
-  const u=window.__zingoTelegramUser
+  const zState=window.__zingoState || {};
+  const u=
+    zState.user
+    || window.__zingoTelegramUser
     || window.Telegram?.WebApp?.initDataUnsafe?.user
     || {};
 
   const p=window.__zingoProfile || {};
 
+  const escProfile=(v)=>{
+    return String(v ?? "").replace(/[&<>"']/g,m=>({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[m]));
+  };
+
   const mode=String(
     window.__zingoMode
-    || document.body.classList.contains("vip-world") && "vip"
-    || "pro"
+    || zState.mode
+    || (document.body.classList.contains("vip-world") ? "vip" : "pro")
   ).toLowerCase();
 
-  const subscription=window.__zingoSubscription || {};
-  const club=p.club_id && typeof window.zingoClubById==="function"
-    ? window.zingoClubById(p.club_id)
-    : null;
+  const subscription=
+    window.__zingoSubscription
+    || zState.subscription
+    || {};
+
+  const club=
+    p.club_id &&
+    typeof window.zingoClubById==="function"
+      ? window.zingoClubById(p.club_id)
+      : null;
 
   const profileCardHtml=
     typeof window.zingoProfileCard==="function"
       ? window.zingoProfileCard()
       : `
         <div class="card card-pad">
-          <div class="eyebrow">TELEGRAM IDENTITY</div>
+
+          <div class="eyebrow">
+            TELEGRAM IDENTITY
+          </div>
+
           <h2 style="margin-top:8px">
-            ${esc(p.display_name || u.first_name || "Player")}
+            ${escProfile(
+              p.display_name
+              || u.first_name
+              || "Player"
+            )}
           </h2>
+
           ${
             club
-              ? `<div class="muted">${esc(club[1])}</div>`
+              ? `<div class="muted">${escProfile(club[1])}</div>`
               : ""
           }
+
         </div>
       `;
 
@@ -692,7 +720,14 @@ function profile(){
       <div class="page-head">
         <div>
           <div class="eyebrow">PLAYER HUB</div>
-          <h1>${esc(p.display_name || u.first_name || "Player")}</h1>
+
+          <h1>
+            ${escProfile(
+              p.display_name
+              || u.first_name
+              || "Player"
+            )}
+          </h1>
         </div>
       </div>
 
@@ -702,15 +737,17 @@ function profile(){
 
         <div class="card stat">
           <div class="stat-label">Mode</div>
+
           <div class="stat-value">
-            ${esc(mode.toUpperCase())}
+            ${escProfile(mode.toUpperCase())}
           </div>
         </div>
 
         <div class="card stat">
           <div class="stat-label">Access</div>
+
           <div class="stat-value">
-            ${esc(String(plan).toUpperCase())}
+            ${escProfile(String(plan).toUpperCase())}
           </div>
         </div>
 
@@ -1633,49 +1670,95 @@ window.zingoProfileCard=profileCard;
 
 function profileCard(){
   const zState=window.__zingoState || {};
-  const p=typeof getProfile==="function" ? getProfile() : (window.__zingoProfile || {});
-  const tgUser=window.Telegram?.WebApp?.initDataUnsafe?.user || {};
-  const u=zState.user || tgUser || {};
-  const avatar=typeof profileAvatar==="function" ? profileAvatar(p) : "";
-  const vip=String(zState.mode || "pro").toLowerCase()==="vip";
+
+  const p=
+    typeof getProfile==="function"
+      ? getProfile()
+      : (window.__zingoProfile || {});
+
+  const tgUser=
+    window.Telegram?.WebApp?.initDataUnsafe?.user
+    || {};
+
+  const u=
+    zState.user
+    || tgUser
+    || {};
+
+  const escProfileCard=(v)=>{
+    return String(v ?? "").replace(/[&<>"']/g,m=>({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[m]));
+  };
+
+  const avatar=
+    typeof profileAvatar==="function"
+      ? profileAvatar(p)
+      : "";
+
+  const vip=
+    String(
+      window.__zingoMode
+      || zState.mode
+      || "pro"
+    ).toLowerCase()==="vip";
+
+  const club=
+    p.club_id &&
+    typeof window.zingoClubById==="function"
+      ? window.zingoClubById(p.club_id)
+      : null;
 
   return `
     <div class="card card-pad">
 
       <div class="zingo-avatar-wrap">
+
         ${
           avatar
-          ? `<img
-              class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
-              src="${esc(avatar)}"
-              alt=""
-            >`
-          : `<div
-              class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
-              style="display:grid;place-items:center;font-size:38px"
-            >
-              ◇
-            </div>`
+            ? `<img
+                class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+                src="${escProfileCard(avatar)}"
+                alt=""
+              >`
+            : `<div
+                class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+                style="display:grid;place-items:center;font-size:38px"
+              >
+                ◇
+              </div>`
         }
+
       </div>
 
       <div style="text-align:center">
+
         <div class="eyebrow">
           ${vip ? "BLACK DIAMOND PLAYER" : "PLAYER IDENTITY"}
         </div>
 
         <h2 style="margin-top:8px">
-          ${esc(p.display_name || u.first_name || "Player")}
+          ${escProfileCard(
+            p.display_name
+            || u.first_name
+            || "Player"
+          )}
         </h2>
 
         ${
-          p.club_id && typeof clubById==="function" && clubById(p.club_id)
-            ? `<div class="muted">${esc(clubById(p.club_id)[1])}</div>`
+          club
+            ? `<div class="muted">${escProfileCard(club[1])}</div>`
             : ""
         }
+
       </div>
 
       <div style="margin-top:16px">
+
         <button
           class="btn primary"
           type="button"
@@ -1683,6 +1766,7 @@ function profileCard(){
         >
           تعديل الملف الشخصي
         </button>
+
       </div>
 
     </div>
@@ -1690,6 +1774,8 @@ function profileCard(){
 }
 
 window.zingoOpenProfileEditor=async function(){
+
+  alert("تم الضغط على زر البروفايل");
 
   await loadZingoProfile();
 
