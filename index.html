@@ -1775,11 +1775,16 @@ function profileCard(){
 
 window.zingoOpenProfileEditor=async function(){
 
-  alert("تم الضغط على زر البروفايل");
+  alert("1️⃣ الزر شغال");
 
-  await loadZingoProfile();
+  try{
+    alert("2️⃣ قبل تحميل البروفايل");
 
-  const p=getProfile();
+    await loadZingoProfile();
+
+    alert("3️⃣ تم تحميل البروفايل");
+
+    const p=getProfile();
   const zState=window.__zingoState || {};
   const currentMode=String(zState.mode || "pro").toLowerCase();
 
