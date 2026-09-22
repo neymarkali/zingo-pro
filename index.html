@@ -2121,95 +2121,33 @@ vip ? "مفعّل" : "الاشتراك مطلوب";
 }
 
 async function select(tier){
+  if(tier==="free"){
+    E("zingoProWorld")?.classList.add("hidden");
+    E("zingoVipWorld")?.classList.add("hidden");
+    E("zingoTierFree")?.classList.add("active");
+    E("zingoTierPro")?.classList.remove("active");
+    E("zingoTierVip")?.classList.remove("active");
+    return;
+  }
 
-const sub=await getSubscription();
+  if(tier==="pro"){
+    E("zingoProWorld")?.classList.remove("hidden");
+    E("zingoVipWorld")?.classList.add("hidden");
+    E("zingoTierFree")?.classList.remove("active");
+    E("zingoTierPro")?.classList.add("active");
+    E("zingoTierVip")?.classList.remove("active");
+    return;
+  }
 
-const pro=!!sub.pro?.active;
-const vip=!!sub.vip?.active;
-
-updateStates(pro,vip);
-
-if(tier==="free"){
-
-clearWorlds();
-
-E("zingoFreeWorld")?.classList.remove("hidden");
-E("zingoTierFree")?.classList.add("active");
-
-return true;
-
+  if(tier==="vip"){
+    E("zingoVipWorld")?.classList.remove("hidden");
+    E("zingoProWorld")?.classList.add("hidden");
+    E("zingoTierFree")?.classList.remove("active");
+    E("zingoTierPro")?.classList.remove("active");
+    E("zingoTierVip")?.classList.add("active");
+    return;
+  }
 }
-
-if(tier==="pro"){
-
-if(!pro){
-
-if(typeof window.toast==="function")
-window.toast("🔒 PRO غير مفعّل حاليًا");
-else
-alert("🔒 PRO غير مفعّل حاليًا");
-
-openPackages();
-return false;
-
-}
-
-clearWorlds();
-
-E("zingoProWorld")?.classList.remove("hidden");
-E("zingoTierPro")?.classList.add("active");
-
-try{
-
-if(typeof window.switchMode==="function")
-await window.ZingoMaster.open("pro");
-
-}catch(e){}
-
-return true;
-
-}
-
-if(tier==="vip"){
-
-if(!vip){
-
-if(typeof window.toast==="function")
-window.toast("🔒 VIP غير مفعّل حاليًا");
-else
-alert("🔒 VIP غير مفعّل حاليًا");
-
-openPackages();
-return false;
-
-}
-
-clearWorlds();
-
-E("zingoVipWorld")?.classList.remove("hidden");
-E("zingoTierVip")?.classList.add("active");
-
-try{
-
-if(typeof window.switchZingoMode==="function")
-await window.ZingoMaster.open("vip");
-else if(typeof window.switchMode==="function")
-await window.switchMode("vip");
-else if(typeof window.royalAscension==="function")
-await window.ZingoMaster.open("vip");
-
-}catch(e){
-console.warn("VIP cinematic:",e);
-}
-
-return true;
-
-}
-
-return false;
-
-}
-
 function openPackages(){
 
 try{
