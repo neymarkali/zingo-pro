@@ -2121,29 +2121,22 @@ vip ? "مفعّل" : "الاشتراك مطلوب";
 }
 
 async function select(tier){
+  clearWorlds();
+
   if(tier==="free"){
-    E("zingoProWorld")?.classList.add("hidden");
-    E("zingoVipWorld")?.classList.add("hidden");
+    E("zingoFreeWorld")?.classList.remove("hidden");
     E("zingoTierFree")?.classList.add("active");
-    E("zingoTierPro")?.classList.remove("active");
-    E("zingoTierVip")?.classList.remove("active");
     return;
   }
 
   if(tier==="pro"){
     E("zingoProWorld")?.classList.remove("hidden");
-    E("zingoVipWorld")?.classList.add("hidden");
-    E("zingoTierFree")?.classList.remove("active");
     E("zingoTierPro")?.classList.add("active");
-    E("zingoTierVip")?.classList.remove("active");
     return;
   }
 
   if(tier==="vip"){
     E("zingoVipWorld")?.classList.remove("hidden");
-    E("zingoProWorld")?.classList.add("hidden");
-    E("zingoTierFree")?.classList.remove("active");
-    E("zingoTierPro")?.classList.remove("active");
     E("zingoTierVip")?.classList.add("active");
     return;
   }
