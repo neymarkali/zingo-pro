@@ -627,11 +627,184 @@ html[dir="ltr"] body{text-align:left}
 
 <body>
 
+<section id="zingoUnifiedExperience">
+
+<div id="zingoUnifiedTierBar">
+
+<button type="button"
+id="zingoTierFree"
+class="zingo-tier-btn zingo-tier-free active"
+onclick="window.ZingoUnified.select('free')">
+<span class="zt-icon">🆓</span>
+<span class="zt-name">المجاني</span>
+<span class="zt-state">مفتوح للجميع</span>
+</button>
+
+<button type="button"
+id="zingoTierPro"
+class="zingo-tier-btn zingo-tier-pro"
+onclick="window.ZingoUnified.select('pro')">
+<span class="zt-icon">🟡</span>
+<span class="zt-name">PRO</span>
+<span class="zt-state" id="zingoProTierState">الاشتراك مطلوب</span>
+</button>
+
+<button type="button"
+id="zingoTierVip"
+class="zingo-tier-btn zingo-tier-vip"
+onclick="window.ZingoUnified.select('vip')">
+<span class="zt-icon">💎</span>
+<span class="zt-name">VIP</span>
+<span class="zt-state" id="zingoVipTierState">الاشتراك مطلوب</span>
+</button>
+
+</div>
+
+<section id="zingoFreeWorld" class="zingo-world">
+
+<div class="zingo-world-hero free-hero">
+<div class="zingo-world-symbol">⚽</div>
+<h2 class="zingo-world-title">المجاني</h2>
+<p class="zingo-world-sub">التوقع متاح للجميع</p>
+</div>
+
+<div class="zingo-world-grid">
+
+<div class="zingo-world-card free-card">
+<b>⚽ المباريات</b>
+<span>المباريات والتوقعات المتاحة</span>
+</div>
+
+<div class="zingo-world-card free-card">
+<b>🎯 توقعاتي</b>
+<span>توقعاتك ونتائجها</span>
+</div>
+
+<div class="zingo-world-card free-card">
+<b>🏆 المسابقات</b>
+<span>المسابقة المجانية</span>
+</div>
+
+<div class="zingo-world-card free-card">
+<b>📊 الترتيب</b>
+<span>ترتيب المشاركين</span>
+</div>
+
+<div class="zingo-world-card free-card">
+<b>🎁 الجوائز</b>
+<span>الجوائز والمكافآت</span>
+</div>
+
+<div class="zingo-world-card free-card">
+<b>👤 ملفي</b>
+<span>حسابك وإحصائياتك</span>
+</div>
+
+</div>
+</section>
+
+<section id="zingoProWorld" class="zingo-world hidden">
+
+<div class="zingo-world-hero pro-hero">
+<div class="zingo-world-symbol">🏆</div>
+<h2 class="zingo-world-title">PRO</h2>
+<p class="zingo-world-sub">مستوى أعلى وفرص أكبر</p>
+</div>
+
+<div class="zingo-world-grid">
+
+<div class="zingo-world-card pro-card">
+<b>⚽ مباريات PRO</b>
+<span>مباريات ومسابقات خاصة</span>
+</div>
+
+<div class="zingo-world-card pro-card">
+<b>🎯 توقعاتي</b>
+<span>توقعاتك ونتائجها</span>
+</div>
+
+<div class="zingo-world-card pro-card">
+<b>🏆 مسابقات PRO</b>
+<span>تحديات ومكافآت حصرية</span>
+</div>
+
+<div class="zingo-world-card pro-card">
+<b>📊 إحصائياتي</b>
+<span>أداؤك ونقاطك</span>
+</div>
+
+<div class="zingo-world-card pro-card">
+<b>👑 الترتيب</b>
+<span>ترتيب منافسي PRO</span>
+</div>
+
+<div class="zingo-world-card pro-card">
+<b>🎁 الجوائز</b>
+<span>جوائز ومكافآت PRO</span>
+</div>
+
+</div>
+
+<div id="zingoProLock" class="zingo-world-lock">
+<div>🔒 هذا القسم متاح لمشتركي PRO</div>
+<button type="button" onclick="window.ZingoUnified.openPackages()">تفعيل PRO</button>
+</div>
+
+</section>
+
+<section id="zingoVipWorld" class="zingo-world hidden">
+
+<div class="zingo-world-hero vip-hero">
+<div class="zingo-world-symbol">💎</div>
+<h2 class="zingo-world-title">VIP</h2>
+<p class="zingo-world-sub">النخبة في المقدمة دائمًا</p>
+</div>
+
+<div class="zingo-world-grid">
+
+<div class="zingo-world-card vip-card">
+<b>💎 مباريات VIP</b>
+<span>محتوى ومسابقات استثنائية</span>
+</div>
+
+<div class="zingo-world-card vip-card">
+<b>🎯 توقعاتي</b>
+<span>توقعاتك ونتائجها</span>
+</div>
+
+<div class="zingo-world-card vip-card">
+<b>👑 مسابقات VIP</b>
+<span>تحديات حصرية</span>
+</div>
+
+<div class="zingo-world-card vip-card">
+<b>📊 إحصائياتي</b>
+<span>تحليل متقدم لأدائك</span>
+</div>
+
+<div class="zingo-world-card vip-card">
+<b>💠 الترتيب الملكي</b>
+<span>منافسة مشتركي VIP</span>
+</div>
+
+<div class="zingo-world-card vip-card">
+<b>🎁 الجوائز</b>
+<span>مكافآت VIP الحصرية</span>
+</div>
+
+</div>
+
+<div id="zingoVipLock" class="zingo-world-lock">
+<div>🔒 هذا القسم متاح لمشتركي VIP</div>
+<button type="button" onclick="window.ZingoUnified.openPackages()">تفعيل VIP</button>
+</div>
+
+</section>
+
+</section>
 
 
 
-
-<div id="app"></div>
 
 <div id="ascension" class="ascension">
   <button class="skip" onclick="finishAscension()">SKIP</button>
@@ -645,675 +818,6 @@ html[dir="ltr"] body{text-align:left}
 </div>
 
 <div id="toast" class="toast"></div>
-
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
-
-<script>
-(() => {
-  "use strict";
-
-  const tg = window.Telegram?.WebApp || null;
-
-  if (tg) {
-    try {
-      tg.ready();
-      tg.expand();
-      tg.setHeaderColor("#05070b");
-      tg.setBackgroundColor("#05070b");
-    } catch(e){}
-  }
-
-  const state = {
-    mode: "free",
-    page: "home",
-    user: null,
-    subscription: null,
-    round: null,
-    ranking: null,
-    selections: {},
-    saved: false,
-    loading: true
-  };
-
-  // Shared state bridge for profile functions defined outside this IIFE.
-  window.__zingoState = state;
-
-  const API = {
-    subscription: "/api/subscription",
-    round: "/api/pro_round",
-    submit: "/api/pro_submit",
-    ranking: "/api/pro_ranking"
-  };
-
-  function authHeaders(){
-    const initData = tg?.initData || "";
-    return initData ? {"X-Telegram-Init-Data": initData} : {};
-  }
-
-  async function api(path, options={}){
-    const headers = {
-      ...(options.body ? {"Content-Type":"application/json"} : {}),
-      ...authHeaders(),
-      ...(options.headers || {})
-    };
-
-    const res = await fetch(path,{...options,headers});
-    const text = await res.text();
-
-    let data;
-    try { data = JSON.parse(text); }
-    catch { data = {raw:text}; }
-
-    if(!res.ok) throw new Error(data?.error || data?.message || `HTTP ${res.status}`);
-    return data;
-  }
-
-  function esc(v){
-    return String(v ?? "").replace(/[&<>"']/g,m=>({
-      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-    }[m]));
-  }
-
-  function toast(message){
-    const el=document.getElementById("toast");
-    el.textContent=message;
-    el.classList.add("show");
-    clearTimeout(window.__toast);
-    window.__toast=setTimeout(()=>el.classList.remove("show"),2200);
-  }
-
-  function userId(){
-    return state.user?.id || tg?.initDataUnsafe?.user?.id || "";
-  }
-
-  function userName(){
-    const u=state.user || tg?.initDataUnsafe?.user;
-    if(!u) return "PLAYER";
-    return u.first_name || u.username || "PLAYER";
-  }
-
-  function formatRound(){
-    const r=state.round;
-    if(!r) return [];
-    if(Array.isArray(r)) return r;
-    return r.matches || r.fixtures || r.games || r.data || r.round?.matches || [];
-  }
-
-  function nav(items){
-    const ar=true;
-    const labels={
-      home:ar?"الرئيسية":"Home",
-      matches:ar?"المباريات":"Matches",
-      predict:ar?"التوقعات":"Predictions",
-      stats:ar?"الإحصائيات":"Stats",
-      profile:ar?"الملف الشخصي":"Profile",
-      analysis:ar?"التحليل":"Analysis",
-      rewards:ar?"المكافآت":"Rewards"
-    };
-
-    return `
-      <nav class="bottom-nav">
-        ${items.map(x=>`
-          <button
-            type="button"
-            class="nav-btn ${state.page===x.id?"active":""}"
-            data-route="${x.id}"
-            onclick="event.preventDefault();window.Zingo.go(this.dataset.route);return false"
-          >
-            <span class="nav-icon">${x.icon}</span>${labels[x.id]||x.label}
-          </button>
-        `).join("")}
-      </nav>`;
-  }
-
-  function shell(content){
-    const vip=state.mode==="vip";
-    document.body.classList.toggle("vip-world",vip);
-
-    return `
-      <div class="topbar">
-        <div class="topbar-inner">
-          <div class="brand">
-            <div class="logo">Z</div>
-            <div>
-              <div class="brand-title">ZINGO</div>
-              <div class="brand-sub">${vip?"BLACK DIAMOND":"AAA ESPORTS COMMAND CENTER"}</div>
-            </div>
-          </div>
-
-          <div class="mode-switch">
-            <button class="mode-btn ${!vip?"active pro":""}" onclick="window.Zingo.setMode('pro')">PRO</button>
-            <button class="mode-btn ${vip?"active vip":""}" onclick="window.Zingo.setMode('vip')">VIP</button>
-          </div>
-        </div>
-      </div>
-
-      <main class="page">${content}</main>
-
-      ${nav(vip ? [
-        {id:"home",icon:"◆",label:"الرئيسية"},
-        {id:"predict",icon:"⌁",label:"التوقعات"},
-        {id:"analysis",icon:"◈",label:"التحليل"},
-        {id:"rewards",icon:"♛",label:"المكافآت"},
-        {id:"profile",icon:"◇",label:"الملف الشخصي"}
-      ] : [
-        {id:"home",icon:"⌂",label:"الرئيسية"},
-        {id:"matches",icon:"◉",label:"المباريات"},
-        {id:"predict",icon:"⌁",label:"التوقعات"},
-        {id:"stats",icon:"▦",label:"الإحصائيات"},
-        {id:"profile",icon:"◇",label:"الملف الشخصي"}
-      ])}
-    `;
-  }
-
-  function home(){
-    const vip=state.mode==="vip";
-    const matches=formatRound().slice(0,3);
-
-    return shell(`
-      <div class="page-head">
-        <div>
-          <div class="eyebrow">${vip?"مركز VIP":"مركز اللعب"}</div>
-          <h1>${vip?"أهلًا بك في VIP":"أهلًا بعودتك"}</h1>
-        </div>
-      </div>
-
-      <section class="card hero">
-        <div class="hero-kicker">${vip?"ULTRA EXCLUSIVE / VIP":"AAA ESPORTS / PRO"}</div>
-        <div class="hero-title">${vip?"مساحتك الخاصة للتوقعات.":"لعبتك. ترتيبك. توقعك."}</div>
-        <div class="hero-text">
-          ${vip
-            ?"A living VIP environment built around your predictions, analysis, royal rank and exclusive rewards."
-            :"Track matches, make predictions, earn النقاط and climb the championship system."}
-        </div>
-        <div class="rank-line">
-          <div class="rank-badge">${vip?"BLACK DIAMOND":"ترتيب PRO"} · ${userName()}</div>
-        </div>
-      </section>
-
-      <div class="grid">
-        <div class="card stat"><div class="stat-label">الترتيب</div><div class="stat-value">${vip?"ROYAL":"PRO"}</div><div class="stat-small">التصنيف الحالي</div></div>
-        <div class="card stat"><div class="stat-label">النقاط</div><div class="stat-value">${state.ranking?.xp ?? "—"}</div><div class="stat-small">Season progress</div></div>
-        <div class="card stat"><div class="stat-label">Predictions</div><div class="stat-value">${state.ranking?.predictions ?? "—"}</div><div class="stat-small">Total saved</div></div>
-        <div class="card stat"><div class="stat-label">${vip?"Royal":"Championship"}</div><div class="stat-value">${state.ranking?.rank ?? "—"}</div><div class="stat-small">Leaderboard</div></div>
-      </div>
-
-      <section class="section">
-        <div class="section-title"><h2>${vip?"Live Cockpit":"Match Center"}</h2><span>${matches.length} ACTIVE</span></div>
-        ${matches.length ? matches.map(matchCard).join("") : `<div class="empty">No active matches available right now.</div>`}
-      </section>
-
-      <section class="section">
-        <div class="grid">
-          <button class="card card-pad secondary" onclick="event.preventDefault();event.stopPropagation();window.Zingo.go(\'predict\');return false">${vip?"OPEN COCKPIT":"ضع توقعك"}</button>
-          <button class="card card-pad secondary" onclick="event.preventDefault();event.stopPropagation();window.Zingo.go(\'${vip?"rewards":"stats"}\');return false">${vip?"ROYAL المكافآت":"عرض الإحصائيات"}</button>
-        </div>
-      </section>
-    `);
-  }
-
-  function matchCard(m){
-    const home=m.home_team || m.home || m.team1 || m.homeTeam || "صاحب الأرض";
-    const away=m.away_team || m.away || m.team2 || m.awayTeam || "الضيف";
-    const status=m.status || m.state || "UPCOMING";
-    const id=m.id || m.match_id || m.fixture_id || "";
-    return `
-      <div class="card match">
-        <div class="match-main">
-          <div class="match-teams">${esc(home)} <span class="muted">vs</span> ${esc(away)}</div>
-          <div class="match-meta"><span class="${/live|playing/i.test(status)?"live-dot":""}"></span>${esc(status)} ${id?`· #${esc(id)}`:""}</div>
-        </div>
-        <button class="match-action" onclick="window.Zingo.selectMatch('${esc(id)}')">توقعاتي</button>
-      </div>`;
-  }
-
-  function matchesPage(){
-    const matches=formatRound();
-    return shell(`
-      <div class="page-head"><div><div class="eyebrow">PRO مركز المباريات</div><h1>Matches</h1></div></div>
-      <div class="section">
-        ${matches.length ? matches.map(matchCard).join("") : `<div class="empty">No matches available.</div>`}
-      </div>
-    `);
-  }
-
-  function predict(){
-    const matches=formatRound();
-    const m=matches[0] || {};
-    const matchId=m.id || m.match_id || m.fixture_id || "current";
-
-    return shell(`
-      <div class="page-head">
-        <div><div class="eyebrow">${state.mode==="vip"?"VIP PREDICTION COCKPIT":"PRO التوقعات"}</div><h1>${state.mode==="vip"?"Cockpit":"Make your call"}</h1></div>
-      </div>
-
-      <div class="card card-pad" style="margin-bottom:12px">
-        <div class="eyebrow">مباراة نشطة</div>
-        <h2 style="margin-top:7px">${esc(m.home_team || m.home || m.team1 || "Home")} <span class="muted">vs</span> ${esc(m.away_team || m.away || m.team2 || "Away")}</h2>
-        <div class="muted" style="font-size:11px">${esc(m.status || "UPCOMING")}</div>
-      </div>
-
-      ${market("الفائز","winner",["صاحب الأرض","تعادل","الضيف"])}
-      ${market("الأهداف","goals",["OVER 1.5","UNDER 1.5","OVER 2.5","UNDER 2.5"])}
-      ${market("النتيجة","score",["1-0","2-0","2-1","1-1","0-0","0-1"])}
-
-      <button class="primary save ${Object.keys(state.selections).length?"ready":""}" onclick="window.Zingo.savePrediction('${esc(matchId)}')">
-        ${state.saved?"✓ تم حفظ التوقع":"حفظ التوقع"}
-      </button>
-
-      <div class="section card card-pad">
-        <div class="eyebrow">القواعد</div>
-        <div style="font-size:11px;line-height:1.7;color:#aeb8c9;margin-top:8px">
-          Select your prediction for each market, then save it before the prediction window closes.
-          Each prediction is stored individually. Results become visible after the match is settled.
-        </div>
-      </div>
-    `);
-  }
-
-  function market(title,key,options){
-    return `
-      <div class="market" style="margin-bottom:10px">
-        <div class="market-title">${title}</div>
-        <div class="options">
-          ${options.map(o=>`
-            <button class="option ${state.selections[key]===o?"selected":""}"
-              onclick="window.Zingo.pick('${key}','${o}')">${o}</button>
-          `).join("")}
-        </div>
-      </div>`;
-  }
-
-  function stats(){
-    return shell(`
-      <div class="page-head"><div><div class="eyebrow">PLAYER HUB</div><h1>Stats</h1></div></div>
-      <div class="grid">
-        <div class="card stat"><div class="stat-label">Accuracy</div><div class="stat-value">—</div><div class="stat-small">Awaiting settled data</div></div>
-        <div class="card stat"><div class="stat-label">Wins</div><div class="stat-value">—</div><div class="stat-small">Season</div></div>
-        <div class="card stat"><div class="stat-label">النقاط</div><div class="stat-value">${state.ranking?.xp ?? "—"}</div><div class="stat-small">Progress</div></div>
-        <div class="card stat"><div class="stat-label">الترتيب</div><div class="stat-value">${state.ranking?.rank ?? "—"}</div><div class="stat-small">Leaderboard</div></div>
-      </div>
-      <div class="section card card-pad">
-        <div class="section-title"><h2>Season Progress</h2><span>ACTIVE</span></div>
-        <div class="progress"><i></i></div>
-      </div>
-    `);
-  }
-
-  function analysis(){
-    return shell(`
-      <div class="page-head"><div><div class="eyebrow">BLACK DIAMOND</div><h1>Analysis Center</h1></div></div>
-      <div class="card hero">
-        <div class="hero-kicker">ADVANCED التحليل</div>
-        <div class="hero-title">Private intelligence layer.</div>
-        <div class="hero-text">This is the dedicated VIP architecture layer for advanced match intelligence, deeper statistics and future analysis modules.</div>
-      </div>
-      <div class="grid">
-        ${["Momentum Engine","Team Form","Goal Patterns","Market Intelligence"].map(x=>`
-          <div class="card card-pad">
-            <div class="eyebrow">VIP MODULE</div>
-            <h2 style="margin-top:7px">${x}</h2>
-            <div class="muted" style="font-size:11px">Module architecture ready for live data.</div>
-          </div>`).join("")}
-      </div>
-    `);
-  }
-
-  function rewards(){
-    return shell(`
-      <div class="page-head"><div><div class="eyebrow">${state.mode==="vip"?"ROYAL المكافآت":"المكافآت SYSTEM"}</div><h1>${state.mode==="vip"?"Royal Vault":"Rewards"}</h1></div></div>
-      <div class="card hero">
-        <div class="hero-kicker">${state.mode==="vip"?"BLACK DIAMOND":"PRO"}</div>
-        <div class="hero-title">${state.mode==="vip"?"Exclusive rewards await.":"Build your reward profile."}</div>
-        <div class="hero-text">Points, badges, rank progression and future reward modules live here.</div>
-      </div>
-      <div class="grid">
-        ${["الترتيب","Badges","Points","Achievements"].map(x=>`
-          <div class="card stat"><div class="stat-label">${x}</div><div class="stat-value">—</div><div class="stat-small">System ready</div></div>`).join("")}
-      </div>
-    `);
-  }
-
-
-function profile(){
-  const zState=window.__zingoState || {};
-  const u=
-    zState.user
-    || window.__zingoTelegramUser
-    || window.Telegram?.WebApp?.initDataUnsafe?.user
-    || {};
-
-  const p=window.__zingoProfile || {};
-
-  const escProfile=(v)=>{
-    return String(v ?? "").replace(/[&<>"']/g,m=>({
-      "&":"&amp;",
-      "<":"&lt;",
-      ">":"&gt;",
-      '"':"&quot;",
-      "'":"&#39;"
-    }[m]));
-  };
-
-  const mode=String(
-    window.__zingoMode
-    || zState.mode
-    || (document.body.classList.contains("vip-world") ? "vip" : "pro")
-  ).toLowerCase();
-
-  const subscription=
-    window.__zingoSubscription
-    || zState.subscription
-    || {};
-
-  const club=
-    p.club_id &&
-    typeof window.zingoClubById==="function"
-      ? window.zingoClubById(p.club_id)
-      : null;
-
-  const profileCardHtml=
-    typeof window.zingoProfileCard==="function"
-      ? window.zingoProfileCard()
-      : `
-        <div class="card card-pad">
-
-          <div class="eyebrow">
-            TELEGRAM IDENTITY
-          </div>
-
-          <h2 style="margin-top:8px">
-            ${escProfile(
-              p.display_name
-              || u.first_name
-              || "Player"
-            )}
-          </h2>
-
-          ${
-            club
-              ? `<div class="muted">${escProfile(club[1])}</div>`
-              : ""
-          }
-
-        </div>
-      `;
-
-  const plan=
-    subscription?.plan
-    || subscription?.subscription?.plan
-    || "PRO";
-
-  return `
-    <div class="page">
-
-      <div class="page-head">
-        <div>
-          <div class="eyebrow">PLAYER HUB</div>
-
-          <h1>
-            ${escProfile(
-              p.display_name
-              || u.first_name
-              || "Player"
-            )}
-          </h1>
-        </div>
-      </div>
-
-      ${profileCardHtml}
-
-      <div class="section grid">
-
-        <div class="card stat">
-          <div class="stat-label">Mode</div>
-
-          <div class="stat-value">
-            ${escProfile(mode.toUpperCase())}
-          </div>
-        </div>
-
-        <div class="card stat">
-          <div class="stat-label">Access</div>
-
-          <div class="stat-value">
-            ${escProfile(String(plan).toUpperCase())}
-          </div>
-        </div>
-
-      </div>
-
-    </div>
-  `;
-}
-
-function render(){
-    let content;
-    if(state.mode==="vip"){
-      if(state.page==="predict") content=predict();
-      else if(state.page==="analysis") content=analysis();
-      else if(state.page==="rewards") content=rewards();
-      else if(state.page==="profile" || state.page==="player") content=profile();
-      else content=home();
-    }else{
-      if(state.page==="matches") content=matchesPage();
-      else if(state.page==="predict") content=predict();
-      else if(state.page==="stats") content=stats();
-      else if(state.page==="profile" || state.page==="player") content=profile();
-      else content=home();
-    }
-
-    document.getElementById("app").innerHTML=content;
-  }
-
-  async function loadData(){
-    state.loading=true;
-    render();
-
-    try{
-      const sub=await api(API.subscription);
-      state.subscription=sub?.subscription || sub;
-    }catch(e){
-      console.warn("subscription:",e.message);
-    }
-
-    try{
-      state.round=await api(API.round);
-    }catch(e){
-      console.warn("round:",e.message);
-    }
-
-    try{
-      state.ranking=await api(API.ranking);
-    }catch(e){
-      console.warn("ranking:",e.message);
-    }
-
-    state.user=tg?.initDataUnsafe?.user || null;
-
-    // Player Identity is part of normal app state.
-    // Failure must never block the application.
-    try{
-      await loadZingoProfile();
-    }catch(e){
-      console.warn("player profile:",e.message);
-    }
-
-    state.loading=false;
-    render();
-  }
-
-  function pick(key,value){
-    state.selections[key]=value;
-    state.saved=false;
-    render();
-  }
-
-  async function savePrediction(matchId){
-    if(!Object.keys(state.selections).length){
-      toast("اختر توقعاً أولاً");
-      return;
-    }
-
-    try{
-      const body={
-        match_id:matchId,
-        predictions:{...state.selections},
-        prediction:{...state.selections}
-      };
-
-      await api(API.submit,{
-        method:"POST",
-        body:JSON.stringify(body)
-      });
-
-      state.saved=true;
-      render();
-      toast("تم حفظ التوقع");
-    }catch(e){
-      console.error(e);
-      toast(e.message || "تعذر حفظ التوقع");
-    }
-  }
-
-  function selectMatch(id){
-    state.page="predict";
-    state.selections={};
-    state.saved=false;
-    render();
-    window.scrollTo({top:0,behavior:"smooth"});
-  }
-
-  let ascensionTimer;
-
-  function startAscension(){
-    const el=document.getElementById("ascension");
-    if(!el) return;
-
-    const p=document.getElementById("particles");
-    p.innerHTML="";
-    for(let i=0;i<42;i++){
-      const x=document.createElement("i");
-      x.className="particle";
-      x.style.left=(Math.random()*100)+"%";
-      x.style.setProperty("--x",(Math.random()*180-90)+"vw");
-      x.style.animationDuration=(2.2+Math.random()*3.5)+"s";
-      x.style.animationDelay=(Math.random()*1.8)+"s";
-      p.appendChild(x);
-    }
-
-    el.classList.add("show");
-    clearTimeout(ascensionTimer);
-    ascensionTimer=setTimeout(finishAscension,5200);
-  }
-
-  function finishAscension(){
-    clearTimeout(ascensionTimer);
-    document.getElementById("ascension")?.classList.remove("show");
-    state.mode="vip";
-    state.page="home";
-    render();
-    try{
-      if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("heavy");
-    }catch(e){}
-  }
-
-
-
-
-window.Zingo={
-  go(page){
-    if(page==="player") page="profile";
-    state.page=page;
-
-    try{
-      if(page==="settings" && typeof window.zingoSettings==="function"){
-        window.zingoSettings();
-      }else{
-        render();
-      }
-    }catch(error){
-      console.error("ZINGO ROUTE ERROR:",error);
-
-      try{
-        if(page==="profile" && typeof profile==="function"){
-          document.getElementById("app").innerHTML=profile();
-        }
-      }catch(profileError){
-        console.error("ZINGO PROFILE ERROR:",profileError);
-      }
-    }
-
-    window.scrollTo({top:0,behavior:"smooth"});
-  },
-
-  pick,
-
-  savePrediction,
-
-  selectMatch,
-
-  async setMode(mode){
-    mode=String(mode||"free").toLowerCase();
-
-    if(mode==="free"){
-      state.mode="free";
-      state.page="home";
-      render();
-      return;
-    }
-
-    if(mode==="vip"){
-      let allowed=false;
-
-      try{
-        allowed =
-          window.ZingoMaster &&
-          await window.ZingoMaster.canUse("vip");
-      }catch(e){
-        console.warn("VIP access:",e);
-      }
-
-      if(!allowed){
-        toast("🔒 VIP غير مفعّل حاليًا");
-        return;
-      }
-
-      if(typeof startAscension==="function"){
-        startAscension();
-      }else{
-        state.mode="vip";
-        state.page="home";
-        render();
-      }
-
-      return;
-    }
-
-    let allowed=false;
-
-    try{
-      allowed =
-        window.ZingoMaster &&
-        await window.ZingoMaster.canUse("pro");
-    }catch(e){
-      console.warn("PRO access:",e);
-    }
-
-    if(!allowed){
-      toast("🔒 PRO غير مفعّل حاليًا");
-      return;
-    }
-
-    state.mode="pro";
-    state.page="home";
-    render();
-  }
-};
-
-window.__zingoLoadData = loadData;
-})();
-</script>
 
 <script id="zingoI18nSystem">
 /* ZINGO BILINGUAL I18N V1 */
