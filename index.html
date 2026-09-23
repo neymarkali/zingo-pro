@@ -162,12 +162,12 @@ h2{font-size:19px;margin:0 0 12px}
   z-index:2147483000;display:grid;grid-template-columns:repeat(5,1fr);
   padding:7px;border:1px solid var(--line);border-radius:21px;
   background:rgba(8,11,16,.9);backdrop-filter:blur(24px);
-  box-shadow:0 18px 55px rgba(0,0,0,.55)
+  box-shadow:0 18px 55px rgba(0,0,0,.55);
 
 pointer-events:auto!important;}
 .nav-btn{
   border:0;background:transparent;border-radius:15px;padding:8px 2px;
-  color:#707b8e;font-size:9px;font-weight:800
+  color:#707b8e;font-size:9px;font-weight:800;
 
 pointer-events:auto!important;
 touch-action:manipulation;}
@@ -2186,32 +2186,28 @@ Z.subscription=getSubscription;
 Z.openPackages=openPackages;
 
 async function boot(){
-
 try{
-
 const tg=window.Telegram?.WebApp;
-
 if(tg){
-
 try{tg.ready()}catch(e){}
 try{tg.expand()}catch(e){}
-
 }
-
 }catch(e){}
 
-const sub=await getSubscription();
-
-updateStates(
-!!sub.pro?.active,
-!!sub.vip?.active
-);
-
+/* افتح الواجهة المجانية فورًا */
 clearWorlds();
-
 E("zingoFreeWorld")?.classList.remove("hidden");
 E("zingoTierFree")?.classList.add("active");
 
+/* تحقق من الاشتراك بالخلفية بدون تعطيل الواجهة */
+getSubscription().then(function(sub){
+updateStates(
+!!sub?.pro?.active,
+!!sub?.vip?.active
+);
+}).catch(function(e){
+console.warn("Zingo background subscription:",e);
+});
 }
 
 if(document.readyState==="loading"){
