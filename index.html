@@ -1,6 +1,19 @@
 <!doctype html>
 <html lang="en">
 <head>
+<script src="https://telegram.org/js/telegram-web-app.js?63"></script>
+<script id="zingoTelegramReady">
+(function(){
+  try{
+    var tg=window.Telegram&&window.Telegram.WebApp;
+    if(tg){
+      try{tg.ready();}catch(e){}
+      try{tg.expand();}catch(e){}
+    }
+  }catch(e){}
+})();
+</script>
+
 
 
 
@@ -641,44 +654,8 @@ html[dir="ltr"] body{text-align:left}
 </style>
 
 
-<script id="zingoTelegramSDK" src="https://telegram.org/js/telegram-web-app.js?63" defer></script>
-<script id="zingoTelegramReady">
-(function(){
-  var tries=0;
-  var max=160;
 
-  function go(){
-    try{
-      var tg=window.Telegram && window.Telegram.WebApp;
-      if(!tg) return false;
 
-      try{ tg.ready(); }catch(e){}
-      try{ tg.expand(); }catch(e){}
-
-      return true;
-    }catch(e){
-      return false;
-    }
-  }
-
-  if(go()) return;
-
-  var timer=setInterval(function(){
-    tries++;
-    if(go() || tries>=max){
-      clearInterval(timer);
-    }
-  },100);
-
-  try{
-    document.addEventListener("DOMContentLoaded",go,{once:true});
-  }catch(e){}
-
-  try{
-    window.addEventListener("load",go,{once:true});
-  }catch(e){}
-})();
-</script>
 </head>
 
 <body>
