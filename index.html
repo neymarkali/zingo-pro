@@ -354,11 +354,21 @@ button{
 var tg=window.Telegram&&window.Telegram.WebApp;
 
 if(tg){
-  try{tg.ready()}catch(e){}
-  try{tg.expand()}catch(e){}
-  try{
-    if(tg.disableVerticalSwipes) tg.disableVerticalSwipes();
-  }catch(e){}
+  function zingoTelegramReady(){
+    try{tg.ready()}catch(e){}
+    try{tg.expand()}catch(e){}
+    try{
+      if(tg.disableVerticalSwipes) tg.disableVerticalSwipes();
+    }catch(e){}
+  }
+
+  zingoTelegramReady();
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", zingoTelegramReady, {once:true});
+  }else{
+    setTimeout(zingoTelegramReady, 0);
+  }
 }
 
 var state={
