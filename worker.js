@@ -393,6 +393,8 @@ async function zingoGoldPreview(request, env) {
 
 export default {
   async fetch(request, env) {
+    const goldPreview = await zingoGoldPreview(request, env);
+    if (goldPreview) return goldPreview;
     const url = new URL(request.url);
 
     if (url.pathname === '/api/subscription' && request.method === 'GET') {
