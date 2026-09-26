@@ -8717,5 +8717,35 @@ window.__zingoProfileV2Draft = {
 })();
 </script>
 
+
+<script id="zingoForceInitialUI">
+(function(){
+  function forceInitialUI(){
+    try{
+      var w = document.getElementById("zingoFreeWorld");
+      if(w){
+        w.classList.remove("hidden");
+        w.style.removeProperty("display");
+        w.style.removeProperty("visibility");
+        w.style.removeProperty("opacity");
+      }
+
+      var f = document.getElementById("zingoTierFree");
+      if(f) f.classList.add("active");
+    }catch(e){
+      console.error("Zingo initial UI:", e);
+    }
+  }
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", function(){
+      setTimeout(forceInitialUI, 800);
+    }, {once:true});
+  }else{
+    setTimeout(forceInitialUI, 800);
+  }
+})();
+</script>
+
 </body>
 </html>
