@@ -378,6 +378,19 @@ function validateZingoDisplayName(value) {
   };
 }
 
+
+// ZINGO_PRO_GOLD_PREVIEW_V1
+async function zingoGoldPreview(request, env) {
+  const url = new URL(request.url);
+  if (url.pathname !== "/pro-gold-preview") return null;
+
+  const asset = await env.ASSETS.fetch(
+    new Request(new URL("/pro-gold-preview.html", request.url), request)
+  );
+
+  return asset;
+}
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
