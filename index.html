@@ -5032,6 +5032,50 @@ async function select(tier){
     return;
   }
 }
+(function(){
+
+function zingoBootTier(){
+
+  try{
+
+    const q=new URLSearchParams(location.search);
+
+    const tier=(q.get("tier")||"free").toLowerCase();
+
+    if(typeof select==="function"){
+
+      if(tier==="pro"){
+        select("pro");
+        return;
+      }
+
+      if(tier==="vip"){
+        select("vip");
+        return;
+      }
+
+      select("free");
+    }
+
+  }catch(e){
+    console.warn("Tier boot:",e);
+  }
+
+}
+
+if(document.readyState==="loading"){
+  document.addEventListener("DOMContentLoaded",zingoBootTier);
+}else{
+  setTimeout(zingoBootTier,100);
+}
+
+window.zingoBootTier=zingoBootTier;
+
+})();
+
+
+
+
 function openPackages(){
 
 try{
@@ -5075,10 +5119,22 @@ try{tg.expand()}catch(e){}
 }
 }catch(e){}
 
-/* افتح الواجهة المجانية فورًا */
+/* افتح المستوى المطلوب من الرابط، وليس FREE دائمًا */
+const bootTier =
+  (new URLSearchParams(location.search).get("tier") || "free").toLowerCase();
+
 clearWorlds();
-E("zingoFreeWorld")?.classList.remove("hidden");
-E("zingoTierFree")?.classList.add("active");
+
+if(typeof select === "function"){
+  select(
+    bootTier === "pro" || bootTier === "vip"
+      ? bootTier
+      : "free"
+  );
+} else {
+  E("zingoFreeWorld")?.classList.remove("hidden");
+  E("zingoTierFree")?.classList.add("active");
+}
 
 /* تحقق من الاشتراك بالخلفية بدون تعطيل الواجهة */
 getSubscription().then(function(sub){
