@@ -2093,6 +2093,57 @@ html[dir="ltr"] body{text-align:left}
 </head>
 
 <body>
+<!-- ZINGO_RUNTIME_DIAGNOSTIC_V1 -->
+<script>
+(function(){
+  var box;
+
+  function show(msg){
+    try{
+      if(!box){
+        box=document.createElement("div");
+        box.id="zingoRuntimeDiagnostic";
+        box.style.cssText=
+          "position:fixed!important;left:8px!important;right:8px!important;top:8px!important;" +
+          "z-index:2147483647!important;background:#160608!important;color:#fff!important;" +
+          "border:2px solid #ff3344!important;border-radius:12px!important;padding:12px!important;" +
+          "font:700 12px/1.5 monospace!important;direction:ltr!important;" +
+          "white-space:pre-wrap!important;word-break:break-word!important;" +
+          "max-height:70vh!important;overflow:auto!important;";
+        document.documentElement.appendChild(box);
+      }
+      box.textContent += (box.textContent ? "\n\n" : "") + msg;
+    }catch(e){}
+  }
+
+  window.addEventListener("error",function(e){
+    show(
+      "JS ERROR\n" +
+      "message: " + (e.message || "unknown") + "\n" +
+      "file: " + (e.filename || "unknown") + "\n" +
+      "line: " + (e.lineno || "?") +
+      ":" + (e.colno || "?")
+    );
+  },true);
+
+  window.addEventListener("unhandledrejection",function(e){
+    var r=e.reason;
+    show(
+      "UNHANDLED PROMISE\n" +
+      (r && r.stack ? r.stack : String(r))
+    );
+  });
+
+  setTimeout(function(){
+    if(!document.getElementById("zingoUnifiedExperience")){
+      show("DOM ERROR: zingoUnifiedExperience not found");
+    }else{
+      show("DIAGNOSTIC ACTIVE — NO ERROR CAPTURED YET");
+    }
+  },3000);
+})();
+</script>
+
 
 <section id="zingoUnifiedExperience">
 
