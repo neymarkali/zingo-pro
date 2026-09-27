@@ -2061,6 +2061,24 @@ html[dir="ltr"] body{text-align:left}
   }
 }
 </style>
+
+<style id="zingoNavigationFix20260927">
+/* إخفاء أزرار تبديل FREE / PRO / VIP العلوية */
+#zingoUnifiedTierBar{
+  display:none !important;
+}
+
+/* تثبيت شريط التنقل السفلي أثناء التمرير */
+#zingoProWorld .zp-bottom{
+  position:fixed !important;
+  left:7px !important;
+  right:7px !important;
+  bottom:max(7px, env(safe-area-inset-bottom)) !important;
+  width:auto !important;
+  z-index:2147483647 !important;
+}
+</style>
+
 <section id="zingoProWorld"
          class="zingo-world hidden zingo-pro-exact-final"
          dir="rtl"
