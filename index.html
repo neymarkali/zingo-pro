@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="ar" dir="rtl">
 <head>
 <!-- ZINGO_TG_LOCAL_SDK_V1 -->
 <script src="https://telegram.org/js/telegram-web-app.js"></script>
@@ -767,6 +767,7 @@ html[dir="ltr"] body{text-align:left}
 #zingoUnifiedExperience #zingoUnifiedTierBar{display:none !important;}
 #zingoUnifiedExperience:has(#zingoTierPro.active) #zingoUnifiedTierBar,
 #zingoUnifiedExperience:has(#zingoTierVip.active) #zingoUnifiedTierBar{display:grid !important;}
+#zingoUnifiedExperience.zingo-tier-menu-open #zingoUnifiedTierBar{display:grid !important;}
 
 #zingoFreeWorld.hidden{display:none !important;}
 
@@ -2093,58 +2094,6 @@ html[dir="ltr"] body{text-align:left}
 </head>
 
 <body>
-<!-- ZINGO_RUNTIME_DIAGNOSTIC_V1 -->
-<script>
-(function(){
-  var box;
-
-  function show(msg){
-    try{
-      if(!box){
-        box=document.createElement("div");
-        box.id="zingoRuntimeDiagnostic";
-        box.style.cssText=
-          "position:fixed!important;left:8px!important;right:8px!important;top:8px!important;" +
-          "z-index:2147483647!important;background:#160608!important;color:#fff!important;" +
-          "border:2px solid #ff3344!important;border-radius:12px!important;padding:12px!important;" +
-          "font:700 12px/1.5 monospace!important;direction:ltr!important;" +
-          "white-space:pre-wrap!important;word-break:break-word!important;" +
-          "max-height:70vh!important;overflow:auto!important;";
-        document.documentElement.appendChild(box);
-      }
-      box.textContent += (box.textContent ? "\n\n" : "") + msg;
-    }catch(e){}
-  }
-
-  window.addEventListener("error",function(e){
-    show(
-      "JS ERROR\n" +
-      "message: " + (e.message || "unknown") + "\n" +
-      "file: " + (e.filename || "unknown") + "\n" +
-      "line: " + (e.lineno || "?") +
-      ":" + (e.colno || "?")
-    );
-  },true);
-
-  window.addEventListener("unhandledrejection",function(e){
-    var r=e.reason;
-    show(
-      "UNHANDLED PROMISE\n" +
-      (r && r.stack ? r.stack : String(r))
-    );
-  });
-
-  setTimeout(function(){
-    if(!document.getElementById("zingoUnifiedExperience")){
-      show("DOM ERROR: zingoUnifiedExperience not found");
-    }else{
-      show("DIAGNOSTIC ACTIVE — NO ERROR CAPTURED YET");
-    }
-  },3000);
-})();
-</script>
-
-
 <section id="zingoUnifiedExperience">
 
   <div class="zingo-ref-header">
@@ -4272,6 +4221,8 @@ function profileApi(path,options={}){
   });
 }
 
+
+window.profileApi=profileApi;
 function allClubs(){
   return CLUBS.flatMap(x=>x.clubs);
 }
@@ -4297,6 +4248,7 @@ async function loadZingoProfile(){
 
 window.zingoClubById=clubById;
 window.zingoAllClubs=allClubs;
+window.__zingoLoadData=loadZingoProfile;
 
 function profileAvatar(profile){
   const p=profile || {};
@@ -4940,7 +4892,7 @@ window.zingoSettings=function(){
           <div>
             <strong>الملكية</strong>
             <div class="muted">
-              ${state.subscription?.active ? "Black Diamond Access" : "VIP Access"}
+              ${window.__zingoSubscription?.vip?.active ? "Black Diamond Access" : "VIP Access"}
             </div>
           </div>
 
@@ -4971,247 +4923,243 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 <script id="zingoUnified3TiersJS">
-
 (function(){
+  "use strict";
 
-const Z = window.ZingoUnified = window.ZingoUnified || {};
+  const Z = window.ZingoUnified = window.ZingoUnified || {};
 
-function E(id){
-return document.getElementById(id);
-}
-
-function uid(){
-
-try{
-return window.Telegram?.WebApp?.initDataUnsafe?.user?.id || "";
-}catch(e){
-return "";
-}
-
-}
-
-async function getSubscription(){
-
-const id=uid();
-
-if(!id){
-return {
-ok:false,
-pro:{active:false},
-vip:{active:false}
-};
-}
-
-try{
-
-const api =
-window.API?.subscription ||
-"/api/subscription";
-
-const r=await fetch(
-api+"?telegram_id="+encodeURIComponent(id),
-{
-cache:"no-store",
-credentials:"include"
-}
-);
-
-const d=await r.json();
-
-return {
-ok:!!d?.ok,
-pro:d?.pro||{active:false},
-vip:d?.vip||{active:false}
-};
-
-}catch(e){
-
-console.warn("Zingo subscription:",e);
-
-return {
-ok:false,
-pro:{active:false},
-vip:{active:false}
-};
-
-}
-
-}
-
-function clearWorlds(){
-
-E("zingoFreeWorld")?.classList.add("hidden");
-E("zingoProWorld")?.classList.add("hidden");
-E("zingoVipWorld")?.classList.add("hidden");
-
-document
-.querySelectorAll(".zingo-tier-btn")
-.forEach(x=>x.classList.remove("active"));
-
-}
-
-function updateStates(pro,vip){
-
-if(E("zingoProTierState"))
-E("zingoProTierState").textContent =
-pro ? "مفعّل" : "الاشتراك مطلوب";
-
-if(E("zingoVipTierState"))
-E("zingoVipTierState").textContent =
-vip ? "مفعّل" : "الاشتراك مطلوب";
-
-}
-
-async function select(tier){
-  clearWorlds();
-
-  if(tier==="free"){
-    E("zingoFreeWorld")?.classList.remove("hidden");
-    E("zingoTierFree")?.classList.add("active");
-    return;
+  function E(id){
+    return document.getElementById(id);
   }
 
-  if(tier==="pro"){
-    location.href = "PRO_GOLD_OFFICIAL.html";
-    return;
+  function cleanTier(tier){
+    const t=String(tier||"").toLowerCase();
+    return t==="vip" ? "vip" : t==="pro" ? "pro" : "free";
   }
 
-  if(tier==="vip"){
-    E("zingoVipWorld")?.classList.remove("hidden");
-    E("zingoTierVip")?.classList.add("active");
-    return;
+  function uid(){
+    try{
+      return String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id || "");
+    }catch(e){
+      return "";
+    }
   }
-}
-(function(){
 
-function zingoBootTier(){
+  function syncState(tier){
+    tier=cleanTier(tier);
+    window.__zingoMode=tier;
+    window.__zingoState=window.__zingoState || {};
+    window.__zingoState.mode=tier;
+    window.__zingoState.tier=tier;
+    try{
+      window.dispatchEvent(new CustomEvent("zingo:mode-changed",{
+        detail:{mode:tier,tier:tier}
+      }));
+    }catch(e){}
+  }
 
-  try{
+  function setTierBar(open){
+    const root=E("zingoUnifiedExperience");
+    if(root){
+      root.classList.toggle("zingo-tier-menu-open",!!open);
+    }
+  }
 
-    const q=new URLSearchParams(location.search);
+  async function getSubscription(){
+    const id=uid();
 
-    const tier=(q.get("tier")||"free").toLowerCase();
-
-    if(typeof select==="function"){
-
-      if(tier==="pro"){
-        select("pro");
-        return;
-      }
-
-      if(tier==="vip"){
-        select("vip");
-        return;
-      }
-
-      select("free");
+    if(!id){
+      return {
+        ok:false,
+        pro:{active:false},
+        vip:{active:false}
+      };
     }
 
-  }catch(e){
-    console.warn("Tier boot:",e);
+    try{
+      const apiUrl = window.API?.subscription || "/api/subscription";
+      const join = apiUrl.indexOf("?") === -1 ? "?" : "&";
+      const r = await fetch(
+        apiUrl + join + "telegram_id=" + encodeURIComponent(id),
+        {
+          cache:"no-store",
+          credentials:"include",
+          headers:{"Accept":"application/json"}
+        }
+      );
+
+      const d=await r.json().catch(()=>({}));
+
+      return {
+        ok:r.ok && d?.ok !== false,
+        pro:d?.pro || {active:false},
+        vip:d?.vip || {active:false}
+      };
+    }catch(e){
+      console.warn("Zingo subscription:",e);
+      return {
+        ok:false,
+        pro:{active:false},
+        vip:{active:false}
+      };
+    }
   }
 
-}
+  function clearWorlds(){
+    E("zingoFreeWorld")?.classList.add("hidden");
+    E("zingoProWorld")?.classList.add("hidden");
+    E("zingoVipWorld")?.classList.add("hidden");
 
-if(document.readyState==="loading"){
-  document.addEventListener("DOMContentLoaded",zingoBootTier);
-}else{
-  setTimeout(zingoBootTier,100);
-}
+    document
+      .querySelectorAll(".zingo-tier-btn")
+      .forEach(x=>x.classList.remove("active"));
+  }
 
-window.zingoBootTier=zingoBootTier;
+  function showWorld(tier){
+    tier=cleanTier(tier);
+    clearWorlds();
+    syncState(tier);
+
+    if(tier==="free"){
+      E("zingoFreeWorld")?.classList.remove("hidden");
+      E("zingoTierFree")?.classList.add("active");
+      setTierBar(false);
+      return;
+    }
+
+    if(tier==="pro"){
+      E("zingoProWorld")?.classList.remove("hidden");
+      E("zingoTierPro")?.classList.add("active");
+      setTierBar(true);
+      return;
+    }
+
+    E("zingoVipWorld")?.classList.remove("hidden");
+    E("zingoTierVip")?.classList.add("active");
+    setTierBar(true);
+  }
+
+  async function select(tier){
+    tier=cleanTier(tier);
+
+    /*
+     * All tiers are rendered inside the same document.
+     * No relative navigation is used, so Cloudflare SPA fallback,
+     * Telegram caching, or a missing secondary asset cannot send PRO back to FREE.
+     */
+    showWorld(tier);
+
+    return tier;
+  }
+
+  function updateStates(pro,vip){
+    const proState=E("zingoProTierState");
+    const vipState=E("zingoVipTierState");
+
+    if(proState) proState.textContent=pro ? "مفعّل" : "الاشتراك مطلوب";
+    if(vipState) vipState.textContent=vip ? "مفعّل" : "الاشتراك مطلوب";
+  }
+
+  async function openPackages(){
+    try{
+      if(typeof window.Zingo?.go==="function"){
+        return window.Zingo.go("packages");
+      }
+    }catch(e){}
+
+    try{
+      if(typeof window.zingoSettings==="function"){
+        return window.zingoSettings();
+      }
+    }catch(e){}
+
+    if(typeof window.toast==="function"){
+      window.toast("افتح الباقات لتفعيل الاشتراك");
+    }
+  }
+
+  async function boot(){
+    try{
+      const tg=window.Telegram?.WebApp;
+      if(tg){
+        try{tg.ready();}catch(e){}
+        try{tg.expand();}catch(e){}
+      }
+    }catch(e){}
+
+    const requested=cleanTier(
+      new URLSearchParams(location.search).get("tier") || "free"
+    );
+
+    await select(requested);
+
+    getSubscription().then(function(sub){
+      updateStates(
+        !!sub?.pro?.active,
+        !!sub?.vip?.active
+      );
+
+      window.__zingoSubscription=sub;
+    }).catch(function(e){
+      console.warn("Zingo background subscription:",e);
+    });
+  }
+
+  Z.select=select;
+  Z.subscription=getSubscription;
+  Z.openPackages=openPackages;
+
+  /* Legacy compatibility used by profile/settings buttons in this file. */
+  window.switchZingoMode=function(mode){
+    return Z.select(cleanTier(mode));
+  };
+
+  window.Zingo=window.Zingo || {};
+  if(typeof window.Zingo.go!=="function"){
+    window.Zingo.go=function(page){
+      const p=String(page||"").toLowerCase();
+      const current=cleanTier(window.__zingoMode || window.__zingoState?.mode || "free");
+
+      if(p==="home" || p==="competitions"){
+        return Z.select(current);
+      }
+
+      if(p==="profile"){
+        if(typeof window.zingoOpenProfileEditorV2==="function"){
+          return window.zingoOpenProfileEditorV2();
+        }
+        return;
+      }
+
+      if(p==="packages"){
+        if(typeof window.zingoSettings==="function"){
+          return window.zingoSettings();
+        }
+        if(typeof window.toast==="function"){
+          window.toast("الباقات غير متاحة حاليًا");
+        }
+        return;
+      }
+
+      if(p==="analysis" || p==="ranking"){
+        if(typeof window.toast==="function"){
+          window.toast("سيتم تفعيل هذا القسم مع ربط البيانات");
+        }
+      }
+    };
+  }
+
+  window.zingoBootTier=boot;
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",function(){
+      setTimeout(function(){ boot().catch(e=>console.warn("Zingo boot:",e)); },0);
+    },{once:true});
+  }else{
+    setTimeout(function(){ boot().catch(e=>console.warn("Zingo boot:",e)); },0);
+  }
 
 })();
-
-
-
-
-function openPackages(){
-
-try{
-
-if(window.Zingo &&
-typeof window.Zingo.go==="function"){
-
-window.Zingo.go("packages");
-return;
-
-}
-
-}catch(e){}
-
-try{
-
-if(typeof window.zingoSettings==="function"){
-
-window.zingoSettings();
-return;
-
-}
-
-}catch(e){}
-
-if(typeof window.toast==="function")
-window.toast("افتح الباقات لتفعيل الاشتراك");
-
-}
-
-Z.select=select;
-Z.subscription=getSubscription;
-Z.openPackages=openPackages;
-
-async function boot(){
-try{
-const tg=window.Telegram?.WebApp;
-if(tg){
-try{tg.ready()}catch(e){}
-try{tg.expand()}catch(e){}
-}
-}catch(e){}
-
-/* افتح المستوى المطلوب من الرابط، وليس FREE دائمًا */
-const bootTier =
-  (new URLSearchParams(location.search).get("tier") || "free").toLowerCase();
-
-clearWorlds();
-
-if(typeof select === "function"){
-  select(
-    bootTier === "pro" || bootTier === "vip"
-      ? bootTier
-      : "free"
-  );
-} else {
-  E("zingoFreeWorld")?.classList.remove("hidden");
-  E("zingoTierFree")?.classList.add("active");
-}
-
-/* تحقق من الاشتراك بالخلفية بدون تعطيل الواجهة */
-getSubscription().then(function(sub){
-updateStates(
-!!sub?.pro?.active,
-!!sub?.vip?.active
-);
-}).catch(function(e){
-console.warn("Zingo background subscription:",e);
-});
-}
-
-if(document.readyState==="loading"){
-
-document.addEventListener(
-"DOMContentLoaded",
-()=>setTimeout(boot,400)
-);
-
-}else{
-
-setTimeout(boot,400);
-
-}
-
-})();
-
 </script>
 
 
@@ -8634,6 +8582,8 @@ window.__zingoProfileV2Draft = {
 
 <script id="zingoProfileIdentityV3Bridge">
 (function(){
+  let refreshQueued=false;
+
   function refresh(){
     try{
       if(typeof window.zingoIdentityHTML!=="function") return;
@@ -8641,32 +8591,40 @@ window.__zingoProfileV2Draft = {
       document
         .querySelectorAll("[data-zingo-profile-identity]")
         .forEach(function(el){
-          el.innerHTML = window.zingoIdentityHTML({
-            compact:true
-          });
+          const next=window.zingoIdentityHTML({compact:true});
+          if(el.innerHTML!==next){
+            el.innerHTML=next;
+          }
         });
     }catch(e){}
   }
 
-  window.zingoRefreshProfileIdentity = refresh;
+  function scheduleRefresh(){
+    if(refreshQueued) return;
+    refreshQueued=true;
+    setTimeout(function(){
+      refreshQueued=false;
+      refresh();
+    },0);
+  }
+
+  window.zingoRefreshProfileIdentity=refresh;
 
   const oldRefresh =
     window.zingoProfileIdentityV3 &&
     window.zingoProfileIdentityV3.refresh;
 
   if(window.zingoProfileIdentityV3){
-    const api = window.zingoProfileIdentityV3;
+    const api=window.zingoProfileIdentityV3;
 
-    api.refresh = function(){
+    api.refresh=function(){
       let result;
-
       try{
         if(typeof oldRefresh==="function"){
-          result = oldRefresh.apply(this,arguments);
+          result=oldRefresh.apply(this,arguments);
         }
       }catch(e){}
-
-      setTimeout(refresh,0);
+      scheduleRefresh();
       return result;
     };
   }
@@ -8683,18 +8641,7 @@ window.__zingoProfileV2Draft = {
     boot();
   }
 
-  const observer = new MutationObserver(function(){
-    refresh();
-  });
-
-  if(document.body){
-    observer.observe(document.body,{
-      childList:true,
-      subtree:true
-    });
-  }
-
-  window.addEventListener("zingo:profile-updated",refresh);
+  window.addEventListener("zingo:profile-updated",scheduleRefresh);
   window.addEventListener("zingo:mode-changed",function(){
     setTimeout(refresh,50);
   });
@@ -8768,31 +8715,28 @@ window.__zingoProfileV2Draft = {
 </script>
 
 
-<script id="zingoForceInitialUI">
-(function(){
-  function forceInitialUI(){
-    try{
-      var w = document.getElementById("zingoFreeWorld");
-      if(w){
-        w.classList.remove("hidden");
-        w.style.removeProperty("display");
-        w.style.removeProperty("visibility");
-        w.style.removeProperty("opacity");
-      }
 
-      var f = document.getElementById("zingoTierFree");
-      if(f) f.classList.add("active");
-    }catch(e){
-      console.error("Zingo initial UI:", e);
-    }
+
+<script id="zingoCoreCompatV1">
+(function(){
+  if(typeof window.toast!=="function"){
+    window.toast=function(message){
+      const el=document.getElementById("toast");
+      if(!el) return;
+      el.textContent=String(message||"");
+      el.classList.add("show");
+      clearTimeout(window.__zingoToastTimer);
+      window.__zingoToastTimer=setTimeout(function(){
+        el.classList.remove("show");
+      },2200);
+    };
   }
 
-  if(document.readyState === "loading"){
-    document.addEventListener("DOMContentLoaded", function(){
-      setTimeout(forceInitialUI, 800);
-    }, {once:true});
-  }else{
-    setTimeout(forceInitialUI, 800);
+  if(typeof window.finishAscension!=="function"){
+    window.finishAscension=function(){
+      const el=document.getElementById("ascension");
+      if(el) el.classList.remove("show");
+    };
   }
 })();
 </script>
