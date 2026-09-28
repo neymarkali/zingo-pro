@@ -1003,9 +1003,3791 @@ html[dir="ltr"] body{text-align:left}
 <body>
 <section id="zingoUnifiedExperience">
 
-  
+  <div class="zingo-ref-header">
+    <div class="zingo-ref-miniapp"><i></i><span>Telegram Mini App</span></div>
+    <div class="zingo-ref-brand">
+      <strong>INGO</strong>
+      <em>FOOTBALL ANALYSIS &amp; COMPETITIONS</em>
+    </div>
+    <div class="zingo-ref-slogan">منصة واحدة..<br><b>لكل مستوياتك!</b></div>
+  </div>
 
-    
+  <div id="zingoUnifiedTierBar">
+
+    <button type="button" id="zingoTierFree" class="zingo-tier-btn zingo-tier-free active"
+      onclick="window.ZingoUnified.select('free')">
+      <span class="zt-icon">⚽</span>
+      <span class="zt-name">FREE</span>
+      <span class="zt-state">مجاني</span>
+      <span>المسابقات فقط 🎁</span>
+    </button>
+
+    <button type="button" id="zingoTierPro" class="zingo-tier-btn zingo-tier-pro"
+      onclick="window.ZingoUnified.select('pro')">
+      <span class="zt-icon">♛</span>
+      <span class="zt-name">PRO</span>
+      <span class="zt-state">اشتراك خفيف</span>
+      <span>مزيد من الفرص ✨</span>
+    </button>
+
+    <button type="button" id="zingoTierVip" class="zingo-tier-btn zingo-tier-vip"
+      onclick="window.ZingoUnified.select('vip')">
+      <span class="zt-icon">💎</span>
+      <span class="zt-name">VIP</span>
+      <span class="zt-state">اشتراك ثقيل</span>
+      <span>تجربة استثنائية 💎</span>
+    </button>
+
+  </div>
+
+  <section id="zingoFreeWorld" class="zingo-world">
+  <div class="zf-status" aria-hidden="true">
+    <span class="zf-time">17:42</span>
+    <span class="zf-status-icons">
+      <span class="zf-signal"><i></i><i></i><i></i><i></i></span>
+      <span class="zf-wifi"></span>
+      <span class="zf-battery">78</span>
+    </span>
+  </div>
+
+  <div class="zf-appbar">
+    <button type="button" class="zf-back" aria-label="رجوع"
+      onclick="if(window.Telegram?.WebApp?.close){window.Telegram.WebApp.close()}else{history.back()}">‹</button>
+    <div class="zf-head-main">
+      <div class="zf-logo">Z</div>
+      <div class="zf-title-wrap">
+        <div class="zf-title">ZINGO</div>
+        <div class="zf-subtitle">mini app</div>
+      </div>
+    </div>
+    <button type="button" class="zf-menu" aria-label="المزيد"
+      onclick="window.zingoOpenProfileEditor?.()">•••</button>
+  </div>
+
+  <div class="zf-hero">
+    <div class="zf-stadium-lights"></div>
+    <div class="zf-hero-copy">
+      <div class="zf-brand">ZINGO</div>
+      <div class="zf-weekly">WEEKLY COMPETITION</div>
+    </div>
+    <div class="zf-trophy" aria-hidden="true">
+      <div class="cup"></div><div class="stem"></div><div class="base"></div>
+    </div>
+    <div class="zf-ball" aria-hidden="true"></div>
+  </div>
+
+  <div class="zf-content">
+    <div data-zingo-profile-identity style="display:none"></div>
+
+    <div class="zf-section-head">
+      <h2 class="zf-section-title">المسابقات الأسبوعية</h2>
+      <button type="button" class="zf-refresh" aria-label="تحديث"
+        onclick="this.animate([{transform:'rotate(0deg)'},{transform:'rotate(360deg)'}],{duration:500})">↻</button>
+    </div>
+
+    <div class="zf-match">
+      <div class="zf-team">
+        <div class="zf-badge rm">RM</div>
+        <div class="zf-team-name">Real Madrid</div>
+      </div>
+      <div class="zf-center">
+        <div class="zf-1x2">1X2</div>
+        <div class="zf-time2">21:00</div>
+        <button type="button" class="zf-join" onclick="window.ZingoUnified?.select?.('free')">انضم الآن</button>
+      </div>
+      <div class="zf-team">
+        <div class="zf-badge fcb">FCB</div>
+        <div class="zf-team-name">Barcelona</div>
+      </div>
+    </div>
+
+    <div class="zf-match">
+      <div class="zf-team">
+        <div class="zf-badge city">CITY</div>
+        <div class="zf-team-name">Man City</div>
+      </div>
+      <div class="zf-center">
+        <div class="zf-1x2">1X2</div>
+        <div class="zf-time2">22:00</div>
+        <button type="button" class="zf-join" onclick="window.ZingoUnified?.select?.('free')">انضم الآن</button>
+      </div>
+      <div class="zf-team">
+        <div class="zf-badge liv">LFC</div>
+        <div class="zf-team-name">Liverpool</div>
+      </div>
+    </div>
+
+    <div class="zf-match">
+      <div class="zf-team">
+        <div class="zf-badge int">INT</div>
+        <div class="zf-team-name">Inter</div>
+      </div>
+      <div class="zf-center">
+        <div class="zf-1x2">1X2</div>
+        <div class="zf-time2">22:00</div>
+        <button type="button" class="zf-join" onclick="window.ZingoUnified?.select?.('free')">انضم الآن</button>
+      </div>
+      <div class="zf-team">
+        <div class="zf-badge mil">ACM</div>
+        <div class="zf-team-name">Milan</div>
+      </div>
+    </div>
+
+    <div class="zf-features">
+      <div class="zf-feature"><div class="ico">🎁</div><span>مجاني بالكامل</span></div>
+      <div class="zf-feature"><div class="ico">⚽</div><span>مباريات حقيقية</span></div>
+      <div class="zf-feature"><div class="ico">🏆</div><span>جوائز نقدية</span></div>
+    </div>
+  </div>
+
+  <nav class="zf-nav" aria-label="التنقل">
+    <button type="button" class="zf-nav-item active" onclick="window.Zingo?.go?.('home')">
+      <span class="zf-nav-ico">⌂</span><span class="zf-nav-text">الرئيسية</span>
+    </button>
+    <button type="button" class="zf-nav-item" onclick="window.Zingo?.go?.('competitions')">
+      <span class="zf-nav-ico">♜</span><span class="zf-nav-text">المسابقات</span>
+    </button>
+    <button type="button" class="zf-nav-item" onclick="window.Zingo?.go?.('ranking')">
+      <span class="zf-nav-ico">♟</span><span class="zf-nav-text">الترتيب</span>
+    </button>
+    <button type="button" class="zf-nav-item" onclick="window.zingoOpenProfileEditor?.()">
+      <span class="zf-nav-ico">•••</span><span class="zf-nav-text">المزيد</span>
+    </button>
+  </nav>
+</section>
+
+
+<style>
+/* ============================================================
+   ZINGO PRO — FULL MOBILE UI
+   Scoped بالكامل داخل #zingoProWorld
+   ============================================================ */
+
+#zingoProWorld{
+  --zp-gold:#d6a83b;
+  --zp-gold-2:#f4d47a;
+  --zp-amber:#ffb62d;
+  --zp-cream:#fff7df;
+  --zp-muted:#aa9a7a;
+  --zp-line:rgba(214,168,59,.30);
+  --zp-panel:rgba(23,16,9,.94);
+  --zp-panel-2:rgba(35,22,8,.90);
+  --zp-black:#070707;
+  --zp-brown:#211507;
+  width:100%;
+  min-height:100svh;
+  background:
+    radial-gradient(circle at 80% 2%, rgba(244,212,122,.13), transparent 23%),
+    radial-gradient(circle at 15% 36%, rgba(129,73,21,.11), transparent 28%),
+    linear-gradient(180deg,#060606 0%,#0e0a06 52%,#050505 100%);
+  color:var(--zp-cream);
+  font-family:Cairo,Tajawal,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+  overflow-x:hidden;
+}
+
+#zingoProWorld *{
+  box-sizing:border-box;
+  -webkit-tap-highlight-color:transparent;
+}
+
+#zingoProWorld button,
+#zingoProWorld input,
+#zingoProWorld select{
+  font:inherit;
+}
+
+#zingoProWorld .zp-wrap{
+  width:min(100%,470px);
+  min-height:100svh;
+  margin:0 auto;
+  padding:7px 8px 14px;
+}
+
+#zingoProWorld .zp-phone{
+  position:relative;
+  width:100%;
+  min-height:calc(100svh - 21px);
+  overflow:hidden;
+  border-radius:32px;
+  border:1px solid rgba(244,212,122,.42);
+  background:
+    radial-gradient(circle at 50% 0%,rgba(214,168,59,.10),transparent 26%),
+    linear-gradient(180deg,#160d06 0%,#090909 34%,#070707 100%);
+  box-shadow:
+    0 0 0 1px rgba(214,168,59,.11),
+    0 0 36px rgba(214,168,59,.13),
+    inset 0 0 75px rgba(214,168,59,.06);
+}
+
+#zingoProWorld .zp-phone::before{
+  content:"";
+  position:absolute;
+  inset:0;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 16% 24%,rgba(255,255,255,.045) 0 1px,transparent 2px),
+    radial-gradient(circle at 76% 17%,rgba(244,212,122,.075) 0 1px,transparent 2px),
+    radial-gradient(circle at 68% 61%,rgba(244,212,122,.045) 0 1px,transparent 2px),
+    radial-gradient(circle at 21% 76%,rgba(255,255,255,.035) 0 1px,transparent 2px);
+  background-size:140px 140px,180px 180px,210px 210px,170px 170px;
+  opacity:.8;
+}
+
+#zingoProWorld .zp-glow-top{
+  position:absolute;
+  top:-50px;
+  left:50%;
+  transform:translateX(-50%);
+  width:230px;
+  height:120px;
+  background:radial-gradient(circle,rgba(244,212,122,.20),transparent 68%);
+  filter:blur(10px);
+  pointer-events:none;
+}
+
+#zingoProWorld .zp-shell{
+  position:relative;
+  z-index:2;
+  min-height:100%;
+}
+
+#zingoProWorld .zp-topbar{
+  display:grid;
+  grid-template-columns:52px 1fr 72px;
+  align-items:center;
+  gap:8px;
+  min-height:74px;
+  padding:10px 11px 8px;
+  border-bottom:1px solid rgba(214,168,59,.24);
+  background:linear-gradient(180deg,rgba(18,12,7,.97),rgba(10,10,10,.88));
+}
+
+#zingoProWorld .zp-icon{
+  width:43px;
+  height:43px;
+  display:grid;
+  place-items:center;
+  border-radius:14px;
+  border:1px solid rgba(214,168,59,.35);
+  background:
+    linear-gradient(145deg,rgba(58,38,12,.95),rgba(9,9,9,.98));
+  color:var(--zp-gold-2);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.04),
+    0 0 13px rgba(214,168,59,.08);
+}
+
+#zingoProWorld .zp-back{
+  justify-self:end;
+  font-size:27px;
+  line-height:1;
+  cursor:pointer;
+}
+
+#zingoProWorld .zp-brand{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:9px;
+  min-width:0;
+}
+
+#zingoProWorld .zp-logo{
+  width:38px;
+  height:38px;
+  flex:0 0 auto;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:2px solid var(--zp-gold);
+  background:
+    radial-gradient(circle at 35% 28%,#4e3711,#090909 62%);
+  color:var(--zp-gold-2);
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:1px;
+  box-shadow:
+    0 0 0 2px rgba(214,168,59,.10),
+    0 0 18px rgba(214,168,59,.18);
+}
+
+#zingoProWorld .zp-brand-txt{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:0;
+  line-height:1.05;
+}
+
+#zingoProWorld .zp-brand-txt strong{
+  font-size:15px;
+  font-weight:1000;
+  letter-spacing:.8px;
+  color:#fff8e7;
+}
+
+#zingoProWorld .zp-brand-txt span{
+  font-size:9px;
+  font-weight:900;
+  color:var(--zp-gold);
+  letter-spacing:2px;
+}
+
+#zingoProWorld .zp-status{
+  display:flex;
+  align-items:center;
+  justify-content:flex-start;
+  gap:6px;
+}
+
+#zingoProWorld .zp-status-dot{
+  width:7px;
+  height:7px;
+  border-radius:50%;
+  background:#eac66b;
+  box-shadow:0 0 11px rgba(244,212,122,.85);
+}
+
+#zingoProWorld .zp-crown{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:28px;
+  height:28px;
+  border-radius:10px;
+  color:#171006;
+  background:linear-gradient(135deg,#7e5514,#f4d47a 45%,#9f711f);
+  box-shadow:
+    0 0 16px rgba(244,212,122,.26),
+    inset 0 1px 0 rgba(255,255,255,.55);
+  font-size:14px;
+}
+
+#zingoProWorld .zp-content{
+  padding:10px 10px 96px;
+}
+
+#zingoProWorld .zp-hero{
+  position:relative;
+  overflow:hidden;
+  min-height:176px;
+  display:grid;
+  grid-template-columns:1.15fr .85fr;
+  gap:7px;
+  align-items:center;
+  padding:18px 17px;
+  border:1px solid rgba(244,212,122,.29);
+  border-radius:26px;
+  background:
+    radial-gradient(circle at 86% 40%,rgba(244,212,122,.19),transparent 27%),
+    linear-gradient(140deg,rgba(52,34,10,.96),rgba(15,11,8,.97) 54%,rgba(7,7,7,.98));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.045),
+    0 17px 45px rgba(0,0,0,.24);
+}
+
+#zingoProWorld .zp-hero::after{
+  content:"";
+  position:absolute;
+  inset:-50%;
+  background:conic-gradient(from 40deg,transparent 0 30%,rgba(244,212,122,.06) 34%,transparent 39% 100%);
+  animation:zpSweep 8s linear infinite;
+  pointer-events:none;
+}
+
+@keyframes zpSweep{
+  from{transform:rotate(0deg)}
+  to{transform:rotate(360deg)}
+}
+
+#zingoProWorld .zp-hero-copy{
+  position:relative;
+  z-index:2;
+  min-width:0;
+}
+
+#zingoProWorld .zp-kicker{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  margin-bottom:8px;
+  padding:6px 9px;
+  border-radius:999px;
+  border:1px solid rgba(244,212,122,.26);
+  background:rgba(6,6,6,.45);
+  color:var(--zp-gold-2);
+  font-size:9px;
+  font-weight:1000;
+  letter-spacing:1.7px;
+}
+
+#zingoProWorld .zp-title{
+  margin:0;
+  font-size:32px;
+  line-height:.95;
+  font-weight:1000;
+  letter-spacing:.3px;
+  background:linear-gradient(180deg,#fff6da 0%,#f4d47a 30%,#c6922a 65%,#8a5f16 100%);
+  -webkit-background-clip:text;
+  background-clip:text;
+  color:transparent;
+  text-shadow:0 0 18px rgba(244,212,122,.11);
+}
+
+#zingoProWorld .zp-subtitle{
+  margin:8px 0 0;
+  color:#b8aa8e;
+  font-size:10px;
+  font-weight:1000;
+  letter-spacing:2.1px;
+}
+
+#zingoProWorld .zp-hero-note{
+  margin:10px 0 0;
+  color:#efe4cd;
+  font-size:11px;
+  line-height:1.7;
+  max-width:210px;
+}
+
+#zingoProWorld .zp-hero-art{
+  position:relative;
+  z-index:2;
+  min-height:138px;
+  display:grid;
+  place-items:center;
+}
+
+#zingoProWorld .zp-ball-orb{
+  position:relative;
+  width:120px;
+  height:120px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:1px solid rgba(244,212,122,.56);
+  background:
+    radial-gradient(circle at 30% 26%,rgba(255,255,255,.22),transparent 13%),
+    radial-gradient(circle,#3d290d 0%,#1a1006 46%,#080808 72%);
+  box-shadow:
+    0 0 0 7px rgba(214,168,59,.05),
+    0 0 40px rgba(214,168,59,.22),
+    inset 0 0 34px rgba(244,212,122,.16);
+}
+
+#zingoProWorld .zp-ball{
+  font-size:63px;
+  filter:
+    drop-shadow(0 0 7px rgba(255,220,133,.23))
+    saturate(.35);
+  transform:rotate(-9deg);
+}
+
+#zingoProWorld .zp-orbit{
+  position:absolute;
+  inset:12px;
+  border:1px dashed rgba(244,212,122,.26);
+  border-radius:50%;
+  animation:zpSpin 10s linear infinite;
+}
+
+@keyframes zpSpin{
+  from{transform:rotate(0)}
+  to{transform:rotate(360deg)}
+}
+
+#zingoProWorld .zp-orbit::after{
+  content:"✦";
+  position:absolute;
+  top:-8px;
+  right:18px;
+  color:var(--zp-gold-2);
+  font-size:11px;
+  text-shadow:0 0 10px rgba(244,212,122,.7);
+}
+
+#zingoProWorld .zp-crown-float{
+  position:absolute;
+  right:8px;
+  top:1px;
+  font-size:24px;
+  color:#f6db8b;
+  filter:drop-shadow(0 0 10px rgba(244,212,122,.55));
+  animation:zpFloat 2.9s ease-in-out infinite;
+}
+
+@keyframes zpFloat{
+  0%,100%{transform:translateY(0)}
+  50%{transform:translateY(-6px)}
+}
+
+#zingoProWorld .zp-feature-head{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:8px;
+  margin:13px 2px 8px;
+}
+
+#zingoProWorld .zp-section-title{
+  margin:0;
+  font-size:16px;
+  font-weight:1000;
+  color:#fff7e3;
+}
+
+#zingoProWorld .zp-section-meta{
+  color:#9d8d6d;
+  font-size:9px;
+  font-weight:900;
+}
+
+#zingoProWorld .zp-features{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+}
+
+#zingoProWorld .zp-feature{
+  min-height:110px;
+  padding:10px 7px 9px;
+  border-radius:18px;
+  border:1px solid rgba(214,168,59,.22);
+  background:linear-gradient(155deg,rgba(39,25,8,.92),rgba(11,11,10,.97));
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+}
+
+#zingoProWorld .zp-feature-icon{
+  width:40px;
+  height:40px;
+  display:grid;
+  place-items:center;
+  border-radius:13px;
+  margin-bottom:7px;
+  color:#f5d57d;
+  border:1px solid rgba(244,212,122,.30);
+  background:radial-gradient(circle at 35% 30%,#5f4415,#12100d 72%);
+  box-shadow:0 0 16px rgba(214,168,59,.11);
+  font-size:19px;
+}
+
+#zingoProWorld .zp-feature b{
+  font-size:11px;
+  font-weight:1000;
+  color:#f8edda;
+}
+
+#zingoProWorld .zp-feature span{
+  margin-top:3px;
+  font-size:8px;
+  color:#9e9178;
+  line-height:1.5;
+}
+
+#zingoProWorld .zp-competition-head{
+  margin:15px 2px 8px;
+}
+
+#zingoProWorld .zp-competition-head h2{
+  margin:0;
+  font-size:17px;
+  font-weight:1000;
+}
+
+#zingoProWorld .zp-competition-head p{
+  margin:4px 0 0;
+  color:#91846e;
+  font-size:9px;
+}
+
+#zingoProWorld .zp-match{
+  overflow:hidden;
+  margin-bottom:8px;
+  border:1px solid rgba(214,168,59,.20);
+  border-radius:20px;
+  background:
+    linear-gradient(145deg,rgba(31,20,8,.96),rgba(11,11,10,.98));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.025),
+    0 8px 24px rgba(0,0,0,.20);
+}
+
+#zingoProWorld .zp-match-top{
+  display:grid;
+  grid-template-columns:62px 1fr 62px;
+  gap:7px;
+  align-items:center;
+  padding:10px 10px 9px;
+}
+
+#zingoProWorld .zp-team{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:4px;
+  text-align:center;
+}
+
+#zingoProWorld .zp-team-badge{
+  width:42px;
+  height:42px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:1px solid rgba(244,212,122,.35);
+  background:radial-gradient(circle,#4c3410,#0d0d0d 72%);
+  color:#f4d47a;
+  font-size:11px;
+  font-weight:1000;
+  box-shadow:0 0 12px rgba(214,168,59,.08);
+}
+
+#zingoProWorld .zp-team span:last-child{
+  font-size:9px;
+  color:#eadfc8;
+  font-weight:900;
+  line-height:1.25;
+}
+
+#zingoProWorld .zp-vs{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:4px;
+}
+
+#zingoProWorld .zp-time{
+  font-size:16px;
+  font-weight:1000;
+  color:#fff4d7;
+}
+
+#zingoProWorld .zp-vs small{
+  font-size:8px;
+  color:#8f8068;
+}
+
+#zingoProWorld .zp-status{
+  justify-self:end;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+  gap:5px;
+}
+
+#zingoProWorld .zp-league{
+  color:#cfb775;
+  font-size:8px;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+#zingoProWorld .zp-live{
+  display:inline-flex;
+  align-items:center;
+  gap:5px;
+  padding:4px 7px;
+  border-radius:999px;
+  border:1px solid rgba(244,212,122,.20);
+  background:rgba(244,212,122,.06);
+  color:#f1d58d;
+  font-size:7px;
+  font-weight:1000;
+}
+
+#zingoProWorld .zp-live::before{
+  content:"";
+  width:5px;
+  height:5px;
+  border-radius:50%;
+  background:#f0c65a;
+  box-shadow:0 0 7px rgba(240,198,90,.75);
+}
+
+#zingoProWorld .zp-details{
+  border-top:1px solid rgba(214,168,59,.13);
+  padding:9px 10px 10px;
+}
+
+#zingoProWorld .zp-label{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:7px;
+  font-size:10px;
+  color:#c8b99d;
+  font-weight:900;
+}
+
+#zingoProWorld .zp-market-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:6px;
+}
+
+#zingoProWorld .zp-market{
+  position:relative;
+}
+
+#zingoProWorld .zp-market input{
+  position:absolute;
+  opacity:0;
+  pointer-events:none;
+}
+
+#zingoProWorld .zp-market span{
+  min-height:43px;
+  display:grid;
+  place-items:center;
+  padding:6px;
+  border-radius:13px;
+  border:1px solid rgba(214,168,59,.18);
+  background:#0d0d0c;
+  color:#b7aa93;
+  font-size:9px;
+  font-weight:1000;
+  text-align:center;
+}
+
+#zingoProWorld .zp-market input:checked + span{
+  border-color:#efc85e;
+  color:#fff7df;
+  background:
+    linear-gradient(145deg,rgba(98,68,17,.90),rgba(19,15,9,.98));
+  box-shadow:
+    0 0 0 1px rgba(244,212,122,.15),
+    0 0 16px rgba(214,168,59,.16);
+}
+
+#zingoProWorld .zp-extra-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:7px;
+  margin-top:8px;
+}
+
+#zingoProWorld .zp-field{
+  display:flex;
+  flex-direction:column;
+  gap:5px;
+}
+
+#zingoProWorld .zp-field label{
+  color:#9d9077;
+  font-size:8px;
+  font-weight:900;
+}
+
+#zingoProWorld .zp-field select{
+  width:100%;
+  min-height:38px;
+  padding:0 10px;
+  border-radius:12px;
+  border:1px solid rgba(214,168,59,.20);
+  background:#0b0b0a;
+  color:#f7edd7;
+  outline:none;
+}
+
+#zingoProWorld .zp-save{
+  width:100%;
+  margin-top:8px;
+  min-height:43px;
+  border:1px solid rgba(244,212,122,.32);
+  border-radius:13px;
+  color:#57400f;
+  background:linear-gradient(180deg,#f8d67a,#c08a22);
+  font-size:10px;
+  font-weight:1000;
+  opacity:.34;
+  cursor:pointer;
+  transition:.18s ease;
+}
+
+#zingoProWorld .zp-details:has(input:checked) .zp-save{
+  opacity:1;
+  box-shadow:0 0 20px rgba(214,168,59,.17);
+}
+
+#zingoProWorld .zp-save:active{
+  transform:scale(.985);
+}
+
+#zingoProWorld .zp-save.is-saved{
+  color:#fff7df;
+  background:linear-gradient(145deg,#3c2b0b,#6e5013);
+  border-color:rgba(244,212,122,.46);
+}
+
+#zingoProWorld .zp-locked{
+  display:inline-flex;
+  align-items:center;
+  gap:6px;
+  margin-top:6px;
+  padding:5px 8px;
+  border-radius:999px;
+  color:#8e826f;
+  font-size:7px;
+  background:rgba(255,255,255,.025);
+  border:1px solid rgba(255,255,255,.06);
+}
+
+#zingoProWorld .zp-achievements{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:8px;
+  margin-top:13px;
+}
+
+#zingoProWorld .zp-stat{
+  padding:12px;
+  border:1px solid rgba(214,168,59,.18);
+  border-radius:18px;
+  background:linear-gradient(145deg,rgba(31,20,8,.80),rgba(9,9,9,.96));
+}
+
+#zingoProWorld .zp-stat small{
+  display:block;
+  color:#8e8068;
+  font-size:8px;
+  font-weight:900;
+}
+
+#zingoProWorld .zp-stat strong{
+  display:block;
+  margin-top:4px;
+  color:#f4d47a;
+  font-size:20px;
+  font-weight:1000;
+}
+
+#zingoProWorld .zp-cta{
+  position:relative;
+  overflow:hidden;
+  margin-top:13px;
+  padding:15px;
+  border-radius:22px;
+  border:1px solid rgba(244,212,122,.45);
+  background:
+    radial-gradient(circle at 85% 30%,rgba(244,212,122,.16),transparent 24%),
+    linear-gradient(145deg,#5b3d0e,#1b1207 58%,#090909);
+  box-shadow:
+    0 0 28px rgba(214,168,59,.12),
+    inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+#zingoProWorld .zp-cta-copy{
+  position:relative;
+  z-index:2;
+}
+
+#zingoProWorld .zp-cta-badge{
+  display:inline-flex;
+  padding:5px 8px;
+  border-radius:999px;
+  background:rgba(7,7,7,.45);
+  border:1px solid rgba(244,212,122,.22);
+  color:#f3d27b;
+  font-size:8px;
+  font-weight:1000;
+}
+
+#zingoProWorld .zp-cta h3{
+  margin:8px 0 2px;
+  font-size:18px;
+  font-weight:1000;
+}
+
+#zingoProWorld .zp-cta p{
+  margin:0 0 10px;
+  color:#bfb294;
+  font-size:9px;
+}
+
+#zingoProWorld .zp-cta button{
+  width:100%;
+  min-height:48px;
+  border:0;
+  border-radius:15px;
+  color:#4b350c;
+  background:
+    linear-gradient(180deg,#ffe296,#e2b54e 58%,#bd8620);
+  box-shadow:
+    0 8px 22px rgba(214,168,59,.20),
+    inset 0 1px 0 rgba(255,255,255,.58);
+  font-size:13px;
+  font-weight:1000;
+  cursor:pointer;
+}
+
+#zingoProWorld .zp-cta button span{
+  display:block;
+  margin-top:2px;
+  color:#705214;
+  font-size:8px;
+  font-weight:900;
+}
+
+#zingoProWorld .zp-cta-crown{
+  position:absolute;
+  top:10px;
+  left:13px;
+  font-size:34px;
+  color:#f5d782;
+  opacity:.18;
+  filter:drop-shadow(0 0 13px rgba(244,212,122,.5));
+  transform:rotate(-10deg);
+}
+
+#zingoProWorld .zp-bottom{
+  position:absolute;
+  z-index:8;
+  left:8px;
+  right:8px;
+  bottom:8px;
+  min-height:72px;
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:4px;
+  padding:7px;
+  border:1px solid rgba(244,212,122,.20);
+  border-radius:22px;
+  background:rgba(10,10,9,.93);
+  backdrop-filter:blur(17px);
+  -webkit-backdrop-filter:blur(17px);
+  box-shadow:
+    0 -8px 30px rgba(0,0,0,.30),
+    0 0 20px rgba(214,168,59,.07);
+}
+
+#zingoProWorld .zp-nav{
+  min-width:0;
+  min-height:54px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:3px;
+  border:0;
+  border-radius:16px;
+  background:transparent;
+  color:#776f61;
+  cursor:pointer;
+}
+
+#zingoProWorld .zp-nav-icon{
+  font-size:18px;
+  line-height:1;
+}
+
+#zingoProWorld .zp-nav small{
+  font-size:7px;
+  font-weight:1000;
+  white-space:nowrap;
+}
+
+#zingoProWorld .zp-nav.active{
+  color:#f5d77d;
+  background:linear-gradient(145deg,rgba(104,72,18,.34),rgba(26,19,9,.48));
+  box-shadow:inset 0 0 20px rgba(214,168,59,.07);
+}
+
+#zingoProWorld .zp-nav.pro{
+  border:1px solid rgba(244,212,122,.38);
+  background:
+    radial-gradient(circle at 50% 15%,rgba(244,212,122,.16),transparent 38%),
+    linear-gradient(145deg,#3c290c,#0d0d0c);
+  color:#f4d47a;
+  box-shadow:
+    0 0 16px rgba(214,168,59,.11),
+    inset 0 1px 0 rgba(255,255,255,.07);
+}
+
+#zingoProWorld .zp-nav.pro .zp-nav-icon{
+  width:26px;
+  height:26px;
+  display:grid;
+  place-items:center;
+  border-radius:50%;
+  border:1px solid rgba(244,212,122,.45);
+  background:#140e06;
+  font-size:10px;
+  font-weight:1000;
+}
+
+#zingoProWorld .zp-mini-note{
+  margin:10px 2px 0;
+  text-align:center;
+  color:#665e52;
+  font-size:7px;
+  line-height:1.65;
+}
+
+@media (max-width:360px){
+  #zingoProWorld .zp-wrap{
+    padding:4px;
+  }
+  #zingoProWorld .zp-phone{
+    border-radius:26px;
+  }
+  #zingoProWorld .zp-title{
+    font-size:27px;
+  }
+  #zingoProWorld .zp-hero{
+    min-height:165px;
+    padding:14px;
+  }
+  #zingoProWorld .zp-ball-orb{
+    width:105px;
+    height:105px;
+  }
+  #zingoProWorld .zp-ball{
+    font-size:55px;
+  }
+}
+</style>
+
+<style id="zingoNavigationFix20260927">
+/* إخفاء أزرار تبديل FREE / PRO / VIP العلوية */
+#zingoUnifiedTierBar{
+  display:none !important;
+}
+
+/* تثبيت شريط التنقل السفلي أثناء التمرير */
+#zingoProWorld .zp-bottom{
+  position:fixed !important;
+  left:7px !important;
+  right:7px !important;
+  bottom:max(7px, env(safe-area-inset-bottom)) !important;
+  width:auto !important;
+  z-index:2147483647 !important;
+}
+</style>
+
+<section id="zingoProWorld"
+         class="zingo-world hidden zingo-pro-exact-final"
+         dir="rtl"
+         aria-label="واجهة ZINGO PRO">
+
+
+<div class="zp-wrap">
+  <div class="zp-phone">
+    <div class="zp-glow-top"></div>
+
+    <div class="zp-shell">
+
+      <!-- TOP BAR -->
+      <header class="zp-topbar">
+        <button
+          class="zp-icon zp-back"
+          type="button"
+          aria-label="رجوع"
+          onclick="if(window.Zingo&&typeof window.Zingo.go==='function'){window.Zingo.go('home')}else{history.back()}"
+        >‹</button>
+
+        <div class="zp-brand">
+          <div class="zp-logo">ZINGO</div>
+          <div class="zp-brand-txt">
+            <strong>ZINGO</strong>
+            <span>تحليل احترافي</span>
+          </div>
+        </div>
+
+        <div class="zp-status">
+          <span class="zp-crown">♛</span>
+          <span class="zp-status-dot"></span>
+        </div>
+      </header>
+
+      <main class="zp-content">
+
+        <!-- HERO -->
+        <section class="zp-hero">
+          <div class="zp-hero-copy">
+            <div class="zp-kicker">✦ أسبوع PRO</div>
+            <h1 class="zp-title">ZINGO PRO</h1>
+            <div class="zp-subtitle">WEEKLY MISSION</div>
+            <p class="zp-hero-note">
+              مساحة التحليل الاحترافي والتحديات الخاصة والجوائز الأسبوعية.
+            </p>
+          </div>
+
+          <div class="zp-hero-art">
+            <div class="zp-crown-float">♛</div>
+            <div class="zp-ball-orb">
+              <div class="zp-orbit"></div>
+              <div class="zp-ball">⚽</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PREMIUM FEATURES -->
+        <div class="zp-feature-head">
+          <h2 class="zp-section-title">مزايا PRO</h2>
+          <span class="zp-section-meta">وصول احترافي</span>
+        </div>
+
+        <section class="zp-features">
+          <article class="zp-feature">
+            <div class="zp-feature-icon">⌁</div>
+            <b>تحليلات متقدمة</b>
+            <span>تفاصيل وتحليل أعمق للمباريات</span>
+          </article>
+
+          <article class="zp-feature">
+            <div class="zp-feature-icon">♛</div>
+            <b>مسابقات خاصة</b>
+            <span>تحديات أسبوعية خاصة بالمشتركين</span>
+          </article>
+
+          <article class="zp-feature">
+            <div class="zp-feature-icon">✦</div>
+            <b>جوائز حصرية</b>
+            <span>نقاط ومكافآت أسبوعية</span>
+          </article>
+        </section>
+
+        <!-- COMPETITIONS -->
+        <div class="zp-competition-head">
+          <h2 class="zp-section-title">المسابقات الخاصة</h2>
+          <p>اختر المباراة، حدّد توقعك، ثم احفظ التوقع قبل الإغلاق.</p>
+        </div>
+
+        <!-- MATCH 1 -->
+        <details class="zp-match" open>
+          <summary style="list-style:none;cursor:pointer">
+            <div class="zp-match-top">
+              <div class="zp-team">
+                <div class="zp-team-badge">RM</div>
+                <span>ريال مدريد</span>
+              </div>
+
+              <div class="zp-vs">
+                <div class="zp-time">21:00</div>
+                <small>اليوم</small>
+              </div>
+
+              <div class="zp-team">
+                <div class="zp-team-badge">FCB</div>
+                <span>برشلونة</span>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 10px 9px">
+              <span class="zp-league">إسبانيا • الدوري</span>
+              <span class="zp-live">متاح للتوقع</span>
+            </div>
+          </summary>
+
+          <form class="zp-details" onsubmit="event.preventDefault();const b=this.querySelector('.zp-save');if(!this.querySelector('input[type=radio]:checked')){alert('اختر توقعك أولاً');return false;}b.textContent='تم حفظ التوقع';b.classList.add('is-saved');return false;">
+            <div class="zp-label">
+              <span>النتيجة المتوقعة</span>
+              <span>اختيار واحد</span>
+            </div>
+
+            <div class="zp-market-grid">
+              <label class="zp-market">
+                <input type="radio" name="zp_match_1" value="home">
+                <span>فوز ريال</span>
+              </label>
+
+              <label class="zp-market">
+                <input type="radio" name="zp_match_1" value="draw">
+                <span>تعادل</span>
+              </label>
+
+              <label class="zp-market">
+                <input type="radio" name="zp_match_1" value="away">
+                <span>فوز برشلونة</span>
+              </label>
+            </div>
+
+            <div class="zp-extra-grid">
+              <div class="zp-field">
+                <label>عدد الأهداف المتوقع</label>
+                <select>
+                  <option>اختر</option>
+                  <option>0 أهداف</option>
+                  <option>1 هدف</option>
+                  <option>2 هدف</option>
+                  <option>3 أهداف</option>
+                  <option>4 أهداف</option>
+                  <option>5 أهداف</option>
+                  <option>6+ أهداف</option>
+                </select>
+              </div>
+
+              <div class="zp-field">
+                <label>الركنيات المتوقعة</label>
+                <select>
+                  <option>اختر</option>
+                  <option>0–4</option>
+                  <option>5–7</option>
+                  <option>8–10</option>
+                  <option>11–13</option>
+                  <option>14+</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="zp-save">حفظ التوقع</button>
+            <div class="zp-locked">🔒 يغلق التوقع قبل المباراة بساعة</div>
+          </form>
+        </details>
+
+        <!-- MATCH 2 -->
+        <details class="zp-match">
+          <summary style="list-style:none;cursor:pointer">
+            <div class="zp-match-top">
+              <div class="zp-team">
+                <div class="zp-team-badge">ARS</div>
+                <span>أرسنال</span>
+              </div>
+
+              <div class="zp-vs">
+                <div class="zp-time">22:30</div>
+                <small>غداً</small>
+              </div>
+
+              <div class="zp-team">
+                <div class="zp-team-badge">LIV</div>
+                <span>ليفربول</span>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 10px 9px">
+              <span class="zp-league">إنجلترا • الدوري</span>
+              <span class="zp-live">متاح للتوقع</span>
+            </div>
+          </summary>
+
+          <form class="zp-details" onsubmit="event.preventDefault();const b=this.querySelector('.zp-save');if(!this.querySelector('input[type=radio]:checked')){alert('اختر توقعك أولاً');return false;}b.textContent='تم حفظ التوقع';b.classList.add('is-saved');return false;">
+            <div class="zp-label">
+              <span>النتيجة المتوقعة</span>
+              <span>اختيار واحد</span>
+            </div>
+
+            <div class="zp-market-grid">
+              <label class="zp-market">
+                <input type="radio" name="zp_match_2" value="home">
+                <span>فوز أرسنال</span>
+              </label>
+
+              <label class="zp-market">
+                <input type="radio" name="zp_match_2" value="draw">
+                <span>تعادل</span>
+              </label>
+
+              <label class="zp-market">
+                <input type="radio" name="zp_match_2" value="away">
+                <span>فوز ليفربول</span>
+              </label>
+            </div>
+
+            <div class="zp-extra-grid">
+              <div class="zp-field">
+                <label>عدد الأهداف المتوقع</label>
+                <select>
+                  <option>اختر</option>
+                  <option>0 أهداف</option>
+                  <option>1 هدف</option>
+                  <option>2 هدف</option>
+                  <option>3 أهداف</option>
+                  <option>4 أهداف</option>
+                  <option>5 أهداف</option>
+                  <option>6+ أهداف</option>
+                </select>
+              </div>
+
+              <div class="zp-field">
+                <label>الركنيات المتوقعة</label>
+                <select>
+                  <option>اختر</option>
+                  <option>0–4</option>
+                  <option>5–7</option>
+                  <option>8–10</option>
+                  <option>11–13</option>
+                  <option>14+</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="zp-save">حفظ التوقع</button>
+            <div class="zp-locked">🔒 يغلق التوقع قبل المباراة بساعة</div>
+          </form>
+        </details>
+
+        <!-- MATCH 3 -->
+        <details class="zp-match">
+          <summary style="list-style:none;cursor:pointer">
+            <div class="zp-match-top">
+              <div class="zp-team">
+                <div class="zp-team-badge">PSG</div>
+                <span>باريس</span>
+              </div>
+
+              <div class="zp-vs">
+                <div class="zp-time">20:45</div>
+                <small>غداً</small>
+              </div>
+
+              <div class="zp-team">
+                <div class="zp-team-badge">OM</div>
+                <span>مارسيليا</span>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 10px 9px">
+              <span class="zp-league">فرنسا • الدوري</span>
+              <span class="zp-live">متاح للتوقع</span>
+            </div>
+          </summary>
+
+          <form class="zp-details" onsubmit="event.preventDefault();const b=this.querySelector('.zp-save');if(!this.querySelector('input[type=radio]:checked')){alert('اختر توقعك أولاً');return false;}b.textContent='تم حفظ التوقع';b.classList.add('is-saved');return false;">
+            <div class="zp-label">
+              <span>النتيجة المتوقعة</span>
+              <span>اختيار واحد</span>
+            </div>
+
+            <div class="zp-market-grid">
+              <label class="zp-market">
+                <input type="radio" name="zp_match_3" value="home">
+                <span>فوز باريس</span>
+              </label>
+
+              <label class="zp-market">
+                <input type="radio" name="zp_match_3" value="draw">
+                <span>تعادل</span>
+              </label>
+
+              <label class="zp-market">
+                <input type="radio" name="zp_match_3" value="away">
+                <span>فوز مارسيليا</span>
+              </label>
+            </div>
+
+            <div class="zp-extra-grid">
+              <div class="zp-field">
+                <label>عدد الأهداف المتوقع</label>
+                <select>
+                  <option>اختر</option>
+                  <option>0 أهداف</option>
+                  <option>1 هدف</option>
+                  <option>2 هدف</option>
+                  <option>3 أهداف</option>
+                  <option>4 أهداف</option>
+                  <option>5 أهداف</option>
+                  <option>6+ أهداف</option>
+                </select>
+              </div>
+
+              <div class="zp-field">
+                <label>الركنيات المتوقعة</label>
+                <select>
+                  <option>اختر</option>
+                  <option>0–4</option>
+                  <option>5–7</option>
+                  <option>8–10</option>
+                  <option>11–13</option>
+                  <option>14+</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="zp-save">حفظ التوقع</button>
+            <div class="zp-locked">🔒 يغلق التوقع قبل المباراة بساعة</div>
+          </form>
+        </details>
+
+        <!-- MATCH 4 -->
+        <details class="zp-match">
+          <summary style="list-style:none;cursor:pointer">
+            <div class="zp-match-top">
+              <div class="zp-team">
+                <div class="zp-team-badge">MIL</div>
+                <span>ميلان</span>
+              </div>
+
+              <div class="zp-vs">
+                <div class="zp-time">21:45</div>
+                <small>السبت</small>
+              </div>
+
+              <div class="zp-team">
+                <div class="zp-team-badge">INT</div>
+                <span>إنتر</span>
+              </div>
+            </div>
+
+            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 10px 9px">
+              <span class="zp-league">إيطاليا • الدوري</span>
+              <span class="zp-live">متاح للتوقع</span>
+            </div>
+          </summary>
+
+          <form class="zp-details" onsubmit="event.preventDefault();const b=this.querySelector('.zp-save');if(!this.querySelector('input[type=radio]:checked')){alert('اختر توقعك أولاً');return false;}b.textContent='تم حفظ التوقع';b.classList.add('is-saved');return false;">
+            <div class="zp-label">
+              <span>النتيجة المتوقعة</span>
+              <span>اختيار واحد</span>
+            </div>
+
+            <div class="zp-market-grid">
+              <label class="zp-market">
+                <input type="radio" name="zp_match_4" value="home">
+                <span>فوز ميلان</span>
+              </label>
+
+              <label class="zp-market">
+                <input type="radio" name="zp_match_4" value="draw">
+                <span>تعادل</span>
+              </label>
+
+              <label class="zp-market">
+                <input type="radio" name="zp_match_4" value="away">
+                <span>فوز إنتر</span>
+              </label>
+            </div>
+
+            <div class="zp-extra-grid">
+              <div class="zp-field">
+                <label>عدد الأهداف المتوقع</label>
+                <select>
+                  <option>اختر</option>
+                  <option>0 أهداف</option>
+                  <option>1 هدف</option>
+                  <option>2 هدف</option>
+                  <option>3 أهداف</option>
+                  <option>4 أهداف</option>
+                  <option>5 أهداف</option>
+                  <option>6+ أهداف</option>
+                </select>
+              </div>
+
+              <div class="zp-field">
+                <label>الركنيات المتوقعة</label>
+                <select>
+                  <option>اختر</option>
+                  <option>0–4</option>
+                  <option>5–7</option>
+                  <option>8–10</option>
+                  <option>11–13</option>
+                  <option>14+</option>
+                </select>
+              </div>
+            </div>
+
+            <button type="submit" class="zp-save">حفظ التوقع</button>
+            <div class="zp-locked">🔒 يغلق التوقع قبل المباراة بساعة</div>
+          </form>
+        </details>
+
+        <!-- PLAYER STATS -->
+        <section class="zp-achievements">
+          <div class="zp-stat">
+            <small>توقعات محفوظة</small>
+            <strong>0</strong>
+          </div>
+
+          <div class="zp-stat">
+            <small>نقاط الأسبوع</small>
+            <strong>0</strong>
+          </div>
+        </section>
+
+        <!-- CTA -->
+        <section class="zp-cta">
+          <div class="zp-cta-crown">♛</div>
+
+          <div class="zp-cta-copy">
+            <div class="zp-cta-badge">✦ وصول PRO</div>
+            <h3>جاهز لتبدأ؟</h3>
+            <p>فعّل المزايا الاحترافية وادخل تحديات الأسبوع.</p>
+
+            <button
+              type="button"
+              onclick="if(window.zingoOpenProfileEditorV2){window.zingoOpenProfileEditorV2()}else if(window.zingoOpenProfileEditor){window.zingoOpenProfileEditor()}"
+            >
+              اشترك الآن
+              <span>احصل على مزايا PRO</span>
+            </button>
+          </div>
+        </section>
+
+        <div class="zp-mini-note">
+          التوقعات قابلة للتعديل قبل الإغلاق، وبعد الإغلاق يتم احتساب النتيجة تلقائياً حسب قواعد المسابقة.
+        </div>
+
+      </main>
+
+      <!-- BOTTOM NAV -->
+      <nav class="zp-bottom" aria-label="التنقل">
+        <button
+          class="zp-nav"
+          type="button"
+          onclick="if(window.Zingo&&typeof window.Zingo.go==='function'){window.Zingo.go('home')}"
+        >
+          <span class="zp-nav-icon">⌂</span>
+          <small>الرئيسية</small>
+        </button>
+
+        <button
+          class="zp-nav"
+          type="button"
+          onclick="if(window.Zingo&&typeof window.Zingo.go==='function'){window.Zingo.go('analysis')}"
+        >
+          <span class="zp-nav-icon">⌁</span>
+          <small>التحليل</small>
+        </button>
+
+        <button
+          class="zp-nav active"
+          type="button"
+        >
+          <span class="zp-nav-icon">🏆</span>
+          <small>المسابقات</small>
+        </button>
+
+        <button
+          class="zp-nav"
+          type="button"
+          onclick="window.zingoOpenProfileEditorV2?.()"
+        >
+          <span class="zp-nav-icon">♙</span>
+          <small>الملف</small>
+        </button>
+
+        <button
+          class="zp-nav pro"
+          type="button"
+        >
+          <span class="zp-nav-icon">PRO</span>
+          <small>اشتراك احترافي</small>
+        </button>
+      </nav>
+
+    </div>
+  </div>
+</div>
+</section>
+
+<section id="zingoVipWorld" class="zingo-world hidden">
+    <div class="zingo-world-identity-slot" data-zingo-profile-identity></div>
+
+    <div class="zingo-world-hero vip-hero">
+      <div class="zingo-world-symbol">♛</div>
+      <h2 class="zingo-world-title">ZINGO VIP</h2>
+      <p class="zingo-world-sub">EXCLUSIVE COMPETITIONS</p>
+    </div>
+
+    <div class="zingo-world-grid">
+      <div class="zingo-world-card vip-card"><b>📊 التحليلات</b><span>توقعات احترافية</span></div>
+      <div class="zingo-world-card vip-card"><b>🏆 المسابقات</b><span>جوائز ضخمة</span></div>
+      <div class="zingo-world-card vip-card"><b>🎁 البكجات</b><span>خيارات حصرية</span></div>
+      <div class="zingo-world-card vip-card"><b>💎 VIP</b><span>تجربة استثنائية</span></div>
+      <div class="zingo-world-card vip-card"><b>🎯 توقعاتي</b><span>تحليل متقدم</span></div>
+      <div class="zingo-world-card vip-card"><b>👑 الترتيب</b><span>الترتيب الملكي</span></div>
+    </div>
+
+    <div class="zingo-ref-matches">
+      <div class="zingo-ref-section-head"><span>مسابقة VIP الأسبوعية</span><small>‹ عرض الكل</small></div>
+      <div class="zingo-ref-match">
+        <div class="zingo-ref-team"><i>🔵</i><span>Man City</span></div>
+        <div class="zingo-ref-mid"><span>1X2</span><br><span>22:00</span></div>
+        <div class="zingo-ref-team"><span>Liverpool</span><i>🔴</i></div>
+      </div>
+      <div class="zingo-ref-feature vip-feature">👑 بكجات VIP — أفضل الخيارات... أعلى قيمة</div>
+    </div>
+
+    <div id="zingoVipLock" class="zingo-world-lock">
+      <div>🔒 هذا القسم متاح لمشتركي العضوية الملكية</div>
+      <button type="button" onclick="window.ZingoUnified.openPackages()">تفعيل العضوية الملكية</button>
+    </div>
+
+    <div class="zingo-ref-bottom-nav">
+      <div><b>⌂</b>الرئيسية</div><div><b>♜</b>المسابقات</div>
+      <div><b>♙</b>الترتيب</div><div><b>•••</b>المزيد</div>
+    </div>
+  </section>
+
+  <div class="zingo-ref-mark"><b>ZINGO</b> &nbsp;|&nbsp; ANALYSIS &nbsp;×&nbsp; COMPETITIONS &nbsp;×&nbsp; COMMUNITY</div>
+</section>
+
+
+
+
+<div id="ascension" class="ascension">
+  <button class="skip" onclick="finishAscension()">تخطي</button>
+  <div class="ascension-bg"></div>
+  <div class="particles" id="particles"></div>
+  <div class="ascension-core">
+    <div class="ascension-logo">Z</div>
+    <div class="ascension-title">الارتقاء الملكي</div>
+    <div class="ascension-sub">الاحترافية ← الماسة السوداء الملكية</div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script id="zingoI18nSystem">
+/* ZINGO BILINGUAL I18N V1 */
+
+(function(){
+
+  const KEEP = new Set([
+    "ZINGO",
+    "ZINGO PRO",
+    "ZINGO VIP",
+    "PRO",
+    "VIP",
+    "BLACK DIAMOND",
+    "ROYAL ASCENSION",
+    "COMMAND CENTER",
+    "PREDICTION COCKPIT",
+    "AAA ESPORTS",
+    "النقاط",
+    "HUD",
+    "VFX",
+    "AR",
+    "EN"
+  ]);
+
+  const dict = {
+
+    "AAA ESPORTS COMMAND CENTER":"مركز قيادة AAA للرياضات الإلكترونية",
+    "مركز اللعب":"مركز قيادة الألعاب",
+    "مركز VIP":"مركز قيادة VIP",
+    "ULTRA EXCLUSIVE / VIP":"حصري للغاية / VIP",
+    "AAA ESPORTS / PRO":"AAA ESPORTS / PRO",
+
+    "أهلًا بعودتك":"مرحبًا بعودتك",
+    "أهلًا بك في VIP":"مرحبًا بك في Black Diamond",
+
+    "لعبتك. ترتيبك. توقعك.":"لعبتك. رتبتك. قرارك.",
+    "مساحتك الخاصة للتوقعات.":"قمرة توقعاتك الخاصة.",
+    "Track matches, make predictions, earn النقاط and climb the championship system.":"تابع المباريات، ضع التوقعات، اكسب النقاط واصعد في نظام البطولة.",
+    "A living VIP environment built around your predictions, analysis, royal rank and exclusive rewards.":"بيئة VIP متكاملة مبنية حول توقعاتك وتحليلك ورتبتك الملكية ومكافآتك الحصرية.",
+
+    "ترتيب PRO":"رتبة PRO",
+    "التصنيف الحالي":"القسم الحالي",
+    "Season progress":"تقدم الموسم",
+    "Total saved":"إجمالي المحفوظ",
+    "Championship":"البطولة",
+    "Royal":"ROYAL",
+    "Leaderboard":"المتصدرون",
+
+    "Live Cockpit":"القمرة المباشرة",
+    "Match Center":"مركز المباريات",
+    "ACTIVE":"نشطة",
+    "UPCOMING":"قادمة",
+    "PREDICT":"توقع",
+    "ضع توقعك":"إنشاء توقع",
+    "عرض الإحصائيات":"عرض الإحصائيات",
+    "OPEN COCKPIT":"فتح القمرة",
+    "ROYAL المكافآت":"المكافآت الملكية",
+
+    "PRO مركز المباريات":"مركز مباريات PRO",
+    "No active matches available right now.":"لا توجد مباريات نشطة حاليًا.",
+    "No matches available.":"لا توجد مباريات متاحة.",
+    "مباراة نشطة":"مباراة نشطة",
+
+    "PRO التوقعات":"توقعات PRO",
+    "VIP PREDICTION COCKPIT":"قمرة توقعات VIP",
+    "Cockpit":"القمرة",
+    "Make your call":"ضع توقعك",
+    "الفائز":"الفائز",
+    "الأهداف":"الأهداف",
+    "النتيجة":"النتيجة",
+    "صاحب الأرض":"صاحب الأرض",
+    "الضيف":"الضيف",
+    "تعادل":"تعادل",
+    "حفظ التوقع":"حفظ التوقع",
+    "تم حفظ التوقع":"تم حفظ التوقع",
+    "القواعد":"القواعد",
+    "Select your prediction for each market, then save it before the prediction window closes.":"اختر توقعك لكل سوق، ثم احفظه قبل انتهاء نافذة التوقع.",
+    "Each prediction is stored individually. Results become visible after the match is settled.":"يتم حفظ كل توقع بشكل مستقل، وتظهر النتيجة بعد حسم المباراة.",
+
+    "PLAYER HUB":"الملف الشخصي",
+    "TELEGRAM IDENTITY":"هوية تيليجرام",
+    "PLAYER IDENTITY":"هوية اللاعب",
+    "BLACK DIAMOND PLAYER":"لاعب Black Diamond",
+
+    "Stats":"الإحصائيات",
+    "Accuracy":"الدقة",
+    "Awaiting settled data":"بانتظار البيانات النهائية",
+    "Wins":"الانتصارات",
+    "Season":"الموسم",
+    "Progress":"التقدم",
+    "Season Progress":"تقدم الموسم",
+    "Analysis Center":"مركز التحليل",
+    "ADVANCED التحليل":"التحليل المتقدم",
+    "Private intelligence layer.":"طبقة استخبارات خاصة.",
+    "This is the dedicated VIP architecture layer for advanced match intelligence, deeper statistics and future analysis modules.":"هذه طبقة VIP مخصصة للتحليل المتقدم للمباريات والإحصائيات الأعمق ووحدات التحليل المستقبلية.",
+    "VIP MODULE":"وحدة VIP",
+    "Module architecture ready for live data.":"بنية الوحدة جاهزة للبيانات المباشرة.",
+
+    "المكافآت SYSTEM":"نظام المكافآت",
+    "Royal Vault":"الخزنة الملكية",
+    "Rewards":"المكافآت",
+    "Exclusive rewards await.":"مكافآت حصرية بانتظارك.",
+    "Build your reward profile.":"طوّر ملف مكافآتك.",
+    "Points, badges, rank progression and future reward modules live here.":"النقاط والشارات وتطور الرتبة ووحدات المكافآت المستقبلية موجودة هنا.",
+    "Badges":"الشارات",
+    "System ready":"النظام جاهز",
+    "Achievements":"الإنجازات",
+
+    "Momentum Engine":"محرك الزخم",
+    "Team Form":"مستوى الفريق",
+    "Goal Patterns":"أنماط الأهداف",
+    "Market Intelligence":"ذكاء الأسواق",
+
+    "ROYAL ASCENSION":"ROYAL ASCENSION",
+
+
+
+    "Home":"الرئيسية",
+    "Dashboard":"لوحة القيادة",
+    "Command Center":"مركز القيادة",
+    "Matches":"المباريات",
+    "Match Center":"مركز المباريات",
+    "Predictions":"التوقعات",
+    "Prediction":"التوقع",
+    "Prediction Cockpit":"قمرة التوقعات",
+    "Markets":"الأسواق",
+    "Winner":"الفائز",
+    "Goals":"الأهداف",
+    "Score":"النتيجة",
+    "Stats":"الإحصائيات",
+    "History":"السجل",
+    "Results":"النتائج",
+    "Profile":"الملف الشخصي",
+    "Achievements":"الإنجازات",
+    "Rewards":"المكافآت",
+    "Competition":"البطولة",
+    "Leaderboard":"لوحة المتصدرين",
+    "Championship Leaderboard":"لوحة أبطال البطولة",
+    "Player Hub":"مركز اللاعب",
+    "الترتيب":"الرتبة",
+    "النقاط":"النقاط",
+    "Points":"النقاط",
+    "Missions":"المهمات",
+    "Rewards":"المكافآت",
+    "Save Prediction":"حفظ التوقع",
+    "Saved":"تم الحفظ",
+    "Save":"حفظ",
+    "Edit":"تعديل",
+    "Cancel":"إلغاء",
+    "Confirm":"تأكيد",
+    "Back":"رجوع",
+    "Next":"التالي",
+    "Close":"إغلاق",
+    "Skip":"تخطي",
+    "Start":"ابدأ",
+    "Continue":"متابعة",
+    "Loading":"جارٍ التحميل...",
+    "Loading...":"جارٍ التحميل...",
+    "No matches":"لا توجد مباريات",
+    "No active matches":"لا توجد مباريات نشطة",
+    "Rules":"القواعد",
+    "Your Prediction":"توقعك",
+    "Your Predictions":"توقعاتك",
+    "Prediction saved":"تم حفظ التوقع",
+    "Prediction submitted":"تم إرسال التوقع",
+    "Choose your prediction":"اختر توقعك",
+    "Select a match":"اختر مباراة",
+    "Select":"اختيار",
+    "Selected":"تم الاختيار",
+    "Overview":"نظرة عامة",
+    "Analysis":"التحليل",
+    "Advanced Analysis Center":"مركز التحليل المتقدم",
+    "Royal Rewards":"المكافآت الملكية",
+    "Royal الترتيب":"الرتبة الملكية",
+    "VIP Command Center":"مركز قيادة VIP",
+    "Black Diamond":"Black Diamond",
+    "Premium":"VIP",
+    "Upgrade":"ترقية",
+    "Upgrade to VIP":"الترقية إلى VIP",
+    "Access":"الدخول",
+    "VIP Access":"دخول VIP",
+    "Locked":"مغلق",
+    "Unlocked":"مفتوح",
+    "Exclusive":"حصري",
+    "Elite":"نخبة",
+    "Player":"اللاعب",
+    "Players":"اللاعبون",
+    "Season":"الموسم",
+    "Division":"القسم",
+    "Status":"الحالة",
+    "Active":"نشط",
+    "Upcoming":"قادمة",
+    "Finished":"منتهية",
+    "Live":"مباشر",
+    "Win":"فوز",
+    "Loss":"خسارة",
+    "Draw":"تعادل",
+    "Total":"الإجمالي",
+    "Today":"اليوم",
+    "Recent":"الأخيرة",
+    "Welcome":"أهلًا بك",
+    "أهلًا بعودتك":"مرحبًا بعودتك",
+    "Good luck":"بالتوفيق",
+    "Leaderboard":"المتصدرون",
+    "History & Results":"السجل والنتائج",
+    "Stats & History":"الإحصائيات والسجل",
+    "Settings":"الإعدادات",
+    "Language":"اللغة",
+    "Arabic":"العربية",
+    "English":"English",
+    "Choose language":"اختر اللغة",
+
+    "ROYAL ASCENSION":"ROYAL ASCENSION",
+    "SKIP":"تخطي",
+    "Away":"الضيف",
+    "OVER 1.5":"أكثر من 1.5",
+    "UNDER 1.5":"أقل من 1.5",
+    "OVER 2.5":"أكثر من 2.5",
+    "UNDER 2.5":"أقل من 2.5",
+    "VIP access required":"يتطلب دخول VIP",
+    "Request failed":"فشل الطلب",
+    "Black Diamond Access":"دخول Black Diamond",
+    "PRO → BLACK DIAMOND VIP":"PRO → BLACK DIAMOND VIP"
+
+  };
+
+  const originals = new WeakMap();
+
+  function clean(v){
+    return v.replace(/\s+/g," ").trim();
+  }
+
+  function translateText(text, lang){
+    const key = clean(text);
+    if(!key || KEEP.has(key)) return null;
+
+    if(lang === "ar"){
+      return dict[key] || null;
+    }
+
+    return null;
+  }
+
+  function shouldSkip(el){
+    if(!el || !el.parentElement) return true;
+
+    const tag = el.parentElement.tagName;
+
+    return [
+      "SCRIPT",
+      "STYLE",
+      "NOSCRIPT",
+      "TEXTAREA",
+      "INPUT"
+    ].includes(tag);
+  }
+
+  function capture(root=document.body){
+    if(!root) return;
+
+    const walker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT
+    );
+
+    const nodes=[];
+
+    while(walker.nextNode()){
+      const n=walker.currentNode;
+      if(!shouldSkip(n)) nodes.push(n);
+    }
+
+    nodes.forEach(n=>{
+      if(!originals.has(n)){
+        originals.set(n,n.nodeValue);
+      }
+    });
+  }
+
+  function apply(lang){
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+
+    capture();
+
+    document.querySelectorAll(
+      "script,style"
+    ).forEach(()=>{});
+
+    const walker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT
+    );
+
+    const nodes=[];
+
+    while(walker.nextNode()){
+      const n=walker.currentNode;
+      if(!shouldSkip(n)) nodes.push(n);
+    }
+
+    nodes.forEach(n=>{
+      const original=originals.get(n);
+      if(original == null) return;
+
+      const key=clean(original);
+
+      if(lang === "en"){
+        n.nodeValue=original;
+        return;
+      }
+
+      const translated=translateText(original,lang);
+
+      if(translated){
+        n.nodeValue=original.replace(key,translated);
+      }
+    });
+
+    document.querySelectorAll("[placeholder]").forEach(el=>{
+      if(!el.dataset.zingoOriginalPlaceholder){
+        el.dataset.zingoOriginalPlaceholder=el.getAttribute("placeholder") || "";
+      }
+
+      const original=el.dataset.zingoOriginalPlaceholder;
+      const translated=lang==="ar" ? translateText(original,lang) : null;
+
+      el.setAttribute(
+        "placeholder",
+        translated || original
+      );
+    });
+
+    document.querySelectorAll("[aria-label]").forEach(el=>{
+
+      if(!el.dataset.zingoOriginalAria){
+        el.dataset.zingoOriginalAria=el.getAttribute("aria-label") || "";
+      }
+
+      const original=el.dataset.zingoOriginalAria;
+      const translated=lang==="ar" ? translateText(original,lang) : null;
+
+      if(translated){
+        el.setAttribute("aria-label",translated);
+      }else if(lang==="en"){
+        el.setAttribute("aria-label",original);
+      }
+    });
+
+    document.querySelectorAll(
+      "#zingoLangAR,#zingoLangEN"
+    ).forEach(b=>b.classList.remove("active"));
+
+    document
+      .getElementById(lang==="ar" ? "zingoLangAR" : "zingoLangEN")
+      ?.classList.add("active");
+
+    document.body.classList.remove("zingo-i18n-fade");
+    void document.body.offsetWidth;
+    document.body.classList.add("zingo-i18n-fade");
+
+    localStorage.setItem("zingo_language",lang);
+
+    window.dispatchEvent(
+      new CustomEvent("zingo:language-change",{
+        detail:{language:lang}
+      })
+    );
+  }
+
+  function init(){
+
+    capture();
+
+    const saved=localStorage.getItem("zingo_language") || "ar";
+
+    document
+      .getElementById("zingoLangAR")
+      ?.addEventListener("click",()=>apply("ar"));
+
+    document
+      .getElementById("zingoLangEN")
+      ?.addEventListener("click",()=>apply("en"));
+
+    apply(saved);
+
+    const observer=new MutationObserver(mutations=>{
+      let added=false;
+
+      for(const m of mutations){
+        if(m.addedNodes && m.addedNodes.length){
+          added=true;
+          break;
+        }
+      }
+
+      if(added){
+        capture();
+        const current=localStorage.getItem("zingo_language") || "ar";
+        apply(current);
+      }
+    });
+
+    observer.observe(document.body,{
+      childList:true,
+      subtree:true
+    });
+
+    window.zingoI18n={
+      setLanguage:apply,
+      getLanguage:()=>localStorage.getItem("zingo_language") || "ar"
+    };
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",init);
+  }else{
+    init();
+  }
+
+})();
+</script>
+
+<script id="zingoPlayerIdentityUI">
+/* ZINGO PLAYER IDENTITY UI V1 */
+
+(function(){
+
+const CLUBS = [
+
+  {
+    league:"Premier League",
+    clubs:[
+      ["arsenal","Arsenal","https://images.fotmob.com/image_resources/logo/teamlogo/9825.png"],
+      ["chelsea","Chelsea","https://images.fotmob.com/image_resources/logo/teamlogo/8455.png"],
+      ["liverpool","Liverpool","https://images.fotmob.com/image_resources/logo/teamlogo/8650.png"],
+      ["mancity","Manchester City","https://images.fotmob.com/image_resources/logo/teamlogo/8456.png"],
+      ["manutd","Manchester United","https://images.fotmob.com/image_resources/logo/teamlogo/10260.png"],
+      ["tottenham","Tottenham","https://images.fotmob.com/image_resources/logo/teamlogo/8586.png"]
+    ]
+  },
+
+  {
+    league:"La Liga",
+    clubs:[
+      ["realmadrid","Real Madrid","https://images.fotmob.com/image_resources/logo/teamlogo/8633.png"],
+      ["barcelona","Barcelona","https://images.fotmob.com/image_resources/logo/teamlogo/8634.png"],
+      ["atletico","Atlético Madrid","https://images.fotmob.com/image_resources/logo/teamlogo/8636.png"],
+      ["sevilla","Sevilla","https://images.fotmob.com/image_resources/logo/teamlogo/8661.png"],
+      ["valencia","Valencia","https://images.fotmob.com/image_resources/logo/teamlogo/8678.png"],
+      ["bilbao","Athletic Club","https://images.fotmob.com/image_resources/logo/teamlogo/8315.png"]
+    ]
+  },
+
+  {
+    league:"Serie A",
+    clubs:[
+      ["inter","Inter","https://images.fotmob.com/image_resources/logo/teamlogo/8636.png"],
+      ["milan","AC Milan","https://images.fotmob.com/image_resources/logo/teamlogo/8564.png"],
+      ["juventus","Juventus","https://images.fotmob.com/image_resources/logo/teamlogo/9882.png"],
+      ["napoli","Napoli","https://images.fotmob.com/image_resources/logo/teamlogo/9875.png"],
+      ["roma","Roma","https://images.fotmob.com/image_resources/logo/teamlogo/8686.png"],
+      ["lazio","Lazio","https://images.fotmob.com/image_resources/logo/teamlogo/8543.png"]
+    ]
+  },
+
+  {
+    league:"Bundesliga",
+    clubs:[
+      ["bayern","Bayern Munich","https://images.fotmob.com/image_resources/logo/teamlogo/9823.png"],
+      ["dortmund","Borussia Dortmund","https://images.fotmob.com/image_resources/logo/teamlogo/9789.png"],
+      ["leverkusen","Bayer Leverkusen","https://images.fotmob.com/image_resources/logo/teamlogo/8178.png"],
+      ["leipzig","RB Leipzig","https://images.fotmob.com/image_resources/logo/teamlogo/178475.png"],
+      ["frankfurt","Eintracht Frankfurt","https://images.fotmob.com/image_resources/logo/teamlogo/9810.png"],
+      ["wolfsburg","Wolfsburg","https://images.fotmob.com/image_resources/logo/teamlogo/9831.png"]
+    ]
+  },
+
+  {
+    league:"Ligue 1",
+    clubs:[
+      ["psg","Paris Saint-Germain","https://images.fotmob.com/image_resources/logo/teamlogo/9847.png"],
+      ["marseille","Marseille","https://images.fotmob.com/image_resources/logo/teamlogo/8592.png"],
+      ["lyon","Lyon","https://images.fotmob.com/image_resources/logo/teamlogo/9746.png"],
+      ["monaco","Monaco","https://images.fotmob.com/image_resources/logo/teamlogo/9829.png"],
+      ["lille","Lille","https://images.fotmob.com/image_resources/logo/teamlogo/8639.png"],
+      ["nice","Nice","https://images.fotmob.com/image_resources/logo/teamlogo/9830.png"]
+    ]
+  }
+
+];
+
+function profileApi(path,options={}){
+  if(typeof api === "function"){
+    return api(path,options);
+  }
+
+  return fetch(path,{
+    ...options,
+    headers:{
+      "Content-Type":"application/json",
+      ...(typeof zingoAuthHeaders==="function" ? zingoAuthHeaders() : {}),
+      ...(options.headers || {})
+    }
+  }).then(async r=>{
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok || data.ok===false){
+      throw new Error(data.error || "Request failed");
+    }
+    return data;
+  });
+}
+
+
+window.profileApi=profileApi;
+function allClubs(){
+  return CLUBS.flatMap(x=>x.clubs);
+}
+
+function clubById(id){
+  return allClubs().find(x=>x[0]===id) || null;
+}
+
+function getProfile(){
+  return window.__zingoProfile || {};
+}
+
+async function loadZingoProfile(){
+  try{
+    const result=await profileApi("/api/profile");
+    window.__zingoProfile=result.profile || {};
+    return window.__zingoProfile;
+  }catch(e){
+    console.warn("profile:",e.message);
+    return {};
+  }
+}
+
+window.zingoClubById=clubById;
+window.zingoAllClubs=allClubs;
+window.__zingoLoadData=loadZingoProfile;
+
+function profileAvatar(profile){
+  const p=profile || {};
+  const club=clubById(p.club_id);
+
+  if(p.avatar_data){
+    return p.avatar_data;
+  }
+
+  if(club){
+    return club[2];
+  }
+
+  return "";
+}
+
+window.zingoProfileCard=profileCard;
+
+function profileCard(){
+  const zState=window.__zingoState || {};
+
+  const p=
+    typeof getProfile==="function"
+      ? getProfile()
+      : (window.__zingoProfile || {});
+
+  const tgUser=
+    window.Telegram?.WebApp?.initDataUnsafe?.user
+    || {};
+
+  const u=
+    zState.user
+    || tgUser
+    || {};
+
+  const escProfileCard=(v)=>{
+    return String(v ?? "").replace(/[&<>"']/g,m=>({
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[m]));
+  };
+
+  const avatar=
+    typeof profileAvatar==="function"
+      ? profileAvatar(p)
+      : "";
+
+  const vip=
+    String(
+      window.__zingoMode
+      || zState.mode
+      || "pro"
+    ).toLowerCase()==="vip";
+
+  const club=
+    p.club_id &&
+    typeof window.zingoClubById==="function"
+      ? window.zingoClubById(p.club_id)
+      : null;
+
+  return `
+    <div class="card card-pad">
+
+      <div class="zingo-avatar-wrap">
+
+        ${
+          avatar
+            ? `<img
+                class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+                src="${escProfileCard(avatar)}"
+                alt=""
+              >`
+            : `<div
+                class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+                style="display:grid;place-items:center;font-size:38px"
+              >
+                ◇
+              </div>`
+        }
+
+      </div>
+
+      <div style="text-align:center">
+
+        <div class="eyebrow">
+          ${vip ? "BLACK DIAMOND PLAYER" : "PLAYER IDENTITY"}
+        </div>
+
+        <h2 style="margin-top:8px">
+          ${escProfileCard(
+            p.display_name
+            || u.first_name
+            || "Player"
+          )}
+        </h2>
+
+        ${
+          club
+            ? `<div class="muted">${escProfileCard(club[1])}</div>`
+            : ""
+        }
+
+      </div>
+
+      <div style="margin-top:16px">
+
+        <button
+          class="btn primary"
+          type="button"
+          onclick="window.zingoOpenProfileEditorV2()"
+        >
+          تعديل الملف الشخصي
+        </button>
+
+      </div>
+
+    </div>
+  `;
+}
+
+window.zingoOpenProfileEditor=async function(){
+
+  alert("1️⃣ الزر شغال");
+
+  try{
+    alert("2️⃣ قبل تحميل البروفايل");
+
+    await loadZingoProfile();
+
+    alert("3️⃣ تم تحميل البروفايل");
+
+    const p=getProfile();
+  const zState=window.__zingoState || {};
+  const currentMode=String(zState.mode || "pro").toLowerCase();
+
+  const app=document.getElementById("app");
+  if(!app) return;
+
+  const avatar=profileAvatar(p);
+  const vip=currentMode==="vip";
+
+  app.innerHTML=shell(`
+    <div class="page">
+
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">هوية اللاعب</div>
+          <h1>تعديل الملف الشخصي</h1>
+        </div>
+      </div>
+
+      <section class="card card-pad zingo-profile-editor">
+
+        <div class="zingo-avatar-wrap">
+          ${
+            avatar
+            ? `<img
+                id="zingoAvatarPreview"
+                class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+                src="${esc(avatar)}"
+                alt=""
+              >`
+            : `<div
+                id="zingoAvatarPreview"
+                class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+                style="display:grid;place-items:center;font-size:38px"
+              >
+                ◇
+              </div>`
+          }
+        </div>
+
+        <label class="btn">
+          تغيير الصورة
+          <input
+            id="zingoAvatarInput"
+            type="file"
+            accept="image/*"
+            hidden
+          >
+        </label>
+
+        <label>
+          <div class="eyebrow" style="margin-bottom:7px">
+            اسم اللاعب
+          </div>
+
+          <input
+            id="zingoDisplayName"
+            class="zingo-profile-input"
+            maxlength="24"
+            value="${esc(p.display_name || "")}"
+            placeholder="اكتب اسمك"
+            autocomplete="off"
+          >
+
+          <div class="muted" style="margin-top:6px;font-size:10px">
+            الاسم يجب أن يكون فريداً بين اللاعبين.
+          </div>
+        </label>
+
+        <div>
+
+          <div class="eyebrow">
+            النادي المفضل
+          </div>
+
+          ${
+            CLUBS.map(league=>`
+              <div class="zingo-league-title">
+                ${esc(league.league)}
+              </div>
+
+              <div class="zingo-club-grid">
+                ${
+                  league.clubs.map(c=>`
+                    <button
+                      type="button"
+                      class="zingo-club ${p.club_id===c[0] ? "active" : ""}"
+                      data-club="${esc(c[0])}"
+                    >
+                      <img
+                        src="${esc(c[2])}"
+                        alt=""
+                      >
+                      <span>${esc(c[1])}</span>
+                    </button>
+                  `).join("")
+                }
+              </div>
+            `).join("")
+          }
+
+        </div>
+
+        <div>
+
+          <div class="eyebrow">
+            لغة الواجهة
+          </div>
+
+          <div style="display:flex;gap:8px;margin-top:8px">
+
+            <button
+              id="zingoProfileLangAR"
+              class="btn"
+              type="button"
+              onclick="window.zingoSelectProfileLanguage('ar')"
+            >
+              العربية
+            </button>
+
+            <button
+              id="zingoProfileLangEN"
+              class="btn"
+              type="button"
+              onclick="window.zingoSelectProfileLanguage('en')"
+            >
+              EN
+            </button>
+
+          </div>
+
+        </div>
+
+        <div style="display:flex;gap:8px">
+
+          <button
+            class="btn primary"
+            type="button"
+            onclick="window.zingoSaveProfile()"
+          >
+            حفظ
+          </button>
+
+          <button
+            class="btn"
+            type="button"
+            onclick="window.Zingo?.go ? window.Zingo.go('profile') : render()"
+          >
+            إلغاء
+          </button>
+
+        </div>
+
+        <div
+          id="zingoProfileMessage"
+          class="muted"
+        ></div>
+
+      </section>
+    </div>
+  `);
+
+  let selectedClub=p.club_id || "";
+
+  document.querySelectorAll("[data-club]").forEach(btn=>{
+
+    btn.addEventListener("click",()=>{
+
+      selectedClub=btn.dataset.club;
+
+      document
+        .querySelectorAll("[data-club]")
+        .forEach(x=>{
+          x.classList.toggle(
+            "active",
+            x.dataset.club===selectedClub
+          );
+        });
+
+    });
+
+  });
+
+  document
+    .getElementById("zingoAvatarInput")
+    ?.addEventListener("change",async e=>{
+
+      const file=e.target.files?.[0];
+      if(!file) return;
+
+      try{
+
+        const data=await new Promise((resolve,reject)=>{
+
+          const img=new Image();
+          const reader=new FileReader();
+
+          reader.onload=()=>{
+
+            img.onload=()=>{
+
+              const max=512;
+
+              let w=img.width;
+              let h=img.height;
+
+              if(w>max || h>max){
+
+                const scale=Math.min(
+                  max/w,
+                  max/h
+                );
+
+                w=Math.round(w*scale);
+                h=Math.round(h*scale);
+
+              }
+
+              const canvas=document.createElement("canvas");
+
+              canvas.width=w;
+              canvas.height=h;
+
+              const ctx=canvas.getContext("2d");
+
+              if(!ctx){
+                reject(new Error("Canvas unavailable"));
+                return;
+              }
+
+              ctx.drawImage(
+                img,
+                0,
+                0,
+                w,
+                h
+              );
+
+              resolve(
+                canvas.toDataURL(
+                  "image/jpeg",
+                  .78
+                )
+              );
+
+            };
+
+            img.onerror=reject;
+            img.src=reader.result;
+
+          };
+
+          reader.onerror=reject;
+          reader.readAsDataURL(file);
+
+        });
+
+        window.__zingoProfileDraftAvatar=data;
+
+        const preview=document.getElementById(
+          "zingoAvatarPreview"
+        );
+
+        if(preview){
+
+          if(preview.tagName==="IMG"){
+
+            preview.src=data;
+
+          }else{
+
+            preview.outerHTML=`
+              <img
+                id="zingoAvatarPreview"
+                class="zingo-avatar ${
+                  String(
+                    (window.__zingoState || {}).mode || "pro"
+                  ).toLowerCase()==="vip"
+                    ? "zingo-vip-crest"
+                    : ""
+                }"
+                src="${esc(data)}"
+                alt=""
+              >
+            `;
+
+          }
+
+        }
+
+      }catch(err){
+
+        console.error(
+          "ZINGO AVATAR ERROR:",
+          err
+        );
+
+        alert("تعذر قراءة الصورة");
+
+      }
+
+    });
+
+  window.__zingoProfileDraftClub=selectedClub;
+
+  window.__zingoProfileDraftLanguage=
+    localStorage.getItem("zingo_language") || "ar";
+
+  window.zingoSelectProfileLanguage=function(lang){
+
+    lang=lang==="en" ? "en" : "ar";
+
+    window.__zingoProfileDraftLanguage=lang;
+
+    const ar=document.getElementById(
+      "zingoProfileLangAR"
+    );
+
+    const en=document.getElementById(
+      "zingoProfileLangEN"
+    );
+
+    if(ar){
+      ar.classList.toggle(
+        "primary",
+        lang==="ar"
+      );
+    }
+
+    if(en){
+      en.classList.toggle(
+        "primary",
+        lang==="en"
+      );
+    }
+
+  };
+
+  window.zingoSelectProfileLanguage(
+    window.__zingoProfileDraftLanguage
+  );
+
+
+
+
+}catch(e){
+  console.error("ZINGO PROFILE EDITOR ERROR:",e);
+  alert(e?.message || "تعذر فتح محرر الملف الشخصي");
+  }
+};
+
+window.zingoSaveProfile=async function(){
+
+  const input=document.getElementById(
+    "zingoDisplayName"
+  );
+
+  const msg=document.getElementById(
+    "zingoProfileMessage"
+  );
+
+  const name=(input?.value || "").trim();
+
+  const avatar=
+    window.__zingoProfileDraftAvatar
+    || getProfile().avatar_data
+    || "";
+
+  const club=
+    document.querySelector(
+      "[data-club].active"
+    )?.dataset.club
+    || getProfile().club_id
+    || "";
+
+  if(!name){
+
+    if(msg){
+      msg.textContent=
+        "اكتب اسم اللاعب أولاً";
+    }
+
+    return;
+  }
+
+  try{
+
+    if(msg){
+      msg.textContent=
+        "جارٍ الحفظ...";
+    }
+
+    const result=await profileApi(
+      "/api/profile/update",
+      {
+        method:"POST",
+
+        body:JSON.stringify({
+          display_name:name,
+          avatar_data:avatar,
+          club_id:club
+        })
+      }
+    );
+
+    window.__zingoProfile=
+      result.profile || {};
+
+    const selectedLanguage=
+      window.__zingoProfileDraftLanguage==="en"
+        ? "en"
+        : "ar";
+
+    localStorage.setItem(
+      "zingo_language",
+      selectedLanguage
+    );
+
+    window.__zingoProfileDraftAvatar="";
+    window.__zingoProfileDraftClub="";
+    window.__zingoProfileDraftLanguage="";
+
+    if(
+      window.zingoI18n &&
+      typeof window.zingoI18n.setLanguage==="function"
+    ){
+
+      window.zingoI18n.setLanguage(
+        selectedLanguage
+      );
+
+    }
+
+    if(typeof toast==="function"){
+
+      toast(
+        "تم تحديث الملف الشخصي"
+      );
+
+    }
+
+    if(
+      window.Zingo &&
+      typeof window.Zingo.go==="function"
+    ){
+
+      window.Zingo.go("profile");
+
+    }else if(typeof render==="function"){
+
+      render();
+
+    }
+
+  }catch(e){
+
+    console.error(
+      "ZINGO الملف الشخصي SAVE ERROR:",
+      e
+    );
+
+    if(msg){
+
+      msg.textContent=
+        e.message ||
+        "تعذر حفظ الملف الشخصي";
+
+    }
+
+  }
+
+};
+
+
+window.zingoSettings=function(){
+
+  const app=document.getElementById("app");
+  if(!app) return;
+
+  app.innerHTML=`
+    <div class="page">
+
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">SYSTEM</div>
+          <h1>الإعدادات</h1>
+        </div>
+      </div>
+
+      <section class="card card-pad zingo-settings-card">
+<div class="zingo-setting-row">
+          <div>
+            <strong>الملف الشخصي</strong>
+            <div class="muted">الاسم، الصورة، والنادي</div>
+          </div>
+
+          <button
+            class="btn"
+            onclick="window.zingoOpenProfileEditorV2()"
+          >
+            تعديل
+          </button>
+        </div>
+
+        <div class="zingo-setting-row">
+          <div>
+            <strong>الملكية</strong>
+            <div class="muted">
+              ${window.__zingoSubscription?.vip?.active ? "Black Diamond Access" : "VIP Access"}
+            </div>
+          </div>
+
+          <button
+            class="btn"
+            onclick="window.switchZingoMode ? window.switchZingoMode('vip') : (state.mode='vip',state.page='home',render())"
+          >
+            VIP
+          </button>
+        </div>
+
+      </section>
+    </div>
+  `;
+};
+
+
+
+})();
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  if(typeof window.__zingoLoadData==="function"){
+    window.__zingoLoadData();
+  }
+});
+</script>
+
+<script id="zingoUnified3TiersJS">
+(function(){
+  "use strict";
+
+  const Z = window.ZingoUnified = window.ZingoUnified || {};
+
+  function E(id){
+    return document.getElementById(id);
+  }
+
+  function cleanTier(tier){
+    const t=String(tier||"").toLowerCase();
+    return t==="vip" ? "vip" : t==="pro" ? "pro" : "free";
+  }
+
+  function uid(){
+    try{
+      return String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id || "");
+    }catch(e){
+      return "";
+    }
+  }
+
+  function syncState(tier){
+    tier=cleanTier(tier);
+    window.__zingoMode=tier;
+    window.__zingoState=window.__zingoState || {};
+    window.__zingoState.mode=tier;
+    window.__zingoState.tier=tier;
+    try{
+      window.dispatchEvent(new CustomEvent("zingo:mode-changed",{
+        detail:{mode:tier,tier:tier}
+      }));
+    }catch(e){}
+  }
+
+  function setTierBar(open){
+    const root=E("zingoUnifiedExperience");
+    if(root){
+      root.classList.toggle("zingo-tier-menu-open",!!open);
+    }
+  }
+
+  async function getSubscription(){
+    const id=uid();
+
+    if(!id){
+      return {
+        ok:false,
+        pro:{active:false},
+        vip:{active:false}
+      };
+    }
+
+    try{
+      const apiUrl = window.API?.subscription || "/api/subscription";
+      const join = apiUrl.indexOf("?") === -1 ? "?" : "&";
+      const r = await fetch(
+        apiUrl + join + "telegram_id=" + encodeURIComponent(id),
+        {
+          cache:"no-store",
+          credentials:"include",
+          headers:{"Accept":"application/json"}
+        }
+      );
+
+      const d=await r.json().catch(()=>({}));
+
+      return {
+        ok:r.ok && d?.ok !== false,
+        pro:d?.pro || {active:false},
+        vip:d?.vip || {active:false}
+      };
+    }catch(e){
+      console.warn("Zingo subscription:",e);
+      return {
+        ok:false,
+        pro:{active:false},
+        vip:{active:false}
+      };
+    }
+  }
+
+  function clearWorlds(){
+    E("zingoFreeWorld")?.classList.add("hidden");
+    E("zingoProWorld")?.classList.add("hidden");
+    E("zingoVipWorld")?.classList.add("hidden");
+
+    document
+      .querySelectorAll(".zingo-tier-btn")
+      .forEach(x=>x.classList.remove("active"));
+  }
+
+  function showWorld(tier){
+    tier=cleanTier(tier);
+    clearWorlds();
+    syncState(tier);
+
+    if(tier==="free"){
+      E("zingoFreeWorld")?.classList.remove("hidden");
+      E("zingoTierFree")?.classList.add("active");
+      setTierBar(false);
+      return;
+    }
+
+    if(tier==="pro"){
+      E("zingoProWorld")?.classList.remove("hidden");
+      E("zingoTierPro")?.classList.add("active");
+      setTierBar(true);
+      return;
+    }
+
+    E("zingoVipWorld")?.classList.remove("hidden");
+    E("zingoTierVip")?.classList.add("active");
+    setTierBar(true);
+  }
+
+  async function select(tier){
+    tier=cleanTier(tier);
+
+    /*
+     * All tiers are rendered inside the same document.
+     * No relative navigation is used, so Cloudflare SPA fallback,
+     * Telegram caching, or a missing secondary asset cannot send PRO back to FREE.
+     */
+    showWorld(tier);
+
+    return tier;
+  }
+
+  function updateStates(pro,vip){
+    const proState=E("zingoProTierState");
+    const vipState=E("zingoVipTierState");
+
+    if(proState) proState.textContent=pro ? "مفعّل" : "الاشتراك مطلوب";
+    if(vipState) vipState.textContent=vip ? "مفعّل" : "الاشتراك مطلوب";
+  }
+
+  async function openPackages(){
+    try{
+      if(typeof window.Zingo?.go==="function"){
+        return window.Zingo.go("packages");
+      }
+    }catch(e){}
+
+    try{
+      if(typeof window.zingoSettings==="function"){
+        return window.zingoSettings();
+      }
+    }catch(e){}
+
+    if(typeof window.toast==="function"){
+      window.toast("افتح الباقات لتفعيل الاشتراك");
+    }
+  }
+
+  async function boot(){
+    try{
+      const tg=window.Telegram?.WebApp;
+      if(tg){
+        try{tg.ready();}catch(e){}
+        try{tg.expand();}catch(e){}
+      }
+    }catch(e){}
+
+    const requested=cleanTier(
+      new URLSearchParams(location.search).get("tier") || "free"
+    );
+
+    await select(requested);
+
+    getSubscription().then(function(sub){
+      updateStates(
+        !!sub?.pro?.active,
+        !!sub?.vip?.active
+      );
+
+      window.__zingoSubscription=sub;
+    }).catch(function(e){
+      console.warn("Zingo background subscription:",e);
+    });
+  }
+
+  Z.select=select;
+  Z.subscription=getSubscription;
+  Z.openPackages=openPackages;
+
+  /* Legacy compatibility used by profile/settings buttons in this file. */
+  window.switchZingoMode=function(mode){
+    return Z.select(cleanTier(mode));
+  };
+
+  window.Zingo=window.Zingo || {};
+  if(typeof window.Zingo.go!=="function"){
+    window.Zingo.go=function(page){
+      const p=String(page||"").toLowerCase();
+      const current=cleanTier(window.__zingoMode || window.__zingoState?.mode || "free");
+
+      if(p==="home" || p==="competitions"){
+        return Z.select(current);
+      }
+
+      if(p==="profile"){
+        if(typeof window.zingoOpenProfileEditorV2==="function"){
+          return window.zingoOpenProfileEditorV2();
+        }
+        return;
+      }
+
+      if(p==="packages"){
+        if(typeof window.zingoSettings==="function"){
+          return window.zingoSettings();
+        }
+        if(typeof window.toast==="function"){
+          window.toast("الباقات غير متاحة حاليًا");
+        }
+        return;
+      }
+
+      if(p==="analysis" || p==="ranking"){
+        if(typeof window.toast==="function"){
+          window.toast("سيتم تفعيل هذا القسم مع ربط البيانات");
+        }
+      }
+    };
+  }
+
+  window.zingoBootTier=boot;
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",function(){
+      setTimeout(function(){ boot().catch(e=>console.warn("Zingo boot:",e)); },0);
+    },{once:true});
+  }else{
+    setTimeout(function(){ boot().catch(e=>console.warn("Zingo boot:",e)); },0);
+  }
+
+})();
+</script>
+
+
+<script id="zingoProfileSystemV2">
+/* =========================================================
+   ZINGO PROFILE SYSTEM V2
+   FREE / PRO / VIP
+   XP + LEVEL + RATING + ACHIEVEMENTS + MISSIONS
+   TITLES + BADGES + FRAMES
+   ========================================================= */
+
+(function(){
+
+  const STORE = "zingo_profile_identity_v2";
+
+  const MODE = () => String(
+    window.__zingoMode ||
+    window.__zingoState?.mode ||
+    "free"
+  ).toLowerCase();
+
+  const esc = v => String(v ?? "").replace(/[&<>"']/g,m=>({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  }[m]));
+
+  const telegramUser =
+    window.Telegram?.WebApp?.initDataUnsafe?.user || {};
+
+  function readStore(){
+    try{
+      return JSON.parse(localStorage.getItem(STORE) || "{}");
+    }catch(e){
+      return {};
+    }
+  }
+
+  function writeStore(data){
+    try{
+      localStorage.setItem(STORE,JSON.stringify(data));
+    }catch(e){}
+  }
+
+  function defaultData(){
+    return {
+      xp:0,
+      rating:0,
+      correct:0,
+      exact:0,
+      predictions:0,
+      streak:0,
+      bestStreak:0,
+      achievements:[],
+      missions:{},
+      unlockedTitles:[],
+      selectedTitle:"",
+      selectedFrame:"none",
+      vipAvatar:"",
+      avatarType:"initial"
+    };
+  }
+
+  function data(){
+    return {
+      ...defaultData(),
+      ...readStore()
+    };
+  }
+
+  function saveData(d){
+    writeStore(d);
+    window.__zingoProfileProgress = d;
+  }
+
+  window.__zingoProfileProgress = data();
+
+/* V2 editor draft */
+window.__zingoProfileV2Draft = {
+  club_id:"",
+  avatar:"",
+  frame:"none"
+};
+
+  /* =========================================================
+     LEVEL SYSTEM
+     ========================================================= */
+
+  const LEVELS = [
+    {level:1,xp:0,name:"مبتدئ"},
+    {level:2,xp:100,name:"متدرّب"},
+    {level:3,xp:250,name:"متوقع"},
+    {level:4,xp:450,name:"متقدم"},
+    {level:5,xp:700,name:"محلل"},
+    {level:6,xp:1000,name:"خبير"},
+    {level:7,xp:1400,name:"محترف"},
+    {level:8,xp:1900,name:"نخبة"},
+    {level:9,xp:2500,name:"أسطوري"},
+    {level:10,xp:3300,name:"سيد"},
+    {level:11,xp:4300,name:"ملك"},
+    {level:12,xp:5600,name:"أسطورة"},
+    {level:13,xp:7200,name:"ملكي"},
+    {level:14,xp:9200,name:"المهيب"},
+    {level:15,xp:12000,name:"العرش"}
+  ];
+
+  function getLevel(xp){
+    let current=LEVELS[0];
+
+    for(const l of LEVELS){
+      if(xp>=l.xp) current=l;
+    }
+
+    return current;
+  }
+
+  function nextLevel(xp){
+    return LEVELS.find(l=>xp<l.xp) || null;
+  }
+
+  function levelProgress(xp){
+    const current=getLevel(xp);
+    const next=nextLevel(xp);
+
+    if(!next) return 100;
+
+    return Math.max(
+      0,
+      Math.min(
+        100,
+        ((xp-current.xp)/(next.xp-current.xp))*100
+      )
+    );
+  }
+
+  /* =========================================================
+     RATING
+     ========================================================= */
+
+  function calculateRating(d){
+    const predictions=Number(d.predictions||0);
+    const correct=Number(d.correct||0);
+    const exact=Number(d.exact||0);
+    const streak=Number(d.bestStreak||0);
+
+    if(!predictions) return 0;
+
+    const accuracy=(correct/predictions)*70;
+    const exactBonus=Math.min(20,exact*2);
+    const streakBonus=Math.min(10,streak);
+
+    return Math.max(
+      0,
+      Math.min(
+        100,
+        Math.round(accuracy+exactBonus+streakBonus)
+      )
+    );
+  }
+
+  /* =========================================================
+     TITLES
+     ========================================================= */
+
+  const TITLES = [
+
+    {
+      id:"first_prediction",
+      name:"المتوقع",
+      icon:"🎯",
+      rarity:"عادي",
+      xp:50
+    },
+
+    {
+      id:"accurate",
+      name:"قارئ المباراة",
+      icon:"👁️",
+      rarity:"نادر",
+      xp:400
+    },
+
+    {
+      id:"streak",
+      name:"صائد السلاسل",
+      icon:"🔥",
+      rarity:"نادر",
+      streak:5
+    },
+
+    {
+      id:"sniper",
+      name:"قناص النتائج",
+      icon:"🎯",
+      rarity:"ملحمي",
+      exact:3
+    },
+
+    {
+      id:"master",
+      name:"خبير التوقعات",
+      icon:"💎",
+      rarity:"ملحمي",
+      correct:50
+    },
+
+    {
+      id:"champion",
+      name:"بطل المنافسات",
+      icon:"🏆",
+      rarity:"أسطوري",
+      rating:80
+    },
+
+    {
+      id:"king",
+      name:"الملك",
+      icon:"👑",
+      rarity:"ملكي",
+      vip:true,
+      xp:5600
+    },
+
+    {
+      id:"master_of_predictions",
+      name:"السيد",
+      icon:"♛",
+      rarity:"ملكي",
+      vip:true,
+      correct:100
+    },
+
+    {
+      id:"legend",
+      name:"الأسطورة",
+      icon:"🏆",
+      rarity:"ملكي",
+      vip:true,
+      exact:15
+    },
+
+    {
+      id:"royal",
+      name:"الملكي",
+      icon:"👑",
+      rarity:"ملكي",
+      vip:true,
+      rating:95,
+      xp:9200
+    },
+
+    {
+      id:"throne",
+      name:"صاحب العرش",
+      icon:"♔",
+      rarity:"نادر جدًا",
+      vip:true,
+      xp:12000
+    }
+
+  ];
+
+  function titleUnlocked(t,d){
+    if(t.vip && MODE()!=="vip") return false;
+    if(t.xp && d.xp<t.xp) return false;
+    if(t.correct && d.correct<t.correct) return false;
+    if(t.exact && d.exact<t.exact) return false;
+    if(t.streak && d.bestStreak<t.streak) return false;
+    if(t.rating && d.rating<t.rating) return false;
+    return true;
+  }
+
+  function availableTitles(d){
+    return TITLES.filter(t=>titleUnlocked(t,d));
+  }
+
+  function currentTitle(d){
+    const unlocked=availableTitles(d);
+
+    if(!unlocked.length) return TITLES[0];
+
+    if(d.selectedTitle){
+      const selected=unlocked.find(t=>t.id===d.selectedTitle);
+      if(selected) return selected;
+    }
+
+    return unlocked[unlocked.length-1];
+  }
+
+  /* =========================================================
+     ACHIEVEMENTS
+     ========================================================= */
+
+  const ACHIEVEMENTS = [
+
+    {
+      id:"first",
+      icon:"🌱",
+      name:"البداية",
+      text:"أول توقع",
+      check:d=>d.predictions>=1,
+      xp:50
+    },
+
+    {
+      id:"five",
+      icon:"🎯",
+      name:"بداية الدقة",
+      text:"5 توقعات صحيحة",
+      check:d=>d.correct>=5,
+      xp:100
+    },
+
+    {
+      id:"ten",
+      icon:"🔥",
+      name:"القنّاص",
+      text:"10 توقعات صحيحة",
+      check:d=>d.correct>=10,
+      xp:150
+    },
+
+    {
+      id:"streak5",
+      icon:"⚡",
+      name:"سلسلة النار",
+      text:"5 توقعات صحيحة متتالية",
+      check:d=>d.bestStreak>=5,
+      xp:200
+    },
+
+    {
+      id:"exact3",
+      icon:"🎯",
+      name:"عين النتيجة",
+      text:"3 نتائج دقيقة",
+      check:d=>d.exact>=3,
+      xp:250
+    },
+
+    {
+      id:"correct25",
+      icon:"💎",
+      name:"المحلل",
+      text:"25 توقعًا صحيحًا",
+      check:d=>d.correct>=25,
+      xp:350
+    },
+
+    {
+      id:"correct50",
+      icon:"👑",
+      name:"خبير التوقعات",
+      text:"50 توقعًا صحيحًا",
+      check:d=>d.correct>=50,
+      xp:500
+    },
+
+    {
+      id:"exact10",
+      icon:"🏆",
+      name:"صياد النتائج",
+      text:"10 نتائج دقيقة",
+      check:d=>d.exact>=10,
+      xp:700
+    },
+
+    {
+      id:"rating80",
+      icon:"⭐",
+      name:"نخبة الدقة",
+      text:"الوصول إلى تقييم 80",
+      check:d=>d.rating>=80,
+      xp:600
+    },
+
+    {
+      id:"vip100",
+      icon:"♛",
+      name:"السيد",
+      text:"100 توقع صحيح",
+      check:d=>MODE()==="vip" && d.correct>=100,
+      xp:1200,
+      vip:true
+    },
+
+    {
+      id:"vip15exact",
+      icon:"👑",
+      name:"الأسطورة",
+      text:"15 نتيجة دقيقة",
+      check:d=>MODE()==="vip" && d.exact>=15,
+      xp:1500,
+      vip:true
+    },
+
+    {
+      id:"royal",
+      icon:"♔",
+      name:"الملكي",
+      text:"تقييم 95 و 9200 XP",
+      check:d=>MODE()==="vip" && d.rating>=95 && d.xp>=9200,
+      xp:2000,
+      vip:true
+    }
+
+  ];
+
+  function refreshAchievements(d){
+    const unlocked=new Set(d.achievements||[]);
+
+    for(const a of ACHIEVEMENTS){
+
+      if(a.vip && MODE()!=="vip") continue;
+
+      if(a.check(d) && !unlocked.has(a.id)){
+        unlocked.add(a.id);
+        d.xp += Number(a.xp||0);
+      }
+
+    }
+
+    d.achievements=[...unlocked];
+    d.rating=calculateRating(d);
+
+    const possible=availableTitles(d);
+
+    d.unlockedTitles=possible.map(x=>x.id);
+
+    saveData(d);
+
+    return d;
+  }
+
+  /* =========================================================
+     MISSIONS
+     ========================================================= */
+
+  const MISSIONS = [
+
+    {
+      id:"daily_predictions",
+      name:"مهمة اليوم",
+      text:"أكمل 3 توقعات",
+      target:3,
+      type:"predictions",
+      reward:50
+    },
+
+    {
+      id:"daily_correct",
+      name:"مهمة الدقة",
+      text:"حقق توقعين صحيحين",
+      target:2,
+      type:"correct",
+      reward:75
+    },
+
+    {
+      id:"weekly_streak",
+      name:"مهمة الأسبوع",
+      text:"حقق سلسلة من 5 توقعات صحيحة",
+      target:5,
+      type:"streak",
+      reward:150
+    },
+
+    {
+      id:"vip_exact",
+      name:"المهمة الملكية",
+      text:"حقق نتيجتين دقيقتين",
+      target:2,
+      type:"exact",
+      reward:250,
+      vip:true
+    }
+
+  ];
+
+  function missionValue(m,d){
+    if(m.type==="predictions") return d.predictions;
+    if(m.type==="correct") return d.correct;
+    if(m.type==="streak") return d.bestStreak;
+    if(m.type==="exact") return d.exact;
+    return 0;
+  }
+
+  function missionDone(m,d){
+    if(m.vip && MODE()!=="vip") return false;
+    return missionValue(m,d)>=m.target;
+  }
+
+  /* =========================================================
+     FRAME SYSTEM
+     ========================================================= */
+
+  const FRAMES=[
+
+    {
+      id:"none",
+      name:"بدون إطار",
+      icon:"○",
+      unlock:0,
+      vip:false
+    },
+
+    {
+      id:"bronze",
+      name:"إطار البداية",
+      icon:"🥉",
+      unlock:250,
+      vip:false
+    },
+
+    {
+      id:"silver",
+      name:"إطار النخبة",
+      icon:"🥈",
+      unlock:1000,
+      vip:false
+    },
+
+    {
+      id:"gold",
+      name:"الإطار الذهبي",
+      icon:"🥇",
+      unlock:2500,
+      vip:false
+    },
+
+    {
+      id:"royal",
+      name:"الإطار الملكي",
+      icon:"👑",
+      unlock:5600,
+      vip:true
+    },
+
+    {
+      id:"legendary",
+      name:"إطار الأسطورة",
+      icon:"♛",
+      unlock:9200,
+      vip:true
+    },
+
+    {
+      id:"throne",
+      name:"إطار العرش",
+      icon:"♔",
+      unlock:12000,
+      vip:true
+    }
+
+  ];
+
+  function frameUnlocked(f,d){
+    if(f.vip && MODE()!=="vip") return false;
+    return d.xp>=f.unlock;
+  }
+
+  function currentFrame(d){
+    const f=FRAMES.find(x=>x.id===d.selectedFrame);
+    if(f && frameUnlocked(f,d)) return f;
+    return FRAMES[0];
+  }
+
+  /* =========================================================
+     AVATAR
+     ========================================================= */
+
+  function profile(){
+    return window.__zingoProfile || {};
+  }
+
+  function initialAvatar(name){
+    const value=String(
+      name ||
+      profile().display_name ||
+      telegramUser.first_name ||
+      "م"
+    ).trim();
+
+    return value.charAt(0).toUpperCase() || "م";
+  }
+
+  function clubAvatar(){
+    const p=profile();
+
+    if(
+      typeof window.zingoClubById==="function" &&
+      p.club_id
+    ){
+      const c=window.zingoClubById(p.club_id);
+      if(c) return c[2];
+    }
+
+    return "";
+  }
+
+  function avatarData(d){
+    if(MODE()==="free"){
+      return {
+        type:"initial",
+        value:initialAvatar(profile().display_name)
+      };
+    }
+
+    if(MODE()==="vip" && d.vipAvatar){
+      return {
+        type:"image",
+        value:d.vipAvatar
+      };
+    }
+
+    const club=clubAvatar();
+
+    if(club){
+      return {
+        type:"club",
+        value:club
+      };
+    }
+
+    return {
+      type:"initial",
+      value:initialAvatar(profile().display_name)
+    };
+  }
+
+  /* =========================================================
+     IDENTITY HTML
+     ========================================================= */
+
+  function avatarHTML(d,small=false){
+
+    const a=avatarData(d);
+    const frame=currentFrame(d);
+
+    const size=small ? "54px" : "92px";
+
+    let inner="";
+
+    if(a.type==="image" || a.type==="club"){
+
+      inner=`
+        <img
+          src="${esc(a.value)}"
+          alt=""
+          style="
+            width:100%;
+            height:100%;
+            object-fit:cover;
+            border-radius:50%;
+            display:block;
+          "
+        >
+      `;
+
+    }else{
+
+      inner=`
+        <span
+          style="
+            font-size:${small ? 22 : 38}px;
+            font-weight:1000;
+          "
+        >
+          ${esc(a.value)}
+        </span>
+      `;
+
+    }
+
+    return `
+      <div
+        class="zingo-v2-avatar-frame zingo-frame-${esc(frame.id)}"
+        style="
+          width:${size};
+          height:${size};
+          border-radius:50%;
+          display:grid;
+          place-items:center;
+          position:relative;
+          flex:0 0 auto;
+        "
+      >
+        <div
+          style="
+            width:88%;
+            height:88%;
+            border-radius:50%;
+            overflow:hidden;
+            display:grid;
+            place-items:center;
+            background:rgba(255,255,255,.06);
+          "
+        >
+          ${inner}
+        </div>
 
         ${
           frame.id!=="none"
@@ -1034,7 +4816,2069 @@ html[dir="ltr"] body{text-align:left}
     const progress=levelProgress(d.xp);
 
     return `
-      
+      <div
+        class="zingo-v2-identity"
+        style="
+          display:flex;
+          align-items:center;
+          gap:12px;
+          padding:10px 0;
+        "
+      >
+
+        ${avatarHTML(d,true)}
+
+        <div style="min-width:0;flex:1">
+
+          <div
+            style="
+              display:flex;
+              align-items:center;
+              gap:6px;
+              flex-wrap:wrap;
+            "
+          >
+
+            <strong
+              style="
+                font-size:15px;
+                font-weight:950;
+              "
+            >
+              ${esc(
+                p.display_name ||
+                telegramUser.first_name ||
+                "اللاعب"
+              )}
+            </strong>
+
+            <span
+              style="
+                font-size:11px;
+                opacity:.9;
+              "
+            >
+              ${title.icon}
+            </span>
+
+            <span
+              style="
+                font-size:10px;
+                font-weight:900;
+              "
+            >
+              ${esc(title.name)}
+            </span>
+
+          </div>
+
+          <div
+            style="
+              display:flex;
+              align-items:center;
+              gap:8px;
+              margin-top:4px;
+              font-size:10px;
+              opacity:.72;
+            "
+          >
+            <span>المستوى ${level.level}</span>
+            <span>•</span>
+            <span>${d.xp} XP</span>
+            <span>•</span>
+            <span>التقييم ${d.rating}</span>
+          </div>
+
+          <div
+            style="
+              height:4px;
+              margin-top:6px;
+              background:rgba(255,255,255,.08);
+              border-radius:20px;
+              overflow:hidden;
+            "
+          >
+            <div
+              style="
+                width:${progress}%;
+                height:100%;
+                background:currentColor;
+                border-radius:20px;
+              "
+            ></div>
+          </div>
+
+        </div>
+
+      </div>
+    `;
+  }
+
+  /* =========================================================
+     DATA REFRESH
+     ========================================================= */
+
+  function refreshData(){
+
+    const d=data();
+
+    d.rating=calculateRating(d);
+
+    const possible=availableTitles(d);
+
+    d.unlockedTitles=possible.map(x=>x.id);
+
+    saveData(d);
+
+    return d;
+  }
+
+  /* =========================================================
+     PROFILE CARD
+     ========================================================= */
+
+  function renderProfileCard(){
+
+    const d=refreshData();
+    const p=profile();
+    const title=currentTitle(d);
+    const level=getLevel(d.xp);
+    const next=nextLevel(d.xp);
+
+    return `
+
+      <section class="card card-pad">
+
+        <div
+          style="
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            text-align:center;
+          "
+        >
+
+          ${avatarHTML(d,false)}
+
+          <div style="margin-top:12px">
+
+            <h2 style="margin:0">
+              ${esc(
+                p.display_name ||
+                telegramUser.first_name ||
+                "اللاعب"
+              )}
+            </h2>
+
+            <div
+              style="
+                margin-top:6px;
+                font-weight:900;
+              "
+            >
+              ${title.icon} ${esc(title.name)}
+            </div>
+
+            <div
+              style="
+                margin-top:5px;
+                font-size:10px;
+                opacity:.65;
+              "
+            >
+              المستوى ${level.level}
+              •
+              ${d.xp} XP
+              •
+              التقييم ${d.rating}
+            </div>
+
+          </div>
+
+        </div>
+
+        <div
+          style="
+            display:grid;
+            grid-template-columns:repeat(3,1fr);
+            gap:8px;
+            margin-top:18px;
+          "
+        >
+
+          <div class="card card-pad" style="text-align:center">
+            <strong>${d.predictions}</strong>
+            <div class="muted" style="font-size:9px">التوقعات</div>
+          </div>
+
+          <div class="card card-pad" style="text-align:center">
+            <strong>${d.correct}</strong>
+            <div class="muted" style="font-size:9px">الصحيحة</div>
+          </div>
+
+          <div class="card card-pad" style="text-align:center">
+            <strong>${d.exact}</strong>
+            <div class="muted" style="font-size:9px">الدقيقة</div>
+          </div>
+
+        </div>
+
+        <div style="margin-top:14px">
+
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              font-size:10px;
+              margin-bottom:5px;
+            "
+          >
+            <span>التقدم</span>
+            <span>
+              ${
+                next
+                ? `${d.xp} / ${next.xp} XP`
+                : "أعلى مستوى"
+              }
+            </span>
+          </div>
+
+          <div
+            style="
+              height:6px;
+              border-radius:20px;
+              overflow:hidden;
+              background:rgba(255,255,255,.08);
+            "
+          >
+            <div
+              style="
+                width:${levelProgress(d.xp)}%;
+                height:100%;
+                background:currentColor;
+              "
+            ></div>
+          </div>
+
+        </div>
+
+        <button
+          class="btn primary"
+          type="button"
+          style="width:100%;margin-top:16px"
+          onclick="window.zingoOpenProfileEditorV2()"
+        >
+          تعديل الملف الشخصي
+        </button>
+
+        <button
+          class="btn"
+          type="button"
+          style="width:100%;margin-top:8px"
+          onclick="window.zingoOpenIdentityDetails()"
+        >
+          الإنجازات والألقاب والمهام
+        </button>
+
+      </section>
+    `;
+  }
+
+  /* =========================================================
+     PROFILE EDITOR
+     ========================================================= */
+
+  function closeEditor(){
+
+    document
+      .getElementById("zingoV2ProfileModal")
+      ?.remove();
+
+  }
+
+  function editor(){
+
+    closeEditor();
+
+    const d=refreshData();
+    const p=profile();
+
+    const mode=MODE();
+
+    const modal=document.createElement("div");
+
+    modal.id="zingoV2ProfileModal";
+
+    modal.style.cssText=`
+      position:fixed;
+      inset:0;
+      z-index:99999;
+      background:rgba(0,0,0,.82);
+      backdrop-filter:blur(12px);
+      overflow:auto;
+      padding:20px 12px;
+    `;
+
+    const title=currentTitle(d);
+
+    modal.innerHTML=`
+
+      <div
+        style="
+          max-width:520px;
+          margin:0 auto;
+          padding-bottom:30px;
+        "
+      >
+
+        <section class="card card-pad">
+
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+              margin-bottom:15px;
+            "
+          >
+
+            <div>
+              <div class="eyebrow">الملف الشخصي</div>
+              <h2 style="margin:5px 0 0">
+                هوية اللاعب
+              </h2>
+            </div>
+
+            <button
+              class="btn"
+              type="button"
+              onclick="window.zingoCloseProfileEditorV2()"
+            >
+              إغلاق
+            </button>
+
+          </div>
+
+          <div
+            style="
+              display:flex;
+              flex-direction:column;
+              align-items:center;
+              text-align:center;
+              margin:10px 0 20px;
+            "
+          >
+
+            ${avatarHTML(d,false)}
+
+            <div style="margin-top:8px;font-weight:900">
+              ${title.icon} ${esc(title.name)}
+            </div>
+
+            <div
+              class="muted"
+              style="font-size:10px;margin-top:4px"
+            >
+              المستوى ${getLevel(d.xp).level}
+              • ${d.xp} XP
+            </div>
+
+          </div>
+
+          <label style="display:block">
+
+            <div class="eyebrow" style="margin-bottom:7px">
+              اسم اللاعب
+            </div>
+
+            <input
+              id="zingoV2Name"
+              class="zingo-profile-input"
+              maxlength="24"
+              value="${esc(p.display_name || "")}"
+              placeholder="اكتب اسمك"
+              autocomplete="off"
+            >
+
+          </label>
+
+          ${
+            mode==="free"
+            ? `
+              <div
+                class="muted"
+                style="
+                  margin-top:12px;
+                  padding:10px;
+                  border-radius:10px;
+                  background:rgba(255,255,255,.04);
+                  font-size:11px;
+                "
+              >
+                في النسخة المجانية تظهر صورتك تلقائيًا
+                من أول حرف في اسمك.
+              </div>
+            `
+            : `
+              <div style="margin-top:18px">
+
+                <div class="eyebrow">
+                  الصورة الشخصية
+                </div>
+
+                <label
+                  class="btn"
+                  style="
+                    display:block;
+                    text-align:center;
+                    margin-top:8px;
+                  "
+                >
+                  اختيار صورة
+                  <input
+                    id="zingoV2Avatar"
+                    type="file"
+                    accept="image/*"
+                    hidden
+                  >
+                </label>
+
+                <div
+                  class="muted"
+                  style="font-size:10px;margin-top:6px"
+                >
+                  ${
+                    mode==="vip"
+                    ? "العضوية الملكية تدعم صورة شخصية حقيقية مع الإطارات."
+                    : "العضوية الاحترافية تستخدم شعارات الأندية."
+                  }
+                </div>
+
+              </div>
+            `
+          }
+
+          ${
+            mode==="pro" || mode==="vip"
+            ? `
+              <div style="margin-top:20px">
+
+                <div class="eyebrow">
+                  النادي المفضل
+                </div>
+
+                ${
+                  Array.isArray(window.__zingoClubGroups)
+                  ? ""
+                  : ""
+                }
+
+                <div
+                  id="zingoV2ClubGrid"
+                  style="
+                    display:grid;
+                    grid-template-columns:repeat(3,1fr);
+                    gap:8px;
+                    margin-top:9px;
+                  "
+                >
+
+                  ${
+                    typeof window.zingoClubById==="function"
+                    ? `
+                      <div
+                        style="
+                          grid-column:1/-1;
+                          font-size:10px;
+                          opacity:.65;
+                          padding:5px 0;
+                        "
+                      >
+                        اختر شعار ناديك
+                      </div>
+                    `
+                    : ""
+                  }
+
+                </div>
+
+              </div>
+            `
+            : ""
+          }
+
+          ${
+            mode==="vip"
+            ? `
+              <div style="margin-top:20px">
+
+                <div class="eyebrow">
+                  الإطار
+                </div>
+
+                <div
+                  id="zingoV2FrameGrid"
+                  style="
+                    display:grid;
+                    grid-template-columns:repeat(2,1fr);
+                    gap:8px;
+                    margin-top:9px;
+                  "
+                ></div>
+
+              </div>
+            `
+            : ""
+          }
+
+          <div
+            id="zingoV2Message"
+            class="muted"
+            style="
+              min-height:20px;
+              margin-top:12px;
+              font-size:11px;
+            "
+          ></div>
+
+          <div
+            style="
+              display:flex;
+              gap:8px;
+              margin-top:10px;
+            "
+          >
+
+            <button
+              class="btn primary"
+              type="button"
+              style="flex:1"
+              onclick="window.zingoSaveProfileV2()"
+            >
+              حفظ
+            </button>
+
+            <button
+              class="btn"
+              type="button"
+              onclick="window.zingoCloseProfileEditorV2()"
+            >
+              إلغاء
+            </button>
+
+          </div>
+
+        </section>
+
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    let selectedClub=p.club_id || "";
+    let selectedFrame=currentFrame(d).id;
+    let selectedAvatar=d.vipAvatar || "";
+
+    window.__zingoProfileV2Draft={
+      club_id:selectedClub,
+      avatar:selectedAvatar,
+      frame:selectedFrame
+    };
+
+    /* النادي */
+
+    const grid=document.getElementById("zingoV2ClubGrid");
+
+    window.__zingoProfileV2Draft.club_id =
+      p.club_id || "";
+
+    if(
+      grid &&
+      typeof window.zingoAllClubs==="function"
+    ){
+
+      const clubs=window.zingoAllClubs();
+
+      clubs.forEach(c=>{
+
+        const id=c[0];
+        const name=c[1];
+        const logo=c[2];
+
+        const b=document.createElement("button");
+
+        b.type="button";
+        b.className="btn";
+        b.dataset.v2Club=id;
+
+        b.style.cssText=`
+          padding:7px 4px;
+          display:flex;
+          flex-direction:column;
+          align-items:center;
+          justify-content:center;
+          gap:4px;
+          min-height:72px;
+          outline:${id===window.__zingoProfileV2Draft.club_id
+            ? "2px solid currentColor"
+            : "none"};
+        `;
+
+        b.innerHTML=`
+          <img
+            src="${esc(logo)}"
+            alt=""
+            style="
+              width:34px;
+              height:34px;
+              object-fit:contain;
+            "
+          >
+          <span style="font-size:8px">
+            ${esc(name)}
+          </span>
+        `;
+
+        b.addEventListener("click",()=>{
+
+          window.__zingoProfileV2Draft.club_id=id;
+
+          grid
+            .querySelectorAll("[data-v2-club]")
+            .forEach(x=>{
+              x.style.outline=
+                x.dataset.v2Club===id
+                ? "2px solid currentColor"
+                : "none";
+            });
+
+        });
+
+        grid.appendChild(b);
+
+      });
+
+    }
+
+    /* صورة VIP */
+    document
+      .getElementById("zingoV2Avatar")
+      ?.addEventListener("change",async e=>{
+
+        const file=e.target.files?.[0];
+
+        if(!file) return;
+
+        if(mode!=="vip"){
+          selectedAvatar="";
+          return;
+        }
+
+        try{
+
+          const result=await new Promise((resolve,reject)=>{
+
+            const reader=new FileReader();
+
+            reader.onload=()=>{
+
+              const img=new Image();
+
+              img.onload=()=>{
+
+                const max=512;
+
+                let w=img.width;
+                let h=img.height;
+
+                if(w>max || h>max){
+
+                  const scale=Math.min(
+                    max/w,
+                    max/h
+                  );
+
+                  w=Math.round(w*scale);
+                  h=Math.round(h*scale);
+
+                }
+
+                const canvas=document.createElement("canvas");
+
+                canvas.width=w;
+                canvas.height=h;
+
+                const ctx=canvas.getContext("2d");
+
+                if(!ctx){
+                  reject(new Error("تعذر معالجة الصورة"));
+                  return;
+                }
+
+                ctx.drawImage(img,0,0,w,h);
+
+                resolve(
+                  canvas.toDataURL("image/jpeg",.82)
+                );
+
+              };
+
+              img.onerror=()=>reject(
+                new Error("الصورة غير صالحة")
+              );
+
+              img.src=reader.result;
+
+            };
+
+            reader.onerror=()=>reject(
+              new Error("تعذر قراءة الصورة")
+            );
+
+            reader.readAsDataURL(file);
+
+          });
+
+          selectedAvatar=result;
+
+          window.__zingoProfileV2Draft.avatar=result;
+
+        }catch(err){
+
+          const msg=document.getElementById("zingoV2Message");
+
+          if(msg) msg.textContent=err.message;
+
+        }
+
+      });
+
+    /* الإطارات */
+    const frameGrid=document.getElementById("zingoV2FrameGrid");
+
+    if(frameGrid){
+
+      FRAMES
+        .filter(f=>frameUnlocked(f,d))
+        .forEach(f=>{
+
+          const b=document.createElement("button");
+
+          b.type="button";
+          b.className="btn";
+
+          b.style.cssText=`
+            min-height:60px;
+            font-size:10px;
+            outline:${f.id===selectedFrame ? "2px solid currentColor" : "none"};
+          `;
+
+          b.innerHTML=`
+            <div style="font-size:20px">${f.icon}</div>
+            <div>${esc(f.name)}</div>
+          `;
+
+          b.addEventListener("click",()=>{
+
+            selectedFrame=f.id;
+
+            window.__zingoProfileV2Draft.frame=f.id;
+
+            frameGrid
+              .querySelectorAll("button")
+              .forEach(x=>{
+                x.style.outline="none";
+              });
+
+            b.style.outline="2px solid currentColor";
+
+          });
+
+          frameGrid.appendChild(b);
+
+        });
+
+    }
+
+  }
+
+  /* =========================================================
+     SAVE
+     ========================================================= */
+
+  async function saveProfile(){
+
+    const input=document.getElementById("zingoV2Name");
+
+    const draft=window.__zingoProfileV2Draft || {
+      club_id:"",
+      avatar:"",
+      frame:"none"
+    };
+    const msg=document.getElementById("zingoV2Message");
+
+    const name=(input?.value || "").trim();
+
+    if(!name){
+
+      if(msg) msg.textContent="اكتب اسم اللاعب أولًا";
+
+      return;
+
+    }
+
+    const d=refreshData();
+    const mode=MODE();
+
+    let avatar="";
+
+    if(mode==="vip" && draft.avatar){
+      avatar=draft.avatar;
+    }
+
+    if(
+      mode!=="free" &&
+      draft.club_id &&
+      typeof window.zingoClubById==="function"
+    ){
+
+      const club=window.zingoClubById(draft.club_id);
+
+      if(club){
+        avatar=mode==="vip" && draft.avatar
+          ? draft.avatar
+          : club[2];
+      }
+
+    }
+
+    try{
+
+      if(typeof profileApi==="function"){
+
+        const payload={
+          display_name:name
+        };
+
+        if(mode!=="free" && draft.club_id){
+
+          payload.club_id=draft.club_id;
+
+        }
+
+        if(mode==="vip" && draft.avatar){
+
+          payload.avatar_data=draft.avatar;
+
+        }else if(mode==="pro" && avatar){
+
+          payload.avatar_data=avatar;
+
+        }
+
+        const result=await profileApi(
+          "/api/profile/update",
+          {
+            method:"POST",
+            body:JSON.stringify(payload)
+          }
+        );
+
+        if(result?.profile){
+          window.__zingoProfile=result.profile;
+        }
+
+      }
+
+      if(mode==="vip" && draft.avatar){
+        d.vipAvatar=draft.avatar;
+        d.avatarType="image";
+      }
+
+      if(mode==="vip"){
+        d.selectedFrame=draft.frame || "none";
+      }
+
+      saveData(d);
+
+      closeEditor();
+
+      renderIdentityEverywhere();
+
+      if(typeof toast==="function"){
+        toast("تم تحديث الملف الشخصي");
+      }
+
+    }catch(e){
+
+      if(msg){
+        msg.textContent=
+          e.message ||
+          "تعذر حفظ الملف الشخصي";
+      }
+
+    }
+
+  }
+
+  /* =========================================================
+     DETAILS
+     ========================================================= */
+
+  function details(){
+
+    document
+      .getElementById("zingoV2IdentityDetails")
+      ?.remove();
+
+    const d=refreshData();
+    const title=currentTitle(d);
+    const level=getLevel(d.xp);
+
+    const modal=document.createElement("div");
+
+    modal.id="zingoV2IdentityDetails";
+
+    modal.style.cssText=`
+      position:fixed;
+      inset:0;
+      z-index:99998;
+      background:rgba(0,0,0,.84);
+      backdrop-filter:blur(12px);
+      overflow:auto;
+      padding:18px 12px 35px;
+    `;
+
+    modal.innerHTML=`
+
+      <div style="max-width:560px;margin:auto">
+
+        <section class="card card-pad">
+
+          <div
+            style="
+              display:flex;
+              justify-content:space-between;
+              align-items:center;
+            "
+          >
+
+            <div>
+              <div class="eyebrow">هوية اللاعب</div>
+              <h2 style="margin:5px 0">
+                الإنجازات والألقاب
+              </h2>
+            </div>
+
+            <button
+              class="btn"
+              onclick="document.getElementById('zingoV2IdentityDetails')?.remove()"
+            >
+              إغلاق
+            </button>
+
+          </div>
+
+          <div
+            style="
+              display:flex;
+              align-items:center;
+              gap:12px;
+              margin-top:15px;
+            "
+          >
+
+            ${avatarHTML(d,true)}
+
+            <div>
+
+              <strong>${esc(
+                profile().display_name ||
+                telegramUser.first_name ||
+                "اللاعب"
+              )}</strong>
+
+              <div style="font-size:10px;margin-top:4px">
+                ${title.icon} ${esc(title.name)}
+              </div>
+
+              <div class="muted" style="font-size:9px;margin-top:3px">
+                المستوى ${level.level}
+                • ${d.xp} XP
+                • التقييم ${d.rating}
+              </div>
+
+            </div>
+
+          </div>
+
+          <div style="margin-top:20px">
+
+            <div class="eyebrow">الإنجازات</div>
+
+            <div
+              style="
+                display:grid;
+                grid-template-columns:repeat(2,1fr);
+                gap:8px;
+                margin-top:9px;
+              "
+            >
+
+              ${
+                ACHIEVEMENTS
+                .filter(a=>!a.vip || MODE()==="vip")
+                .map(a=>{
+
+                  const unlocked=d.achievements.includes(a.id);
+
+                  return `
+                    <div
+                      class="card card-pad"
+                      style="
+                        opacity:${unlocked ? 1 : .42};
+                        position:relative;
+                      "
+                    >
+
+                      <div style="font-size:24px">
+                        ${a.icon}
+                      </div>
+
+                      <strong style="font-size:11px">
+                        ${esc(a.name)}
+                      </strong>
+
+                      <div
+                        class="muted"
+                        style="font-size:9px;margin-top:3px"
+                      >
+                        ${esc(a.text)}
+                      </div>
+
+                      <div
+                        style="
+                          font-size:8px;
+                          margin-top:5px;
+                        "
+                      >
+                        ${unlocked ? "مفتوح" : "مغلق"}
+                        • +${a.xp} XP
+                      </div>
+
+                    </div>
+                  `;
+
+                }).join("")
+              }
+
+            </div>
+
+          </div>
+
+          <div style="margin-top:20px">
+
+            <div class="eyebrow">المهام</div>
+
+            <div style="display:grid;gap:8px;margin-top:9px">
+
+              ${
+                MISSIONS
+                .filter(m=>!m.vip || MODE()==="vip")
+                .map(m=>{
+
+                  const value=Math.min(
+                    m.target,
+                    missionValue(m,d)
+                  );
+
+                  const done=missionDone(m,d);
+
+                  return `
+                    <div class="card card-pad">
+
+                      <div
+                        style="
+                          display:flex;
+                          justify-content:space-between;
+                          gap:10px;
+                        "
+                      >
+
+                        <div>
+
+                          <strong style="font-size:11px">
+                            ${esc(m.name)}
+                          </strong>
+
+                          <div
+                            class="muted"
+                            style="font-size:9px;margin-top:3px"
+                          >
+                            ${esc(m.text)}
+                          </div>
+
+                        </div>
+
+                        <strong>
+                          ${done ? "✓" : `${value}/${m.target}`}
+                        </strong>
+
+                      </div>
+
+                      <div
+                        style="
+                          height:4px;
+                          margin-top:8px;
+                          background:rgba(255,255,255,.08);
+                          border-radius:10px;
+                          overflow:hidden;
+                        "
+                      >
+
+                        <div
+                          style="
+                            width:${Math.min(
+                              100,
+                              (value/m.target)*100
+                            )}%;
+                            height:100%;
+                            background:currentColor;
+                          "
+                        ></div>
+
+                      </div>
+
+                      <div
+                        class="muted"
+                        style="font-size:8px;margin-top:5px"
+                      >
+                        المكافأة +${m.reward} XP
+                      </div>
+
+                    </div>
+                  `;
+
+                }).join("")
+              }
+
+            </div>
+
+          </div>
+
+          <div style="margin-top:20px">
+
+            <div class="eyebrow">الألقاب</div>
+
+            <div
+              style="
+                display:grid;
+                grid-template-columns:repeat(2,1fr);
+                gap:8px;
+                margin-top:9px;
+              "
+            >
+
+              ${
+                TITLES
+                .filter(t=>!t.vip || MODE()==="vip")
+                .map(t=>{
+
+                  const unlocked=titleUnlocked(t,d);
+                  const selected=currentTitle(d).id===t.id;
+
+                  return `
+                    <button
+                      type="button"
+                      class="btn"
+                      ${
+                        unlocked
+                        ? `onclick="window.zingoSelectTitleV2('${t.id}')"`
+                        : ""
+                      }
+                      style="
+                        text-align:right;
+                        opacity:${unlocked ? 1 : .4};
+                        outline:${selected ? "2px solid currentColor" : "none"};
+                      "
+                    >
+
+                      <div style="font-size:20px">
+                        ${t.icon}
+                      </div>
+
+                      <strong style="font-size:10px">
+                        ${esc(t.name)}
+                      </strong>
+
+                      <div
+                        style="
+                          font-size:8px;
+                          margin-top:3px;
+                        "
+                      >
+                        ${esc(t.rarity)}
+                      </div>
+
+                    </button>
+                  `;
+
+                }).join("")
+              }
+
+            </div>
+
+          </div>
+
+        </section>
+
+      </div>
+    `;
+
+    document.body.appendChild(modal);
+
+  }
+
+  /* =========================================================
+     PUBLIC API
+     ========================================================= */
+
+  window.zingoOpenProfileEditorV2=editor;
+
+  window.zingoCloseProfileEditorV2=closeEditor;
+
+  window.zingoSaveProfileV2=saveProfile;
+
+  window.zingoOpenIdentityDetails=details;
+
+  window.zingoSelectTitleV2=function(id){
+
+    const d=refreshData();
+
+    const t=TITLES.find(x=>x.id===id);
+
+    if(!t || !titleUnlocked(t,d)) return;
+
+    d.selectedTitle=id;
+
+    saveData(d);
+
+    details();
+
+    renderIdentityEverywhere();
+
+  };
+
+  window.zingoProfileSystem={
+
+    getData:()=>({...refreshData()}),
+
+    getLevel:()=>getLevel(refreshData().xp),
+
+    getTitle:()=>currentTitle(refreshData()),
+
+    getFrame:()=>currentFrame(refreshData()),
+
+    addXP:function(amount){
+
+      const d=refreshData();
+
+      d.xp=Math.max(
+        0,
+        d.xp+Math.max(0,Number(amount)||0)
+      );
+
+      refreshAchievements(d);
+
+      renderIdentityEverywhere();
+
+      return d.xp;
+
+    },
+
+    registerPrediction:function(correct=false,exact=false){
+
+      const d=refreshData();
+
+      d.predictions++;
+
+      if(correct){
+
+        d.correct++;
+        d.streak++;
+
+        if(d.streak>d.bestStreak){
+          d.bestStreak=d.streak;
+        }
+
+      }else{
+
+        d.streak=0;
+
+      }
+
+      if(exact){
+        d.exact++;
+      }
+
+      /*
+       * XP من الأداء.
+       * لا نغيّر نقاط المسابقة نفسها.
+       */
+
+      d.xp += exact ? 25 : correct ? 10 : 2;
+
+      refreshAchievements(d);
+
+      renderIdentityEverywhere();
+
+      return {...d};
+
+    },
+
+    setStats:function(stats={}){
+
+      const d=refreshData();
+
+      if(stats.predictions!=null)
+        d.predictions=Math.max(
+          0,
+          Number(stats.predictions)||0
+        );
+
+      if(stats.correct!=null)
+        d.correct=Math.max(
+          0,
+          Number(stats.correct)||0
+        );
+
+      if(stats.exact!=null)
+        d.exact=Math.max(
+          0,
+          Number(stats.exact)||0
+        );
+
+      if(stats.streak!=null)
+        d.streak=Math.max(
+          0,
+          Number(stats.streak)||0
+        );
+
+      if(stats.bestStreak!=null)
+        d.bestStreak=Math.max(
+          0,
+          Number(stats.bestStreak)||0
+        );
+
+      if(stats.xp!=null)
+        d.xp=Math.max(
+          0,
+          Number(stats.xp)||0
+        );
+
+      d.rating=calculateRating(d);
+
+      refreshAchievements(d);
+
+      renderIdentityEverywhere();
+
+      return {...d};
+
+    }
+
+  };
+
+  /* =========================================================
+     RENDER BRIDGE
+     ========================================================= */
+
+  function renderIdentityEverywhere(){
+
+    try{
+
+      document
+        .querySelectorAll("[data-zingo-profile-identity]")
+        .forEach(el=>{
+          el.innerHTML=identityHTML();
+        });
+
+    }catch(e){}
+
+  }
+
+  /*
+   * إذا كان البروفايل الحالي يستخدم zingoProfileCard
+   * نغلفه بدل حذف النسخة القديمة.
+   */
+
+  const originalProfileCard=
+    window.zingoProfileCard;
+
+  window.zingoProfileCard=function(){
+
+    try{
+
+      const base=
+        typeof originalProfileCard==="function"
+        ? originalProfileCard()
+        : "";
+
+      /*
+       * نحافظ على محتوى البروفايل الحالي
+       * ونضيف هوية V2 تحته.
+       */
+
+      return `
+        ${base}
+        <div data-zingo-profile-identity>
+          ${identityHTML()}
+        </div>
+      `;
+
+    }catch(e){
+
+      console.error("ZINGO PROFILE V2:",e);
+
+      return `
+        <div data-zingo-profile-identity>
+          ${identityHTML()}
+        </div>
+      `;
+
+    }
+
+  };
+
+  /* =========================================================
+     INITIALIZE
+     ========================================================= */
+
+  refreshData();
+
+  window.addEventListener("zingo:profile-updated",()=>{
+    refreshData();
+    renderIdentityEverywhere();
+  });
+
+})();
+</script>
+
+
+<style id="zingoProfileIdentityV3Style">
+.zingo-v3-identity{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+.zingo-v3-avatar{
+  width:58px;
+  height:58px;
+  min-width:58px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  overflow:hidden;
+  position:relative;
+  background:linear-gradient(145deg,#171717,#050505);
+  border:2px solid rgba(255,255,255,.16);
+  box-shadow:0 8px 28px rgba(0,0,0,.35);
+}
+.zingo-v3-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+.zingo-v3-letter{
+  font-size:24px;
+  font-weight:900;
+  color:#fff;
+  text-transform:uppercase;
+}
+.zingo-v3-info{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  gap:3px;
+}
+.zingo-v3-name{
+  font-size:15px;
+  font-weight:900;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.zingo-v3-title{
+  font-size:11px;
+  opacity:.82;
+  display:flex;
+  align-items:center;
+  gap:4px;
+}
+.zingo-v3-meta{
+  font-size:10px;
+  opacity:.68;
+}
+.zingo-v3-level{
+  position:absolute;
+  right:-2px;
+  bottom:-2px;
+  min-width:22px;
+  height:18px;
+  padding:0 5px;
+  border-radius:10px;
+  display:grid;
+  place-items:center;
+  font-size:9px;
+  font-weight:900;
+  background:#111;
+  color:#fff;
+  border:1px solid rgba(255,255,255,.28);
+}
+.zingo-v3-frame-bronze{box-shadow:0 0 0 3px #8b5a2b,0 8px 28px rgba(0,0,0,.4)}
+.zingo-v3-frame-silver{box-shadow:0 0 0 3px #bfc4ca,0 8px 28px rgba(0,0,0,.4)}
+.zingo-v3-frame-gold{box-shadow:0 0 0 3px #d6a928,0 0 18px rgba(214,169,40,.35)}
+.zingo-v3-frame-elite{box-shadow:0 0 0 3px #8d63d8,0 0 20px rgba(141,99,216,.38)}
+.zingo-v3-frame-royal{box-shadow:0 0 0 3px #d6a928,0 0 24px rgba(214,169,40,.5)}
+.zingo-v3-frame-throne{box-shadow:0 0 0 4px #f0c75e,0 0 30px rgba(240,199,94,.65)}
+.zingo-v3-panel{
+  padding:16px;
+  border-radius:18px;
+  background:rgba(255,255,255,.045);
+  border:1px solid rgba(255,255,255,.08);
+}
+.zingo-v3-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:9px;
+}
+.zingo-v3-stat{
+  padding:11px;
+  border-radius:14px;
+  background:rgba(255,255,255,.045);
+}
+.zingo-v3-stat b{
+  display:block;
+  font-size:16px;
+  margin-bottom:2px;
+}
+.zingo-v3-stat span{
+  font-size:10px;
+  opacity:.65;
+}
+.zingo-v3-progress{
+  height:7px;
+  border-radius:10px;
+  overflow:hidden;
+  background:rgba(255,255,255,.08);
+  margin-top:8px;
+}
+.zingo-v3-progress i{
+  display:block;
+  height:100%;
+  width:0;
+  border-radius:inherit;
+  background:currentColor;
+}
+.zingo-v3-editor{
+  position:fixed;
+  inset:0;
+  z-index:99999;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(0,0,0,.78);
+  backdrop-filter:blur(12px);
+}
+.zingo-v3-editor-box{
+  width:min(560px,100%);
+  max-height:90vh;
+  overflow:auto;
+  padding:18px;
+  border-radius:24px;
+  background:#101010;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 25px 80px rgba(0,0,0,.65);
+}
+.zingo-v3-editor-head{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:14px;
+}
+.zingo-v3-editor-head button{
+  border:0;
+  background:rgba(255,255,255,.08);
+  color:#fff;
+  width:34px;
+  height:34px;
+  border-radius:50%;
+}
+.zingo-v3-input{
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.055);
+  color:#fff;
+  border-radius:13px;
+  padding:12px;
+  outline:none;
+  margin:6px 0 12px;
+}
+.zingo-v3-clubs{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+.zingo-v3-club{
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);
+  color:#fff;
+  border-radius:13px;
+  padding:9px 5px;
+  min-height:72px;
+}
+.zingo-v3-club.active{
+  border-color:#fff;
+  box-shadow:0 0 0 2px rgba(255,255,255,.15);
+}
+.zingo-v3-club img{
+  width:34px;
+  height:34px;
+  object-fit:contain;
+  display:block;
+  margin:0 auto 4px;
+}
+.zingo-v3-club span{
+  display:block;
+  font-size:9px;
+  white-space:nowrap;
+  overflow:hidden;
+  text-overflow:ellipsis;
+}
+.zingo-v3-frames{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+.zingo-v3-frame-btn{
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.04);
+  color:#fff;
+  border-radius:13px;
+  padding:10px 5px;
+}
+.zingo-v3-frame-btn.active{
+  border-color:#fff;
+}
+.zingo-v3-editor-actions{
+  display:flex;
+  gap:8px;
+  margin-top:16px;
+}
+.zingo-v3-editor-actions button{
+  flex:1;
+  border:0;
+  border-radius:13px;
+  padding:12px;
+  font-weight:900;
+}
+.zingo-v3-save{
+  background:#fff;
+  color:#000;
+}
+.zingo-v3-cancel{
+  background:rgba(255,255,255,.08);
+  color:#fff;
+}
+</style>
+
+<script id="zingoProfileIdentityV3">
+(function(){
+
+  if(window.__zingoProfileIdentityV3Loaded) return;
+  window.__zingoProfileIdentityV3Loaded=true;
+
+  const KEY="zingo_profile_identity_v3";
+
+  const MODE=()=>{
+    return String(
+      window.__zingoMode ||
+      window.__zingoState?.mode ||
+      "free"
+    ).toLowerCase();
+  };
+
+  const TIER={
+    FREE:"free",
+    PRO:"pro",
+    VIP:"vip"
+  };
+
+  const cleanTier=()=>{
+    const m=MODE();
+    return m==="vip" ? "vip" : m==="pro" ? "pro" : "free";
+  };
+
+  const emptyData={
+    name:"",
+    xp:0,
+    rating:0,
+    points:0,
+    predictions:0,
+    correct:0,
+    exact:0,
+    streak:0,
+    bestStreak:0,
+    achievements:[],
+    missions:{},
+    unlockedTitles:[],
+    selectedTitle:"",
+    selectedFrame:"none",
+    club_id:"",
+    avatar:"",
+    avatarType:"letter",
+    vipAvatar:"",
+    animatedAvatar:false,
+    vipAvatarId:"",
+    lastDaily:"",
+    lastWeekly:"",
+    createdAt:Date.now()
+  };
+
+  function read(){
+    try{
+      const raw=localStorage.getItem(KEY);
+      if(raw){
+        const d=JSON.parse(raw);
+        return Object.assign({},emptyData,d||{});
+      }
+    }catch(e){}
+    return Object.assign({},emptyData);
+  }
+
+  function save(d){
+    try{
+      localStorage.setItem(KEY,JSON.stringify(d));
+    }catch(e){}
+    return d;
+  }
+
+  function migrate(){
+    let d=read();
+
+    try{
+      const old=localStorage.getItem("zingo_profile_identity_v2");
+      if(old){
+        const o=JSON.parse(old)||{};
+        d=Object.assign({},d,{
+          name:o.name || d.name || "",
+          xp:Number(o.xp||d.xp||0),
+          rating:Number(o.rating||d.rating||0),
+          predictions:Number(o.predictions||d.predictions||0),
+          correct:Number(o.correct||d.correct||0),
+          exact:Number(o.exact||d.exact||0),
+          streak:Number(o.streak||d.streak||0),
+          bestStreak:Number(o.bestStreak||d.bestStreak||0),
+          achievements:Array.isArray(o.achievements)?o.achievements:d.achievements,
+          missions:o.missions||d.missions,
+          unlockedTitles:Array.isArray(o.unlockedTitles)?o.unlockedTitles:d.unlockedTitles,
+          selectedTitle:o.selectedTitle||d.selectedTitle||"",
+          selectedFrame:o.selectedFrame||d.selectedFrame||"none",
+          club_id:o.club_id||d.club_id||"",
+          avatar:o.avatar||d.avatar||"",
+          vipAvatar:o.vipAvatar||d.vipAvatar||"",
+          avatarType:o.avatarType||d.avatarType||"letter"
+        });
+        save(d);
+      }
+    }catch(e){}
+
+    return d;
+  }
+
+  const LEVELS=[
+    {level:1,xp:0,name:"مبتدئ"},
+    {level:2,xp:100,name:"متدرّب"},
+    {level:3,xp:250,name:"متوقع"},
+    {level:4,xp:450,name:"متقدم"},
+    {level:5,xp:700,name:"محلل"},
+    {level:6,xp:1000,name:"خبير"},
+    {level:7,xp:1400,name:"محترف"},
+    {level:8,xp:1900,name:"نخبة"},
+    {level:9,xp:2500,name:"أسطوري"},
+    {level:10,xp:3300,name:"سيد"},
+    {level:11,xp:4300,name:"ملك"},
+    {level:12,xp:5600,name:"أسطورة"},
+    {level:13,xp:7200,name:"ملكي"},
+    {level:14,xp:9200,name:"المهيب"},
+    {level:15,xp:12000,name:"العرش"},
+    {level:16,xp:15000,name:"النخبة الملكية"},
+    {level:17,xp:18500,name:"سيد العرش"},
+    {level:18,xp:22500,name:"قمة النخبة"},
+    {level:19,xp:27000,name:"الرتبة العليا"},
+    {level:20,xp:32000,name:"صاحب التاج"}
+  ];
+
+  function getLevel(xp){
+    let cur=LEVELS[0];
+    for(const l of LEVELS){
+      if(Number(xp||0)>=l.xp) cur=l;
+    }
+    return cur;
+  }
+
+  function nextLevel(xp){
+    return LEVELS.find(x=>Number(xp||0)<x.xp)||null;
+  }
+
+  function progress(xp){
+    const cur=getLevel(xp);
+    const next=nextLevel(xp);
+    if(!next) return 100;
+    return Math.max(
+      0,
+      Math.min(
+        100,
+        ((Number(xp||0)-cur.xp)/(next.xp-cur.xp))*100
+      )
+    );
+  }
+
+  const TITLES=[
+    {id:"starter",name:"متوقع ناشئ",badge:"🥉",tier:"pro",xp:50},
+    {id:"analyst",name:"محلل",badge:"🥈",tier:"pro",xp:250},
+    {id:"expert",name:"خبير التوقعات",badge:"🥇",tier:"pro",xp:700},
+    {id:"reader",name:"قارئ المباراة",badge:"🔵",tier:"pro",xp:1000,rating:70},
+    {id:"hunter",name:"صياد النتائج",badge:"🔥",tier:"pro",xp:1400,exact:3},
+    {id:"sniper",name:"قناص التوقعات",badge:"🎯",tier:"pro",xp:2500,exact:10},
+    {id:"master",name:"سيد التوقعات",badge:"🏆",tier:"pro",xp:4300,rating:85},
+    {id:"king_results",name:"ملك النتائج",badge:"👑",tier:"vip",xp:7200,rating:90},
+    {id:"match_sniper",name:"قناص المباريات",badge:"🎯",tier:"vip",xp:9200,exact:25},
+    {id:"master_analysis",name:"سيد التحليل",badge:"♛",tier:"vip",xp:12000,rating:94},
+    {id:"legend",name:"الأسطورة",badge:"👑",tier:"vip",xp:15000,rating:96},
+    {id:"royal",name:"الملكي",badge:"♛",tier:"vip",xp:18500,rating:97},
+    {id:"throne",name:"صاحب العرش",badge:"👑",tier:"vip",xp:22500,rating:98}
+  ];
+
+  const ACHIEVEMENTS=[
+    {id:"first_correct",name:"أول توقع صحيح",xp:50,check:d=>d.correct>=1},
+    {id:"correct_5",name:"5 توقعات صحيحة",xp:100,check:d=>d.correct>=5},
+    {id:"correct_10",name:"10 توقعات صحيحة",xp:150,check:d=>d.correct>=10},
+    {id:"correct_25",name:"25 توقعًا صحيحًا",xp:250,check:d=>d.correct>=25},
+    {id:"correct_50",name:"50 توقعًا صحيحًا",xp:400,check:d=>d.correct>=50},
+    {id:"correct_100",name:"100 توقع صحيح",xp:700,check:d=>d.correct>=100},
+    {id:"streak_3",name:"سلسلة 3 صحيحة",xp:100,check:d=>d.bestStreak>=3},
+    {id:"streak_5",name:"سلسلة 5 صحيحة",xp:200,check:d=>d.bestStreak>=5},
+    {id:"streak_10",name:"سلسلة 10 صحيحة",xp:500,check:d=>d.bestStreak>=10},
+    {id:"exact_1",name:"أول نتيجة دقيقة",xp:100,check:d=>d.exact>=1},
+    {id:"exact_3",name:"3 نتائج دقيقة",xp:200,check:d=>d.exact>=3},
+    {id:"exact_10",name:"10 نتائج دقيقة",xp:500,check:d=>d.exact>=10},
+    {id:"exact_25",name:"25 نتيجة دقيقة",xp:1000,check:d=>d.exact>=25},
+    {id:"rating_80",name:"تقييم 80",xp:600,check:d=>d.rating>=80},
+    {id:"rating_90",name:"تقييم 90",xp:1200,check:d=>d.rating>=90},
+    {id:"vip_95",name:"رتبة ملكية",xp:2000,check:d=>cleanTier()==="vip"&&d.rating>=95},
+    {id:"vip_rare",name:"إنجاز ملكي نادر",xp:3000,check:d=>cleanTier()==="vip"&&d.xp>=12000&&d.exact>=25}
+  ];
+
+  const MISSIONS=[
+    {id:"daily_correct_2",name:"مهمة اليوم: حقق توقعين صحيحين",period:"daily",goal:2,type:"correct",xp:50},
+    {id:"daily_exact_1",name:"مهمة اليوم: حقق نتيجة دقيقة",period:"daily",goal:1,type:"exact",xp:75},
+    {id:"weekly_matches_10",name:"مهمة الأسبوع: شارك في 10 مباريات",period:"weekly",goal:10,type:"predictions",xp:150},
+    {id:"weekly_correct_10",name:"مهمة الأسبوع: 10 توقعات صحيحة",period:"weekly",goal:10,type:"correct",xp:250},
+    {id:"advanced_exact_3",name:"مهمة متقدمة: 3 نتائج دقيقة",period:"advanced",goal:3,type:"exact",xp:300},
+    {id:"vip_exact_10",name:"مهمة ملكية: 10 نتائج دقيقة",period:"vip",goal:10,type:"exact",xp:700,tier:"vip"}
+  ];
+
+  const FRAMES=[
+    {id:"none",name:"بدون إطار",unlock:0,tier:"free"},
+    {id:"bronze",name:"إطار برونزي",unlock:500,tier:"pro"},
+    {id:"silver",name:"إطار فضي",unlock:1500,tier:"pro"},
+    {id:"gold",name:"الإطار الذهبي",unlock:3500,tier:"pro"},
+    {id:"elite",name:"إطار النخبة",unlock:7000,tier:"vip"},
+    {id:"royal",name:"الإطار الملكي",unlock:12000,tier:"vip"},
+    {id:"throne",name:"إطار العرش",unlock:20000,tier:"vip"}
+  ];
+
+  function rating(d){
+    const p=Number(d.predictions||0);
+    if(!p) return Number(d.rating||0);
+    const accuracy=(Number(d.correct||0)/p)*100;
+    const exactBonus=Math.min(15,(Number(d.exact||0)/Math.max(1,p))*100);
+    const streakBonus=Math.min(10,Number(d.bestStreak||0));
+    return Math.round(
+      Math.max(
+        0,
+        Math.min(
+          100,
+          accuracy*.75 + exactBonus + streakBonus
+        )
+      )
+    );
+  }
+
+  function allowed(feature,tier=cleanTier()){
+    if(feature==="free") return true;
+    if(feature==="pro") return tier==="pro"||tier==="vip";
+    if(feature==="vip") return tier==="vip";
+    return false;
+  }
+
+  function letter(name){
+    const value=String(name||"Z");
+    return Array.from(value.trim())[0]||"Z";
+  }
+
+  function club(id){
+    try{
+      if(typeof window.zingoClubById==="function"){
+        return window.zingoClubById(id);
+      }
+      if(typeof window.zingoAllClubs==="function"){
+        return (window.zingoAllClubs()||[]).find(x=>x.id===id);
+      }
+    }catch(e){}
+    return null;
+  }
+
+  function currentAvatar(d){
+    const tier=cleanTier();
+
+    if(tier==="free"){
+      return {
+        type:"letter",
+        value:letter(d.name)
+      };
+    }
+
+    if(tier==="pro"){
+      const c=club(d.club_id);
+      if(c && c.logo){
+        return {
+          type:"image",
+          value:c.logo
+        };
+      }
+      return {
+        type:"letter",
+        value:letter(d.name)
+      };
+    }
+
+    if(d.vipAvatar){
+      return {
+        type:"image",
+        value:d.vipAvatar,
+        animated:!!d.animatedAvatar
+      };
+    }
+
+    const c=club(d.club_id);
+    if(c && c.logo){
+      return {
+        type:"image",
+        value:c.logo
+      };
+    }
+
+    return {
+      type:"letter",
+      value:letter(d.name)
+    };
+  }
+
+  function currentFrame(d){
+    const tier=cleanTier();
+    if(tier!=="vip") return "none";
+    const f=FRAMES.find(x=>x.id===d.selectedFrame);
+    if(!f || d.xp<f.unlock) return "none";
+    return f.id;
+  }
+
+  function refresh(d){
+    d.rating=rating(d);
+
+    const unlocked=new Set(d.achievements||[]);
+
+    for(const a of ACHIEVEMENTS){
+      try{
+        if(a.check(d)) unlocked.add(a.id);
+      }catch(e){}
+    }
+
+    d.achievements=[...unlocked];
+
+    const titles=TITLES
+      .filter(t=>{
+        if(t.tier==="vip" && cleanTier()!=="vip") return false;
+        if(t.tier==="pro" && !allowed("pro")) return false;
+        if(t.xp && d.xp<t.xp) return false;
+        if(t.rating && d.rating<t.rating) return false;
+        if(t.exact && d.exact<t.exact) return false;
+        return true;
+      })
+      .map(t=>t.id);
+
+    d.unlockedTitles=titles;
+
+    if(d.selectedTitle && !titles.includes(d.selectedTitle)){
+      d.selectedTitle="";
+    }
+
+    if(cleanTier()!=="vip"){
+      d.selectedFrame="none";
+      d.vipAvatar="";
+      d.animatedAvatar=false;
+    }
+
+    if(cleanTier()==="free"){
+      d.club_id="";
+      d.selectedTitle="";
+      d.selectedFrame="none";
+      d.vipAvatar="";
+      d.animatedAvatar=false;
+    }
+
+    return save(d);
+  }
+
+  function identityHTML(options={}){
+    let d=refresh(migrate());
+    const tier=cleanTier();
+    const av=currentAvatar(d);
+    const frame=currentFrame(d);
+    const level=getLevel(d.xp);
+    const title=TITLES.find(x=>x.id===d.selectedTitle);
+
+    let frameClass="";
+    if(frame==="bronze") frameClass="zingo-v3-frame-bronze";
+    if(frame==="silver") frameClass="zingo-v3-frame-silver";
+    if(frame==="gold") frameClass="zingo-v3-frame-gold";
+    if(frame==="elite") frameClass="zingo-v3-frame-elite";
+    if(frame==="royal") frameClass="zingo-v3-frame-royal";
+    if(frame==="throne") frameClass="zingo-v3-frame-throne";
+
+    const avatar=av.type==="image"
+      ? `<img src="${String(av.value).replace(/"/g,"&quot;")}" alt="">`
+      : `<span class="zingo-v3-letter">${String(av.value).replace(/[<>&"]/g,"")}</span>`;
+
+    const titleHTML=
+      tier!=="free" && title
+      ? `<span class="zingo-v3-title">${title.badge} ${title.name}</span>`
+      : "";
+
+    const meta=tier==="free"
+      ? `المستوى ${level.level} • ${d.points||0} نقطة`
+      : `المستوى ${level.level} • ${d.xp} XP • التقييم ${d.rating}`;
+
+    return `
+      <div class="zingo-v3-identity" data-zingo-profile-identity-v3="${options.compact?"compact":"full"}">
+        <div class="zingo-v3-avatar ${frameClass}">
+          ${avatar}
+          <span class="zingo-v3-level">${level.level}</span>
+        </div>
         <div class="zingo-v3-info">
           <span class="zingo-v3-name">${String(d.name||"Zingo").replace(/[<>&"]/g,"")}</span>
           ${titleHTML}
