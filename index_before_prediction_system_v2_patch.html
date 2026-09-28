@@ -1,0 +1,1153 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#050914">
+<title>ZINGO</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js?63"></script>
+
+<style>
+:root{
+  --bg:#050914;
+  --card:#0c1424;
+  --card2:#111c30;
+  --text:#f7f9ff;
+  --muted:#91a0b8;
+  --line:rgba(255,255,255,.09);
+  --blue:#2588ff;
+  --gold:#d6a93a;
+  --gold2:#ffe08a;
+}
+
+*{box-sizing:border-box}
+
+html,body{
+  margin:0;
+  min-height:100%;
+  background:var(--bg);
+  color:var(--text);
+  font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif
+}
+
+body{
+  overflow-x:hidden
+}
+
+button,input{
+  font:inherit
+}
+
+button{
+  border:0
+}
+
+.app{
+  max-width:760px;
+  min-height:100vh;
+  margin:auto;
+  padding:16px 13px 100px
+}
+
+.top{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:14px
+}
+
+.brand{
+  font-size:28px;
+  font-weight:900;
+  letter-spacing:2px
+}
+
+.mode{
+  color:var(--muted);
+  font-size:12px;
+  padding:7px 11px;
+  border:1px solid var(--line);
+  border-radius:999px
+}
+
+.hero{
+  padding:20px;
+  border-radius:24px;
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,#101c31,#080e19);
+  margin-bottom:13px
+}
+
+.hero h1{
+  margin:0 0 7px;
+  font-size:24px
+}
+
+.hero p{
+  margin:0;
+  color:var(--muted);
+  line-height:1.7
+}
+
+.tiers{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:8px;
+  margin-bottom:13px
+}
+
+.tier{
+  min-height:50px;
+  border-radius:15px;
+  background:#0b1322;
+  color:#dce5f5;
+  border:1px solid var(--line);
+  cursor:pointer;
+  font-weight:800
+}
+
+.tier.active{
+  border-color:var(--blue);
+  background:rgba(37,136,255,.12)
+}
+
+.vip .tier.active{
+  border-color:var(--gold);
+  background:rgba(214,169,58,.12)
+}
+
+.cards{
+  display:grid;
+  gap:12px
+}
+
+.card{
+  padding:16px;
+  background:var(--card);
+  border:1px solid var(--line);
+  border-radius:20px
+}
+
+.card h2{
+  margin:0 0 12px;
+  font-size:17px
+}
+
+.match{
+  padding:13px 0;
+  border-top:1px solid var(--line)
+}
+
+.match:first-child{
+  border-top:0
+}
+
+.teams{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  font-weight:800
+}
+
+.league{
+  margin-top:4px;
+  color:var(--muted);
+  font-size:12px
+}
+
+.opts{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:7px;
+  margin-top:10px
+}
+
+.opt{
+  padding:10px 5px;
+  border-radius:12px;
+  background:var(--card2);
+  color:#edf3ff;
+  border:1px solid transparent;
+  cursor:pointer
+}
+
+.opt.selected{
+  border-color:var(--blue);
+  background:rgba(37,136,255,.16)
+}
+
+.vip .opt.selected{
+  border-color:var(--gold);
+  background:rgba(214,169,58,.14)
+}
+
+.profile{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:14px;
+  align-items:center
+}
+
+.avatar{
+  width:68px;
+  height:68px;
+  border-radius:21px;
+  display:grid;
+  place-items:center;
+  background:linear-gradient(145deg,#1b3558,#0b1525);
+  border:1px solid var(--line);
+  font-size:27px;
+  font-weight:900
+}
+
+.name{
+  font-size:20px;
+  font-weight:900
+}
+
+.meta{
+  color:var(--muted);
+  font-size:13px;
+  line-height:1.7
+}
+
+.bar{
+  height:8px;
+  margin-top:9px;
+  background:#172338;
+  border-radius:999px;
+  overflow:hidden
+}
+
+.bar i{
+  display:block;
+  width:42%;
+  height:100%;
+  background:var(--blue);
+  border-radius:999px
+}
+
+.vip .bar i{
+  background:linear-gradient(90deg,var(--gold),var(--gold2))
+}
+
+.actions{
+  display:flex;
+  gap:8px;
+  margin-top:14px
+}
+
+.primary,
+.secondary{
+  flex:1;
+  padding:12px;
+  border-radius:13px;
+  cursor:pointer;
+  font-weight:800
+}
+
+.primary{
+  color:white;
+  background:var(--blue)
+}
+
+.vip .primary{
+  color:#111;
+  background:linear-gradient(135deg,#9b7417,#f0cf68)
+}
+
+.secondary{
+  color:white;
+  background:#121d30;
+  border:1px solid var(--line)
+}
+
+.notice{
+  margin-top:12px;
+  padding:11px;
+  border-radius:13px;
+  color:#b9f7df;
+  background:rgba(52,211,153,.08);
+  border:1px solid rgba(52,211,153,.2);
+  font-size:13px
+}
+
+.bottom{
+  position:fixed;
+  left:50%;
+  bottom:10px;
+  transform:translateX(-50%);
+  width:min(740px,calc(100% - 14px));
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:5px;
+  padding:7px;
+  background:rgba(8,14,25,.95);
+  border:1px solid var(--line);
+  border-radius:19px;
+  backdrop-filter:blur(16px);
+  z-index:20
+}
+
+.nav{
+  min-height:44px;
+  padding:7px 3px;
+  border-radius:13px;
+  background:transparent;
+  color:var(--muted);
+  cursor:pointer;
+  font-size:11px
+}
+
+.nav.active{
+  color:#fff;
+  background:rgba(255,255,255,.07)
+}
+
+@media(max-width:430px){
+  .app{padding-inline:10px}
+  .hero h1{font-size:22px}
+  .bottom{width:calc(100% - 10px)}
+}
+
+/* ===== ZINGO LUXURY TIERS ===== */
+
+:root{
+  --zingo-blue:#07152f;
+  --zingo-blue2:#0b2f68;
+  --zingo-gold:#ffd45a;
+  --zingo-gold2:#fff0a8;
+  --zingo-diamond:#f7fbff;
+  --zingo-ice:#9feaff;
+}
+
+body{
+  transition:
+    background .8s ease,
+    color .6s ease,
+    filter .6s ease;
+}
+
+/* FREE */
+body:not(.vip):not(.pro){
+  background:
+    radial-gradient(circle at 50% -10%,rgba(28,92,190,.32),transparent 42%),
+    linear-gradient(180deg,#061126 0%,#030914 100%);
+}
+
+body:not(.vip):not(.pro) .card{
+  background:linear-gradient(145deg,rgba(12,35,72,.92),rgba(4,13,29,.96));
+  border:1px solid rgba(67,137,230,.22);
+  box-shadow:0 16px 40px rgba(0,0,0,.28);
+}
+
+/* PRO */
+body.pro{
+  background:
+    radial-gradient(circle at 50% -10%,rgba(255,197,45,.30),transparent 40%),
+    radial-gradient(circle at 15% 60%,rgba(255,169,0,.10),transparent 35%),
+    linear-gradient(180deg,#171006 0%,#050403 100%);
+}
+
+body.pro .card{
+  background:
+    linear-gradient(145deg,rgba(63,43,8,.90),rgba(12,9,3,.97));
+  border:1px solid rgba(255,210,74,.42);
+  box-shadow:
+    0 18px 45px rgba(0,0,0,.55),
+    0 0 25px rgba(255,190,35,.08);
+}
+
+body.pro .mode{
+  color:#ffe58a;
+  text-shadow:0 0 16px rgba(255,207,76,.65);
+}
+
+/* VIP DIAMOND */
+body.vip{
+  background:
+    radial-gradient(circle at 50% -15%,rgba(220,250,255,.32),transparent 34%),
+    radial-gradient(circle at 15% 35%,rgba(100,220,255,.12),transparent 28%),
+    radial-gradient(circle at 85% 65%,rgba(255,255,255,.10),transparent 30%),
+    linear-gradient(180deg,#071019 0%,#010305 100%);
+}
+
+body.vip .card{
+  background:
+    linear-gradient(145deg,
+      rgba(235,250,255,.13),
+      rgba(18,35,46,.76) 38%,
+      rgba(3,8,12,.95));
+  border:1px solid rgba(220,250,255,.48);
+  box-shadow:
+    0 20px 55px rgba(0,0,0,.70),
+    0 0 28px rgba(145,235,255,.14),
+    inset 0 1px 0 rgba(255,255,255,.28);
+  position:relative;
+  overflow:hidden;
+}
+
+body.vip .card::after{
+  content:"";
+  position:absolute;
+  top:-30%;
+  left:-80%;
+  width:45%;
+  height:180%;
+  transform:rotate(20deg);
+  background:linear-gradient(
+    90deg,
+    transparent,
+    rgba(255,255,255,.42),
+    transparent
+  );
+  animation:diamondSweep 4.8s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes diamondSweep{
+  0%,45%{left:-80%}
+  75%,100%{left:145%}
+}
+
+/* SWITCH */
+.luxury-switch{
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:14px;
+  min-height:112px;
+  margin:8px 0 15px;
+  direction:rtl;
+}
+
+.luxury-orbit{
+  position:relative;
+  width:82px;
+  height:82px;
+  display:grid;
+  place-items:center;
+}
+
+.luxury-ball{
+  position:relative;
+  z-index:5;
+  width:58px;
+  height:58px;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  font-size:31px;
+  background:
+    radial-gradient(circle at 30% 25%,#fff,#b7d8ff 18%,#204b91 58%,#020817 100%);
+  border:2px solid rgba(155,211,255,.75);
+  box-shadow:
+    0 0 18px rgba(53,145,255,.55),
+    0 8px 25px rgba(0,0,0,.55);
+  cursor:pointer;
+  transition:
+    transform .9s cubic-bezier(.2,.8,.2,1),
+    box-shadow .6s ease,
+    background .8s ease;
+  animation:ballFloat 2.8s ease-in-out infinite;
+}
+
+.luxury-ball span{
+  display:block;
+  filter:drop-shadow(0 3px 5px rgba(0,0,0,.65));
+}
+
+.luxury-ball.spinning{
+  animation:ballSpin .95s cubic-bezier(.4,0,.2,1);
+}
+
+@keyframes ballSpin{
+  0%{transform:rotate(0) scale(1)}
+  45%{transform:rotate(220deg) scale(1.12)}
+  100%{transform:rotate(720deg) scale(1)}
+}
+
+@keyframes ballFloat{
+  0%,100%{translate:0 0}
+  50%{translate:0 -4px}
+}
+
+.luxury-ring{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(94,165,255,.35);
+  pointer-events:none;
+}
+
+.ring-a{
+  width:76px;
+  height:76px;
+  animation:ringRotate 5s linear infinite;
+}
+
+.ring-b{
+  width:92px;
+  height:46px;
+  transform:rotate(25deg);
+  border-color:rgba(130,205,255,.22);
+  animation:ringRotate 7s linear infinite reverse;
+}
+
+@keyframes ringRotate{
+  to{transform:rotate(360deg)}
+}
+
+.ring-b{
+  animation-name:ringRotateB;
+}
+
+@keyframes ringRotateB{
+  to{transform:rotate(385deg)}
+}
+
+.luxury-switch-info{
+  min-width:105px;
+  text-align:right;
+}
+
+.luxury-target{
+  font-size:15px;
+  font-weight:900;
+  margin-bottom:7px;
+  transition:.5s ease;
+}
+
+.luxury-transfer{
+  border:1px solid rgba(116,184,255,.42);
+  border-radius:999px;
+  padding:7px 15px;
+  color:#fff;
+  background:rgba(18,51,96,.72);
+  font-weight:900;
+  font-size:11px;
+  cursor:pointer;
+  box-shadow:0 5px 18px rgba(0,0,0,.3);
+  transition:.35s ease;
+}
+
+.luxury-transfer:active{
+  transform:scale(.93);
+}
+
+/* PRO switch */
+body.pro .luxury-ball{
+  background:
+    radial-gradient(circle at 28% 22%,#fffbe0,#ffd75a 19%,#b87900 58%,#271500 100%);
+  border-color:#ffe58a;
+  box-shadow:
+    0 0 22px rgba(255,205,70,.72),
+    0 0 48px rgba(255,174,0,.22);
+}
+
+body.pro .luxury-ring{
+  border-color:rgba(255,211,79,.48);
+}
+
+body.pro .luxury-transfer{
+  color:#171003;
+  background:linear-gradient(135deg,#fff0a0,#d89a18,#fff2a8);
+  border-color:#ffe27a;
+  box-shadow:0 0 22px rgba(255,196,50,.28);
+}
+
+body.pro .luxury-target{
+  color:#ffe18a;
+}
+
+/* VIP switch */
+body.vip .luxury-ball{
+  background:
+    radial-gradient(circle at 28% 18%,#fff,#eaffff 15%,#9feaff 38%,#376d88 67%,#061016 100%);
+  border-color:#fff;
+  box-shadow:
+    0 0 22px rgba(220,250,255,.95),
+    0 0 55px rgba(92,220,255,.48),
+    inset 0 0 18px rgba(255,255,255,.6);
+}
+
+body.vip .luxury-ring{
+  border-color:rgba(222,250,255,.68);
+  box-shadow:0 0 15px rgba(128,225,255,.35);
+}
+
+body.vip .luxury-transfer{
+  color:#061017;
+  background:
+    linear-gradient(135deg,#fff,#c9f6ff 35%,#75d8ee 60%,#fff);
+  border-color:#fff;
+  box-shadow:
+    0 0 18px rgba(197,246,255,.7),
+    0 0 40px rgba(91,220,255,.25);
+}
+
+body.vip .luxury-target{
+  color:#eaffff;
+  text-shadow:
+    0 0 8px rgba(210,250,255,.95),
+    0 0 22px rgba(105,220,255,.55);
+}
+
+/* old tier buttons stay hidden; JS state remains intact */
+.tiers{
+  display:none !important;
+}
+
+@media(max-width:420px){
+  .luxury-switch{
+    min-height:102px;
+  }
+
+  .luxury-ball{
+    width:54px;
+    height:54px;
+    font-size:28px;
+  }
+}
+
+</style>
+</head>
+
+<body>
+
+<main class="app">
+
+<header class="top">
+  <div class="brand">ZINGO</div>
+  <div class="mode" id="modeLabel">مجاني</div>
+</header>
+
+<section class="hero">
+  <h1 id="heroTitle">واجهة التوقعات</h1>
+  <p id="heroText">اختر الواجهة وابدأ التوقعات مباشرة.</p>
+</section>
+
+<section class="luxury-switch" aria-label="تبديل الواجهة">
+  <div class="luxury-orbit" id="luxuryOrbit">
+    <div class="luxury-ball" id="luxuryBall">
+      <span>⚽</span>
+    </div>
+    <div class="luxury-ring ring-a"></div>
+    <div class="luxury-ring ring-b"></div>
+  </div>
+
+  <div class="luxury-switch-info">
+    <div class="luxury-target" id="luxuryTarget">مجاني</div>
+    <button class="luxury-transfer" id="luxuryTransfer" type="button">
+      انتقال
+    </button>
+  </div>
+</section>
+
+<section class="cards" id="content"></section>
+
+<nav class="bottom">
+  <button class="nav active" data-page="home">الرئيسية</button>
+  <button class="nav" data-page="matches">المباريات</button>
+  <button class="nav" data-page="predictions">التوقعات</button>
+  <button class="nav" data-page="stats">الإحصائيات</button>
+  <button class="nav" data-page="profile">الملف الشخصي</button>
+</nav>
+
+</main>
+
+<script>
+(function(){
+
+"use strict";
+
+var tg=window.Telegram&&window.Telegram.WebApp;
+
+if(tg){
+  function zingoTelegramReady(){
+    try{tg.ready()}catch(e){}
+    try{tg.expand()}catch(e){}
+    try{
+      if(tg.disableVerticalSwipes) tg.disableVerticalSwipes();
+    }catch(e){}
+  }
+
+  zingoTelegramReady();
+
+  if(document.readyState === "loading"){
+    document.addEventListener("DOMContentLoaded", zingoTelegramReady, {once:true});
+  }else{
+    setTimeout(zingoTelegramReady, 0);
+  }
+}
+
+var state={
+  tier:"free",
+  page:"home",
+  name:"لاعب جديد",
+  points:0,
+  level:1,
+  picks:{}
+};
+
+var matches=[
+  {
+    id:1,
+    league:"الدوري الإنجليزي",
+    a:"ليفربول",
+    b:"تشيلسي"
+  },
+  {
+    id:2,
+    league:"الدوري الإسباني",
+    a:"ريال مدريد",
+    b:"برشلونة"
+  },
+  {
+    id:3,
+    league:"الدوري الإيطالي",
+    a:"إنتر",
+    b:"ميلان"
+  }
+];
+
+function $(id){
+  return document.getElementById(id);
+}
+
+function safe(s){
+  return String(s).replace(/[&<>"']/g,function(x){
+    return {
+      "&":"&amp;",
+      "<":"&lt;",
+      ">":"&gt;",
+      '"':"&quot;",
+      "'":"&#39;"
+    }[x];
+  });
+}
+
+function tierName(){
+  if(state.tier==="pro") return "احترافي";
+  if(state.tier==="vip") return "ملكي";
+  return "مجاني";
+}
+
+function save(){
+  try{
+    localStorage.setItem(
+      "zingo_clean_3tiers",
+      JSON.stringify(state)
+    );
+  }catch(e){}
+}
+
+function load(){
+  try{
+    var x=JSON.parse(
+      localStorage.getItem("zingo_clean_3tiers")||"null"
+    );
+
+    if(!x) return;
+
+    if(["free","pro","vip"].includes(x.tier))
+      state.tier=x.tier;
+
+    if([
+      "home",
+      "matches",
+      "predictions",
+      "stats",
+      "profile"
+    ].includes(x.page))
+      state.page=x.page;
+
+    if(typeof x.name==="string"&&x.name)
+      state.name=x.name;
+
+    if(Number.isFinite(x.points))
+      state.points=x.points;
+
+    if(Number.isFinite(x.level))
+      state.level=x.level;
+
+    if(x.picks&&typeof x.picks==="object")
+      state.picks=x.picks;
+
+  }catch(e){}
+}
+
+function render(){
+
+  document.body.classList.toggle(
+    "vip",
+    state.tier==="vip"
+  );
+
+  document.body.classList.toggle(
+    "pro",
+    state.tier==="pro"
+  );
+
+  var luxuryTarget=$("luxuryTarget");
+  if(luxuryTarget){
+    luxuryTarget.textContent=tierName();
+  }
+
+  $("modeLabel").textContent=tierName();
+
+  document.querySelectorAll(".tier").forEach(function(b){
+    b.classList.toggle(
+      "active",
+      b.dataset.tier===state.tier
+    );
+  });
+
+  document.querySelectorAll(".nav").forEach(function(b){
+    b.classList.toggle(
+      "active",
+      b.dataset.page===state.page
+    );
+  });
+
+  $("heroTitle").textContent=
+    state.tier==="vip"
+      ? "الواجهة الملكية"
+      : state.tier==="pro"
+        ? "الواجهة الاحترافية"
+        : "واجهة التوقعات";
+
+  $("heroText").textContent=
+    state.tier==="vip"
+      ? "توقعات متقدمة مع خيارات إضافية وهوية ملكية."
+      : state.tier==="pro"
+        ? "توقعات احترافية مع خيارات وتحليلات أوسع."
+        : "واجهة بسيطة وسريعة للتوقعات الأساسية.";
+
+  var c=$("content");
+
+  if(state.page==="profile"){
+
+    c.innerHTML=
+      '<section class="card">'+
+        '<div class="profile">'+
+          '<div class="avatar">'+
+            safe((state.name.trim()[0]||"ز"))+
+          '</div>'+
+          '<div>'+
+            '<div class="name">'+safe(state.name)+'</div>'+
+            '<div class="meta">'+
+              'المستوى '+state.level+
+              ' • '+state.points+
+              ' نقطة • '+tierName()+
+            '</div>'+
+            '<div class="bar"><i></i></div>'+
+          '</div>'+
+        '</div>'+
+        '<div class="actions">'+
+          '<button class="primary" id="editName">تعديل الاسم</button>'+
+          '<button class="secondary" id="resetData">إعادة البيانات</button>'+
+        '</div>'+
+      '</section>'+
+      '<section class="card">'+
+        '<h2>هوية الحساب</h2>'+
+        '<div class="meta">'+
+          'المجاني: اسم وحرف فقط • '+
+          'الاحترافي: شعار نادي وإحصائيات • '+
+          'الملكي: هوية وإطارات متقدمة.'+
+        '</div>'+
+      '</section>';
+
+    $("editName").onclick=function(){
+
+      var n=prompt(
+        "اكتب اسمك",
+        state.name
+      );
+
+      if(n&&n.trim()){
+        state.name=n.trim();
+        save();
+        render();
+      }
+
+    };
+
+    $("resetData").onclick=function(){
+      state.points=0;
+      state.level=1;
+      state.picks={};
+      save();
+      render();
+    };
+
+    return;
+  }
+
+  if(state.page==="stats"){
+
+    c.innerHTML=
+      '<section class="card">'+
+        '<h2>الإحصائيات</h2>'+
+        '<div class="profile">'+
+          '<div class="avatar">'+
+            state.points+
+          '</div>'+
+          '<div>'+
+            '<div class="name">'+
+              state.points+' نقطة'+
+            '</div>'+
+            '<div class="meta">'+
+              'المستوى الحالي '+state.level+
+            '</div>'+
+            '<div class="bar">'+
+              '<i style="width:'+Math.min(
+                100,
+                state.points%100
+              )+'%"></i>'+
+            '</div>'+
+          '</div>'+
+        '</div>'+
+      '</section>'+
+      '<section class="card">'+
+        '<h2>نظام النقاط</h2>'+
+        '<div class="meta">'+
+          'النتيجة الصحيحة: نقطتان • '+
+          'الخيارات الإضافية حسب الواجهة.'+
+        '</div>'+
+      '</section>';
+
+    return;
+  }
+
+  if(state.page==="predictions"){
+
+    var keys=Object.keys(state.picks);
+
+    c.innerHTML=
+      '<section class="card">'+
+        '<h2>توقعاتي</h2>'+
+        '<div id="savedList"></div>'+
+      '</section>';
+
+    if(!keys.length){
+      $("savedList").innerHTML=
+        '<div class="meta">لم تحفظ أي توقع بعد.</div>';
+    }else{
+
+      $("savedList").innerHTML=
+        keys.map(function(k){
+
+          var p=state.picks[k];
+
+          return(
+            '<div class="match">'+
+              '<div class="teams">'+
+                '<span>'+safe(p.a)+'</span>'+
+                '<span>'+safe(p.pick)+'</span>'+
+                '<span>'+safe(p.b)+'</span>'+
+              '</div>'+
+            '</div>'
+          );
+
+        }).join("");
+    }
+
+    return;
+  }
+
+  var html=
+    '<section class="card">'+
+      '<h2>مباريات اليوم</h2>';
+
+  matches.forEach(function(m){
+
+    html+=
+      '<div class="match">'+
+        '<div class="teams">'+
+          '<span>'+safe(m.a)+'</span>'+
+          '<span>ضد</span>'+
+          '<span>'+safe(m.b)+'</span>'+
+        '</div>'+
+        '<div class="league">'+
+          safe(m.league)+
+        '</div>'+
+        '<div class="opts">';
+
+    [
+      ["فوز الأول","1"],
+      ["تعادل","X"],
+      ["فوز الثاني","2"]
+    ].forEach(function(o){
+
+      var selected=
+        state.picks[m.id] &&
+        state.picks[m.id].pick===o[1];
+
+      html+=
+        '<button class="opt'+
+        (selected?" selected":"")+
+        '" data-match="'+m.id+
+        '" data-pick="'+o[1]+'">'+
+        o[0]+
+        '</button>';
+
+    });
+
+    html+='</div>';
+
+    if(state.tier!=="free"){
+
+      html+=
+        '<div class="opts">'+
+          '<button class="opt">كلاهما يسجل</button>'+
+          '<button class="opt">فوق 2.5</button>';
+
+      if(state.tier==="vip"){
+        html+=
+          '<button class="opt">الركنيات</button>';
+      }
+
+      html+='</div>';
+    }
+
+    html+='</div>';
+  });
+
+  html+=
+      '<div class="notice">'+
+        'الواجهة الجديدة خفيفة ومستقلة، '+
+        'ويمكن ربطها لاحقاً ببيانات البوت الحقيقية.'+
+      '</div>'+
+    '</section>';
+
+  c.innerHTML=html;
+
+  c.querySelectorAll(
+    "[data-match][data-pick]"
+  ).forEach(function(b){
+
+    b.onclick=function(){
+
+      var id=b.dataset.match;
+
+      var m=matches.find(function(x){
+        return String(x.id)===id;
+      });
+
+      if(!m) return;
+
+      state.picks[id]={
+        a:m.a,
+        b:m.b,
+        pick:b.dataset.pick
+      };
+
+      state.points++;
+
+      if(state.points>=100)
+        state.level=2;
+
+      save();
+      render();
+    };
+
+  });
+}
+
+(function(){
+
+  var order=["free","pro","vip"];
+  var pendingTier=null;
+
+  function nextTier(){
+    var i=order.indexOf(state.tier);
+    return order[(i+1)%order.length];
+  }
+
+  function tierArabic(t){
+    if(t==="pro") return "احترافي";
+    if(t==="vip") return "ملكي";
+    return "مجاني";
+  }
+
+  function prepareTransfer(){
+
+    var target=nextTier();
+    pendingTier=target;
+
+    var label=$("luxuryTarget");
+    if(label){
+      label.textContent="الوجهة: "+tierArabic(target);
+    }
+
+    var ball=$("luxuryBall");
+    if(ball){
+      ball.classList.remove("spinning");
+      void ball.offsetWidth;
+      ball.classList.add("spinning");
+    }
+  }
+
+  function commitTransfer(){
+
+    var target=pendingTier||nextTier();
+
+    state.tier=target;
+    state.page="home";
+
+    save();
+    render();
+
+    pendingTier=null;
+
+    var ball=$("luxuryBall");
+    if(ball){
+      ball.classList.remove("spinning");
+      void ball.offsetWidth;
+      ball.classList.add("spinning");
+    }
+  }
+
+  var ball=$("luxuryBall");
+  var transfer=$("luxuryTransfer");
+
+  if(ball){
+    ball.addEventListener("click",prepareTransfer);
+  }
+
+  if(transfer){
+    transfer.addEventListener("click",function(){
+      if(!pendingTier){
+        prepareTransfer();
+        setTimeout(commitTransfer,420);
+      }else{
+        commitTransfer();
+      }
+    });
+  }
+
+})();
+
+document.querySelectorAll(".nav").forEach(function(b){
+
+  b.onclick=function(){
+
+    state.page=b.dataset.page;
+
+    save();
+    render();
+  };
+
+});
+
+load();
+render();
+
+})();
+</script>
+
+</body>
+</html>

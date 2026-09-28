@@ -1,8 +1,8 @@
 <!doctype html>
-<html lang="ar" dir="rtl">
+<html lang="en">
 <head>
 <!-- ZINGO_TG_LOCAL_SDK_V1 -->
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<script id="zingoTelegramSDK" src="./telegram-web-app.js"></script>
 <script id="zingoTelegramReadyLocal">
 (function(){
   function ready(){
@@ -136,7 +136,10 @@ body:after{
 .brand-title{font-weight:900;letter-spacing:.8px}
 .brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.8px;margin-top:2px}
 
-
+.mode-switch{
+  display:flex;padding:4px;border:1px solid var(--line);
+  background:rgba(255,255,255,.035);border-radius:14px
+}
 .mode-btn{
   border:0;background:transparent;padding:8px 12px;border-radius:10px;
   font-size:11px;font-weight:900;letter-spacing:.8px;color:var(--muted)
@@ -216,10 +219,15 @@ h2{font-size:19px;margin:0 0 12px}
   box-shadow:0 18px 55px rgba(0,0,0,.55);
 
 pointer-events:auto!important;}
+.nav-btn{
+  border:0;background:transparent;border-radius:15px;padding:8px 2px;
+  color:#707b8e;font-size:9px;font-weight:800;
 
+pointer-events:auto!important;
+touch-action:manipulation;}
 .nav-icon{font-size:17px;display:block;margin-bottom:3px}
-
-.vip-world 
+.nav-btn.active{color:#76c1ff;background:rgba(55,160,255,.09)}
+.vip-world .nav-btn.active{color:#ffe09a;background:rgba(245,200,91,.08)}
 
 .primary{
   width:100%;border:0;border-radius:15px;padding:14px;
@@ -759,7 +767,6 @@ html[dir="ltr"] body{text-align:left}
 #zingoUnifiedExperience #zingoUnifiedTierBar{display:none !important;}
 #zingoUnifiedExperience:has(#zingoTierPro.active) #zingoUnifiedTierBar,
 #zingoUnifiedExperience:has(#zingoTierVip.active) #zingoUnifiedTierBar{display:grid !important;}
-#zingoUnifiedExperience.zingo-tier-menu-open #zingoUnifiedTierBar{display:grid !important;}
 
 #zingoFreeWorld.hidden{display:none !important;}
 
@@ -991,16 +998,25 @@ html[dir="ltr"] body{text-align:left}
 </style>
 
 
-
-
-
-
-
-
+<style id="zingoProExactV1">
+#zingoProWorld{--g:#d6a43b;--a:#ffbf3f;--t:#fffaf0;--l:rgba(214,164,59,.22);width:100%;min-height:100%;background:radial-gradient(circle at 78% 13%,rgba(214,164,59,.13),transparent 27%),radial-gradient(circle at 15% 45%,rgba(126,69,18,.12),transparent 30%),linear-gradient(180deg,#090909,#100c08 53%,#090909);color:var(--t);font-family:Cairo,Tajawal,system-ui,sans-serif}
+#zingoProWorld.hidden{display:none!important}#zingoProWorld:not(.hidden){display:block!important}
+.zp-phone{position:relative;max-width:430px;min-height:760px;margin:0 auto;overflow:hidden;border:1px solid rgba(255,199,78,.34);border-radius:30px;background:linear-gradient(145deg,#0a0a0a,#1b1108 52%,#090909);box-shadow:0 0 34px rgba(218,157,37,.16),inset 0 0 45px rgba(255,191,63,.035)}
+.zp-phone:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(255,201,83,.55) 0 1px,transparent 1.5px);background-size:73px 91px;opacity:.14}
+.zp-status,.zp-topbar,.zp-content,.zp-bottom{position:relative;z-index:1}.zp-status{height:28px;padding:7px 16px 0;display:flex;justify-content:space-between;font-size:10px;color:#e8dfd0}.zp-status-icons{letter-spacing:4px;color:#d9c49a}
+.zp-topbar{height:62px;display:grid;grid-template-columns:42px 1fr 42px;align-items:center;padding:0 14px;border-bottom:1px solid var(--l)}.zp-icon-btn{width:36px;height:36px;border:1px solid rgba(214,164,59,.22);border-radius:12px;background:rgba(255,255,255,.025);color:#f2c766;font-size:26px;line-height:1}.zp-crown{font-size:19px}.zp-brand{display:flex;align-items:center;justify-content:center;gap:9px;font-size:16px;letter-spacing:2px}.zp-logo{display:grid;place-items:center;width:31px;height:31px;border-radius:50%;border:1px solid #e0ad45;color:#fff1bf;font-weight:900;background:radial-gradient(circle at 35% 30%,#6e4a13,#17100a 70%);box-shadow:0 0 16px rgba(255,190,55,.25)}
+.zp-content{padding:15px 14px 104px}.zp-hero{min-height:184px;position:relative;overflow:hidden;border-radius:24px;border:1px solid rgba(220,170,66,.43);background:linear-gradient(115deg,#0b0b0b 8%,#211507 58%,#0d0b08);box-shadow:0 15px 35px rgba(0,0,0,.38),inset 0 1px rgba(255,220,137,.09)}.zp-hero:after{content:"";position:absolute;inset:auto -20% -58% 20%;height:170px;background:radial-gradient(ellipse,rgba(238,173,52,.23),transparent 66%);filter:blur(12px)}.zp-hero-copy{position:relative;z-index:2;padding:23px 21px;max-width:67%}.zp-kicker{font-size:10px;color:#d6bd87;letter-spacing:1.8px;margin-bottom:5px}.zp-hero h1{margin:0;font-size:29px;line-height:1;font-weight:900;letter-spacing:1px;background:linear-gradient(180deg,#fff2bb,#e1ac3f 45%,#8d5b12);-webkit-background-clip:text;background-clip:text;color:transparent}.zp-subtitle{margin-top:8px;font-size:9px;letter-spacing:3px;color:#f1ca72}.zp-hero p{font-size:11px;line-height:1.8;color:#b9ad9b;margin:13px 0 0}.zp-hero-ball{position:absolute;right:-3px;top:20px;width:145px;height:145px}.zp-ball{position:absolute;right:5px;top:20px;font-size:86px;filter:drop-shadow(0 0 16px rgba(255,188,54,.45));transform:rotate(-10deg)}.zp-orbit{position:absolute;inset:10px;border:1px solid rgba(239,182,63,.34);border-radius:50%;transform:rotate(-22deg) scaleY(.43)}.zp-mini-crown{position:absolute;right:17px;top:0;color:#ffd66d;font-size:27px;text-shadow:0 0 14px #d99c27}
+.zp-features{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}.zp-feature{min-height:76px;padding:10px 5px;border-radius:15px;border:1px solid var(--l);background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(72,43,13,.16));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center}.zp-feature-icon{font-size:21px;color:#efbd52;text-shadow:0 0 12px rgba(240,185,69,.45)}.zp-feature span{font-size:10px;color:#e8dfd0;white-space:nowrap}
+.zp-competitions{border-top:1px solid rgba(214,164,59,.13);padding-top:13px}.zp-section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:9px}.zp-section-kicker{font-size:8px;letter-spacing:2px;color:#bf8730}.zp-section-head h2{margin:3px 0 0;font-size:17px}.zp-live-dot{font-size:9px;color:#d7a73f}.zp-match{position:relative;min-height:67px;display:grid;grid-template-columns:1fr 1.12fr 1fr;align-items:center;gap:5px;margin:7px 0;padding:8px 10px;border:1px solid rgba(214,164,59,.17);border-radius:16px;background:linear-gradient(100deg,rgba(255,255,255,.035),rgba(50,28,7,.24))}.zp-team{display:flex;align-items:center;gap:6px;font-size:9px;color:#eee5d7}.zp-team:last-of-type{flex-direction:row-reverse}.zp-team-badge{flex:0 0 30px;width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:linear-gradient(145deg,#4c3516,#0e0d0b);border:1px solid rgba(238,185,73,.34);color:#e8bb5d;font-size:8px;font-weight:900}.zp-match-mid{text-align:center;display:flex;flex-direction:column;gap:1px}.zp-league{font-size:7px;color:#8f8577}.zp-match-mid strong{font-size:15px;color:#f4d48a}.zp-match-mid small{font-size:7px;color:#9e9384}.zp-status-dot{position:absolute;right:8px;top:7px;width:5px;height:5px;border-radius:50%;background:#e4ae3f;box-shadow:0 0 8px #e4ae3f}
+.zp-subscribe{margin-top:13px;padding:12px;border-radius:20px;border:1px solid rgba(238,185,73,.3);background:linear-gradient(145deg,rgba(255,194,63,.1),rgba(39,22,7,.3))}.zp-price-line{display:flex;justify-content:space-between;margin-bottom:9px;font-size:9px;color:#b8ad9d}.zp-price-line b{color:#f1c45e}.zp-cta{width:100%;border:0;border-radius:15px;padding:12px 10px;color:#251705;background:linear-gradient(180deg,#ffe39a,#eab448 45%,#a66b16);box-shadow:0 0 24px rgba(236,177,49,.24);font-weight:900;cursor:pointer}.zp-cta span{display:block;font-size:15px}.zp-cta small{display:block;margin-top:2px;font-size:9px;opacity:.8}
+.zp-bottom{position:absolute;bottom:0;left:0;right:0;height:79px;display:grid;grid-template-columns:repeat(4,1fr);align-items:center;padding:7px 9px 11px;border-top:1px solid rgba(214,164,59,.18);background:rgba(7,7,7,.93);backdrop-filter:blur(15px)}.zp-nav{border:0;background:none;color:#71695e;font-family:inherit;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}.zp-nav span{font-size:18px}.zp-nav small{font-size:8px}.zp-nav.active{color:#e9c56f}.zp-pro-tab{height:55px;margin:-19px 2px 0;border:1px solid rgba(238,185,73,.52);border-radius:17px;background:linear-gradient(145deg,#35220b,#100d09);color:#e9bc53;box-shadow:0 -4px 22px rgba(225,165,44,.13)}.zp-pro-tab span{font-size:14px;font-weight:900}
+@media(max-width:380px){.zp-content{padding-inline:10px}.zp-hero-copy{padding:20px 16px}.zp-hero h1{font-size:25px}.zp-team{font-size:8px}.zp-feature span{font-size:9px}}
+</style>
 
 </head>
 
 <body>
+
 <section id="zingoUnifiedExperience">
 
   <div class="zingo-ref-header">
@@ -1156,1427 +1172,60 @@ html[dir="ltr"] body{text-align:left}
   </nav>
 </section>
 
-
-<style>
-/* ============================================================
-   ZINGO PRO — FULL MOBILE UI
-   Scoped بالكامل داخل #zingoProWorld
-   ============================================================ */
-
-#zingoProWorld{
-  --zp-gold:#d6a83b;
-  --zp-gold-2:#f4d47a;
-  --zp-amber:#ffb62d;
-  --zp-cream:#fff7df;
-  --zp-muted:#aa9a7a;
-  --zp-line:rgba(214,168,59,.30);
-  --zp-panel:rgba(23,16,9,.94);
-  --zp-panel-2:rgba(35,22,8,.90);
-  --zp-black:#070707;
-  --zp-brown:#211507;
-  width:100%;
-  min-height:100svh;
-  background:
-    radial-gradient(circle at 80% 2%, rgba(244,212,122,.13), transparent 23%),
-    radial-gradient(circle at 15% 36%, rgba(129,73,21,.11), transparent 28%),
-    linear-gradient(180deg,#060606 0%,#0e0a06 52%,#050505 100%);
-  color:var(--zp-cream);
-  font-family:Cairo,Tajawal,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
-  overflow-x:hidden;
-}
-
-#zingoProWorld *{
-  box-sizing:border-box;
-  -webkit-tap-highlight-color:transparent;
-}
-
-#zingoProWorld button,
-#zingoProWorld input,
-#zingoProWorld select{
-  font:inherit;
-}
-
-#zingoProWorld .zp-wrap{
-  width:min(100%,470px);
-  min-height:100svh;
-  margin:0 auto;
-  padding:7px 8px 14px;
-}
-
-#zingoProWorld .zp-phone{
-  position:relative;
-  width:100%;
-  min-height:calc(100svh - 21px);
-  overflow:hidden;
-  border-radius:32px;
-  border:1px solid rgba(244,212,122,.42);
-  background:
-    radial-gradient(circle at 50% 0%,rgba(214,168,59,.10),transparent 26%),
-    linear-gradient(180deg,#160d06 0%,#090909 34%,#070707 100%);
-  box-shadow:
-    0 0 0 1px rgba(214,168,59,.11),
-    0 0 36px rgba(214,168,59,.13),
-    inset 0 0 75px rgba(214,168,59,.06);
-}
-
-#zingoProWorld .zp-phone::before{
-  content:"";
-  position:absolute;
-  inset:0;
-  pointer-events:none;
-  background:
-    radial-gradient(circle at 16% 24%,rgba(255,255,255,.045) 0 1px,transparent 2px),
-    radial-gradient(circle at 76% 17%,rgba(244,212,122,.075) 0 1px,transparent 2px),
-    radial-gradient(circle at 68% 61%,rgba(244,212,122,.045) 0 1px,transparent 2px),
-    radial-gradient(circle at 21% 76%,rgba(255,255,255,.035) 0 1px,transparent 2px);
-  background-size:140px 140px,180px 180px,210px 210px,170px 170px;
-  opacity:.8;
-}
-
-#zingoProWorld .zp-glow-top{
-  position:absolute;
-  top:-50px;
-  left:50%;
-  transform:translateX(-50%);
-  width:230px;
-  height:120px;
-  background:radial-gradient(circle,rgba(244,212,122,.20),transparent 68%);
-  filter:blur(10px);
-  pointer-events:none;
-}
-
-#zingoProWorld .zp-shell{
-  position:relative;
-  z-index:2;
-  min-height:100%;
-}
-
-#zingoProWorld .zp-topbar{
-  display:grid;
-  grid-template-columns:52px 1fr 72px;
-  align-items:center;
-  gap:8px;
-  min-height:74px;
-  padding:10px 11px 8px;
-  border-bottom:1px solid rgba(214,168,59,.24);
-  background:linear-gradient(180deg,rgba(18,12,7,.97),rgba(10,10,10,.88));
-}
-
-#zingoProWorld .zp-icon{
-  width:43px;
-  height:43px;
-  display:grid;
-  place-items:center;
-  border-radius:14px;
-  border:1px solid rgba(214,168,59,.35);
-  background:
-    linear-gradient(145deg,rgba(58,38,12,.95),rgba(9,9,9,.98));
-  color:var(--zp-gold-2);
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.04),
-    0 0 13px rgba(214,168,59,.08);
-}
-
-#zingoProWorld .zp-back{
-  justify-self:end;
-  font-size:27px;
-  line-height:1;
-  cursor:pointer;
-}
-
-#zingoProWorld .zp-brand{
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:9px;
-  min-width:0;
-}
-
-#zingoProWorld .zp-logo{
-  width:38px;
-  height:38px;
-  flex:0 0 auto;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  border:2px solid var(--zp-gold);
-  background:
-    radial-gradient(circle at 35% 28%,#4e3711,#090909 62%);
-  color:var(--zp-gold-2);
-  font-size:10px;
-  font-weight:1000;
-  letter-spacing:1px;
-  box-shadow:
-    0 0 0 2px rgba(214,168,59,.10),
-    0 0 18px rgba(214,168,59,.18);
-}
-
-#zingoProWorld .zp-brand-txt{
-  display:flex;
-  flex-direction:column;
-  align-items:flex-start;
-  gap:0;
-  line-height:1.05;
-}
-
-#zingoProWorld .zp-brand-txt strong{
-  font-size:15px;
-  font-weight:1000;
-  letter-spacing:.8px;
-  color:#fff8e7;
-}
-
-#zingoProWorld .zp-brand-txt span{
-  font-size:9px;
-  font-weight:900;
-  color:var(--zp-gold);
-  letter-spacing:2px;
-}
-
-#zingoProWorld .zp-status{
-  display:flex;
-  align-items:center;
-  justify-content:flex-start;
-  gap:6px;
-}
-
-#zingoProWorld .zp-status-dot{
-  width:7px;
-  height:7px;
-  border-radius:50%;
-  background:#eac66b;
-  box-shadow:0 0 11px rgba(244,212,122,.85);
-}
-
-#zingoProWorld .zp-crown{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:28px;
-  height:28px;
-  border-radius:10px;
-  color:#171006;
-  background:linear-gradient(135deg,#7e5514,#f4d47a 45%,#9f711f);
-  box-shadow:
-    0 0 16px rgba(244,212,122,.26),
-    inset 0 1px 0 rgba(255,255,255,.55);
-  font-size:14px;
-}
-
-#zingoProWorld .zp-content{
-  padding:10px 10px 96px;
-}
-
-#zingoProWorld .zp-hero{
-  position:relative;
-  overflow:hidden;
-  min-height:176px;
-  display:grid;
-  grid-template-columns:1.15fr .85fr;
-  gap:7px;
-  align-items:center;
-  padding:18px 17px;
-  border:1px solid rgba(244,212,122,.29);
-  border-radius:26px;
-  background:
-    radial-gradient(circle at 86% 40%,rgba(244,212,122,.19),transparent 27%),
-    linear-gradient(140deg,rgba(52,34,10,.96),rgba(15,11,8,.97) 54%,rgba(7,7,7,.98));
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.045),
-    0 17px 45px rgba(0,0,0,.24);
-}
-
-#zingoProWorld .zp-hero::after{
-  content:"";
-  position:absolute;
-  inset:-50%;
-  background:conic-gradient(from 40deg,transparent 0 30%,rgba(244,212,122,.06) 34%,transparent 39% 100%);
-  animation:zpSweep 8s linear infinite;
-  pointer-events:none;
-}
-
-@keyframes zpSweep{
-  from{transform:rotate(0deg)}
-  to{transform:rotate(360deg)}
-}
-
-#zingoProWorld .zp-hero-copy{
-  position:relative;
-  z-index:2;
-  min-width:0;
-}
-
-#zingoProWorld .zp-kicker{
-  display:inline-flex;
-  align-items:center;
-  gap:7px;
-  margin-bottom:8px;
-  padding:6px 9px;
-  border-radius:999px;
-  border:1px solid rgba(244,212,122,.26);
-  background:rgba(6,6,6,.45);
-  color:var(--zp-gold-2);
-  font-size:9px;
-  font-weight:1000;
-  letter-spacing:1.7px;
-}
-
-#zingoProWorld .zp-title{
-  margin:0;
-  font-size:32px;
-  line-height:.95;
-  font-weight:1000;
-  letter-spacing:.3px;
-  background:linear-gradient(180deg,#fff6da 0%,#f4d47a 30%,#c6922a 65%,#8a5f16 100%);
-  -webkit-background-clip:text;
-  background-clip:text;
-  color:transparent;
-  text-shadow:0 0 18px rgba(244,212,122,.11);
-}
-
-#zingoProWorld .zp-subtitle{
-  margin:8px 0 0;
-  color:#b8aa8e;
-  font-size:10px;
-  font-weight:1000;
-  letter-spacing:2.1px;
-}
-
-#zingoProWorld .zp-hero-note{
-  margin:10px 0 0;
-  color:#efe4cd;
-  font-size:11px;
-  line-height:1.7;
-  max-width:210px;
-}
-
-#zingoProWorld .zp-hero-art{
-  position:relative;
-  z-index:2;
-  min-height:138px;
-  display:grid;
-  place-items:center;
-}
-
-#zingoProWorld .zp-ball-orb{
-  position:relative;
-  width:120px;
-  height:120px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  border:1px solid rgba(244,212,122,.56);
-  background:
-    radial-gradient(circle at 30% 26%,rgba(255,255,255,.22),transparent 13%),
-    radial-gradient(circle,#3d290d 0%,#1a1006 46%,#080808 72%);
-  box-shadow:
-    0 0 0 7px rgba(214,168,59,.05),
-    0 0 40px rgba(214,168,59,.22),
-    inset 0 0 34px rgba(244,212,122,.16);
-}
-
-#zingoProWorld .zp-ball{
-  font-size:63px;
-  filter:
-    drop-shadow(0 0 7px rgba(255,220,133,.23))
-    saturate(.35);
-  transform:rotate(-9deg);
-}
-
-#zingoProWorld .zp-orbit{
-  position:absolute;
-  inset:12px;
-  border:1px dashed rgba(244,212,122,.26);
-  border-radius:50%;
-  animation:zpSpin 10s linear infinite;
-}
-
-@keyframes zpSpin{
-  from{transform:rotate(0)}
-  to{transform:rotate(360deg)}
-}
-
-#zingoProWorld .zp-orbit::after{
-  content:"✦";
-  position:absolute;
-  top:-8px;
-  right:18px;
-  color:var(--zp-gold-2);
-  font-size:11px;
-  text-shadow:0 0 10px rgba(244,212,122,.7);
-}
-
-#zingoProWorld .zp-crown-float{
-  position:absolute;
-  right:8px;
-  top:1px;
-  font-size:24px;
-  color:#f6db8b;
-  filter:drop-shadow(0 0 10px rgba(244,212,122,.55));
-  animation:zpFloat 2.9s ease-in-out infinite;
-}
-
-@keyframes zpFloat{
-  0%,100%{transform:translateY(0)}
-  50%{transform:translateY(-6px)}
-}
-
-#zingoProWorld .zp-feature-head{
-  display:flex;
-  align-items:end;
-  justify-content:space-between;
-  gap:8px;
-  margin:13px 2px 8px;
-}
-
-#zingoProWorld .zp-section-title{
-  margin:0;
-  font-size:16px;
-  font-weight:1000;
-  color:#fff7e3;
-}
-
-#zingoProWorld .zp-section-meta{
-  color:#9d8d6d;
-  font-size:9px;
-  font-weight:900;
-}
-
-#zingoProWorld .zp-features{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:7px;
-}
-
-#zingoProWorld .zp-feature{
-  min-height:110px;
-  padding:10px 7px 9px;
-  border-radius:18px;
-  border:1px solid rgba(214,168,59,.22);
-  background:linear-gradient(155deg,rgba(39,25,8,.92),rgba(11,11,10,.97));
-  box-shadow:inset 0 1px 0 rgba(255,255,255,.03);
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  text-align:center;
-}
-
-#zingoProWorld .zp-feature-icon{
-  width:40px;
-  height:40px;
-  display:grid;
-  place-items:center;
-  border-radius:13px;
-  margin-bottom:7px;
-  color:#f5d57d;
-  border:1px solid rgba(244,212,122,.30);
-  background:radial-gradient(circle at 35% 30%,#5f4415,#12100d 72%);
-  box-shadow:0 0 16px rgba(214,168,59,.11);
-  font-size:19px;
-}
-
-#zingoProWorld .zp-feature b{
-  font-size:11px;
-  font-weight:1000;
-  color:#f8edda;
-}
-
-#zingoProWorld .zp-feature span{
-  margin-top:3px;
-  font-size:8px;
-  color:#9e9178;
-  line-height:1.5;
-}
-
-#zingoProWorld .zp-competition-head{
-  margin:15px 2px 8px;
-}
-
-#zingoProWorld .zp-competition-head h2{
-  margin:0;
-  font-size:17px;
-  font-weight:1000;
-}
-
-#zingoProWorld .zp-competition-head p{
-  margin:4px 0 0;
-  color:#91846e;
-  font-size:9px;
-}
-
-#zingoProWorld .zp-match{
-  overflow:hidden;
-  margin-bottom:8px;
-  border:1px solid rgba(214,168,59,.20);
-  border-radius:20px;
-  background:
-    linear-gradient(145deg,rgba(31,20,8,.96),rgba(11,11,10,.98));
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.025),
-    0 8px 24px rgba(0,0,0,.20);
-}
-
-#zingoProWorld .zp-match-top{
-  display:grid;
-  grid-template-columns:62px 1fr 62px;
-  gap:7px;
-  align-items:center;
-  padding:10px 10px 9px;
-}
-
-#zingoProWorld .zp-team{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:4px;
-  text-align:center;
-}
-
-#zingoProWorld .zp-team-badge{
-  width:42px;
-  height:42px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  border:1px solid rgba(244,212,122,.35);
-  background:radial-gradient(circle,#4c3410,#0d0d0d 72%);
-  color:#f4d47a;
-  font-size:11px;
-  font-weight:1000;
-  box-shadow:0 0 12px rgba(214,168,59,.08);
-}
-
-#zingoProWorld .zp-team span:last-child{
-  font-size:9px;
-  color:#eadfc8;
-  font-weight:900;
-  line-height:1.25;
-}
-
-#zingoProWorld .zp-vs{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:4px;
-}
-
-#zingoProWorld .zp-time{
-  font-size:16px;
-  font-weight:1000;
-  color:#fff4d7;
-}
-
-#zingoProWorld .zp-vs small{
-  font-size:8px;
-  color:#8f8068;
-}
-
-#zingoProWorld .zp-status{
-  justify-self:end;
-  display:flex;
-  flex-direction:column;
-  align-items:flex-end;
-  gap:5px;
-}
-
-#zingoProWorld .zp-league{
-  color:#cfb775;
-  font-size:8px;
-  font-weight:900;
-  white-space:nowrap;
-}
-
-#zingoProWorld .zp-live{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-  padding:4px 7px;
-  border-radius:999px;
-  border:1px solid rgba(244,212,122,.20);
-  background:rgba(244,212,122,.06);
-  color:#f1d58d;
-  font-size:7px;
-  font-weight:1000;
-}
-
-#zingoProWorld .zp-live::before{
-  content:"";
-  width:5px;
-  height:5px;
-  border-radius:50%;
-  background:#f0c65a;
-  box-shadow:0 0 7px rgba(240,198,90,.75);
-}
-
-#zingoProWorld .zp-details{
-  border-top:1px solid rgba(214,168,59,.13);
-  padding:9px 10px 10px;
-}
-
-#zingoProWorld .zp-label{
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:8px;
-  margin-bottom:7px;
-  font-size:10px;
-  color:#c8b99d;
-  font-weight:900;
-}
-
-#zingoProWorld .zp-market-grid{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:6px;
-}
-
-#zingoProWorld .zp-market{
-  position:relative;
-}
-
-#zingoProWorld .zp-market input{
-  position:absolute;
-  opacity:0;
-  pointer-events:none;
-}
-
-#zingoProWorld .zp-market span{
-  min-height:43px;
-  display:grid;
-  place-items:center;
-  padding:6px;
-  border-radius:13px;
-  border:1px solid rgba(214,168,59,.18);
-  background:#0d0d0c;
-  color:#b7aa93;
-  font-size:9px;
-  font-weight:1000;
-  text-align:center;
-}
-
-#zingoProWorld .zp-market input:checked + span{
-  border-color:#efc85e;
-  color:#fff7df;
-  background:
-    linear-gradient(145deg,rgba(98,68,17,.90),rgba(19,15,9,.98));
-  box-shadow:
-    0 0 0 1px rgba(244,212,122,.15),
-    0 0 16px rgba(214,168,59,.16);
-}
-
-#zingoProWorld .zp-extra-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:7px;
-  margin-top:8px;
-}
-
-#zingoProWorld .zp-field{
-  display:flex;
-  flex-direction:column;
-  gap:5px;
-}
-
-#zingoProWorld .zp-field label{
-  color:#9d9077;
-  font-size:8px;
-  font-weight:900;
-}
-
-#zingoProWorld .zp-field select{
-  width:100%;
-  min-height:38px;
-  padding:0 10px;
-  border-radius:12px;
-  border:1px solid rgba(214,168,59,.20);
-  background:#0b0b0a;
-  color:#f7edd7;
-  outline:none;
-}
-
-#zingoProWorld .zp-save{
-  width:100%;
-  margin-top:8px;
-  min-height:43px;
-  border:1px solid rgba(244,212,122,.32);
-  border-radius:13px;
-  color:#57400f;
-  background:linear-gradient(180deg,#f8d67a,#c08a22);
-  font-size:10px;
-  font-weight:1000;
-  opacity:.34;
-  cursor:pointer;
-  transition:.18s ease;
-}
-
-#zingoProWorld .zp-details:has(input:checked) .zp-save{
-  opacity:1;
-  box-shadow:0 0 20px rgba(214,168,59,.17);
-}
-
-#zingoProWorld .zp-save:active{
-  transform:scale(.985);
-}
-
-#zingoProWorld .zp-save.is-saved{
-  color:#fff7df;
-  background:linear-gradient(145deg,#3c2b0b,#6e5013);
-  border-color:rgba(244,212,122,.46);
-}
-
-#zingoProWorld .zp-locked{
-  display:inline-flex;
-  align-items:center;
-  gap:6px;
-  margin-top:6px;
-  padding:5px 8px;
-  border-radius:999px;
-  color:#8e826f;
-  font-size:7px;
-  background:rgba(255,255,255,.025);
-  border:1px solid rgba(255,255,255,.06);
-}
-
-#zingoProWorld .zp-achievements{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:8px;
-  margin-top:13px;
-}
-
-#zingoProWorld .zp-stat{
-  padding:12px;
-  border:1px solid rgba(214,168,59,.18);
-  border-radius:18px;
-  background:linear-gradient(145deg,rgba(31,20,8,.80),rgba(9,9,9,.96));
-}
-
-#zingoProWorld .zp-stat small{
-  display:block;
-  color:#8e8068;
-  font-size:8px;
-  font-weight:900;
-}
-
-#zingoProWorld .zp-stat strong{
-  display:block;
-  margin-top:4px;
-  color:#f4d47a;
-  font-size:20px;
-  font-weight:1000;
-}
-
-#zingoProWorld .zp-cta{
-  position:relative;
-  overflow:hidden;
-  margin-top:13px;
-  padding:15px;
-  border-radius:22px;
-  border:1px solid rgba(244,212,122,.45);
-  background:
-    radial-gradient(circle at 85% 30%,rgba(244,212,122,.16),transparent 24%),
-    linear-gradient(145deg,#5b3d0e,#1b1207 58%,#090909);
-  box-shadow:
-    0 0 28px rgba(214,168,59,.12),
-    inset 0 1px 0 rgba(255,255,255,.07);
-}
-
-#zingoProWorld .zp-cta-copy{
-  position:relative;
-  z-index:2;
-}
-
-#zingoProWorld .zp-cta-badge{
-  display:inline-flex;
-  padding:5px 8px;
-  border-radius:999px;
-  background:rgba(7,7,7,.45);
-  border:1px solid rgba(244,212,122,.22);
-  color:#f3d27b;
-  font-size:8px;
-  font-weight:1000;
-}
-
-#zingoProWorld .zp-cta h3{
-  margin:8px 0 2px;
-  font-size:18px;
-  font-weight:1000;
-}
-
-#zingoProWorld .zp-cta p{
-  margin:0 0 10px;
-  color:#bfb294;
-  font-size:9px;
-}
-
-#zingoProWorld .zp-cta button{
-  width:100%;
-  min-height:48px;
-  border:0;
-  border-radius:15px;
-  color:#4b350c;
-  background:
-    linear-gradient(180deg,#ffe296,#e2b54e 58%,#bd8620);
-  box-shadow:
-    0 8px 22px rgba(214,168,59,.20),
-    inset 0 1px 0 rgba(255,255,255,.58);
-  font-size:13px;
-  font-weight:1000;
-  cursor:pointer;
-}
-
-#zingoProWorld .zp-cta button span{
-  display:block;
-  margin-top:2px;
-  color:#705214;
-  font-size:8px;
-  font-weight:900;
-}
-
-#zingoProWorld .zp-cta-crown{
-  position:absolute;
-  top:10px;
-  left:13px;
-  font-size:34px;
-  color:#f5d782;
-  opacity:.18;
-  filter:drop-shadow(0 0 13px rgba(244,212,122,.5));
-  transform:rotate(-10deg);
-}
-
-#zingoProWorld .zp-bottom{
-  position:absolute;
-  z-index:8;
-  left:8px;
-  right:8px;
-  bottom:8px;
-  min-height:72px;
-  display:grid;
-  grid-template-columns:repeat(5,1fr);
-  gap:4px;
-  padding:7px;
-  border:1px solid rgba(244,212,122,.20);
-  border-radius:22px;
-  background:rgba(10,10,9,.93);
-  backdrop-filter:blur(17px);
-  -webkit-backdrop-filter:blur(17px);
-  box-shadow:
-    0 -8px 30px rgba(0,0,0,.30),
-    0 0 20px rgba(214,168,59,.07);
-}
-
-#zingoProWorld .zp-nav{
-  min-width:0;
-  min-height:54px;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  gap:3px;
-  border:0;
-  border-radius:16px;
-  background:transparent;
-  color:#776f61;
-  cursor:pointer;
-}
-
-#zingoProWorld .zp-nav-icon{
-  font-size:18px;
-  line-height:1;
-}
-
-#zingoProWorld .zp-nav small{
-  font-size:7px;
-  font-weight:1000;
-  white-space:nowrap;
-}
-
-#zingoProWorld .zp-nav.active{
-  color:#f5d77d;
-  background:linear-gradient(145deg,rgba(104,72,18,.34),rgba(26,19,9,.48));
-  box-shadow:inset 0 0 20px rgba(214,168,59,.07);
-}
-
-#zingoProWorld .zp-nav.pro{
-  border:1px solid rgba(244,212,122,.38);
-  background:
-    radial-gradient(circle at 50% 15%,rgba(244,212,122,.16),transparent 38%),
-    linear-gradient(145deg,#3c290c,#0d0d0c);
-  color:#f4d47a;
-  box-shadow:
-    0 0 16px rgba(214,168,59,.11),
-    inset 0 1px 0 rgba(255,255,255,.07);
-}
-
-#zingoProWorld .zp-nav.pro .zp-nav-icon{
-  width:26px;
-  height:26px;
-  display:grid;
-  place-items:center;
-  border-radius:50%;
-  border:1px solid rgba(244,212,122,.45);
-  background:#140e06;
-  font-size:10px;
-  font-weight:1000;
-}
-
-#zingoProWorld .zp-mini-note{
-  margin:10px 2px 0;
-  text-align:center;
-  color:#665e52;
-  font-size:7px;
-  line-height:1.65;
-}
-
-@media (max-width:360px){
-  #zingoProWorld .zp-wrap{
-    padding:4px;
-  }
-  #zingoProWorld .zp-phone{
-    border-radius:26px;
-  }
-  #zingoProWorld .zp-title{
-    font-size:27px;
-  }
-  #zingoProWorld .zp-hero{
-    min-height:165px;
-    padding:14px;
-  }
-  #zingoProWorld .zp-ball-orb{
-    width:105px;
-    height:105px;
-  }
-  #zingoProWorld .zp-ball{
-    font-size:55px;
-  }
-}
-</style>
-
-<style id="zingoNavigationFix20260927">
-/* إخفاء أزرار تبديل FREE / PRO / VIP العلوية */
-#zingoUnifiedTierBar{
-  display:none !important;
-}
-
-/* تثبيت شريط التنقل السفلي أثناء التمرير */
-#zingoProWorld .zp-bottom{
-  position:fixed !important;
-  left:7px !important;
-  right:7px !important;
-  bottom:max(7px, env(safe-area-inset-bottom)) !important;
-  width:auto !important;
-  z-index:2147483647 !important;
-}
-</style>
-
-<section id="zingoProWorld"
-         class="zingo-world hidden zingo-pro-exact-final"
-         dir="rtl"
-         aria-label="واجهة ZINGO PRO">
-
-
-<div class="zp-wrap">
+<section id="zingoProWorld" class="zingo-world hidden" dir="rtl">
   <div class="zp-phone">
-    <div class="zp-glow-top"></div>
-
-    <div class="zp-shell">
-
-      <!-- TOP BAR -->
-      <header class="zp-topbar">
-        <button
-          class="zp-icon zp-back"
-          type="button"
-          aria-label="رجوع"
-          onclick="if(window.Zingo&&typeof window.Zingo.go==='function'){window.Zingo.go('home')}else{history.back()}"
-        >‹</button>
-
-        <div class="zp-brand">
-          <div class="zp-logo">ZINGO</div>
-          <div class="zp-brand-txt">
-            <strong>ZINGO</strong>
-            <span>تحليل احترافي</span>
-          </div>
+    <div class="zp-status"><span>٩:٤١</span><span class="zp-status-icons">● ◒ ▰</span></div>
+    <header class="zp-topbar">
+      <button type="button" class="zp-icon-btn" aria-label="رجوع" onclick="window.ZingoUnified?.select('free')">‹</button>
+      <div class="zp-brand"><div class="zp-logo">Z</div><strong>ZINGO</strong></div>
+      <button type="button" class="zp-icon-btn zp-crown" aria-label="PRO">♛</button>
+    </header>
+    <main class="zp-content">
+      <section class="zp-hero">
+        <div class="zp-hero-copy">
+          <div class="zp-kicker">اشتراك احترافي</div>
+          <h1>ZINGO PRO</h1>
+          <div class="zp-subtitle">WEEKLY MISSION</div>
+          <p>ارتقِ بتجربتك الكروية واحصل على مزايا PRO الحصرية.</p>
         </div>
-
-        <div class="zp-status">
-          <span class="zp-crown">♛</span>
-          <span class="zp-status-dot"></span>
+        <div class="zp-hero-ball" aria-hidden="true"><div class="zp-orbit"></div><div class="zp-ball">⚽</div><div class="zp-mini-crown">♛</div></div>
+      </section>
+      <section class="zp-features">
+        <article class="zp-feature"><div class="zp-feature-icon">◈</div><span>تحليلات متقدمة</span></article>
+        <article class="zp-feature"><div class="zp-feature-icon">♛</div><span>مسابقات خاصة</span></article>
+        <article class="zp-feature"><div class="zp-feature-icon">✦</div><span>جوائز حصرية</span></article>
+      </section>
+      <section class="zp-competitions">
+        <div class="zp-section-head"><div><span class="zp-section-kicker">PRO</span><h2>المسابقات الخاصة</h2></div><span class="zp-live-dot">● مباشر</span></div>
+        <div class="zp-match">
+          <div class="zp-team"><div class="zp-team-badge">RM</div><span>ريال مدريد</span></div>
+          <div class="zp-match-mid"><span class="zp-league">إسبانيا · الدوري</span><strong>21:00</strong><small>اليوم</small></div>
+          <div class="zp-team"><div class="zp-team-badge">FCB</div><span>برشلونة</span></div><span class="zp-status-dot"></span>
         </div>
-      </header>
-
-      <main class="zp-content">
-
-        <!-- HERO -->
-        <section class="zp-hero">
-          <div class="zp-hero-copy">
-            <div class="zp-kicker">✦ أسبوع PRO</div>
-            <h1 class="zp-title">ZINGO PRO</h1>
-            <div class="zp-subtitle">WEEKLY MISSION</div>
-            <p class="zp-hero-note">
-              مساحة التحليل الاحترافي والتحديات الخاصة والجوائز الأسبوعية.
-            </p>
-          </div>
-
-          <div class="zp-hero-art">
-            <div class="zp-crown-float">♛</div>
-            <div class="zp-ball-orb">
-              <div class="zp-orbit"></div>
-              <div class="zp-ball">⚽</div>
-            </div>
-          </div>
-        </section>
-
-        <!-- PREMIUM FEATURES -->
-        <div class="zp-feature-head">
-          <h2 class="zp-section-title">مزايا PRO</h2>
-          <span class="zp-section-meta">وصول احترافي</span>
+        <div class="zp-match">
+          <div class="zp-team"><div class="zp-team-badge">MCI</div><span>مانشستر سيتي</span></div>
+          <div class="zp-match-mid"><span class="zp-league">إنجلترا · الدوري</span><strong>22:30</strong><small>اليوم</small></div>
+          <div class="zp-team"><div class="zp-team-badge">LIV</div><span>ليفربول</span></div><span class="zp-status-dot"></span>
         </div>
-
-        <section class="zp-features">
-          <article class="zp-feature">
-            <div class="zp-feature-icon">⌁</div>
-            <b>تحليلات متقدمة</b>
-            <span>تفاصيل وتحليل أعمق للمباريات</span>
-          </article>
-
-          <article class="zp-feature">
-            <div class="zp-feature-icon">♛</div>
-            <b>مسابقات خاصة</b>
-            <span>تحديات أسبوعية خاصة بالمشتركين</span>
-          </article>
-
-          <article class="zp-feature">
-            <div class="zp-feature-icon">✦</div>
-            <b>جوائز حصرية</b>
-            <span>نقاط ومكافآت أسبوعية</span>
-          </article>
-        </section>
-
-        <!-- COMPETITIONS -->
-        <div class="zp-competition-head">
-          <h2 class="zp-section-title">المسابقات الخاصة</h2>
-          <p>اختر المباراة، حدّد توقعك، ثم احفظ التوقع قبل الإغلاق.</p>
+        <div class="zp-match">
+          <div class="zp-team"><div class="zp-team-badge">INT</div><span>إنتر</span></div>
+          <div class="zp-match-mid"><span class="zp-league">إيطاليا · الدوري</span><strong>23:00</strong><small>غداً</small></div>
+          <div class="zp-team"><div class="zp-team-badge">MIL</div><span>ميلان</span></div><span class="zp-status-dot"></span>
         </div>
-
-        <!-- MATCH 1 -->
-        <details class="zp-match" open>
-          <summary style="list-style:none;cursor:pointer">
-            <div class="zp-match-top">
-              <div class="zp-team">
-                <div class="zp-team-badge">RM</div>
-                <span>ريال مدريد</span>
-              </div>
-
-              <div class="zp-vs">
-                <div class="zp-time">21:00</div>
-                <small>اليوم</small>
-              </div>
-
-              <div class="zp-team">
-                <div class="zp-team-badge">FCB</div>
-                <span>برشلونة</span>
-              </div>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 10px 9px">
-              <span class="zp-league">إسبانيا • الدوري</span>
-              <span class="zp-live">متاح للتوقع</span>
-            </div>
-          </summary>
-
-          <form class="zp-details" onsubmit="event.preventDefault();const b=this.querySelector('.zp-save');if(!this.querySelector('input[type=radio]:checked')){alert('اختر توقعك أولاً');return false;}b.textContent='تم حفظ التوقع';b.classList.add('is-saved');return false;">
-            <div class="zp-label">
-              <span>النتيجة المتوقعة</span>
-              <span>اختيار واحد</span>
-            </div>
-
-            <div class="zp-market-grid">
-              <label class="zp-market">
-                <input type="radio" name="zp_match_1" value="home">
-                <span>فوز ريال</span>
-              </label>
-
-              <label class="zp-market">
-                <input type="radio" name="zp_match_1" value="draw">
-                <span>تعادل</span>
-              </label>
-
-              <label class="zp-market">
-                <input type="radio" name="zp_match_1" value="away">
-                <span>فوز برشلونة</span>
-              </label>
-            </div>
-
-            <div class="zp-extra-grid">
-              <div class="zp-field">
-                <label>عدد الأهداف المتوقع</label>
-                <select>
-                  <option>اختر</option>
-                  <option>0 أهداف</option>
-                  <option>1 هدف</option>
-                  <option>2 هدف</option>
-                  <option>3 أهداف</option>
-                  <option>4 أهداف</option>
-                  <option>5 أهداف</option>
-                  <option>6+ أهداف</option>
-                </select>
-              </div>
-
-              <div class="zp-field">
-                <label>الركنيات المتوقعة</label>
-                <select>
-                  <option>اختر</option>
-                  <option>0–4</option>
-                  <option>5–7</option>
-                  <option>8–10</option>
-                  <option>11–13</option>
-                  <option>14+</option>
-                </select>
-              </div>
-            </div>
-
-            <button type="submit" class="zp-save">حفظ التوقع</button>
-            <div class="zp-locked">🔒 يغلق التوقع قبل المباراة بساعة</div>
-          </form>
-        </details>
-
-        <!-- MATCH 2 -->
-        <details class="zp-match">
-          <summary style="list-style:none;cursor:pointer">
-            <div class="zp-match-top">
-              <div class="zp-team">
-                <div class="zp-team-badge">ARS</div>
-                <span>أرسنال</span>
-              </div>
-
-              <div class="zp-vs">
-                <div class="zp-time">22:30</div>
-                <small>غداً</small>
-              </div>
-
-              <div class="zp-team">
-                <div class="zp-team-badge">LIV</div>
-                <span>ليفربول</span>
-              </div>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 10px 9px">
-              <span class="zp-league">إنجلترا • الدوري</span>
-              <span class="zp-live">متاح للتوقع</span>
-            </div>
-          </summary>
-
-          <form class="zp-details" onsubmit="event.preventDefault();const b=this.querySelector('.zp-save');if(!this.querySelector('input[type=radio]:checked')){alert('اختر توقعك أولاً');return false;}b.textContent='تم حفظ التوقع';b.classList.add('is-saved');return false;">
-            <div class="zp-label">
-              <span>النتيجة المتوقعة</span>
-              <span>اختيار واحد</span>
-            </div>
-
-            <div class="zp-market-grid">
-              <label class="zp-market">
-                <input type="radio" name="zp_match_2" value="home">
-                <span>فوز أرسنال</span>
-              </label>
-
-              <label class="zp-market">
-                <input type="radio" name="zp_match_2" value="draw">
-                <span>تعادل</span>
-              </label>
-
-              <label class="zp-market">
-                <input type="radio" name="zp_match_2" value="away">
-                <span>فوز ليفربول</span>
-              </label>
-            </div>
-
-            <div class="zp-extra-grid">
-              <div class="zp-field">
-                <label>عدد الأهداف المتوقع</label>
-                <select>
-                  <option>اختر</option>
-                  <option>0 أهداف</option>
-                  <option>1 هدف</option>
-                  <option>2 هدف</option>
-                  <option>3 أهداف</option>
-                  <option>4 أهداف</option>
-                  <option>5 أهداف</option>
-                  <option>6+ أهداف</option>
-                </select>
-              </div>
-
-              <div class="zp-field">
-                <label>الركنيات المتوقعة</label>
-                <select>
-                  <option>اختر</option>
-                  <option>0–4</option>
-                  <option>5–7</option>
-                  <option>8–10</option>
-                  <option>11–13</option>
-                  <option>14+</option>
-                </select>
-              </div>
-            </div>
-
-            <button type="submit" class="zp-save">حفظ التوقع</button>
-            <div class="zp-locked">🔒 يغلق التوقع قبل المباراة بساعة</div>
-          </form>
-        </details>
-
-        <!-- MATCH 3 -->
-        <details class="zp-match">
-          <summary style="list-style:none;cursor:pointer">
-            <div class="zp-match-top">
-              <div class="zp-team">
-                <div class="zp-team-badge">PSG</div>
-                <span>باريس</span>
-              </div>
-
-              <div class="zp-vs">
-                <div class="zp-time">20:45</div>
-                <small>غداً</small>
-              </div>
-
-              <div class="zp-team">
-                <div class="zp-team-badge">OM</div>
-                <span>مارسيليا</span>
-              </div>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 10px 9px">
-              <span class="zp-league">فرنسا • الدوري</span>
-              <span class="zp-live">متاح للتوقع</span>
-            </div>
-          </summary>
-
-          <form class="zp-details" onsubmit="event.preventDefault();const b=this.querySelector('.zp-save');if(!this.querySelector('input[type=radio]:checked')){alert('اختر توقعك أولاً');return false;}b.textContent='تم حفظ التوقع';b.classList.add('is-saved');return false;">
-            <div class="zp-label">
-              <span>النتيجة المتوقعة</span>
-              <span>اختيار واحد</span>
-            </div>
-
-            <div class="zp-market-grid">
-              <label class="zp-market">
-                <input type="radio" name="zp_match_3" value="home">
-                <span>فوز باريس</span>
-              </label>
-
-              <label class="zp-market">
-                <input type="radio" name="zp_match_3" value="draw">
-                <span>تعادل</span>
-              </label>
-
-              <label class="zp-market">
-                <input type="radio" name="zp_match_3" value="away">
-                <span>فوز مارسيليا</span>
-              </label>
-            </div>
-
-            <div class="zp-extra-grid">
-              <div class="zp-field">
-                <label>عدد الأهداف المتوقع</label>
-                <select>
-                  <option>اختر</option>
-                  <option>0 أهداف</option>
-                  <option>1 هدف</option>
-                  <option>2 هدف</option>
-                  <option>3 أهداف</option>
-                  <option>4 أهداف</option>
-                  <option>5 أهداف</option>
-                  <option>6+ أهداف</option>
-                </select>
-              </div>
-
-              <div class="zp-field">
-                <label>الركنيات المتوقعة</label>
-                <select>
-                  <option>اختر</option>
-                  <option>0–4</option>
-                  <option>5–7</option>
-                  <option>8–10</option>
-                  <option>11–13</option>
-                  <option>14+</option>
-                </select>
-              </div>
-            </div>
-
-            <button type="submit" class="zp-save">حفظ التوقع</button>
-            <div class="zp-locked">🔒 يغلق التوقع قبل المباراة بساعة</div>
-          </form>
-        </details>
-
-        <!-- MATCH 4 -->
-        <details class="zp-match">
-          <summary style="list-style:none;cursor:pointer">
-            <div class="zp-match-top">
-              <div class="zp-team">
-                <div class="zp-team-badge">MIL</div>
-                <span>ميلان</span>
-              </div>
-
-              <div class="zp-vs">
-                <div class="zp-time">21:45</div>
-                <small>السبت</small>
-              </div>
-
-              <div class="zp-team">
-                <div class="zp-team-badge">INT</div>
-                <span>إنتر</span>
-              </div>
-            </div>
-
-            <div style="display:flex;justify-content:space-between;align-items:center;padding:0 10px 9px">
-              <span class="zp-league">إيطاليا • الدوري</span>
-              <span class="zp-live">متاح للتوقع</span>
-            </div>
-          </summary>
-
-          <form class="zp-details" onsubmit="event.preventDefault();const b=this.querySelector('.zp-save');if(!this.querySelector('input[type=radio]:checked')){alert('اختر توقعك أولاً');return false;}b.textContent='تم حفظ التوقع';b.classList.add('is-saved');return false;">
-            <div class="zp-label">
-              <span>النتيجة المتوقعة</span>
-              <span>اختيار واحد</span>
-            </div>
-
-            <div class="zp-market-grid">
-              <label class="zp-market">
-                <input type="radio" name="zp_match_4" value="home">
-                <span>فوز ميلان</span>
-              </label>
-
-              <label class="zp-market">
-                <input type="radio" name="zp_match_4" value="draw">
-                <span>تعادل</span>
-              </label>
-
-              <label class="zp-market">
-                <input type="radio" name="zp_match_4" value="away">
-                <span>فوز إنتر</span>
-              </label>
-            </div>
-
-            <div class="zp-extra-grid">
-              <div class="zp-field">
-                <label>عدد الأهداف المتوقع</label>
-                <select>
-                  <option>اختر</option>
-                  <option>0 أهداف</option>
-                  <option>1 هدف</option>
-                  <option>2 هدف</option>
-                  <option>3 أهداف</option>
-                  <option>4 أهداف</option>
-                  <option>5 أهداف</option>
-                  <option>6+ أهداف</option>
-                </select>
-              </div>
-
-              <div class="zp-field">
-                <label>الركنيات المتوقعة</label>
-                <select>
-                  <option>اختر</option>
-                  <option>0–4</option>
-                  <option>5–7</option>
-                  <option>8–10</option>
-                  <option>11–13</option>
-                  <option>14+</option>
-                </select>
-              </div>
-            </div>
-
-            <button type="submit" class="zp-save">حفظ التوقع</button>
-            <div class="zp-locked">🔒 يغلق التوقع قبل المباراة بساعة</div>
-          </form>
-        </details>
-
-        <!-- PLAYER STATS -->
-        <section class="zp-achievements">
-          <div class="zp-stat">
-            <small>توقعات محفوظة</small>
-            <strong>0</strong>
-          </div>
-
-          <div class="zp-stat">
-            <small>نقاط الأسبوع</small>
-            <strong>0</strong>
-          </div>
-        </section>
-
-        <!-- CTA -->
-        <section class="zp-cta">
-          <div class="zp-cta-crown">♛</div>
-
-          <div class="zp-cta-copy">
-            <div class="zp-cta-badge">✦ وصول PRO</div>
-            <h3>جاهز لتبدأ؟</h3>
-            <p>فعّل المزايا الاحترافية وادخل تحديات الأسبوع.</p>
-
-            <button
-              type="button"
-              onclick="if(window.zingoOpenProfileEditorV2){window.zingoOpenProfileEditorV2()}else if(window.zingoOpenProfileEditor){window.zingoOpenProfileEditor()}"
-            >
-              اشترك الآن
-              <span>احصل على مزايا PRO</span>
-            </button>
-          </div>
-        </section>
-
-        <div class="zp-mini-note">
-          التوقعات قابلة للتعديل قبل الإغلاق، وبعد الإغلاق يتم احتساب النتيجة تلقائياً حسب قواعد المسابقة.
-        </div>
-
-      </main>
-
-      <!-- BOTTOM NAV -->
-      <nav class="zp-bottom" aria-label="التنقل">
-        <button
-          class="zp-nav"
-          type="button"
-          onclick="if(window.Zingo&&typeof window.Zingo.go==='function'){window.Zingo.go('home')}"
-        >
-          <span class="zp-nav-icon">⌂</span>
-          <small>الرئيسية</small>
-        </button>
-
-        <button
-          class="zp-nav"
-          type="button"
-          onclick="if(window.Zingo&&typeof window.Zingo.go==='function'){window.Zingo.go('analysis')}"
-        >
-          <span class="zp-nav-icon">⌁</span>
-          <small>التحليل</small>
-        </button>
-
-        <button
-          class="zp-nav active"
-          type="button"
-        >
-          <span class="zp-nav-icon">🏆</span>
-          <small>المسابقات</small>
-        </button>
-
-        <button
-          class="zp-nav"
-          type="button"
-          onclick="window.zingoOpenProfileEditorV2?.()"
-        >
-          <span class="zp-nav-icon">♙</span>
-          <small>الملف</small>
-        </button>
-
-        <button
-          class="zp-nav pro"
-          type="button"
-        >
-          <span class="zp-nav-icon">PRO</span>
-          <small>اشتراك احترافي</small>
-        </button>
-      </nav>
-
-    </div>
+      </section>
+      <section class="zp-subscribe">
+        <div class="zp-price-line"><span>مزايا PRO الأسبوعية</span><b>PRO</b></div>
+        <button type="button" class="zp-cta" onclick="window.ZingoUnified?.openPackages?.()"><span>اشترك الآن</span><small>احصل على مزايا PRO</small></button>
+      </section>
+    </main>
+    <nav class="zp-bottom">
+      <button type="button" class="zp-nav active" onclick="window.ZingoUnified?.select('pro')"><span>◆</span><small>الرئيسية</small></button>
+      <button type="button" class="zp-nav" onclick="window.ZingoUnified?.select('pro')"><span>◉</span><small>المسابقات</small></button>
+      <button type="button" class="zp-nav zp-pro-tab" onclick="window.ZingoUnified?.openPackages?.()"><span>PRO</span><small>اشتراك احترافي</small></button>
+      <button type="button" class="zp-nav" onclick="window.zingoOpenProfileEditor?.()"><span>♙</span><small>حسابي</small></button>
+    </nav>
   </div>
-</div>
 </section>
-
 <section id="zingoVipWorld" class="zingo-world hidden">
     <div class="zingo-world-identity-slot" data-zingo-profile-identity></div>
 
@@ -3147,8 +1796,6 @@ function profileApi(path,options={}){
   });
 }
 
-
-window.profileApi=profileApi;
 function allClubs(){
   return CLUBS.flatMap(x=>x.clubs);
 }
@@ -3174,7 +1821,6 @@ async function loadZingoProfile(){
 
 window.zingoClubById=clubById;
 window.zingoAllClubs=allClubs;
-window.__zingoLoadData=loadZingoProfile;
 
 function profileAvatar(profile){
   const p=profile || {};
@@ -3818,7 +2464,7 @@ window.zingoSettings=function(){
           <div>
             <strong>الملكية</strong>
             <div class="muted">
-              ${window.__zingoSubscription?.vip?.active ? "Black Diamond Access" : "VIP Access"}
+              ${state.subscription?.active ? "Black Diamond Access" : "VIP Access"}
             </div>
           </div>
 
@@ -3849,243 +2495,192 @@ document.addEventListener("DOMContentLoaded", function(){
 </script>
 
 <script id="zingoUnified3TiersJS">
+
 (function(){
-  "use strict";
 
-  const Z = window.ZingoUnified = window.ZingoUnified || {};
+const Z = window.ZingoUnified = window.ZingoUnified || {};
 
-  function E(id){
-    return document.getElementById(id);
+function E(id){
+return document.getElementById(id);
+}
+
+function uid(){
+
+try{
+return window.Telegram?.WebApp?.initDataUnsafe?.user?.id || "";
+}catch(e){
+return "";
+}
+
+}
+
+async function getSubscription(){
+
+const id=uid();
+
+if(!id){
+return {
+ok:false,
+pro:{active:false},
+vip:{active:false}
+};
+}
+
+try{
+
+const api =
+window.API?.subscription ||
+"/api/subscription";
+
+const r=await fetch(
+api+"?telegram_id="+encodeURIComponent(id),
+{
+cache:"no-store",
+credentials:"include"
+}
+);
+
+const d=await r.json();
+
+return {
+ok:!!d?.ok,
+pro:d?.pro||{active:false},
+vip:d?.vip||{active:false}
+};
+
+}catch(e){
+
+console.warn("Zingo subscription:",e);
+
+return {
+ok:false,
+pro:{active:false},
+vip:{active:false}
+};
+
+}
+
+}
+
+function clearWorlds(){
+
+E("zingoFreeWorld")?.classList.add("hidden");
+E("zingoProWorld")?.classList.add("hidden");
+E("zingoVipWorld")?.classList.add("hidden");
+
+document
+.querySelectorAll(".zingo-tier-btn")
+.forEach(x=>x.classList.remove("active"));
+
+}
+
+function updateStates(pro,vip){
+
+if(E("zingoProTierState"))
+E("zingoProTierState").textContent =
+pro ? "مفعّل" : "الاشتراك مطلوب";
+
+if(E("zingoVipTierState"))
+E("zingoVipTierState").textContent =
+vip ? "مفعّل" : "الاشتراك مطلوب";
+
+}
+
+async function select(tier){
+  clearWorlds();
+
+  if(tier==="free"){
+    E("zingoFreeWorld")?.classList.remove("hidden");
+    E("zingoTierFree")?.classList.add("active");
+    return;
   }
 
-  function cleanTier(tier){
-    const t=String(tier||"").toLowerCase();
-    return t==="vip" ? "vip" : t==="pro" ? "pro" : "free";
+  if(tier==="pro"){
+    E("zingoProWorld")?.classList.remove("hidden");
+    E("zingoTierPro")?.classList.add("active");
+    return;
   }
 
-  function uid(){
-    try{
-      return String(window.Telegram?.WebApp?.initDataUnsafe?.user?.id || "");
-    }catch(e){
-      return "";
-    }
-  }
-
-  function syncState(tier){
-    tier=cleanTier(tier);
-    window.__zingoMode=tier;
-    window.__zingoState=window.__zingoState || {};
-    window.__zingoState.mode=tier;
-    window.__zingoState.tier=tier;
-    try{
-      window.dispatchEvent(new CustomEvent("zingo:mode-changed",{
-        detail:{mode:tier,tier:tier}
-      }));
-    }catch(e){}
-  }
-
-  function setTierBar(open){
-    const root=E("zingoUnifiedExperience");
-    if(root){
-      root.classList.toggle("zingo-tier-menu-open",!!open);
-    }
-  }
-
-  async function getSubscription(){
-    const id=uid();
-
-    if(!id){
-      return {
-        ok:false,
-        pro:{active:false},
-        vip:{active:false}
-      };
-    }
-
-    try{
-      const apiUrl = window.API?.subscription || "/api/subscription";
-      const join = apiUrl.indexOf("?") === -1 ? "?" : "&";
-      const r = await fetch(
-        apiUrl + join + "telegram_id=" + encodeURIComponent(id),
-        {
-          cache:"no-store",
-          credentials:"include",
-          headers:{"Accept":"application/json"}
-        }
-      );
-
-      const d=await r.json().catch(()=>({}));
-
-      return {
-        ok:r.ok && d?.ok !== false,
-        pro:d?.pro || {active:false},
-        vip:d?.vip || {active:false}
-      };
-    }catch(e){
-      console.warn("Zingo subscription:",e);
-      return {
-        ok:false,
-        pro:{active:false},
-        vip:{active:false}
-      };
-    }
-  }
-
-  function clearWorlds(){
-    E("zingoFreeWorld")?.classList.add("hidden");
-    E("zingoProWorld")?.classList.add("hidden");
-    E("zingoVipWorld")?.classList.add("hidden");
-
-    document
-      .querySelectorAll(".zingo-tier-btn")
-      .forEach(x=>x.classList.remove("active"));
-  }
-
-  function showWorld(tier){
-    tier=cleanTier(tier);
-    clearWorlds();
-    syncState(tier);
-
-    if(tier==="free"){
-      E("zingoFreeWorld")?.classList.remove("hidden");
-      E("zingoTierFree")?.classList.add("active");
-      setTierBar(false);
-      return;
-    }
-
-    if(tier==="pro"){
-      E("zingoProWorld")?.classList.remove("hidden");
-      E("zingoTierPro")?.classList.add("active");
-      setTierBar(true);
-      return;
-    }
-
+  if(tier==="vip"){
     E("zingoVipWorld")?.classList.remove("hidden");
     E("zingoTierVip")?.classList.add("active");
-    setTierBar(true);
+    return;
   }
+}
+function openPackages(){
 
-  async function select(tier){
-    tier=cleanTier(tier);
+try{
 
-    /*
-     * All tiers are rendered inside the same document.
-     * No relative navigation is used, so Cloudflare SPA fallback,
-     * Telegram caching, or a missing secondary asset cannot send PRO back to FREE.
-     */
-    showWorld(tier);
+if(window.Zingo &&
+typeof window.Zingo.go==="function"){
 
-    return tier;
-  }
+window.Zingo.go("packages");
+return;
 
-  function updateStates(pro,vip){
-    const proState=E("zingoProTierState");
-    const vipState=E("zingoVipTierState");
+}
 
-    if(proState) proState.textContent=pro ? "مفعّل" : "الاشتراك مطلوب";
-    if(vipState) vipState.textContent=vip ? "مفعّل" : "الاشتراك مطلوب";
-  }
+}catch(e){}
 
-  async function openPackages(){
-    try{
-      if(typeof window.Zingo?.go==="function"){
-        return window.Zingo.go("packages");
-      }
-    }catch(e){}
+try{
 
-    try{
-      if(typeof window.zingoSettings==="function"){
-        return window.zingoSettings();
-      }
-    }catch(e){}
+if(typeof window.zingoSettings==="function"){
 
-    if(typeof window.toast==="function"){
-      window.toast("افتح الباقات لتفعيل الاشتراك");
-    }
-  }
+window.zingoSettings();
+return;
 
-  async function boot(){
-    try{
-      const tg=window.Telegram?.WebApp;
-      if(tg){
-        try{tg.ready();}catch(e){}
-        try{tg.expand();}catch(e){}
-      }
-    }catch(e){}
+}
 
-    const requested=cleanTier(
-      new URLSearchParams(location.search).get("tier") || "free"
-    );
+}catch(e){}
 
-    await select(requested);
+if(typeof window.toast==="function")
+window.toast("افتح الباقات لتفعيل الاشتراك");
 
-    getSubscription().then(function(sub){
-      updateStates(
-        !!sub?.pro?.active,
-        !!sub?.vip?.active
-      );
+}
 
-      window.__zingoSubscription=sub;
-    }).catch(function(e){
-      console.warn("Zingo background subscription:",e);
-    });
-  }
+Z.select=select;
+Z.subscription=getSubscription;
+Z.openPackages=openPackages;
 
-  Z.select=select;
-  Z.subscription=getSubscription;
-  Z.openPackages=openPackages;
+async function boot(){
+try{
+const tg=window.Telegram?.WebApp;
+if(tg){
+try{tg.ready()}catch(e){}
+try{tg.expand()}catch(e){}
+}
+}catch(e){}
 
-  /* Legacy compatibility used by profile/settings buttons in this file. */
-  window.switchZingoMode=function(mode){
-    return Z.select(cleanTier(mode));
-  };
+/* افتح الواجهة المجانية فورًا */
+clearWorlds();
+E("zingoFreeWorld")?.classList.remove("hidden");
+E("zingoTierFree")?.classList.add("active");
 
-  window.Zingo=window.Zingo || {};
-  if(typeof window.Zingo.go!=="function"){
-    window.Zingo.go=function(page){
-      const p=String(page||"").toLowerCase();
-      const current=cleanTier(window.__zingoMode || window.__zingoState?.mode || "free");
+/* تحقق من الاشتراك بالخلفية بدون تعطيل الواجهة */
+getSubscription().then(function(sub){
+updateStates(
+!!sub?.pro?.active,
+!!sub?.vip?.active
+);
+}).catch(function(e){
+console.warn("Zingo background subscription:",e);
+});
+}
 
-      if(p==="home" || p==="competitions"){
-        return Z.select(current);
-      }
+if(document.readyState==="loading"){
 
-      if(p==="profile"){
-        if(typeof window.zingoOpenProfileEditorV2==="function"){
-          return window.zingoOpenProfileEditorV2();
-        }
-        return;
-      }
+document.addEventListener(
+"DOMContentLoaded",
+()=>setTimeout(boot,400)
+);
 
-      if(p==="packages"){
-        if(typeof window.zingoSettings==="function"){
-          return window.zingoSettings();
-        }
-        if(typeof window.toast==="function"){
-          window.toast("الباقات غير متاحة حاليًا");
-        }
-        return;
-      }
+}else{
 
-      if(p==="analysis" || p==="ranking"){
-        if(typeof window.toast==="function"){
-          window.toast("سيتم تفعيل هذا القسم مع ربط البيانات");
-        }
-      }
-    };
-  }
+setTimeout(boot,400);
 
-  window.zingoBootTier=boot;
-
-  if(document.readyState==="loading"){
-    document.addEventListener("DOMContentLoaded",function(){
-      setTimeout(function(){ boot().catch(e=>console.warn("Zingo boot:",e)); },0);
-    },{once:true});
-  }else{
-    setTimeout(function(){ boot().catch(e=>console.warn("Zingo boot:",e)); },0);
-  }
+}
 
 })();
+
 </script>
 
 
@@ -7508,8 +6103,6 @@ window.__zingoProfileV2Draft = {
 
 <script id="zingoProfileIdentityV3Bridge">
 (function(){
-  let refreshQueued=false;
-
   function refresh(){
     try{
       if(typeof window.zingoIdentityHTML!=="function") return;
@@ -7517,40 +6110,32 @@ window.__zingoProfileV2Draft = {
       document
         .querySelectorAll("[data-zingo-profile-identity]")
         .forEach(function(el){
-          const next=window.zingoIdentityHTML({compact:true});
-          if(el.innerHTML!==next){
-            el.innerHTML=next;
-          }
+          el.innerHTML = window.zingoIdentityHTML({
+            compact:true
+          });
         });
     }catch(e){}
   }
 
-  function scheduleRefresh(){
-    if(refreshQueued) return;
-    refreshQueued=true;
-    setTimeout(function(){
-      refreshQueued=false;
-      refresh();
-    },0);
-  }
-
-  window.zingoRefreshProfileIdentity=refresh;
+  window.zingoRefreshProfileIdentity = refresh;
 
   const oldRefresh =
     window.zingoProfileIdentityV3 &&
     window.zingoProfileIdentityV3.refresh;
 
   if(window.zingoProfileIdentityV3){
-    const api=window.zingoProfileIdentityV3;
+    const api = window.zingoProfileIdentityV3;
 
-    api.refresh=function(){
+    api.refresh = function(){
       let result;
+
       try{
         if(typeof oldRefresh==="function"){
-          result=oldRefresh.apply(this,arguments);
+          result = oldRefresh.apply(this,arguments);
         }
       }catch(e){}
-      scheduleRefresh();
+
+      setTimeout(refresh,0);
       return result;
     };
   }
@@ -7567,7 +6152,18 @@ window.__zingoProfileV2Draft = {
     boot();
   }
 
-  window.addEventListener("zingo:profile-updated",scheduleRefresh);
+  const observer = new MutationObserver(function(){
+    refresh();
+  });
+
+  if(document.body){
+    observer.observe(document.body,{
+      childList:true,
+      subtree:true
+    });
+  }
+
+  window.addEventListener("zingo:profile-updated",refresh);
   window.addEventListener("zingo:mode-changed",function(){
     setTimeout(refresh,50);
   });
@@ -7641,577 +6237,35 @@ window.__zingoProfileV2Draft = {
 </script>
 
 
-
-
-<script id="zingoCoreCompatV1">
-(function(){
-  if(typeof window.toast!=="function"){
-    window.toast=function(message){
-      const el=document.getElementById("toast");
-      if(!el) return;
-      el.textContent=String(message||"");
-      el.classList.add("show");
-      clearTimeout(window.__zingoToastTimer);
-      window.__zingoToastTimer=setTimeout(function(){
-        el.classList.remove("show");
-      },2200);
-    };
+<style id="PRO_ONLY_PREVIEW">
+#zingoFreeWorld,
+#zingoVipWorld,
+#zingoTierFree,
+#zingoTierVip{
+  display:none !important;
+}
+#zingoProWorld{
+  display:block !important;
+  visibility:visible !important;
+  opacity:1 !important;
+}
+body{
+  overflow-x:hidden !important;
+}
+</style>
+<script>
+document.addEventListener("DOMContentLoaded", function(){
+  const free=document.getElementById("zingoFreeWorld");
+  const pro=document.getElementById("zingoProWorld");
+  const vip=document.getElementById("zingoVipWorld");
+  if(free) free.style.setProperty("display","none","important");
+  if(vip) vip.style.setProperty("display","none","important");
+  if(pro){
+    pro.style.setProperty("display","block","important");
+    pro.style.setProperty("visibility","visible","important");
+    pro.style.setProperty("opacity","1","important");
   }
-
-  if(typeof window.finishAscension!=="function"){
-    window.finishAscension=function(){
-      const el=document.getElementById("ascension");
-      if(el) el.classList.remove("show");
-    };
-  }
-})();
-</script>
-
-
-<script id="zingoProApiBridge20260927">
-(function(){
-  "use strict";
-
-  /*
-   * ZINGO PRO API BRIDGE
-   * 2026-09-27
-   *
-   * This layer connects the existing PRO GOLD SIGNATURE UI
-   * to the existing PRO API without replacing the UI.
-   */
-
-  const API = {
-    subscription: "/api/subscription",
-    round: "/api/pro_round",
-    submit: "/api/pro_submit",
-    ranking: "/api/pro_ranking"
-  };
-
-  window.API = Object.assign(window.API || {}, API);
-
-  const tg = window.Telegram?.WebApp;
-
-  function authHeaders(){
-    const initData = tg?.initData || "";
-    return initData
-      ? {"X-Telegram-Init-Data": initData}
-      : {};
-  }
-
-  async function api(path, options={}){
-    const headers = {
-      ...(options.body ? {"Content-Type":"application/json"} : {}),
-      ...authHeaders(),
-      ...(options.headers || {})
-    };
-
-    const res = await fetch(path, {
-      ...options,
-      headers,
-      cache: "no-store",
-      credentials: "include"
-    });
-
-    const text = await res.text();
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch(e) {
-      data = {raw:text};
-    }
-
-    if(!res.ok){
-      throw new Error(
-        data?.error ||
-        data?.message ||
-        `HTTP ${res.status}`
-      );
-    }
-
-    return data;
-  }
-
-  function asArray(data){
-    if(Array.isArray(data)) return data;
-
-    return (
-      data?.matches ||
-      data?.fixtures ||
-      data?.games ||
-      data?.data ||
-      data?.round?.matches ||
-      data?.round?.fixtures ||
-      []
-    );
-  }
-
-  function valueOf(obj, keys, fallback=""){
-    for(const key of keys){
-      const v = obj?.[key];
-      if(v !== undefined && v !== null && String(v) !== ""){
-        return v;
-      }
-    }
-    return fallback;
-  }
-
-  function matchId(match, index){
-    return String(
-      valueOf(
-        match,
-        ["id","match_id","fixture_id","game_id"],
-        `pro-${index+1}`
-      )
-    );
-  }
-
-  function teamName(match, side){
-    if(side === "home"){
-      return String(valueOf(
-        match,
-        ["home_team","home","team1","homeTeam","home_name"],
-        ""
-      ));
-    }
-
-    return String(valueOf(
-      match,
-      ["away_team","away","team2","awayTeam","away_name"],
-      ""
-    ));
-  }
-
-  function leagueName(match){
-    const league = match?.league;
-
-    if(typeof league === "string" && league){
-      return league;
-    }
-
-    if(league && typeof league === "object"){
-      return String(
-        league.name ||
-        league.title ||
-        league.league_name ||
-        ""
-      );
-    }
-
-    return String(valueOf(
-      match,
-      ["league_name","competition","tournament","league"],
-      ""
-    ));
-  }
-
-  function matchTime(match){
-    return String(valueOf(
-      match,
-      ["time","start_time","kickoff","date_time","datetime"],
-      ""
-    ));
-  }
-
-  function setText(el, value){
-    if(el && value !== ""){
-      el.textContent = String(value);
-    }
-  }
-
-  function formatTime(raw){
-    if(!raw) return "";
-
-    const s = String(raw);
-
-    /*
-     * Keep already formatted values such as 21:00.
-     */
-    if(/^\\d{1,2}:\\d{2}$/.test(s)){
-      return s;
-    }
-
-    const d = new Date(s);
-
-    if(Number.isNaN(d.getTime())){
-      return s;
-    }
-
-    return d.toLocaleTimeString("ar", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false
-    });
-  }
-
-  function installMatchIds(){
-    const matches = document.querySelectorAll(
-      "#zingoProWorld details.zp-match"
-    );
-
-    matches.forEach((details, index)=>{
-      if(!details.dataset.matchIndex){
-        details.dataset.matchIndex = String(index);
-      }
-    });
-
-    return matches;
-  }
-
-  function updateMatchFromApi(details, match, index){
-    if(!details || !match) return;
-
-    const id = matchId(match,index);
-    details.dataset.matchId = id;
-
-    const home = teamName(match,"home");
-    const away = teamName(match,"away");
-    const league = leagueName(match);
-    const time = formatTime(matchTime(match));
-
-    const teams = details.querySelectorAll(".zp-team span");
-
-    if(home && teams[0]){
-      teams[0].textContent = home;
-    }
-
-    if(away && teams[1]){
-      teams[1].textContent = away;
-    }
-
-    const timeEl = details.querySelector(".zp-time");
-    if(time && timeEl){
-      timeEl.textContent = time;
-    }
-
-    const leagueEl = details.querySelector(".zp-league");
-    if(league && leagueEl){
-      leagueEl.textContent = league;
-    }
-
-    /*
-     * Optional backend status.
-     */
-    const status = String(valueOf(
-      match,
-      ["status","state","availability"],
-      ""
-    ));
-
-    const statusEl = details.querySelector(".zp-live");
-
-    if(statusEl && status){
-      statusEl.textContent = status;
-    }
-
-    /*
-     * Store the complete backend match object for submission.
-     */
-    details.__zingoMatch = match;
-  }
-
-  async function loadRound(){
-    const details = Array.from(
-      document.querySelectorAll(
-        "#zingoProWorld details.zp-match"
-      )
-    );
-
-    if(!details.length){
-      return;
-    }
-
-    try{
-      const data = await api(API.round);
-      const matches = asArray(data);
-
-      if(!matches.length){
-        console.warn("Zingo PRO: round returned no matches");
-        return;
-      }
-
-      matches.forEach((match,index)=>{
-        if(details[index]){
-          updateMatchFromApi(details[index],match,index);
-        }
-      });
-
-      window.__zingoProRound = data;
-
-      /*
-       * Re-apply prediction handlers after the backend data
-       * has been attached.
-       */
-      installPredictionHandlers();
-
-      console.log(
-        "Zingo PRO round loaded:",
-        matches.length,
-        "matches"
-      );
-
-    }catch(e){
-      console.warn(
-        "Zingo PRO round:",
-        e?.message || e
-      );
-    }
-  }
-
-  function selectedValue(form, selector){
-    const el = form.querySelector(selector);
-    return el ? String(el.value || "") : "";
-  }
-
-  function normalizeGoals(value){
-    const s = String(value || "").trim();
-
-    if(!s || s === "اختر"){
-      return "";
-    }
-
-    const m = s.match(/\\d+/);
-
-    if(!m){
-      return s;
-    }
-
-    if(s.includes("6+")){
-      return "6+";
-    }
-
-    return m[0];
-  }
-
-  function collectPrediction(form){
-    const winner = form.querySelector(
-      'input[type="radio"][name^="zp_match_"]:checked'
-    );
-
-    const selects = form.querySelectorAll(
-      ".zp-field select"
-    );
-
-    const goals = selects[0]
-      ? normalizeGoals(selects[0].value)
-      : "";
-
-    const corners = selects[1]
-      ? String(selects[1].value || "")
-      : "";
-
-    return {
-      winner: winner ? String(winner.value || "") : "",
-      goals,
-      corners
-    };
-  }
-
-  function matchIdFromForm(form,index){
-    const details = form.closest("details.zp-match");
-
-    return String(
-      details?.dataset?.matchId ||
-      details?.__zingoMatch?.id ||
-      details?.__zingoMatch?.match_id ||
-      details?.__zingoMatch?.fixture_id ||
-      `pro-${index+1}`
-    );
-  }
-
-  async function submitPrediction(form,index){
-    const button = form.querySelector(".zp-save");
-
-    if(!button){
-      return;
-    }
-
-    const prediction = collectPrediction(form);
-
-    if(!prediction.winner){
-      alert("اختر توقعك أولاً");
-      return;
-    }
-
-    const originalText = button.textContent;
-
-    button.disabled = true;
-    button.textContent = "جارٍ الحفظ…";
-
-    try{
-      const matchId = matchIdFromForm(form,index);
-
-      const body = {
-        match_id: matchId,
-
-        predictions: {
-          winner: prediction.winner,
-          goals: prediction.goals,
-          corners: prediction.corners
-        },
-
-        prediction: {
-          winner: prediction.winner,
-          goals: prediction.goals,
-          corners: prediction.corners
-        }
-      };
-
-      const result = await api(API.submit,{
-        method: "POST",
-        body: JSON.stringify(body)
-      });
-
-      form.dataset.saved = "1";
-      form.dataset.savedPrediction = JSON.stringify(prediction);
-
-      button.disabled = false;
-      button.textContent = "تم حفظ التوقع";
-      button.classList.add("is-saved");
-
-      /*
-       * Keep the success state even if the user scrolls.
-       */
-      window.__zingoLastSubmit = {
-        match_id: matchId,
-        prediction,
-        result
-      };
-
-      try{
-        tg?.HapticFeedback?.notificationOccurred("success");
-      }catch(e){}
-
-      console.log(
-        "Zingo PRO prediction saved:",
-        matchId,
-        result
-      );
-
-    }catch(e){
-      console.error("Zingo PRO submit:",e);
-
-      button.disabled = false;
-      button.textContent = originalText || "حفظ التوقع";
-
-      alert(
-        e?.message ||
-        "تعذر حفظ التوقع"
-      );
-    }
-  }
-
-  function installPredictionHandlers(){
-    const forms = document.querySelectorAll(
-      "#zingoProWorld details.zp-match form.zp-details"
-    );
-
-    forms.forEach((form,index)=>{
-      if(form.dataset.zingoApiBound === "1"){
-        return;
-      }
-
-      form.dataset.zingoApiBound = "1";
-
-      /*
-       * Remove the old inline-only submit behaviour by
-       * intercepting the event here.
-       */
-      form.addEventListener("submit",function(event){
-        event.preventDefault();
-        event.stopPropagation();
-
-        submitPrediction(form,index);
-      },true);
-
-      /*
-       * A new choice means the prediction has changed,
-       * therefore the old saved state is no longer valid.
-       */
-      form.addEventListener("change",function(event){
-        const target = event.target;
-
-        if(
-          target?.matches?.(
-            'input[type="radio"], select'
-          )
-        ){
-          form.dataset.saved = "0";
-
-          const button = form.querySelector(".zp-save");
-
-          if(
-            button &&
-            !button.classList.contains("is-saved")
-          ){
-            button.textContent = "حفظ التوقع";
-          }
-
-          if(button){
-            button.classList.remove("is-saved");
-          }
-        }
-      });
-    });
-  }
-
-  async function loadRanking(){
-    try{
-      const data = await api(API.ranking);
-      window.__zingoProRanking = data;
-      return data;
-    }catch(e){
-      console.warn(
-        "Zingo PRO ranking:",
-        e?.message || e
-      );
-      return null;
-    }
-  }
-
-  /*
-   * Make ranking available to the existing navigation
-   * without replacing its design.
-   */
-  window.ZingoProAPI = {
-    api,
-    loadRound,
-    loadRanking,
-    submitPrediction,
-    getPrediction: collectPrediction
-  };
-
-  function boot(){
-    installMatchIds();
-    installPredictionHandlers();
-
-    /*
-     * Give the existing tier system time to reveal PRO
-     * if PRO is the selected tier.
-     */
-    setTimeout(function(){
-      installMatchIds();
-      installPredictionHandlers();
-
-      const world = document.getElementById("zingoProWorld");
-
-      if(world && !world.classList.contains("hidden")){
-        loadRound();
-      }
-    },250);
-  }
-
-  if(document.readyState === "loading"){
-    document.addEventListener(
-      "DOMContentLoaded",
-      boot,
-      {once:true}
-    );
-  }else{
-    boot();
-  }
-
-})();
+});
 </script>
 
 </body>

@@ -136,7 +136,10 @@ body:after{
 .brand-title{font-weight:900;letter-spacing:.8px}
 .brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.8px;margin-top:2px}
 
-
+.mode-switch{
+  display:flex;padding:4px;border:1px solid var(--line);
+  background:rgba(255,255,255,.035);border-radius:14px
+}
 .mode-btn{
   border:0;background:transparent;padding:8px 12px;border-radius:10px;
   font-size:11px;font-weight:900;letter-spacing:.8px;color:var(--muted)
@@ -216,10 +219,15 @@ h2{font-size:19px;margin:0 0 12px}
   box-shadow:0 18px 55px rgba(0,0,0,.55);
 
 pointer-events:auto!important;}
+.nav-btn{
+  border:0;background:transparent;border-radius:15px;padding:8px 2px;
+  color:#707b8e;font-size:9px;font-weight:800;
 
+pointer-events:auto!important;
+touch-action:manipulation;}
 .nav-icon{font-size:17px;display:block;margin-bottom:3px}
-
-.vip-world 
+.nav-btn.active{color:#76c1ff;background:rgba(55,160,255,.09)}
+.vip-world .nav-btn.active{color:#ffe09a;background:rgba(245,200,91,.08)}
 
 .primary{
   width:100%;border:0;border-radius:15px;padding:14px;
@@ -991,13 +999,1180 @@ html[dir="ltr"] body{text-align:left}
 </style>
 
 
+<style id="zingoProExactV1">
+#zingoProWorld{--g:#d6a43b;--a:#ffbf3f;--t:#fffaf0;--l:rgba(214,164,59,.22);width:100%;min-height:100%;background:radial-gradient(circle at 78% 13%,rgba(214,164,59,.13),transparent 27%),radial-gradient(circle at 15% 45%,rgba(126,69,18,.12),transparent 30%),linear-gradient(180deg,#090909,#100c08 53%,#090909);color:var(--t);font-family:Cairo,Tajawal,system-ui,sans-serif}
+#zingoProWorld.hidden{display:none!important}#zingoProWorld:not(.hidden){display:block!important}
+.zp-phone{position:relative;max-width:430px;min-height:760px;margin:0 auto;overflow:hidden;border:1px solid rgba(255,199,78,.34);border-radius:30px;background:linear-gradient(145deg,#0a0a0a,#1b1108 52%,#090909);box-shadow:0 0 34px rgba(218,157,37,.16),inset 0 0 45px rgba(255,191,63,.035)}
+.zp-phone:before{content:"";position:absolute;inset:0;pointer-events:none;background-image:radial-gradient(circle,rgba(255,201,83,.55) 0 1px,transparent 1.5px);background-size:73px 91px;opacity:.14}
+.zp-status,.zp-topbar,.zp-content,.zp-bottom{position:relative;z-index:1}.zp-status{height:28px;padding:7px 16px 0;display:flex;justify-content:space-between;font-size:10px;color:#e8dfd0}.zp-status-icons{letter-spacing:4px;color:#d9c49a}
+.zp-topbar{height:62px;display:grid;grid-template-columns:42px 1fr 42px;align-items:center;padding:0 14px;border-bottom:1px solid var(--l)}.zp-icon-btn{width:36px;height:36px;border:1px solid rgba(214,164,59,.22);border-radius:12px;background:rgba(255,255,255,.025);color:#f2c766;font-size:26px;line-height:1}.zp-crown{font-size:19px}.zp-brand{display:flex;align-items:center;justify-content:center;gap:9px;font-size:16px;letter-spacing:2px}.zp-logo{display:grid;place-items:center;width:31px;height:31px;border-radius:50%;border:1px solid #e0ad45;color:#fff1bf;font-weight:900;background:radial-gradient(circle at 35% 30%,#6e4a13,#17100a 70%);box-shadow:0 0 16px rgba(255,190,55,.25)}
+.zp-content{padding:15px 14px 104px}.zp-hero{min-height:184px;position:relative;overflow:hidden;border-radius:24px;border:1px solid rgba(220,170,66,.43);background:linear-gradient(115deg,#0b0b0b 8%,#211507 58%,#0d0b08);box-shadow:0 15px 35px rgba(0,0,0,.38),inset 0 1px rgba(255,220,137,.09)}.zp-hero:after{content:"";position:absolute;inset:auto -20% -58% 20%;height:170px;background:radial-gradient(ellipse,rgba(238,173,52,.23),transparent 66%);filter:blur(12px)}.zp-hero-copy{position:relative;z-index:2;padding:23px 21px;max-width:67%}.zp-kicker{font-size:10px;color:#d6bd87;letter-spacing:1.8px;margin-bottom:5px}.zp-hero h1{margin:0;font-size:29px;line-height:1;font-weight:900;letter-spacing:1px;background:linear-gradient(180deg,#fff2bb,#e1ac3f 45%,#8d5b12);-webkit-background-clip:text;background-clip:text;color:transparent}.zp-subtitle{margin-top:8px;font-size:9px;letter-spacing:3px;color:#f1ca72}.zp-hero p{font-size:11px;line-height:1.8;color:#b9ad9b;margin:13px 0 0}.zp-hero-ball{position:absolute;right:-3px;top:20px;width:145px;height:145px}.zp-ball{position:absolute;right:5px;top:20px;font-size:86px;filter:drop-shadow(0 0 16px rgba(255,188,54,.45));transform:rotate(-10deg)}.zp-orbit{position:absolute;inset:10px;border:1px solid rgba(239,182,63,.34);border-radius:50%;transform:rotate(-22deg) scaleY(.43)}.zp-mini-crown{position:absolute;right:17px;top:0;color:#ffd66d;font-size:27px;text-shadow:0 0 14px #d99c27}
+.zp-features{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin:12px 0}.zp-feature{min-height:76px;padding:10px 5px;border-radius:15px;border:1px solid var(--l);background:linear-gradient(145deg,rgba(255,255,255,.045),rgba(72,43,13,.16));display:flex;flex-direction:column;align-items:center;justify-content:center;gap:7px;text-align:center}.zp-feature-icon{font-size:21px;color:#efbd52;text-shadow:0 0 12px rgba(240,185,69,.45)}.zp-feature span{font-size:10px;color:#e8dfd0;white-space:nowrap}
+.zp-competitions{border-top:1px solid rgba(214,164,59,.13);padding-top:13px}.zp-section-head{display:flex;justify-content:space-between;align-items:end;margin-bottom:9px}.zp-section-kicker{font-size:8px;letter-spacing:2px;color:#bf8730}.zp-section-head h2{margin:3px 0 0;font-size:17px}.zp-live-dot{font-size:9px;color:#d7a73f}.zp-match{position:relative;min-height:67px;display:grid;grid-template-columns:1fr 1.12fr 1fr;align-items:center;gap:5px;margin:7px 0;padding:8px 10px;border:1px solid rgba(214,164,59,.17);border-radius:16px;background:linear-gradient(100deg,rgba(255,255,255,.035),rgba(50,28,7,.24))}.zp-team{display:flex;align-items:center;gap:6px;font-size:9px;color:#eee5d7}.zp-team:last-of-type{flex-direction:row-reverse}.zp-team-badge{flex:0 0 30px;width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:linear-gradient(145deg,#4c3516,#0e0d0b);border:1px solid rgba(238,185,73,.34);color:#e8bb5d;font-size:8px;font-weight:900}.zp-match-mid{text-align:center;display:flex;flex-direction:column;gap:1px}.zp-league{font-size:7px;color:#8f8577}.zp-match-mid strong{font-size:15px;color:#f4d48a}.zp-match-mid small{font-size:7px;color:#9e9384}.zp-status-dot{position:absolute;right:8px;top:7px;width:5px;height:5px;border-radius:50%;background:#e4ae3f;box-shadow:0 0 8px #e4ae3f}
+.zp-subscribe{margin-top:13px;padding:12px;border-radius:20px;border:1px solid rgba(238,185,73,.3);background:linear-gradient(145deg,rgba(255,194,63,.1),rgba(39,22,7,.3))}.zp-price-line{display:flex;justify-content:space-between;margin-bottom:9px;font-size:9px;color:#b8ad9d}.zp-price-line b{color:#f1c45e}.zp-cta{width:100%;border:0;border-radius:15px;padding:12px 10px;color:#251705;background:linear-gradient(180deg,#ffe39a,#eab448 45%,#a66b16);box-shadow:0 0 24px rgba(236,177,49,.24);font-weight:900;cursor:pointer}.zp-cta span{display:block;font-size:15px}.zp-cta small{display:block;margin-top:2px;font-size:9px;opacity:.8}
+.zp-bottom{position:absolute;bottom:0;left:0;right:0;height:79px;display:grid;grid-template-columns:repeat(4,1fr);align-items:center;padding:7px 9px 11px;border-top:1px solid rgba(214,164,59,.18);background:rgba(7,7,7,.93);backdrop-filter:blur(15px)}.zp-nav{border:0;background:none;color:#71695e;font-family:inherit;font-size:9px;display:flex;flex-direction:column;align-items:center;gap:4px;cursor:pointer}.zp-nav span{font-size:18px}.zp-nav small{font-size:8px}.zp-nav.active{color:#e9c56f}.zp-pro-tab{height:55px;margin:-19px 2px 0;border:1px solid rgba(238,185,73,.52);border-radius:17px;background:linear-gradient(145deg,#35220b,#100d09);color:#e9bc53;box-shadow:0 -4px 22px rgba(225,165,44,.13)}.zp-pro-tab span{font-size:14px;font-weight:900}
+@media(max-width:380px){.zp-content{padding-inline:10px}.zp-hero-copy{padding:20px 16px}.zp-hero h1{font-size:25px}.zp-team{font-size:8px}.zp-feature span{font-size:9px}}
+</style>
 
 
+<style id="zingoProExactV3">
+#zingoProWorld{--g:#d6a83b;--g2:#f4cd69;--w:#f7eed8;--m:#afa184;display:block!important;min-height:100vh;width:100%;overflow:visible!important;background:radial-gradient(circle at 82% 5%,#4b310d22,transparent 28%),linear-gradient(145deg,#090909,#211507 52%,#090909);color:var(--w);font-family:system-ui,-apple-system,"Segoe UI",Tahoma,Arial,sans-serif}
+#zingoProWorld *{box-sizing:border-box}
+#zingoProWorld .zp-app{width:min(100%,520px);min-height:100vh;margin:auto;position:relative;overflow:hidden;background:radial-gradient(circle,#d6a83b08 1px,transparent 2px),linear-gradient(180deg,#1b1007ee,#080808);background-size:110px 110px,auto;border-inline:1px solid #d6a83b66;box-shadow:inset 0 0 70px #d6a83b09}
+#zingoProWorld .zp-top{height:86px;display:grid;grid-template-columns:58px 1fr 58px;align-items:center;padding:12px 16px;border-bottom:1px solid #d6a83b55;background:#120d08dd}
+#zingoProWorld .zp-icon-btn{width:48px;height:48px;border:1px solid #d6a83b66;border-radius:16px;background:linear-gradient(145deg,#30200c,#0b0b0a);color:var(--g2);font-size:25px;display:grid;place-items:center}
+#zingoProWorld .zp-back{justify-self:end;font-size:38px}
+#zingoProWorld .zp-brand{display:flex;justify-content:center;align-items:center;gap:10px}
+#zingoProWorld .zp-brand-name{font-size:22px;font-weight:950;letter-spacing:4px;font-style:italic}
+#zingoProWorld .zp-logo{width:42px;height:42px;border-radius:50%;display:grid;place-items:center;border:1px solid #e1b744;color:#fff2bd;background:radial-gradient(circle at 35% 30%,#70551b,#080808 70%);box-shadow:0 0 20px #e0b03655}
+#zingoProWorld .zp-content{padding:18px 16px 105px}
+#zingoProWorld .zp-hero{min-height:280px;position:relative;display:flex;align-items:center;padding:28px 23px;overflow:hidden;border:1px solid #d6a83b77;border-radius:28px;background:radial-gradient(circle at 86% 50%,#e0b03630,transparent 28%),linear-gradient(135deg,#080808f5,#261807ee);box-shadow:inset 0 0 38px #d6a83b0e}
+#zingoProWorld .zp-hero-copy{width:62%;position:relative;z-index:2}
+#zingoProWorld .zp-mini-crown{font-size:20px;color:#f0c85d}
+#zingoProWorld .zp-kicker{font-size:11px;font-weight:950;letter-spacing:4px;color:#f1cc6c}
+#zingoProWorld .zp-hero h1{margin:7px 0 12px;font-size:38px;line-height:1;font-weight:950;font-style:italic;background:linear-gradient(#fff1a9,#e5af37,#8e6117);-webkit-background-clip:text;background-clip:text;color:transparent}
+#zingoProWorld .zp-hero p{margin:0;color:#d1c5ab;font-size:14px;line-height:1.8}
+#zingoProWorld .zp-hero-ball-wrap{position:absolute;width:190px;height:190px;right:-8px;top:50%;transform:translateY(-50%)}
+#zingoProWorld .zp-glow{position:absolute;inset:5px;border-radius:50%;background:#eabc4533;filter:blur(22px)}
+#zingoProWorld .zp-ball{position:absolute;width:142px;height:142px;left:22px;top:25px;border-radius:50%;background:radial-gradient(circle at 33% 27%,#fff,#aaa 18%,#3e3e3e 20%,#eee 30%,#686868 44%,#ddd 57%,#292929 76%,#090909);box-shadow:0 0 30px #e8b94355,inset -12px -14px 20px #0007;transform:rotate(-13deg)}
+#zingoProWorld .zp-ball i{position:absolute;width:31px;height:27px;background:#222;border-radius:45%}
+#zingoProWorld .zp-ball i:nth-child(1){left:55px;top:12px}#zingoProWorld .zp-ball i:nth-child(2){left:101px;top:54px}#zingoProWorld .zp-ball i:nth-child(3){left:70px;top:104px}#zingoProWorld .zp-ball i:nth-child(4){left:18px;top:86px}#zingoProWorld .zp-ball i:nth-child(5){left:15px;top:38px}
+#zingoProWorld .zp-crown-orbit{position:absolute;right:7px;top:1px;color:#ffe18a;font-size:34px;filter:drop-shadow(0 0 10px #ffcd4e88)}
+#zingoProWorld .zp-features{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+#zingoProWorld .zp-feature{min-height:145px;padding:14px 11px;border:1px solid #d6a83b44;border-radius:20px;background:linear-gradient(155deg,#281908c4,#0c0c0be8);box-shadow:inset 0 0 20px #d6a83b08}
+#zingoProWorld .zp-feature-icon{width:39px;height:39px;display:grid;place-items:center;border-radius:13px;border:1px solid #e0b34166;color:#f6cf72;background:#d6a83b12;font-size:20px;margin-bottom:10px}
+#zingoProWorld .zp-feature h3{margin:0 0 7px;font-size:14px;color:#f8eac4}
+#zingoProWorld .zp-feature p{margin:0;color:#a99c84;font-size:11px;line-height:1.75}
+#zingoProWorld .zp-competitions{margin-top:23px}
+#zingoProWorld .zp-section-head{display:flex;align-items:end;justify-content:space-between;margin-bottom:11px}
+#zingoProWorld .zp-section-head span{display:block;color:#b88a2b;font-size:10px;font-weight:950;letter-spacing:2px}
+#zingoProWorld .zp-section-head h2{margin:3px 0 0;font-size:22px;color:#f7e7bd}
+#zingoProWorld .zp-section-head em{font-style:normal;color:#d5b25e;font-size:10px;border:1px solid #d6a83b40;border-radius:20px;padding:6px 9px}
+#zingoProWorld .zp-match{min-height:82px;display:grid;grid-template-columns:1fr auto 32px;gap:9px;align-items:center;margin:9px 0;padding:12px;border:1px solid #d6a83b40;border-radius:18px;background:linear-gradient(110deg,#1f1408e0,#0a0a09f5)}
+#zingoProWorld .zp-match small{display:block;color:#948873;font-size:10px;margin-bottom:5px}
+#zingoProWorld .zp-match strong{display:block;color:#eee2c3;font-size:13px}
+#zingoProWorld .zp-match i{color:#d4a73a;font-style:normal;font-size:10px;margin:0 4px}
+#zingoProWorld .zp-match aside{text-align:left}
+#zingoProWorld .zp-match aside b{display:block;color:#e8be55;font-size:9px}
+#zingoProWorld .zp-match aside small{white-space:nowrap;margin-top:4px}
+#zingoProWorld .zp-match>button{width:30px;height:30px;border-radius:10px;border:1px solid #d6a83b44;background:#d6a83b0f;color:#edc15b;font-size:25px}
+#zingoProWorld .zp-cta{margin-top:18px;padding:18px;border-radius:22px;border:1px solid #ecbe468f;background:linear-gradient(105deg,#2b1a07,#100e0b 62%,#241705);display:flex;align-items:center;justify-content:space-between;gap:12px;box-shadow:0 0 30px #d8a52f14}
+#zingoProWorld .zp-cta small{display:block;color:#a9997b;font-size:10px;margin-bottom:4px}
+#zingoProWorld .zp-cta strong{color:#fff0c4;font-size:16px}
+#zingoProWorld .zp-cta>button{border:1px solid #f0c45a;border-radius:14px;padding:11px 13px;color:#211507;font-weight:950;background:linear-gradient(#ffe18a,#c8942a);white-space:nowrap}
+#zingoProWorld .zp-cta>button b{font-size:20px}
+#zingoProWorld .zp-bottom{position:absolute;bottom:0;left:0;right:0;height:82px;display:grid;grid-template-columns:repeat(5,1fr);padding:8px;border-top:1px solid #d6a83b4d;background:#090908f2;backdrop-filter:blur(14px)}
+#zingoProWorld .zp-bottom button{border:0;background:none;color:#766c5a;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:19px}
+#zingoProWorld .zp-bottom small{font-size:9px;color:#766c5a}
+#zingoProWorld .zp-bottom .active,#zingoProWorld .zp-bottom .active small{color:#f1c65d}
+@media(max-width:380px){#zingoProWorld .zp-content{padding-inline:11px}#zingoProWorld .zp-feature{padding:11px 9px}#zingoProWorld .zp-feature h3{font-size:12px}#zingoProWorld .zp-feature p{font-size:10px}#zingoProWorld .zp-hero{padding-inline:18px}#zingoProWorld .zp-hero h1{font-size:32px}}
+</style>
+<style id="zingoProExactFinal20260926">
+
+:root{
+  --zpro-bg:#090909;
+  --zpro-panel:#15110c;
+  --zpro-panel2:#211507;
+  --zpro-gold:#f0bf43;
+  --zpro-gold2:#ffd86a;
+  --zpro-cream:#fff7df;
+  --zpro-line:rgba(243,193,67,.18);
+  --zpro-line2:rgba(243,193,67,.38);
+  --zpro-shadow:0 18px 60px rgba(0,0,0,.56);
+}
 
 
+/* =========================================================
+   ZINGO PRO GOLD SIGNATURE — CLEAN MOBILE LAYER
+   20260927
+   ========================================================= */
 
+#zingoProWorld.zingo-pro-exact-final{
+  position:relative !important;
+  width:100% !important;
+  min-width:0 !important;
+  min-height:100dvh !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:visible !important;
+  box-sizing:border-box !important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,205,80,.10),transparent 35%),
+    linear-gradient(180deg,#050505 0%,#090909 48%,#030303 100%) !important;
+}
 
+#zingoProWorld.zingo-pro-exact-final *,
+#zingoProWorld.zingo-pro-exact-final *::before,
+#zingoProWorld.zingo-pro-exact-final *::after{
+  box-sizing:border-box !important;
+}
 
+#zingoProWorld.zingo-pro-exact-final .zpro-phone{
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  min-height:100dvh !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  overflow:visible !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-phone::before{
+  display:none !important;
+  content:none !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-screen{
+  width:100% !important;
+  max-width:none !important;
+  min-height:100dvh !important;
+  margin:0 !important;
+  padding:0 !important;
+  border:0 !important;
+  border-radius:0 !important;
+  overflow:visible !important;
+  background:
+    radial-gradient(circle at 50% 0%,rgba(255,215,100,.08),transparent 34%),
+    linear-gradient(180deg,#070707 0%,#0a0a0a 55%,#030303 100%) !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-wrap{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:
+    max(12px,env(safe-area-inset-top))
+    12px
+    calc(94px + env(safe-area-inset-bottom))
+    12px !important;
+}
+
+/* ---------- HEADER ---------- */
+
+#zingoProWorld.zingo-pro-exact-final .zpro-topbar{
+  width:100% !important;
+  min-width:0 !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:space-between !important;
+  gap:10px !important;
+  margin-bottom:12px !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-brand{
+  min-width:0 !important;
+  flex:1 1 auto !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-brand-title{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-brand-sub{
+  white-space:nowrap !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+}
+
+/* ---------- HERO ---------- */
+
+#zingoProWorld.zingo-pro-exact-final .zpro-hero{
+  width:100% !important;
+  min-width:0 !important;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) 100px !important;
+  gap:10px !important;
+  align-items:center !important;
+  overflow:hidden !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-hero-copy{
+  min-width:0 !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-hero-title{
+  max-width:100% !important;
+  font-size:clamp(27px,8vw,42px) !important;
+  line-height:1 !important;
+  overflow-wrap:anywhere !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-hero-sub{
+  max-width:100% !important;
+  line-height:1.65 !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-hero-art{
+  width:100px !important;
+  height:100px !important;
+  min-width:100px !important;
+  overflow:visible !important;
+}
+
+/* ---------- FEATURES ---------- */
+
+#zingoProWorld.zingo-pro-exact-final .zpro-features{
+  width:100% !important;
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:8px !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-feature{
+  min-width:0 !important;
+  width:100% !important;
+  overflow:hidden !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-feature-title,
+#zingoProWorld.zingo-pro-exact-final .zpro-feature-note{
+  overflow-wrap:anywhere !important;
+}
+
+/* ---------- MATCHES ---------- */
+
+#zingoProWorld.zingo-pro-exact-final .zpro-matches{
+  width:100% !important;
+  min-width:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:12px !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-match{
+  width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  overflow:hidden !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-match summary{
+  width:100% !important;
+  min-width:0 !important;
+  display:grid !important;
+  grid-template-columns:48px minmax(0,1fr) 66px !important;
+  gap:8px !important;
+  align-items:center !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-match-date,
+#zingoProWorld.zingo-pro-exact-final .zpro-teams,
+#zingoProWorld.zingo-pro-exact-final .zpro-status{
+  min-width:0 !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-teams{
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:5px !important;
+  overflow:hidden !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-team{
+  min-width:0 !important;
+  max-width:42% !important;
+  overflow:hidden !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-team span{
+  display:block !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-vs{
+  flex:0 0 auto !important;
+}
+
+/* ---------- PREDICTION AREA ---------- */
+
+#zingoProWorld.zingo-pro-exact-final .zpro-match details,
+#zingoProWorld.zingo-pro-exact-final .zpro-match[open]{
+  width:100% !important;
+  min-width:0 !important;
+  overflow:visible !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-match button,
+#zingoProWorld.zingo-pro-exact-final .zpro-match input,
+#zingoProWorld.zingo-pro-exact-final .zpro-match select{
+  max-width:100% !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-picks,
+#zingoProWorld.zingo-pro-exact-final .zpro-options,
+#zingoProWorld.zingo-pro-exact-final .zpro-predictions,
+#zingoProWorld.zingo-pro-exact-final .zpro-prediction-options{
+  width:100% !important;
+  min-width:0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:8px !important;
+  margin-top:8px !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-picks button,
+#zingoProWorld.zingo-pro-exact-final .zpro-options button,
+#zingoProWorld.zingo-pro-exact-final .zpro-predictions button,
+#zingoProWorld.zingo-pro-exact-final .zpro-prediction-options button{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:48px !important;
+  padding:8px 5px !important;
+  border-radius:12px !important;
+  white-space:normal !important;
+  line-height:1.25 !important;
+  font-size:13px !important;
+  text-align:center !important;
+  touch-action:manipulation !important;
+}
+
+/* Any native select used for goals/corners */
+#zingoProWorld.zingo-pro-exact-final .zpro-match select{
+  width:100% !important;
+  min-height:48px !important;
+  padding:0 12px !important;
+  border-radius:12px !important;
+  font-size:14px !important;
+}
+
+/* ---------- CTA ---------- */
+
+#zingoProWorld.zingo-pro-exact-final .zpro-cta{
+  width:100% !important;
+  min-width:0 !important;
+  margin-top:12px !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-cta-title,
+#zingoProWorld.zingo-pro-exact-final .zpro-cta-sub{
+  overflow-wrap:anywhere !important;
+}
+
+/* ---------- TRUST ---------- */
+
+#zingoProWorld.zingo-pro-exact-final .zpro-trust{
+  width:100% !important;
+  min-width:0 !important;
+  display:flex !important;
+  flex-wrap:wrap !important;
+  justify-content:center !important;
+  gap:6px !important;
+}
+
+/* ---------- FIXED BOTTOM NAV ---------- */
+
+#zingoProWorld.zingo-pro-exact-final .zpro-nav{
+  position:fixed !important;
+  left:10px !important;
+  right:10px !important;
+  bottom:max(8px,env(safe-area-inset-bottom)) !important;
+  width:auto !important;
+  max-width:none !important;
+  min-width:0 !important;
+  height:auto !important;
+  min-height:58px !important;
+  margin:0 !important;
+  padding:5px !important;
+  display:grid !important;
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  gap:4px !important;
+  z-index:2147483647 !important;
+  border-radius:18px !important;
+  backdrop-filter:blur(18px) !important;
+  -webkit-backdrop-filter:blur(18px) !important;
+  background:rgba(5,5,5,.94) !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-nav a{
+  min-width:0 !important;
+  min-height:48px !important;
+  padding:5px 2px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:2px !important;
+  overflow:hidden !important;
+  border-radius:13px !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-nav .nav-icon{
+  flex:0 0 auto !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-nav .nav-label{
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:9px !important;
+  line-height:1 !important;
+}
+
+#zingoProWorld.zingo-pro-exact-final .zpro-pro-pill{
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+}
+
+/* ---------- MOBILE ---------- */
+
+@media(max-width:390px){
+  #zingoProWorld.zingo-pro-exact-final .zpro-wrap{
+    padding-left:9px !important;
+    padding-right:9px !important;
+  }
+
+  #zingoProWorld.zingo-pro-exact-final .zpro-hero{
+    grid-template-columns:minmax(0,1fr) 78px !important;
+  }
+
+  #zingoProWorld.zingo-pro-exact-final .zpro-hero-art{
+    width:78px !important;
+    height:78px !important;
+    min-width:78px !important;
+  }
+
+  #zingoProWorld.zingo-pro-exact-final .zpro-features{
+    gap:5px !important;
+  }
+
+  #zingoProWorld.zingo-pro-exact-final .zpro-feature{
+    padding:8px 5px !important;
+  }
+
+  #zingoProWorld.zingo-pro-exact-final .zpro-match summary{
+    grid-template-columns:43px minmax(0,1fr) 60px !important;
+    gap:5px !important;
+  }
+
+  #zingoProWorld.zingo-pro-exact-final .zpro-picks button,
+  #zingoProWorld.zingo-pro-exact-final .zpro-options button,
+  #zingoProWorld.zingo-pro-exact-final .zpro-predictions button,
+  #zingoProWorld.zingo-pro-exact-final .zpro-prediction-options button{
+    min-height:46px !important;
+    font-size:12px !important;
+  }
+
+  #zingoProWorld.zingo-pro-exact-final .zpro-nav{
+    left:6px !important;
+    right:6px !important;
+  }
+
+  #zingoProWorld.zingo-pro-exact-final .zpro-nav .nav-label{
+    font-size:8px !important;
+  }
+}
+
+@media(min-width:560px){
+  #zingoProWorld.zingo-pro-exact-final{
+    max-width:520px !important;
+    margin:0 auto !important;
+  }
+
+  #zingoProWorld.zingo-pro-exact-final .zpro-nav{
+    left:50% !important;
+    right:auto !important;
+    transform:translateX(-50%) !important;
+    width:min(500px,calc(100% - 20px)) !important;
+  }
+}
+
+/* =========================================================
+   END CLEAN PRO MOBILE LAYER
+   ========================================================= */
+
+<style>
+/* =========================================================
+   ZINGO PRO REAL MOBILE FIX 20260927
+   Targets the ACTUAL .zp-* PRO interface.
+   ========================================================= */
+
+#zingoProWorld{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  min-height:100dvh !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:visible !important;
+}
+
+#zingoProWorld *{
+  box-sizing:border-box !important;
+}
+
+#zingoProWorld .zp-app,
+#zingoProWorld .zp-shell,
+#zingoProWorld .zp-phone,
+#zingoProWorld .zp-screen{
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+  margin:0 !important;
+}
+
+#zingoProWorld .zp-phone{
+  min-height:100dvh !important;
+  padding:0 !important;
+  border-radius:0 !important;
+  border-left:0 !important;
+  border-right:0 !important;
+}
+
+#zingoProWorld .zp-screen{
+  min-height:100dvh !important;
+  padding:0 !important;
+  border-radius:0 !important;
+  overflow:visible !important;
+}
+
+/* ===== CONTENT ===== */
+
+#zingoProWorld .zp-wrap{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  padding:
+    12px
+    12px
+    calc(92px + env(safe-area-inset-bottom))
+    12px !important;
+  margin:0 !important;
+}
+
+#zingoProWorld .zp-hero{
+  width:100% !important;
+  min-width:0 !important;
+  grid-template-columns:minmax(0,1fr) 100px !important;
+  gap:10px !important;
+}
+
+#zingoProWorld .zp-hero-copy{
+  min-width:0 !important;
+}
+
+#zingoProWorld .zp-title{
+  font-size:clamp(27px,8vw,36px) !important;
+  line-height:1 !important;
+  overflow-wrap:anywhere !important;
+}
+
+#zingoProWorld .zp-subtitle,
+#zingoProWorld .zp-hero-note{
+  max-width:100% !important;
+  overflow-wrap:anywhere !important;
+}
+
+/* ===== FEATURES ===== */
+
+#zingoProWorld .zp-features{
+  width:100% !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:7px !important;
+}
+
+#zingoProWorld .zp-feature{
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+
+#zingoProWorld .zp-feature-title,
+#zingoProWorld .zp-feature-note{
+  overflow-wrap:anywhere !important;
+}
+
+/* ===== MATCH CARD ===== */
+
+#zingoProWorld .zp-matches{
+  width:100% !important;
+  min-width:0 !important;
+}
+
+#zingoProWorld .zp-match{
+  width:100% !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+
+#zingoProWorld .zp-match form,
+#zingoProWorld .zp-match details{
+  width:100% !important;
+  min-width:0 !important;
+}
+
+#zingoProWorld .zp-market-grid{
+  width:100% !important;
+  min-width:0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:7px !important;
+  margin:10px 0 !important;
+}
+
+#zingoProWorld .zp-market{
+  min-width:0 !important;
+  width:100% !important;
+  display:block !important;
+  margin:0 !important;
+}
+
+#zingoProWorld .zp-market input{
+  position:absolute !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+
+#zingoProWorld .zp-market span{
+  width:100% !important;
+  min-height:50px !important;
+  padding:8px 4px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  border-radius:12px !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+  line-height:1.25 !important;
+  font-size:12px !important;
+}
+
+/* Selected prediction */
+#zingoProWorld .zp-market input:checked + span{
+  transform:translateY(-1px);
+}
+
+/* ===== GOALS + CORNERS ===== */
+
+#zingoProWorld .zp-extra-grid{
+  width:100% !important;
+  min-width:0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:8px !important;
+}
+
+#zingoProWorld .zp-field{
+  min-width:0 !important;
+  width:100% !important;
+}
+
+#zingoProWorld .zp-field label{
+  display:block !important;
+  width:100% !important;
+  margin-bottom:6px !important;
+  line-height:1.4 !important;
+  overflow-wrap:anywhere !important;
+}
+
+#zingoProWorld .zp-field select{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:48px !important;
+  padding:0 9px !important;
+  border-radius:12px !important;
+  font-size:13px !important;
+}
+
+/* ===== SAVE ===== */
+
+#zingoProWorld .zp-save{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:50px !important;
+  margin-top:10px !important;
+  padding:10px 14px !important;
+  border-radius:13px !important;
+  font-size:14px !important;
+  white-space:normal !important;
+}
+
+/* ===== LOCKED TEXT ===== */
+
+#zingoProWorld .zp-locked{
+  width:100% !important;
+  text-align:center !important;
+  line-height:1.5 !important;
+  overflow-wrap:anywhere !important;
+}
+
+/* ===== REAL PRO NAV ===== */
+
+#zingoProWorld .zp-nav{
+  position:fixed !important;
+  left:8px !important;
+  right:8px !important;
+  bottom:max(7px,env(safe-area-inset-bottom)) !important;
+  width:auto !important;
+  max-width:none !important;
+  min-width:0 !important;
+  height:auto !important;
+  min-height:60px !important;
+  margin:0 !important;
+  padding:5px !important;
+  display:grid !important;
+  grid-template-columns:repeat(5,minmax(0,1fr)) !important;
+  gap:4px !important;
+  z-index:2147483647 !important;
+  border-radius:18px !important;
+}
+
+#zingoProWorld .zp-nav a,
+#zingoProWorld .zp-nav button{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:48px !important;
+  padding:4px 2px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:3px !important;
+  overflow:hidden !important;
+  border-radius:13px !important;
+}
+
+#zingoProWorld .zp-nav .nav-label{
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:8px !important;
+  line-height:1.1 !important;
+}
+
+/* ===== SMALL PHONES ===== */
+
+@media(max-width:390px){
+
+  #zingoProWorld .zp-wrap{
+    padding-left:9px !important;
+    padding-right:9px !important;
+  }
+
+  #zingoProWorld .zp-hero{
+    grid-template-columns:minmax(0,1fr) 78px !important;
+  }
+
+  #zingoProWorld .zp-hero-art{
+    min-height:90px !important;
+  }
+
+  #zingoProWorld .zp-features{
+    gap:5px !important;
+  }
+
+  #zingoProWorld .zp-feature{
+    padding-left:5px !important;
+    padding-right:5px !important;
+  }
+
+  #zingoProWorld .zp-market-grid{
+    gap:5px !important;
+  }
+
+  #zingoProWorld .zp-market span{
+    min-height:48px !important;
+    font-size:11px !important;
+  }
+
+  #zingoProWorld .zp-extra-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  #zingoProWorld .zp-nav{
+    left:5px !important;
+    right:5px !important;
+  }
+}
+
+/* ===== TABLET / DESKTOP SHOULD NOT CREATE A PHONE FRAME ===== */
+
+@media(min-width:560px){
+  #zingoProWorld{
+    max-width:520px !important;
+    margin:0 auto !important;
+  }
+
+  #zingoProWorld .zp-nav{
+    left:50% !important;
+    right:auto !important;
+    transform:translateX(-50%) !important;
+    width:min(500px,calc(100% - 20px)) !important;
+  }
+}
+
+/* =========================================================
+   END REAL PRO MOBILE FIX
+   ========================================================= */
+</style>
+
+<style>
+/* =========================================================
+   ZINGO PRO FINAL MOBILE OVERRIDE 20260927
+   FINAL VISUAL OVERRIDE — PRO ONLY
+   ========================================================= */
+
+#zingoProWorld{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  min-height:100dvh !important;
+  margin:0 !important;
+  padding:0 !important;
+  overflow:visible !important;
+}
+
+#zingoProWorld,
+#zingoProWorld *{
+  box-sizing:border-box !important;
+}
+
+/* Remove desktop/phone-in-phone effect */
+#zingoProWorld .zp-app,
+#zingoProWorld .zp-phone,
+#zingoProWorld .zp-screen,
+#zingoProWorld .zp-shell{
+  width:100% !important;
+  max-width:none !important;
+  min-width:0 !important;
+}
+
+#zingoProWorld .zp-phone{
+  min-height:100dvh !important;
+  margin:0 !important;
+  padding:0 !important;
+  border-radius:0 !important;
+  box-shadow:none !important;
+}
+
+#zingoProWorld .zp-screen{
+  min-height:100dvh !important;
+  margin:0 !important;
+  padding:0 !important;
+  border-radius:0 !important;
+  overflow:visible !important;
+}
+
+/* Main content */
+#zingoProWorld .zp-wrap{
+  width:100% !important;
+  max-width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  padding:
+    12px
+    10px
+    calc(100px + env(safe-area-inset-bottom))
+    10px !important;
+}
+
+/* Hero */
+#zingoProWorld .zp-hero{
+  width:100% !important;
+  min-width:0 !important;
+  grid-template-columns:minmax(0,1fr) 90px !important;
+  gap:8px !important;
+}
+
+#zingoProWorld .zp-hero-copy{
+  min-width:0 !important;
+}
+
+#zingoProWorld .zp-title{
+  max-width:100% !important;
+  font-size:clamp(26px,8vw,35px) !important;
+  line-height:1 !important;
+  overflow-wrap:anywhere !important;
+}
+
+#zingoProWorld .zp-subtitle,
+#zingoProWorld .zp-hero-note{
+  max-width:100% !important;
+  overflow-wrap:anywhere !important;
+}
+
+/* Features */
+#zingoProWorld .zp-features{
+  width:100% !important;
+  min-width:0 !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:6px !important;
+}
+
+#zingoProWorld .zp-feature{
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+
+#zingoProWorld .zp-feature-head{
+  min-width:0 !important;
+}
+
+/* Matches */
+#zingoProWorld .zp-matches{
+  width:100% !important;
+  min-width:0 !important;
+  display:flex !important;
+  flex-direction:column !important;
+  gap:10px !important;
+}
+
+#zingoProWorld .zp-match{
+  width:100% !important;
+  min-width:0 !important;
+  overflow:hidden !important;
+}
+
+#zingoProWorld .zp-details{
+  width:100% !important;
+  min-width:0 !important;
+}
+
+/* Prediction buttons */
+#zingoProWorld .zp-market-grid{
+  width:100% !important;
+  min-width:0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  gap:6px !important;
+  margin:10px 0 !important;
+}
+
+#zingoProWorld .zp-market{
+  width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  display:block !important;
+}
+
+#zingoProWorld .zp-market input{
+  position:absolute !important;
+  width:1px !important;
+  height:1px !important;
+  opacity:0 !important;
+  pointer-events:none !important;
+}
+
+#zingoProWorld .zp-market span{
+  width:100% !important;
+  min-height:50px !important;
+  padding:7px 3px !important;
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  text-align:center !important;
+  border-radius:12px !important;
+  font-size:12px !important;
+  line-height:1.25 !important;
+  white-space:normal !important;
+  overflow-wrap:anywhere !important;
+}
+
+/* Selected button */
+#zingoProWorld .zp-market input:checked + span{
+  border-color:#f0c65f !important;
+  box-shadow:
+    0 0 0 1px rgba(240,198,95,.35),
+    0 0 18px rgba(240,198,95,.18) !important;
+}
+
+/* Goals + corners */
+#zingoProWorld .zp-extra-grid{
+  width:100% !important;
+  min-width:0 !important;
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:7px !important;
+}
+
+#zingoProWorld .zp-field{
+  width:100% !important;
+  min-width:0 !important;
+}
+
+#zingoProWorld .zp-field label{
+  display:block !important;
+  width:100% !important;
+  margin-bottom:5px !important;
+  line-height:1.4 !important;
+  overflow-wrap:anywhere !important;
+}
+
+#zingoProWorld .zp-field select{
+  width:100% !important;
+  min-width:0 !important;
+  min-height:48px !important;
+  padding:0 8px !important;
+  border-radius:12px !important;
+  font-size:13px !important;
+}
+
+/* Save */
+#zingoProWorld .zp-save{
+  display:block !important;
+  width:100% !important;
+  min-width:0 !important;
+  min-height:50px !important;
+  margin-top:9px !important;
+  padding:10px 12px !important;
+  border-radius:13px !important;
+  font-size:14px !important;
+}
+
+/* Locked */
+#zingoProWorld .zp-locked{
+  width:100% !important;
+  text-align:center !important;
+  line-height:1.5 !important;
+  overflow-wrap:anywhere !important;
+}
+
+/* =========================================================
+   REAL BOTTOM BAR
+   ========================================================= */
+
+#zingoProWorld .zp-bottom{
+  position:fixed !important;
+  left:7px !important;
+  right:7px !important;
+  bottom:max(7px,env(safe-area-inset-bottom)) !important;
+
+  width:auto !important;
+  height:auto !important;
+  min-height:64px !important;
+
+  margin:0 !important;
+  padding:6px 7px !important;
+
+  display:grid !important;
+  grid-template-columns:repeat(4,minmax(0,1fr)) !important;
+  gap:5px !important;
+
+  z-index:2147483647 !important;
+
+  border-radius:19px !important;
+  background:rgba(7,7,7,.96) !important;
+  backdrop-filter:blur(18px) !important;
+  -webkit-backdrop-filter:blur(18px) !important;
+}
+
+#zingoProWorld .zp-bottom .zp-nav{
+  position:relative !important;
+  left:auto !important;
+  right:auto !important;
+  bottom:auto !important;
+  transform:none !important;
+
+  width:100% !important;
+  min-width:0 !important;
+  min-height:50px !important;
+
+  margin:0 !important;
+  padding:5px 2px !important;
+
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:3px !important;
+
+  overflow:hidden !important;
+  border-radius:13px !important;
+}
+
+#zingoProWorld .zp-bottom .zp-nav span{
+  flex:0 0 auto !important;
+  font-size:18px !important;
+  line-height:1 !important;
+}
+
+#zingoProWorld .zp-bottom .zp-nav small{
+  display:block !important;
+  max-width:100% !important;
+  overflow:hidden !important;
+  text-overflow:ellipsis !important;
+  white-space:nowrap !important;
+  font-size:8px !important;
+  line-height:1.1 !important;
+}
+
+/* PRO tab */
+#zingoProWorld .zp-bottom .zp-pro-tab{
+  width:100% !important;
+  min-width:0 !important;
+  margin:0 !important;
+  min-height:50px !important;
+}
+
+/* Prevent bottom content from being hidden */
+#zingoProWorld .zp-bottom ~ *{
+  margin-bottom:0 !important;
+}
+
+/* Small screens */
+@media(max-width:390px){
+
+  #zingoProWorld .zp-wrap{
+    padding-left:8px !important;
+    padding-right:8px !important;
+    padding-bottom:calc(96px + env(safe-area-inset-bottom)) !important;
+  }
+
+  #zingoProWorld .zp-hero{
+    grid-template-columns:minmax(0,1fr) 74px !important;
+  }
+
+  #zingoProWorld .zp-hero-art{
+    min-height:78px !important;
+  }
+
+  #zingoProWorld .zp-features{
+    gap:4px !important;
+  }
+
+  #zingoProWorld .zp-feature{
+    padding-left:4px !important;
+    padding-right:4px !important;
+  }
+
+  #zingoProWorld .zp-market-grid{
+    gap:5px !important;
+  }
+
+  #zingoProWorld .zp-market span{
+    min-height:47px !important;
+    font-size:11px !important;
+  }
+
+  #zingoProWorld .zp-extra-grid{
+    grid-template-columns:1fr !important;
+  }
+
+  #zingoProWorld .zp-bottom{
+    left:5px !important;
+    right:5px !important;
+    gap:3px !important;
+  }
+
+  #zingoProWorld .zp-bottom .zp-nav span{
+    font-size:17px !important;
+  }
+}
+</style>
 </head>
 
 <body>
@@ -1157,6 +2332,10 @@ html[dir="ltr"] body{text-align:left}
 </section>
 
 
+<section id="zingoProWorld"
+         class="zingo-world hidden zingo-pro-exact-final"
+         dir="rtl"
+         aria-label="واجهة ZINGO PRO">
 <style>
 /* ============================================================
    ZINGO PRO — FULL MOBILE UI
@@ -1947,12 +3126,13 @@ html[dir="ltr"] body{text-align:left}
 }
 
 #zingoProWorld .zp-bottom{
-  position:absolute;
-  z-index:8;
-  left:8px;
-  right:8px;
-  bottom:8px;
-  min-height:72px;
+  position:fixed !important;
+  z-index:2147483647 !important;
+  left:7px !important;
+  right:7px !important;
+  bottom:max(7px,env(safe-area-inset-bottom)) !important;
+  width:auto !important;
+  min-height:72px !important;
   display:grid;
   grid-template-columns:repeat(5,1fr);
   gap:4px;
@@ -2053,29 +3233,6 @@ html[dir="ltr"] body{text-align:left}
   }
 }
 </style>
-
-<style id="zingoNavigationFix20260927">
-/* إخفاء أزرار تبديل FREE / PRO / VIP العلوية */
-#zingoUnifiedTierBar{
-  display:none !important;
-}
-
-/* تثبيت شريط التنقل السفلي أثناء التمرير */
-#zingoProWorld .zp-bottom{
-  position:fixed !important;
-  left:7px !important;
-  right:7px !important;
-  bottom:max(7px, env(safe-area-inset-bottom)) !important;
-  width:auto !important;
-  z-index:2147483647 !important;
-}
-</style>
-
-<section id="zingoProWorld"
-         class="zingo-world hidden zingo-pro-exact-final"
-         dir="rtl"
-         aria-label="واجهة ZINGO PRO">
-
 
 <div class="zp-wrap">
   <div class="zp-phone">
@@ -7664,553 +8821,6 @@ window.__zingoProfileV2Draft = {
       if(el) el.classList.remove("show");
     };
   }
-})();
-</script>
-
-
-<script id="zingoProApiBridge20260927">
-(function(){
-  "use strict";
-
-  /*
-   * ZINGO PRO API BRIDGE
-   * 2026-09-27
-   *
-   * This layer connects the existing PRO GOLD SIGNATURE UI
-   * to the existing PRO API without replacing the UI.
-   */
-
-  const API = {
-    subscription: "/api/subscription",
-    round: "/api/pro_round",
-    submit: "/api/pro_submit",
-    ranking: "/api/pro_ranking"
-  };
-
-  window.API = Object.assign(window.API || {}, API);
-
-  const tg = window.Telegram?.WebApp;
-
-  function authHeaders(){
-    const initData = tg?.initData || "";
-    return initData
-      ? {"X-Telegram-Init-Data": initData}
-      : {};
-  }
-
-  async function api(path, options={}){
-    const headers = {
-      ...(options.body ? {"Content-Type":"application/json"} : {}),
-      ...authHeaders(),
-      ...(options.headers || {})
-    };
-
-    const res = await fetch(path, {
-      ...options,
-      headers,
-      cache: "no-store",
-      credentials: "include"
-    });
-
-    const text = await res.text();
-
-    let data;
-    try {
-      data = JSON.parse(text);
-    } catch(e) {
-      data = {raw:text};
-    }
-
-    if(!res.ok){
-      throw new Error(
-        data?.error ||
-        data?.message ||
-        `HTTP ${res.status}`
-      );
-    }
-
-    return data;
-  }
-
-  function asArray(data){
-    if(Array.isArray(data)) return data;
-
-    return (
-      data?.matches ||
-      data?.fixtures ||
-      data?.games ||
-      data?.data ||
-      data?.round?.matches ||
-      data?.round?.fixtures ||
-      []
-    );
-  }
-
-  function valueOf(obj, keys, fallback=""){
-    for(const key of keys){
-      const v = obj?.[key];
-      if(v !== undefined && v !== null && String(v) !== ""){
-        return v;
-      }
-    }
-    return fallback;
-  }
-
-  function matchId(match, index){
-    return String(
-      valueOf(
-        match,
-        ["id","match_id","fixture_id","game_id"],
-        `pro-${index+1}`
-      )
-    );
-  }
-
-  function teamName(match, side){
-    if(side === "home"){
-      return String(valueOf(
-        match,
-        ["home_team","home","team1","homeTeam","home_name"],
-        ""
-      ));
-    }
-
-    return String(valueOf(
-      match,
-      ["away_team","away","team2","awayTeam","away_name"],
-      ""
-    ));
-  }
-
-  function leagueName(match){
-    const league = match?.league;
-
-    if(typeof league === "string" && league){
-      return league;
-    }
-
-    if(league && typeof league === "object"){
-      return String(
-        league.name ||
-        league.title ||
-        league.league_name ||
-        ""
-      );
-    }
-
-    return String(valueOf(
-      match,
-      ["league_name","competition","tournament","league"],
-      ""
-    ));
-  }
-
-  function matchTime(match){
-    return String(valueOf(
-      match,
-      ["time","start_time","kickoff","date_time","datetime"],
-      ""
-    ));
-  }
-
-  function setText(el, value){
-    if(el && value !== ""){
-      el.textContent = String(value);
-    }
-  }
-
-  function formatTime(raw){
-    if(!raw) return "";
-
-    const s = String(raw);
-
-    /*
-     * Keep already formatted values such as 21:00.
-     */
-    if(/^\\d{1,2}:\\d{2}$/.test(s)){
-      return s;
-    }
-
-    const d = new Date(s);
-
-    if(Number.isNaN(d.getTime())){
-      return s;
-    }
-
-    return d.toLocaleTimeString("ar", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: false
-    });
-  }
-
-  function installMatchIds(){
-    const matches = document.querySelectorAll(
-      "#zingoProWorld details.zp-match"
-    );
-
-    matches.forEach((details, index)=>{
-      if(!details.dataset.matchIndex){
-        details.dataset.matchIndex = String(index);
-      }
-    });
-
-    return matches;
-  }
-
-  function updateMatchFromApi(details, match, index){
-    if(!details || !match) return;
-
-    const id = matchId(match,index);
-    details.dataset.matchId = id;
-
-    const home = teamName(match,"home");
-    const away = teamName(match,"away");
-    const league = leagueName(match);
-    const time = formatTime(matchTime(match));
-
-    const teams = details.querySelectorAll(".zp-team span");
-
-    if(home && teams[0]){
-      teams[0].textContent = home;
-    }
-
-    if(away && teams[1]){
-      teams[1].textContent = away;
-    }
-
-    const timeEl = details.querySelector(".zp-time");
-    if(time && timeEl){
-      timeEl.textContent = time;
-    }
-
-    const leagueEl = details.querySelector(".zp-league");
-    if(league && leagueEl){
-      leagueEl.textContent = league;
-    }
-
-    /*
-     * Optional backend status.
-     */
-    const status = String(valueOf(
-      match,
-      ["status","state","availability"],
-      ""
-    ));
-
-    const statusEl = details.querySelector(".zp-live");
-
-    if(statusEl && status){
-      statusEl.textContent = status;
-    }
-
-    /*
-     * Store the complete backend match object for submission.
-     */
-    details.__zingoMatch = match;
-  }
-
-  async function loadRound(){
-    const details = Array.from(
-      document.querySelectorAll(
-        "#zingoProWorld details.zp-match"
-      )
-    );
-
-    if(!details.length){
-      return;
-    }
-
-    try{
-      const data = await api(API.round);
-      const matches = asArray(data);
-
-      if(!matches.length){
-        console.warn("Zingo PRO: round returned no matches");
-        return;
-      }
-
-      matches.forEach((match,index)=>{
-        if(details[index]){
-          updateMatchFromApi(details[index],match,index);
-        }
-      });
-
-      window.__zingoProRound = data;
-
-      /*
-       * Re-apply prediction handlers after the backend data
-       * has been attached.
-       */
-      installPredictionHandlers();
-
-      console.log(
-        "Zingo PRO round loaded:",
-        matches.length,
-        "matches"
-      );
-
-    }catch(e){
-      console.warn(
-        "Zingo PRO round:",
-        e?.message || e
-      );
-    }
-  }
-
-  function selectedValue(form, selector){
-    const el = form.querySelector(selector);
-    return el ? String(el.value || "") : "";
-  }
-
-  function normalizeGoals(value){
-    const s = String(value || "").trim();
-
-    if(!s || s === "اختر"){
-      return "";
-    }
-
-    const m = s.match(/\\d+/);
-
-    if(!m){
-      return s;
-    }
-
-    if(s.includes("6+")){
-      return "6+";
-    }
-
-    return m[0];
-  }
-
-  function collectPrediction(form){
-    const winner = form.querySelector(
-      'input[type="radio"][name^="zp_match_"]:checked'
-    );
-
-    const selects = form.querySelectorAll(
-      ".zp-field select"
-    );
-
-    const goals = selects[0]
-      ? normalizeGoals(selects[0].value)
-      : "";
-
-    const corners = selects[1]
-      ? String(selects[1].value || "")
-      : "";
-
-    return {
-      winner: winner ? String(winner.value || "") : "",
-      goals,
-      corners
-    };
-  }
-
-  function matchIdFromForm(form,index){
-    const details = form.closest("details.zp-match");
-
-    return String(
-      details?.dataset?.matchId ||
-      details?.__zingoMatch?.id ||
-      details?.__zingoMatch?.match_id ||
-      details?.__zingoMatch?.fixture_id ||
-      `pro-${index+1}`
-    );
-  }
-
-  async function submitPrediction(form,index){
-    const button = form.querySelector(".zp-save");
-
-    if(!button){
-      return;
-    }
-
-    const prediction = collectPrediction(form);
-
-    if(!prediction.winner){
-      alert("اختر توقعك أولاً");
-      return;
-    }
-
-    const originalText = button.textContent;
-
-    button.disabled = true;
-    button.textContent = "جارٍ الحفظ…";
-
-    try{
-      const matchId = matchIdFromForm(form,index);
-
-      const body = {
-        match_id: matchId,
-
-        predictions: {
-          winner: prediction.winner,
-          goals: prediction.goals,
-          corners: prediction.corners
-        },
-
-        prediction: {
-          winner: prediction.winner,
-          goals: prediction.goals,
-          corners: prediction.corners
-        }
-      };
-
-      const result = await api(API.submit,{
-        method: "POST",
-        body: JSON.stringify(body)
-      });
-
-      form.dataset.saved = "1";
-      form.dataset.savedPrediction = JSON.stringify(prediction);
-
-      button.disabled = false;
-      button.textContent = "تم حفظ التوقع";
-      button.classList.add("is-saved");
-
-      /*
-       * Keep the success state even if the user scrolls.
-       */
-      window.__zingoLastSubmit = {
-        match_id: matchId,
-        prediction,
-        result
-      };
-
-      try{
-        tg?.HapticFeedback?.notificationOccurred("success");
-      }catch(e){}
-
-      console.log(
-        "Zingo PRO prediction saved:",
-        matchId,
-        result
-      );
-
-    }catch(e){
-      console.error("Zingo PRO submit:",e);
-
-      button.disabled = false;
-      button.textContent = originalText || "حفظ التوقع";
-
-      alert(
-        e?.message ||
-        "تعذر حفظ التوقع"
-      );
-    }
-  }
-
-  function installPredictionHandlers(){
-    const forms = document.querySelectorAll(
-      "#zingoProWorld details.zp-match form.zp-details"
-    );
-
-    forms.forEach((form,index)=>{
-      if(form.dataset.zingoApiBound === "1"){
-        return;
-      }
-
-      form.dataset.zingoApiBound = "1";
-
-      /*
-       * Remove the old inline-only submit behaviour by
-       * intercepting the event here.
-       */
-      form.addEventListener("submit",function(event){
-        event.preventDefault();
-        event.stopPropagation();
-
-        submitPrediction(form,index);
-      },true);
-
-      /*
-       * A new choice means the prediction has changed,
-       * therefore the old saved state is no longer valid.
-       */
-      form.addEventListener("change",function(event){
-        const target = event.target;
-
-        if(
-          target?.matches?.(
-            'input[type="radio"], select'
-          )
-        ){
-          form.dataset.saved = "0";
-
-          const button = form.querySelector(".zp-save");
-
-          if(
-            button &&
-            !button.classList.contains("is-saved")
-          ){
-            button.textContent = "حفظ التوقع";
-          }
-
-          if(button){
-            button.classList.remove("is-saved");
-          }
-        }
-      });
-    });
-  }
-
-  async function loadRanking(){
-    try{
-      const data = await api(API.ranking);
-      window.__zingoProRanking = data;
-      return data;
-    }catch(e){
-      console.warn(
-        "Zingo PRO ranking:",
-        e?.message || e
-      );
-      return null;
-    }
-  }
-
-  /*
-   * Make ranking available to the existing navigation
-   * without replacing its design.
-   */
-  window.ZingoProAPI = {
-    api,
-    loadRound,
-    loadRanking,
-    submitPrediction,
-    getPrediction: collectPrediction
-  };
-
-  function boot(){
-    installMatchIds();
-    installPredictionHandlers();
-
-    /*
-     * Give the existing tier system time to reveal PRO
-     * if PRO is the selected tier.
-     */
-    setTimeout(function(){
-      installMatchIds();
-      installPredictionHandlers();
-
-      const world = document.getElementById("zingoProWorld");
-
-      if(world && !world.classList.contains("hidden")){
-        loadRound();
-      }
-    },250);
-  }
-
-  if(document.readyState === "loading"){
-    document.addEventListener(
-      "DOMContentLoaded",
-      boot,
-      {once:true}
-    );
-  }else{
-    boot();
-  }
-
 })();
 </script>
 

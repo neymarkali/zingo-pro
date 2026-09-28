@@ -1,0 +1,81 @@
+[1mdiff --git a/index.html b/index.html[m
+[1mindex 02630de..70bb44b 100644[m
+[1m--- a/index.html[m
+[1m+++ b/index.html[m
+[36m@@ -5032,6 +5032,50 @@[m [masync function select(tier){[m
+     return;[m
+   }[m
+ }[m
+[32m+[m[32m(function(){[m
+[32m+[m
+[32m+[m[32mfunction zingoBootTier(){[m
+[32m+[m
+[32m+[m[32m  try{[m
+[32m+[m
+[32m+[m[32m    const q=new URLSearchParams(location.search);[m
+[32m+[m
+[32m+[m[32m    const tier=(q.get("tier")||"free").toLowerCase();[m
+[32m+[m
+[32m+[m[32m    if(typeof select==="function"){[m
+[32m+[m
+[32m+[m[32m      if(tier==="pro"){[m
+[32m+[m[32m        select("pro");[m
+[32m+[m[32m        return;[m
+[32m+[m[32m      }[m
+[32m+[m
+[32m+[m[32m      if(tier==="vip"){[m
+[32m+[m[32m        select("vip");[m
+[32m+[m[32m        return;[m
+[32m+[m[32m      }[m
+[32m+[m
+[32m+[m[32m      select("free");[m
+[32m+[m[32m    }[m
+[32m+[m
+[32m+[m[32m  }catch(e){[m
+[32m+[m[32m    console.warn("Tier boot:",e);[m
+[32m+[m[32m  }[m
+[32m+[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mif(document.readyState==="loading"){[m
+[32m+[m[32m  document.addEventListener("DOMContentLoaded",zingoBootTier);[m
+[32m+[m[32m}else{[m
+[32m+[m[32m  setTimeout(zingoBootTier,100);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mwindow.zingoBootTier=zingoBootTier;[m
+[32m+[m
+[32m+[m[32m})();[m
+[32m+[m
+[32m+[m
+[32m+[m
+[32m+[m
+ function openPackages(){[m
+ [m
+ try{[m
+[36m@@ -5075,10 +5119,22 @@[m [mtry{tg.expand()}catch(e){}[m
+ }[m
+ }catch(e){}[m
+ [m
+[31m-/* افتح الواجهة المجانية فورًا */[m
+[32m+[m[32m/* افتح المستوى المطلوب من الرابط، وليس FREE دائمًا */[m
+[32m+[m[32mconst bootTier =[m
+[32m+[m[32m  (new URLSearchParams(location.search).get("tier") || "free").toLowerCase();[m
+[32m+[m
+ clearWorlds();[m
+[31m-E("zingoFreeWorld")?.classList.remove("hidden");[m
+[31m-E("zingoTierFree")?.classList.add("active");[m
+[32m+[m
+[32m+[m[32mif(typeof select === "function"){[m
+[32m+[m[32m  select([m
+[32m+[m[32m    bootTier === "pro" || bootTier === "vip"[m
+[32m+[m[32m      ? bootTier[m
+[32m+[m[32m      : "free"[m
+[32m+[m[32m  );[m
+[32m+[m[32m} else {[m
+[32m+[m[32m  E("zingoFreeWorld")?.classList.remove("hidden");[m
+[32m+[m[32m  E("zingoTierFree")?.classList.add("active");[m
+[32m+[m[32m}[m
+ [m
+ /* تحقق من الاشتراك بالخلفية بدون تعطيل الواجهة */[m
+ getSubscription().then(function(sub){[m

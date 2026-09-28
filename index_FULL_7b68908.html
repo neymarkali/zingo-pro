@@ -1,0 +1,2018 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#05070b">
+<title>ZINGO — Gaming Command Center</title>
+
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+<style>
+:root{
+  --bg:#05070b;
+  --panel:rgba(15,19,27,.78);
+  --panel2:rgba(20,25,35,.92);
+  --line:rgba(255,255,255,.09);
+  --text:#f5f7fb;
+  --muted:#8e98aa;
+  --blue:#48a8ff;
+  --blue2:#1678d2;
+  --gold:#f5c85b;
+  --gold2:#a87818;
+  --green:#42e6a4;
+  --red:#ff6175;
+  --shadow:0 20px 60px rgba(0,0,0,.45);
+  --radius:22px;
+}
+
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+body{overflow-x:hidden}
+button{font:inherit;color:inherit}
+button:active{transform:scale(.98)}
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:-30%;
+  pointer-events:none;
+  background:
+    radial-gradient(circle at 20% 10%,rgba(30,130,255,.13),transparent 28%),
+    radial-gradient(circle at 85% 15%,rgba(255,196,65,.07),transparent 24%),
+    radial-gradient(circle at 50% 100%,rgba(20,80,160,.09),transparent 32%);
+  z-index:-2;
+}
+
+body:after{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  background-image:
+    linear-gradient(rgba(255,255,255,.018) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.018) 1px,transparent 1px);
+  background-size:38px 38px;
+  mask-image:linear-gradient(to bottom,black,transparent 80%);
+  z-index:-1;
+}
+
+#app{min-height:100vh;padding-bottom:94px}
+
+.topbar{
+  position:sticky;
+  top:0;
+  z-index:30;
+  padding:calc(12px + env(safe-area-inset-top)) 16px 12px;
+  backdrop-filter:blur(22px);
+  background:rgba(5,7,11,.78);
+  border-bottom:1px solid var(--line);
+}
+
+.topbar-inner{display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:11px}
+.logo{
+  width:42px;height:42px;border-radius:14px;
+  display:grid;place-items:center;
+  font-weight:1000;letter-spacing:-2px;
+  color:#fff;
+  background:linear-gradient(145deg,#2c9cff,#0759a9);
+  box-shadow:0 8px 28px rgba(27,133,235,.32),inset 0 1px rgba(255,255,255,.35);
+}
+.brand-title{font-weight:900;letter-spacing:.8px}
+.brand-sub{font-size:10px;color:var(--muted);letter-spacing:1.8px;margin-top:2px}
+
+.mode-switch{
+  display:flex;padding:4px;border:1px solid var(--line);
+  background:rgba(255,255,255,.035);border-radius:14px
+}
+.mode-btn{
+  border:0;background:transparent;padding:8px 12px;border-radius:10px;
+  font-size:11px;font-weight:900;letter-spacing:.8px;color:var(--muted)
+}
+.mode-btn.active.pro{background:rgba(55,160,255,.16);color:#7cc5ff}
+.mode-btn.active.vip{background:rgba(245,200,91,.14);color:#ffe19a}
+
+.page{padding:18px 15px;max-width:900px;margin:auto}
+.page-head{display:flex;justify-content:space-between;align-items:end;gap:10px;margin:8px 0 18px}
+.eyebrow{font-size:10px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;font-weight:800}
+h1{font-size:29px;line-height:1;margin:5px 0 0;letter-spacing:-1.2px}
+h2{font-size:19px;margin:0 0 12px}
+.muted{color:var(--muted)}
+
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+.grid3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+
+.card{
+  position:relative;
+  border:1px solid var(--line);
+  background:linear-gradient(145deg,rgba(22,27,37,.9),rgba(10,13,19,.82));
+  border-radius:var(--radius);
+  box-shadow:var(--shadow);
+  overflow:hidden;
+}
+.card-pad{padding:16px}
+.card:after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  border-radius:inherit;box-shadow:inset 0 1px rgba(255,255,255,.055)
+}
+
+.hero{
+  padding:20px;
+  margin-bottom:13px;
+  min-height:205px;
+  background:
+    radial-gradient(circle at 90% 10%,rgba(54,164,255,.22),transparent 35%),
+    linear-gradient(145deg,#111c2b,#080b11 72%);
+}
+.hero-kicker{color:#76bdff;font-size:10px;font-weight:900;letter-spacing:2px}
+.hero-title{font-size:31px;line-height:1.02;font-weight:950;letter-spacing:-1.5px;margin:10px 0}
+.hero-text{max-width:560px;color:#aeb8c9;font-size:13px;line-height:1.55}
+.rank-line{display:flex;align-items:center;gap:9px;margin-top:18px}
+.rank-badge{
+  padding:7px 10px;border-radius:10px;
+  background:rgba(69,166,255,.12);border:1px solid rgba(69,166,255,.25);
+  color:#7bc4ff;font-size:11px;font-weight:900
+}
+
+.stat{
+  padding:14px;
+  min-height:95px;
+}
+.stat-label{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1.4px}
+.stat-value{font-size:25px;font-weight:950;margin-top:7px}
+.stat-small{font-size:10px;color:var(--muted);margin-top:2px}
+
+.section{margin-top:20px}
+.section-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.section-title span{font-size:10px;color:var(--muted);letter-spacing:1.4px}
+
+.match{
+  padding:14px;
+  display:flex;align-items:center;gap:12px;
+}
+.match-main{flex:1;min-width:0}
+.match-teams{font-weight:850;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.match-meta{font-size:10px;color:var(--muted);margin-top:5px}
+.live-dot{width:7px;height:7px;border-radius:50%;background:#45e8a5;box-shadow:0 0 12px #45e8a5;display:inline-block;margin-right:5px}
+.match-action{border:1px solid rgba(72,168,255,.25);background:rgba(72,168,255,.1);color:#83c9ff;border-radius:11px;padding:8px 10px;font-size:10px;font-weight:900}
+
+.bottom-nav{
+  position:fixed;left:10px;right:10px;bottom:calc(9px + env(safe-area-inset-bottom));
+  z-index:2147483000;display:grid;grid-template-columns:repeat(5,1fr);
+  padding:7px;border:1px solid var(--line);border-radius:21px;
+  background:rgba(8,11,16,.9);backdrop-filter:blur(24px);
+  box-shadow:0 18px 55px rgba(0,0,0,.55)
+
+pointer-events:auto!important;}
+.nav-btn{
+  border:0;background:transparent;border-radius:15px;padding:8px 2px;
+  color:#707b8e;font-size:9px;font-weight:800
+
+pointer-events:auto!important;
+touch-action:manipulation;}
+.nav-icon{font-size:17px;display:block;margin-bottom:3px}
+.nav-btn.active{color:#76c1ff;background:rgba(55,160,255,.09)}
+.vip-world .nav-btn.active{color:#ffe09a;background:rgba(245,200,91,.08)}
+
+.primary{
+  width:100%;border:0;border-radius:15px;padding:14px;
+  background:linear-gradient(135deg,#2698f0,#1265b7);
+  font-weight:950;letter-spacing:.5px;
+  box-shadow:0 12px 30px rgba(25,130,225,.22)
+}
+.secondary{
+  border:1px solid var(--line);background:rgba(255,255,255,.035);
+  border-radius:13px;padding:11px 13px;font-weight:800
+}
+.market{
+  border:1px solid var(--line);background:rgba(255,255,255,.025);
+  padding:13px;border-radius:16px
+}
+.market-title{font-size:11px;font-weight:900;margin-bottom:9px}
+.options{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}
+.option{
+  border:1px solid var(--line);background:rgba(255,255,255,.025);
+  border-radius:11px;padding:10px;font-size:11px;font-weight:800;text-align:center
+}
+.option.selected{border-color:rgba(72,168,255,.6);background:rgba(72,168,255,.14);color:#8dceff}
+.save{
+  margin-top:12px;opacity:.45;pointer-events:none;transition:.2s
+}
+.save.ready{opacity:1;pointer-events:auto}
+
+.progress{height:7px;background:rgba(255,255,255,.06);border-radius:99px;overflow:hidden;margin-top:9px}
+.progress i{display:block;height:100%;width:62%;background:linear-gradient(90deg,#1681df,#74c5ff);border-radius:inherit}
+
+.vip-world{
+  --panel:rgba(13,12,14,.8);
+  --line:rgba(245,200,91,.13);
+  --shadow:0 20px 65px rgba(0,0,0,.65);
+  background:
+    radial-gradient(circle at 80% 15%,rgba(225,174,54,.09),transparent 30%),
+    radial-gradient(circle at 15% 80%,rgba(70,70,80,.08),transparent 30%);
+}
+.vip-world .logo{
+  color:#080808;
+  background:linear-gradient(145deg,#fff0a8,#d4a633 48%,#7a5511);
+  box-shadow:0 0 32px rgba(245,200,91,.2),inset 0 1px #fff9cf
+}
+.vip-world .hero{
+  background:
+    radial-gradient(circle at 88% 12%,rgba(245,200,91,.19),transparent 34%),
+    linear-gradient(145deg,#17140f,#080807 70%);
+}
+.vip-world .hero-kicker{color:#e8bd59}
+.vip-world .primary{
+  color:#090909;
+  background:linear-gradient(135deg,#fff0a2,#d5a533 52%,#866017);
+  box-shadow:0 12px 38px rgba(210,163,48,.2)
+}
+.vip-world .rank-badge{color:#ffe39a;border-color:rgba(245,200,91,.3);background:rgba(245,200,91,.08)}
+.vip-world .option.selected{border-color:rgba(245,200,91,.55);background:rgba(245,200,91,.11);color:#ffe39a}
+
+.ascension{
+  position:fixed;inset:0;z-index:100;
+  display:none;align-items:center;justify-content:center;
+  background:#020304;
+  overflow:hidden;
+}
+.ascension.show{display:flex}
+.ascension-bg{
+  position:absolute;inset:-30%;
+  background:
+    radial-gradient(circle,rgba(245,200,91,.18),transparent 18%),
+    radial-gradient(circle at 30% 70%,rgba(255,255,255,.07),transparent 16%),
+    radial-gradient(circle at 70% 35%,rgba(245,200,91,.08),transparent 18%);
+  animation:royalPulse 3.8s ease-in-out infinite alternate;
+}
+@keyframes royalPulse{to{transform:scale(1.16) rotate(4deg);filter:blur(4px)}}
+.ascension-core{position:relative;text-align:center;z-index:2}
+.ascension-logo{
+  width:145px;height:145px;margin:auto;border-radius:40px;
+  display:grid;place-items:center;font-size:38px;font-weight:1000;
+  color:#090909;
+  background:linear-gradient(145deg,#fff4b1,#d3a32f 52%,#76500c);
+  box-shadow:0 0 0 1px rgba(255,240,160,.35),0 0 80px rgba(245,200,91,.3);
+  animation:rise 2s cubic-bezier(.2,.8,.2,1)
+}
+@keyframes rise{
+  from{transform:translateY(90px) scale(.55) rotate(-8deg);opacity:0}
+  to{transform:none;opacity:1}
+}
+.ascension-title{font-size:29px;font-weight:1000;letter-spacing:3px;margin-top:25px}
+.ascension-sub{color:#a8a29a;font-size:11px;letter-spacing:2px;margin-top:9px}
+.skip{
+  position:absolute;right:17px;top:calc(17px + env(safe-area-inset-top));
+  z-index:4;border:1px solid rgba(255,255,255,.14);
+  background:rgba(255,255,255,.05);border-radius:12px;padding:9px 13px;
+  color:#b9b3a9;font-size:10px;font-weight:900
+}
+.particles{position:absolute;inset:0;overflow:hidden}
+.particle{
+  position:absolute;width:3px;height:3px;border-radius:50%;background:#f4cd69;
+  box-shadow:0 0 12px #f4cd69;animation:fly linear infinite
+}
+@keyframes fly{
+  from{transform:translate3d(0,110vh,0) scale(.3);opacity:0}
+  15%{opacity:1}
+  to{transform:translate3d(var(--x),-20vh,0) scale(1.2);opacity:0}
+}
+
+.empty{
+  text-align:center;padding:35px 15px;color:var(--muted);
+  font-size:12px;border:1px dashed var(--line);border-radius:18px
+}
+.toast{
+  position:fixed;left:50%;bottom:105px;transform:translateX(-50%) translateY(20px);
+  z-index:200;background:#121722;border:1px solid var(--line);
+  border-radius:13px;padding:11px 15px;font-size:11px;font-weight:850;
+  opacity:0;pointer-events:none;transition:.25s;white-space:nowrap
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+@media(min-width:700px){
+  .bottom-nav{max-width:680px;margin:auto}
+  .page{padding-top:26px}
+}
+/* ZINGO_LANGUAGE_DIRECTION_V1 */
+html[dir="rtl"] body{text-align:right}
+html[dir="ltr"] body{text-align:left}
+.bottom-nav{direction:rtl}
+</style>
+</head>
+
+<body>
+<div id="app"></div>
+
+<div id="ascension" class="ascension">
+  <button class="skip" onclick="finishAscension()">SKIP</button>
+  <div class="ascension-bg"></div>
+  <div class="particles" id="particles"></div>
+  <div class="ascension-core">
+    <div class="ascension-logo">Z</div>
+    <div class="ascension-title">ROYAL ASCENSION</div>
+    <div class="ascension-sub">PRO → BLACK DIAMOND VIP</div>
+  </div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(() => {
+  "use strict";
+
+  const tg = window.Telegram?.WebApp || null;
+
+  if (tg) {
+    try {
+      tg.ready();
+      tg.expand();
+      tg.setHeaderColor("#05070b");
+      tg.setBackgroundColor("#05070b");
+    } catch(e){}
+  }
+
+  const state = {
+    mode: "pro",
+    page: "home",
+    user: null,
+    subscription: null,
+    round: null,
+    ranking: null,
+    selections: {},
+    saved: false,
+    loading: true
+  };
+
+  const API = {
+    subscription: "/api/subscription",
+    round: "/api/pro_round",
+    submit: "/api/pro_submit",
+    ranking: "/api/pro_ranking"
+  };
+
+  function authHeaders(){
+    const initData = tg?.initData || "";
+    return initData ? {"X-Telegram-Init-Data": initData} : {};
+  }
+
+  async function api(path, options={}){
+    const headers = {
+      ...(options.body ? {"Content-Type":"application/json"} : {}),
+      ...authHeaders(),
+      ...(options.headers || {})
+    };
+
+    const res = await fetch(path,{...options,headers});
+    const text = await res.text();
+
+    let data;
+    try { data = JSON.parse(text); }
+    catch { data = {raw:text}; }
+
+    if(!res.ok) throw new Error(data?.error || data?.message || `HTTP ${res.status}`);
+    return data;
+  }
+
+  function esc(v){
+    return String(v ?? "").replace(/[&<>"']/g,m=>({
+      "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+    }[m]));
+  }
+
+  function toast(message){
+    const el=document.getElementById("toast");
+    el.textContent=message;
+    el.classList.add("show");
+    clearTimeout(window.__toast);
+    window.__toast=setTimeout(()=>el.classList.remove("show"),2200);
+  }
+
+  function userId(){
+    return state.user?.id || tg?.initDataUnsafe?.user?.id || "";
+  }
+
+  function userName(){
+    const u=state.user || tg?.initDataUnsafe?.user;
+    if(!u) return "PLAYER";
+    return u.first_name || u.username || "PLAYER";
+  }
+
+  function formatRound(){
+    const r=state.round;
+    if(!r) return [];
+    if(Array.isArray(r)) return r;
+    return r.matches || r.fixtures || r.games || r.data || r.round?.matches || [];
+  }
+
+  function nav(items){
+    const ar=localStorage.getItem("zingo_language")!=="en";
+    const labels={
+      home:ar?"الرئيسية":"Home",
+      matches:ar?"المباريات":"Matches",
+      predict:ar?"التوقعات":"Predictions",
+      stats:ar?"الإحصائيات":"Stats",
+      profile:ar?"الملف الشخصي":"Profile",
+      analysis:ar?"التحليل":"Analysis",
+      rewards:ar?"المكافآت":"Rewards"
+    };
+
+    return `
+      <nav class="bottom-nav">
+        ${items.map(x=>`
+          <button
+            type="button"
+            class="nav-btn ${state.page===x.id?"active":""}"
+            data-route="${x.id}"
+            onclick="event.preventDefault();window.Zingo.go(this.dataset.route);return false"
+          >
+            <span class="nav-icon">${x.icon}</span>${labels[x.id]||x.label}
+          </button>
+        `).join("")}
+      </nav>`;
+  }
+
+  function shell(content){
+    const vip=state.mode==="vip";
+    document.body.classList.toggle("vip-world",vip);
+
+    return `
+      <div class="topbar">
+        <div class="topbar-inner">
+          <div class="brand">
+            <div class="logo">Z</div>
+            <div>
+              <div class="brand-title">ZINGO</div>
+              <div class="brand-sub">${vip?"BLACK DIAMOND":"AAA ESPORTS COMMAND CENTER"}</div>
+            </div>
+          </div>
+
+          <div class="mode-switch">
+            <button class="mode-btn ${!vip?"active pro":""}" onclick="window.Zingo.setMode('pro')">PRO</button>
+            <button class="mode-btn ${vip?"active vip":""}" onclick="window.Zingo.setMode('vip')">VIP</button>
+          </div>
+        </div>
+      </div>
+
+      <main class="page">${content}</main>
+
+      ${nav(vip ? [
+        {id:"home",icon:"◆",label:"Home"},
+        {id:"predict",icon:"⌁",label:"Predictions"},
+        {id:"analysis",icon:"◈",label:"Analysis"},
+        {id:"rewards",icon:"♛",label:"Rewards"},
+        {id:"profile",icon:"◇",label:"Profile"}
+      ] : [
+        {id:"home",icon:"⌂",label:"Home"},
+        {id:"matches",icon:"◉",label:"Matches"},
+        {id:"predict",icon:"⌁",label:"Predictions"},
+        {id:"stats",icon:"▦",label:"Stats"},
+        {id:"profile",icon:"◇",label:"Profile"}
+      ])}
+    `;
+  }
+
+  function home(){
+    const vip=state.mode==="vip";
+    const matches=formatRound().slice(0,3);
+
+    return shell(`
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">${vip?"VIP COMMAND CENTER":"GAMING COMMAND CENTER"}</div>
+          <h1>${vip?"Welcome to the Black Diamond":"Welcome back"}</h1>
+        </div>
+      </div>
+
+      <section class="card hero">
+        <div class="hero-kicker">${vip?"ULTRA EXCLUSIVE / VIP":"AAA ESPORTS / PRO"}</div>
+        <div class="hero-title">${vip?"Your private prediction cockpit.":"Your game. Your rank. Your call."}</div>
+        <div class="hero-text">
+          ${vip
+            ?"A living VIP environment built around your predictions, analysis, royal rank and exclusive rewards."
+            :"Track matches, make predictions, earn XP and climb the championship system."}
+        </div>
+        <div class="rank-line">
+          <div class="rank-badge">${vip?"BLACK DIAMOND":"PRO RANK"} · ${userName()}</div>
+        </div>
+      </section>
+
+      <div class="grid">
+        <div class="card stat"><div class="stat-label">Rank</div><div class="stat-value">${vip?"ROYAL":"PRO"}</div><div class="stat-small">Current division</div></div>
+        <div class="card stat"><div class="stat-label">XP</div><div class="stat-value">${state.ranking?.xp ?? "—"}</div><div class="stat-small">Season progress</div></div>
+        <div class="card stat"><div class="stat-label">Predictions</div><div class="stat-value">${state.ranking?.predictions ?? "—"}</div><div class="stat-small">Total saved</div></div>
+        <div class="card stat"><div class="stat-label">${vip?"Royal":"Championship"}</div><div class="stat-value">${state.ranking?.rank ?? "—"}</div><div class="stat-small">Leaderboard</div></div>
+      </div>
+
+      <section class="section">
+        <div class="section-title"><h2>${vip?"Live Cockpit":"Match Center"}</h2><span>${matches.length} ACTIVE</span></div>
+        ${matches.length ? matches.map(matchCard).join("") : `<div class="empty">No active matches available right now.</div>`}
+      </section>
+
+      <section class="section">
+        <div class="grid">
+          <button class="card card-pad secondary" onclick="event.preventDefault();event.stopPropagation();window.Zingo.go(\'predict\');return false">${vip?"OPEN COCKPIT":"MAKE PREDICTION"}</button>
+          <button class="card card-pad secondary" onclick="event.preventDefault();event.stopPropagation();window.Zingo.go(\'${vip?"rewards":"stats"}\');return false">${vip?"ROYAL REWARDS":"VIEW STATS"}</button>
+        </div>
+      </section>
+    `);
+  }
+
+  function matchCard(m){
+    const home=m.home_team || m.home || m.team1 || m.homeTeam || "HOME";
+    const away=m.away_team || m.away || m.team2 || m.awayTeam || "AWAY";
+    const status=m.status || m.state || "UPCOMING";
+    const id=m.id || m.match_id || m.fixture_id || "";
+    return `
+      <div class="card match">
+        <div class="match-main">
+          <div class="match-teams">${esc(home)} <span class="muted">vs</span> ${esc(away)}</div>
+          <div class="match-meta"><span class="${/live|playing/i.test(status)?"live-dot":""}"></span>${esc(status)} ${id?`· #${esc(id)}`:""}</div>
+        </div>
+        <button class="match-action" onclick="window.Zingo.selectMatch('${esc(id)}')">PREDICT</button>
+      </div>`;
+  }
+
+  function matchesPage(){
+    const matches=formatRound();
+    return shell(`
+      <div class="page-head"><div><div class="eyebrow">PRO MATCH CENTER</div><h1>Matches</h1></div></div>
+      <div class="section">
+        ${matches.length ? matches.map(matchCard).join("") : `<div class="empty">No matches available.</div>`}
+      </div>
+    `);
+  }
+
+  function predict(){
+    const matches=formatRound();
+    const m=matches[0] || {};
+    const matchId=m.id || m.match_id || m.fixture_id || "current";
+
+    return shell(`
+      <div class="page-head">
+        <div><div class="eyebrow">${state.mode==="vip"?"VIP PREDICTION COCKPIT":"PRO PREDICTIONS"}</div><h1>${state.mode==="vip"?"Cockpit":"Make your call"}</h1></div>
+      </div>
+
+      <div class="card card-pad" style="margin-bottom:12px">
+        <div class="eyebrow">ACTIVE MATCH</div>
+        <h2 style="margin-top:7px">${esc(m.home_team || m.home || m.team1 || "Home")} <span class="muted">vs</span> ${esc(m.away_team || m.away || m.team2 || "Away")}</h2>
+        <div class="muted" style="font-size:11px">${esc(m.status || "UPCOMING")}</div>
+      </div>
+
+      ${market("WINNER","winner",["HOME","DRAW","AWAY"])}
+      ${market("GOALS","goals",["OVER 1.5","UNDER 1.5","OVER 2.5","UNDER 2.5"])}
+      ${market("SCORE","score",["1-0","2-0","2-1","1-1","0-0","0-1"])}
+
+      <button class="primary save ${Object.keys(state.selections).length?"ready":""}" onclick="window.Zingo.savePrediction('${esc(matchId)}')">
+        ${state.saved?"✓ PREDICTION SAVED":"SAVE PREDICTION"}
+      </button>
+
+      <div class="section card card-pad">
+        <div class="eyebrow">RULES</div>
+        <div style="font-size:11px;line-height:1.7;color:#aeb8c9;margin-top:8px">
+          Select your prediction for each market, then save it before the prediction window closes.
+          Each prediction is stored individually. Results become visible after the match is settled.
+        </div>
+      </div>
+    `);
+  }
+
+  function market(title,key,options){
+    return `
+      <div class="market" style="margin-bottom:10px">
+        <div class="market-title">${title}</div>
+        <div class="options">
+          ${options.map(o=>`
+            <button class="option ${state.selections[key]===o?"selected":""}"
+              onclick="window.Zingo.pick('${key}','${o}')">${o}</button>
+          `).join("")}
+        </div>
+      </div>`;
+  }
+
+  function stats(){
+    return shell(`
+      <div class="page-head"><div><div class="eyebrow">PLAYER HUB</div><h1>Stats</h1></div></div>
+      <div class="grid">
+        <div class="card stat"><div class="stat-label">Accuracy</div><div class="stat-value">—</div><div class="stat-small">Awaiting settled data</div></div>
+        <div class="card stat"><div class="stat-label">Wins</div><div class="stat-value">—</div><div class="stat-small">Season</div></div>
+        <div class="card stat"><div class="stat-label">XP</div><div class="stat-value">${state.ranking?.xp ?? "—"}</div><div class="stat-small">Progress</div></div>
+        <div class="card stat"><div class="stat-label">Rank</div><div class="stat-value">${state.ranking?.rank ?? "—"}</div><div class="stat-small">Leaderboard</div></div>
+      </div>
+      <div class="section card card-pad">
+        <div class="section-title"><h2>Season Progress</h2><span>ACTIVE</span></div>
+        <div class="progress"><i></i></div>
+      </div>
+    `);
+  }
+
+  function analysis(){
+    return shell(`
+      <div class="page-head"><div><div class="eyebrow">BLACK DIAMOND</div><h1>Analysis Center</h1></div></div>
+      <div class="card hero">
+        <div class="hero-kicker">ADVANCED ANALYSIS</div>
+        <div class="hero-title">Private intelligence layer.</div>
+        <div class="hero-text">This is the dedicated VIP architecture layer for advanced match intelligence, deeper statistics and future analysis modules.</div>
+      </div>
+      <div class="grid">
+        ${["Momentum Engine","Team Form","Goal Patterns","Market Intelligence"].map(x=>`
+          <div class="card card-pad">
+            <div class="eyebrow">VIP MODULE</div>
+            <h2 style="margin-top:7px">${x}</h2>
+            <div class="muted" style="font-size:11px">Module architecture ready for live data.</div>
+          </div>`).join("")}
+      </div>
+    `);
+  }
+
+  function rewards(){
+    return shell(`
+      <div class="page-head"><div><div class="eyebrow">${state.mode==="vip"?"ROYAL REWARDS":"REWARDS SYSTEM"}</div><h1>${state.mode==="vip"?"Royal Vault":"Rewards"}</h1></div></div>
+      <div class="card hero">
+        <div class="hero-kicker">${state.mode==="vip"?"BLACK DIAMOND":"PRO"}</div>
+        <div class="hero-title">${state.mode==="vip"?"Exclusive rewards await.":"Build your reward profile."}</div>
+        <div class="hero-text">Points, badges, rank progression and future reward modules live here.</div>
+      </div>
+      <div class="grid">
+        ${["Rank","Badges","Points","Achievements"].map(x=>`
+          <div class="card stat"><div class="stat-label">${x}</div><div class="stat-value">—</div><div class="stat-small">System ready</div></div>`).join("")}
+      </div>
+    `);
+  }
+
+
+function profile(){
+
+  const u=state.user || tg?.initDataUnsafe?.user || {};
+  const p=window.__zingoProfile || {};
+  const club=p.club_id && window.zingoClubById
+    ? window.zingoClubById(p.club_id)
+    : null;
+
+  return shell(`
+    <div class="page-head">
+      <div>
+        <div class="eyebrow">PLAYER HUB</div>
+        <h1>${esc(p.display_name || u.first_name || "Player")}</h1>
+      </div>
+    </div>
+
+    ${window.zingoProfileCard ? window.zingoProfileCard() : `
+      <div class="card card-pad">
+        <div class="eyebrow">TELEGRAM IDENTITY</div>
+        <h2 style="margin-top:8px">
+          ${esc(p.display_name || u.first_name || "Player")}
+        </h2>
+      </div>
+    `}
+
+    <div class="section grid">
+      <div class="card stat">
+        <div class="stat-label">Mode</div>
+        <div class="stat-value">${state.mode.toUpperCase()}</div>
+      </div>
+
+      <div class="card stat">
+        <div class="stat-label">Access</div>
+        <div class="stat-value">${state.subscription?.plan || "PRO"}</div>
+      </div>
+    </div>
+  `);
+}
+
+function render(){
+    let content;
+    if(state.mode==="vip"){
+      if(state.page==="predict") content=predict();
+      else if(state.page==="analysis") content=analysis();
+      else if(state.page==="rewards") content=rewards();
+      else if(state.page==="profile" || state.page==="player") content=profile();
+      else content=home();
+    }else{
+      if(state.page==="matches") content=matchesPage();
+      else if(state.page==="predict") content=predict();
+      else if(state.page==="stats") content=stats();
+      else if(state.page==="profile" || state.page==="player") content=profile();
+      else content=home();
+    }
+
+    document.getElementById("app").innerHTML=content;
+  }
+
+  async function loadData(){
+    state.loading=true;
+    render();
+
+    try{
+      const sub=await api(API.subscription);
+      state.subscription=sub?.subscription || sub;
+    }catch(e){
+      console.warn("subscription:",e.message);
+    }
+
+    try{
+      state.round=await api(API.round);
+    }catch(e){
+      console.warn("round:",e.message);
+    }
+
+    try{
+      state.ranking=await api(API.ranking);
+    }catch(e){
+      console.warn("ranking:",e.message);
+    }
+
+    state.user=tg?.initDataUnsafe?.user || null;
+
+    // Player Identity is part of normal app state.
+    // Failure must never block the application.
+    try{
+      await loadZingoProfile();
+    }catch(e){
+      console.warn("player profile:",e.message);
+    }
+
+    state.loading=false;
+    render();
+  }
+
+  function pick(key,value){
+    state.selections[key]=value;
+    state.saved=false;
+    render();
+  }
+
+  async function savePrediction(matchId){
+    if(!Object.keys(state.selections).length){
+      toast("اختر توقعاً أولاً");
+      return;
+    }
+
+    try{
+      const body={
+        match_id:matchId,
+        predictions:{...state.selections},
+        prediction:{...state.selections}
+      };
+
+      await api(API.submit,{
+        method:"POST",
+        body:JSON.stringify(body)
+      });
+
+      state.saved=true;
+      render();
+      toast("تم حفظ التوقع");
+    }catch(e){
+      console.error(e);
+      toast(e.message || "تعذر حفظ التوقع");
+    }
+  }
+
+  function selectMatch(id){
+    state.page="predict";
+    state.selections={};
+    state.saved=false;
+    render();
+    window.scrollTo({top:0,behavior:"smooth"});
+  }
+
+  let ascensionTimer;
+
+  function startAscension(){
+    const el=document.getElementById("ascension");
+    if(!el) return;
+
+    const p=document.getElementById("particles");
+    p.innerHTML="";
+    for(let i=0;i<42;i++){
+      const x=document.createElement("i");
+      x.className="particle";
+      x.style.left=(Math.random()*100)+"%";
+      x.style.setProperty("--x",(Math.random()*180-90)+"vw");
+      x.style.animationDuration=(2.2+Math.random()*3.5)+"s";
+      x.style.animationDelay=(Math.random()*1.8)+"s";
+      p.appendChild(x);
+    }
+
+    el.classList.add("show");
+    clearTimeout(ascensionTimer);
+    ascensionTimer=setTimeout(finishAscension,5200);
+  }
+
+  function finishAscension(){
+    clearTimeout(ascensionTimer);
+    document.getElementById("ascension")?.classList.remove("show");
+    state.mode="vip";
+    state.page="home";
+    render();
+    try{
+      if(tg?.HapticFeedback) tg.HapticFeedback.impactOccurred("heavy");
+    }catch(e){}
+  }
+
+
+
+
+window.Zingo={
+    go(page){
+      if(page==="player") page="profile";
+      state.page=page;
+
+      try{
+        if(page==="settings" && typeof window.zingoSettings==="function"){
+          window.zingoSettings();
+        }else{
+          render();
+        }
+      }catch(error){
+        console.error("ZINGO ROUTE ERROR:",error);
+        console.error("ZINGO ROUTE ERROR MESSAGE:",error?.message);
+        console.error("ZINGO ROUTE ERROR STACK:",error?.stack);
+
+        const app=document.getElementById("app");
+
+        if(app && page==="profile"){
+          app.innerHTML=`
+            <div class="page">
+              <div class="card card-pad">
+                <div class="eyebrow">PROFILE ERROR</div>
+                <h2 style="margin-top:10px">تعذر فتح الملف الشخصي</h2>
+                <div class="muted" style="margin-top:12px;white-space:pre-wrap;word-break:break-word">
+                  ${String(error?.message || error)}
+                </div>
+              </div>
+            </div>
+          `;
+        }
+      }
+
+      window.scrollTo({top:0,behavior:"smooth"});
+    },
+
+    pick,
+
+
+    savePrediction,
+    selectMatch,
+
+    setMode(mode){
+      if(mode==="vip"){
+        if(state.mode==="vip") return;
+
+        const plan=String(state.subscription?.plan || "").toLowerCase();
+        const isAdmin=String(userId())==="994708968";
+
+        if(plan!=="vip" && !isAdmin){
+          toast("VIP access required");
+          return;
+        }
+
+        startAscension();
+        return;
+      }
+
+      state.mode="pro";
+      state.page="home";
+      render();
+    }
+  };
+
+  loadData();
+})();
+</script>
+
+<script id="zingoI18nSystem">
+/* ZINGO BILINGUAL I18N V1 */
+
+(function(){
+
+  const KEEP = new Set([
+    "ZINGO",
+    "ZINGO PRO",
+    "ZINGO VIP",
+    "PRO",
+    "VIP",
+    "BLACK DIAMOND",
+    "ROYAL ASCENSION",
+    "COMMAND CENTER",
+    "PREDICTION COCKPIT",
+    "AAA ESPORTS",
+    "XP",
+    "HUD",
+    "VFX",
+    "AR",
+    "EN"
+  ]);
+
+  const dict = {
+
+    "AAA ESPORTS COMMAND CENTER":"مركز قيادة AAA للرياضات الإلكترونية",
+    "GAMING COMMAND CENTER":"مركز قيادة الألعاب",
+    "VIP COMMAND CENTER":"مركز قيادة VIP",
+    "ULTRA EXCLUSIVE / VIP":"حصري للغاية / VIP",
+    "AAA ESPORTS / PRO":"AAA ESPORTS / PRO",
+
+    "Welcome back":"مرحبًا بعودتك",
+    "Welcome to the Black Diamond":"مرحبًا بك في Black Diamond",
+
+    "Your game. Your rank. Your call.":"لعبتك. رتبتك. قرارك.",
+    "Your private prediction cockpit.":"قمرة توقعاتك الخاصة.",
+    "Track matches, make predictions, earn XP and climb the championship system.":"تابع المباريات، ضع التوقعات، اكسب XP واصعد في نظام البطولة.",
+    "A living VIP environment built around your predictions, analysis, royal rank and exclusive rewards.":"بيئة VIP متكاملة مبنية حول توقعاتك وتحليلك ورتبتك الملكية ومكافآتك الحصرية.",
+
+    "PRO RANK":"رتبة PRO",
+    "Current division":"القسم الحالي",
+    "Season progress":"تقدم الموسم",
+    "Total saved":"إجمالي المحفوظ",
+    "Championship":"البطولة",
+    "Royal":"ROYAL",
+    "Leaderboard":"المتصدرون",
+
+    "Live Cockpit":"القمرة المباشرة",
+    "Match Center":"مركز المباريات",
+    "ACTIVE":"نشطة",
+    "UPCOMING":"قادمة",
+    "PREDICT":"توقع",
+    "MAKE PREDICTION":"إنشاء توقع",
+    "VIEW STATS":"عرض الإحصائيات",
+    "OPEN COCKPIT":"فتح القمرة",
+    "ROYAL REWARDS":"المكافآت الملكية",
+
+    "PRO MATCH CENTER":"مركز مباريات PRO",
+    "No active matches available right now.":"لا توجد مباريات نشطة حاليًا.",
+    "No matches available.":"لا توجد مباريات متاحة.",
+    "ACTIVE MATCH":"مباراة نشطة",
+
+    "PRO PREDICTIONS":"توقعات PRO",
+    "VIP PREDICTION COCKPIT":"قمرة توقعات VIP",
+    "Cockpit":"القمرة",
+    "Make your call":"ضع توقعك",
+    "WINNER":"الفائز",
+    "GOALS":"الأهداف",
+    "SCORE":"النتيجة",
+    "HOME":"صاحب الأرض",
+    "AWAY":"الضيف",
+    "DRAW":"تعادل",
+    "SAVE PREDICTION":"حفظ التوقع",
+    "PREDICTION SAVED":"تم حفظ التوقع",
+    "RULES":"القواعد",
+    "Select your prediction for each market, then save it before the prediction window closes.":"اختر توقعك لكل سوق، ثم احفظه قبل انتهاء نافذة التوقع.",
+    "Each prediction is stored individually. Results become visible after the match is settled.":"يتم حفظ كل توقع بشكل مستقل، وتظهر النتيجة بعد حسم المباراة.",
+
+    "PLAYER HUB":"الملف الشخصي",
+    "TELEGRAM IDENTITY":"هوية تيليجرام",
+    "PLAYER IDENTITY":"هوية اللاعب",
+    "BLACK DIAMOND PLAYER":"لاعب Black Diamond",
+
+    "Stats":"الإحصائيات",
+    "Accuracy":"الدقة",
+    "Awaiting settled data":"بانتظار البيانات النهائية",
+    "Wins":"الانتصارات",
+    "Season":"الموسم",
+    "Progress":"التقدم",
+    "Season Progress":"تقدم الموسم",
+    "Analysis Center":"مركز التحليل",
+    "ADVANCED ANALYSIS":"التحليل المتقدم",
+    "Private intelligence layer.":"طبقة استخبارات خاصة.",
+    "This is the dedicated VIP architecture layer for advanced match intelligence, deeper statistics and future analysis modules.":"هذه طبقة VIP مخصصة للتحليل المتقدم للمباريات والإحصائيات الأعمق ووحدات التحليل المستقبلية.",
+    "VIP MODULE":"وحدة VIP",
+    "Module architecture ready for live data.":"بنية الوحدة جاهزة للبيانات المباشرة.",
+
+    "REWARDS SYSTEM":"نظام المكافآت",
+    "Royal Vault":"الخزنة الملكية",
+    "Rewards":"المكافآت",
+    "Exclusive rewards await.":"مكافآت حصرية بانتظارك.",
+    "Build your reward profile.":"طوّر ملف مكافآتك.",
+    "Points, badges, rank progression and future reward modules live here.":"النقاط والشارات وتطور الرتبة ووحدات المكافآت المستقبلية موجودة هنا.",
+    "Badges":"الشارات",
+    "System ready":"النظام جاهز",
+    "Achievements":"الإنجازات",
+
+    "Momentum Engine":"محرك الزخم",
+    "Team Form":"مستوى الفريق",
+    "Goal Patterns":"أنماط الأهداف",
+    "Market Intelligence":"ذكاء الأسواق",
+
+    "ROYAL ASCENSION":"ROYAL ASCENSION",
+
+
+
+    "Home":"الرئيسية",
+    "Dashboard":"لوحة القيادة",
+    "Command Center":"مركز القيادة",
+    "Matches":"المباريات",
+    "Match Center":"مركز المباريات",
+    "Predictions":"التوقعات",
+    "Prediction":"التوقع",
+    "Prediction Cockpit":"قمرة التوقعات",
+    "Markets":"الأسواق",
+    "Winner":"الفائز",
+    "Goals":"الأهداف",
+    "Score":"النتيجة",
+    "Stats":"الإحصائيات",
+    "History":"السجل",
+    "Results":"النتائج",
+    "Profile":"الملف الشخصي",
+    "Achievements":"الإنجازات",
+    "Rewards":"المكافآت",
+    "Competition":"البطولة",
+    "Leaderboard":"لوحة المتصدرين",
+    "Championship Leaderboard":"لوحة أبطال البطولة",
+    "Player Hub":"مركز اللاعب",
+    "Rank":"الرتبة",
+    "XP":"XP",
+    "Points":"النقاط",
+    "Missions":"المهمات",
+    "Rewards":"المكافآت",
+    "Save Prediction":"حفظ التوقع",
+    "Saved":"تم الحفظ",
+    "Save":"حفظ",
+    "Edit":"تعديل",
+    "Cancel":"إلغاء",
+    "Confirm":"تأكيد",
+    "Back":"رجوع",
+    "Next":"التالي",
+    "Close":"إغلاق",
+    "Skip":"تخطي",
+    "Start":"ابدأ",
+    "Continue":"متابعة",
+    "Loading":"جارٍ التحميل...",
+    "Loading...":"جارٍ التحميل...",
+    "No matches":"لا توجد مباريات",
+    "No active matches":"لا توجد مباريات نشطة",
+    "Rules":"القواعد",
+    "Your Prediction":"توقعك",
+    "Your Predictions":"توقعاتك",
+    "Prediction saved":"تم حفظ التوقع",
+    "Prediction submitted":"تم إرسال التوقع",
+    "Choose your prediction":"اختر توقعك",
+    "Select a match":"اختر مباراة",
+    "Select":"اختيار",
+    "Selected":"تم الاختيار",
+    "Overview":"نظرة عامة",
+    "Analysis":"التحليل",
+    "Advanced Analysis Center":"مركز التحليل المتقدم",
+    "Royal Rewards":"المكافآت الملكية",
+    "Royal Rank":"الرتبة الملكية",
+    "VIP Command Center":"مركز قيادة VIP",
+    "Black Diamond":"Black Diamond",
+    "Premium":"VIP",
+    "Upgrade":"ترقية",
+    "Upgrade to VIP":"الترقية إلى VIP",
+    "Access":"الدخول",
+    "VIP Access":"دخول VIP",
+    "Locked":"مغلق",
+    "Unlocked":"مفتوح",
+    "Exclusive":"حصري",
+    "Elite":"نخبة",
+    "Player":"اللاعب",
+    "Players":"اللاعبون",
+    "Season":"الموسم",
+    "Division":"القسم",
+    "Status":"الحالة",
+    "Active":"نشط",
+    "Upcoming":"قادمة",
+    "Finished":"منتهية",
+    "Live":"مباشر",
+    "Win":"فوز",
+    "Loss":"خسارة",
+    "Draw":"تعادل",
+    "Total":"الإجمالي",
+    "Today":"اليوم",
+    "Recent":"الأخيرة",
+    "Welcome":"أهلًا بك",
+    "Welcome back":"مرحبًا بعودتك",
+    "Good luck":"بالتوفيق",
+    "Leaderboard":"المتصدرون",
+    "History & Results":"السجل والنتائج",
+    "Stats & History":"الإحصائيات والسجل",
+    "Settings":"الإعدادات",
+    "Language":"اللغة",
+    "Arabic":"العربية",
+    "English":"English",
+    "Choose language":"اختر اللغة",
+
+    "ROYAL ASCENSION":"ROYAL ASCENSION",
+    "SKIP":"تخطي",
+    "Away":"الضيف",
+    "OVER 1.5":"أكثر من 1.5",
+    "UNDER 1.5":"أقل من 1.5",
+    "OVER 2.5":"أكثر من 2.5",
+    "UNDER 2.5":"أقل من 2.5",
+    "VIP access required":"يتطلب دخول VIP",
+    "Request failed":"فشل الطلب",
+    "Black Diamond Access":"دخول Black Diamond",
+    "PRO → BLACK DIAMOND VIP":"PRO → BLACK DIAMOND VIP"
+
+  };
+
+  const originals = new WeakMap();
+
+  function clean(v){
+    return v.replace(/\s+/g," ").trim();
+  }
+
+  function translateText(text, lang){
+    const key = clean(text);
+    if(!key || KEEP.has(key)) return null;
+
+    if(lang === "ar"){
+      return dict[key] || null;
+    }
+
+    return null;
+  }
+
+  function shouldSkip(el){
+    if(!el || !el.parentElement) return true;
+
+    const tag = el.parentElement.tagName;
+
+    return [
+      "SCRIPT",
+      "STYLE",
+      "NOSCRIPT",
+      "TEXTAREA",
+      "INPUT"
+    ].includes(tag);
+  }
+
+  function capture(root=document.body){
+    if(!root) return;
+
+    const walker = document.createTreeWalker(
+      root,
+      NodeFilter.SHOW_TEXT
+    );
+
+    const nodes=[];
+
+    while(walker.nextNode()){
+      const n=walker.currentNode;
+      if(!shouldSkip(n)) nodes.push(n);
+    }
+
+    nodes.forEach(n=>{
+      if(!originals.has(n)){
+        originals.set(n,n.nodeValue);
+      }
+    });
+  }
+
+  function apply(lang){
+    document.documentElement.lang = lang;
+    document.documentElement.dir = lang === "ar" ? "rtl" : "ltr";
+
+    capture();
+
+    document.querySelectorAll(
+      "script,style"
+    ).forEach(()=>{});
+
+    const walker = document.createTreeWalker(
+      document.body,
+      NodeFilter.SHOW_TEXT
+    );
+
+    const nodes=[];
+
+    while(walker.nextNode()){
+      const n=walker.currentNode;
+      if(!shouldSkip(n)) nodes.push(n);
+    }
+
+    nodes.forEach(n=>{
+      const original=originals.get(n);
+      if(original == null) return;
+
+      const key=clean(original);
+
+      if(lang === "en"){
+        n.nodeValue=original;
+        return;
+      }
+
+      const translated=translateText(original,lang);
+
+      if(translated){
+        n.nodeValue=original.replace(key,translated);
+      }
+    });
+
+    document.querySelectorAll("[placeholder]").forEach(el=>{
+      if(!el.dataset.zingoOriginalPlaceholder){
+        el.dataset.zingoOriginalPlaceholder=el.getAttribute("placeholder") || "";
+      }
+
+      const original=el.dataset.zingoOriginalPlaceholder;
+      const translated=lang==="ar" ? translateText(original,lang) : null;
+
+      el.setAttribute(
+        "placeholder",
+        translated || original
+      );
+    });
+
+    document.querySelectorAll("[aria-label]").forEach(el=>{
+
+      if(!el.dataset.zingoOriginalAria){
+        el.dataset.zingoOriginalAria=el.getAttribute("aria-label") || "";
+      }
+
+      const original=el.dataset.zingoOriginalAria;
+      const translated=lang==="ar" ? translateText(original,lang) : null;
+
+      if(translated){
+        el.setAttribute("aria-label",translated);
+      }else if(lang==="en"){
+        el.setAttribute("aria-label",original);
+      }
+    });
+
+    document.querySelectorAll(
+      "#zingoLangAR,#zingoLangEN"
+    ).forEach(b=>b.classList.remove("active"));
+
+    document
+      .getElementById(lang==="ar" ? "zingoLangAR" : "zingoLangEN")
+      ?.classList.add("active");
+
+    document.body.classList.remove("zingo-i18n-fade");
+    void document.body.offsetWidth;
+    document.body.classList.add("zingo-i18n-fade");
+
+    localStorage.setItem("zingo_language",lang);
+
+    window.dispatchEvent(
+      new CustomEvent("zingo:language-change",{
+        detail:{language:lang}
+      })
+    );
+  }
+
+  function init(){
+
+    capture();
+
+    const saved=localStorage.getItem("zingo_language") || "ar";
+
+    document
+      .getElementById("zingoLangAR")
+      ?.addEventListener("click",()=>apply("ar"));
+
+    document
+      .getElementById("zingoLangEN")
+      ?.addEventListener("click",()=>apply("en"));
+
+    apply(saved);
+
+    const observer=new MutationObserver(mutations=>{
+      let added=false;
+
+      for(const m of mutations){
+        if(m.addedNodes && m.addedNodes.length){
+          added=true;
+          break;
+        }
+      }
+
+      if(added){
+        capture();
+        const current=localStorage.getItem("zingo_language") || "ar";
+        apply(current);
+      }
+    });
+
+    observer.observe(document.body,{
+      childList:true,
+      subtree:true
+    });
+
+    window.zingoI18n={
+      setLanguage:apply,
+      getLanguage:()=>localStorage.getItem("zingo_language") || "ar"
+    };
+  }
+
+  if(document.readyState==="loading"){
+    document.addEventListener("DOMContentLoaded",init);
+  }else{
+    init();
+  }
+
+})();
+</script>
+
+
+<style>
+/* ZINGO PLAYER IDENTITY UI V1 */
+
+.zingo-settings-card{
+  display:grid;
+  gap:12px;
+}
+
+.zingo-setting-row{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:14px 0;
+  border-bottom:1px solid rgba(255,255,255,.07);
+}
+
+.zingo-setting-row:last-child{
+  border-bottom:0;
+}
+
+.zingo-profile-editor{
+  display:grid;
+  gap:14px;
+}
+
+.zingo-avatar-wrap{
+  width:108px;
+  height:108px;
+  margin:0 auto 4px;
+  position:relative;
+}
+
+.zingo-avatar{
+  width:100%;
+  height:100%;
+  border-radius:32px;
+  object-fit:cover;
+  background:
+    radial-gradient(circle at 30% 20%,rgba(255,255,255,.2),transparent 30%),
+    linear-gradient(145deg,#171b25,#05060a);
+  border:1px solid rgba(255,255,255,.14);
+  box-shadow:0 18px 50px rgba(0,0,0,.38);
+}
+
+.zingo-vip-crest{
+  position:relative;
+  overflow:hidden;
+  animation:zingoCrestFloat 4.8s ease-in-out infinite;
+  box-shadow:
+    0 0 0 1px rgba(255,215,100,.2),
+    0 0 35px rgba(255,190,60,.2),
+    0 20px 60px rgba(0,0,0,.5);
+}
+
+.zingo-vip-crest::after{
+  content:"";
+  position:absolute;
+  inset:-50%;
+  background:linear-gradient(
+    115deg,
+    transparent 35%,
+    rgba(255,255,255,.48) 48%,
+    rgba(255,215,120,.25) 52%,
+    transparent 65%
+  );
+  transform:translateX(-70%) rotate(8deg);
+  animation:zingoCrestShine 4.2s ease-in-out infinite;
+  pointer-events:none;
+}
+
+@keyframes zingoCrestFloat{
+  0%,100%{transform:translateY(0) rotate(0deg)}
+  50%{transform:translateY(-3px) rotate(.6deg)}
+}
+
+@keyframes zingoCrestShine{
+  0%,55%{transform:translateX(-75%) rotate(8deg)}
+  78%,100%{transform:translateX(75%) rotate(8deg)}
+}
+
+.zingo-club-grid{
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:8px;
+}
+
+.zingo-club{
+  min-height:74px;
+  padding:8px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.08);
+  background:rgba(255,255,255,.035);
+  color:inherit;
+  cursor:pointer;
+}
+
+.zingo-club.active{
+  border-color:rgba(255,205,80,.7);
+  background:rgba(255,190,50,.09);
+}
+
+.zingo-club img{
+  width:34px;
+  height:34px;
+  object-fit:contain;
+  display:block;
+  margin:auto;
+}
+
+.zingo-club span{
+  display:block;
+  margin-top:5px;
+  font-size:9px;
+  line-height:1.2;
+}
+
+.zingo-league-title{
+  margin:18px 0 8px;
+  font-size:10px;
+  letter-spacing:.12em;
+  opacity:.65;
+}
+
+.zingo-profile-input{
+  width:100%;
+  box-sizing:border-box;
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.045);
+  color:inherit;
+  border-radius:12px;
+  padding:12px 13px;
+  outline:none;
+}
+
+.zingo-profile-input:focus{
+  border-color:rgba(255,205,80,.6);
+}
+
+.zingo-language-pills{
+  display:flex;
+  gap:6px;
+}
+
+.zingo-language-pills button{
+  border:1px solid rgba(255,255,255,.1);
+  background:rgba(255,255,255,.04);
+  color:inherit;
+  padding:8px 13px;
+  border-radius:999px;
+  cursor:pointer;
+}
+
+.zingo-language-pills button.active{
+  background:rgba(255,205,80,.13);
+  border-color:rgba(255,205,80,.55);
+}
+
+@media(max-width:420px){
+  .zingo-club-grid{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+}
+</style>
+
+<script id="zingoPlayerIdentityUI">
+/* ZINGO PLAYER IDENTITY UI V1 */
+
+(function(){
+
+const CLUBS = [
+
+  {
+    league:"Premier League",
+    clubs:[
+      ["arsenal","Arsenal","https://images.fotmob.com/image_resources/logo/teamlogo/9825.png"],
+      ["chelsea","Chelsea","https://images.fotmob.com/image_resources/logo/teamlogo/8455.png"],
+      ["liverpool","Liverpool","https://images.fotmob.com/image_resources/logo/teamlogo/8650.png"],
+      ["mancity","Manchester City","https://images.fotmob.com/image_resources/logo/teamlogo/8456.png"],
+      ["manutd","Manchester United","https://images.fotmob.com/image_resources/logo/teamlogo/10260.png"],
+      ["tottenham","Tottenham","https://images.fotmob.com/image_resources/logo/teamlogo/8586.png"]
+    ]
+  },
+
+  {
+    league:"La Liga",
+    clubs:[
+      ["realmadrid","Real Madrid","https://images.fotmob.com/image_resources/logo/teamlogo/8633.png"],
+      ["barcelona","Barcelona","https://images.fotmob.com/image_resources/logo/teamlogo/8634.png"],
+      ["atletico","Atlético Madrid","https://images.fotmob.com/image_resources/logo/teamlogo/8636.png"],
+      ["sevilla","Sevilla","https://images.fotmob.com/image_resources/logo/teamlogo/8661.png"],
+      ["valencia","Valencia","https://images.fotmob.com/image_resources/logo/teamlogo/8678.png"],
+      ["bilbao","Athletic Club","https://images.fotmob.com/image_resources/logo/teamlogo/8315.png"]
+    ]
+  },
+
+  {
+    league:"Serie A",
+    clubs:[
+      ["inter","Inter","https://images.fotmob.com/image_resources/logo/teamlogo/8636.png"],
+      ["milan","AC Milan","https://images.fotmob.com/image_resources/logo/teamlogo/8564.png"],
+      ["juventus","Juventus","https://images.fotmob.com/image_resources/logo/teamlogo/9882.png"],
+      ["napoli","Napoli","https://images.fotmob.com/image_resources/logo/teamlogo/9875.png"],
+      ["roma","Roma","https://images.fotmob.com/image_resources/logo/teamlogo/8686.png"],
+      ["lazio","Lazio","https://images.fotmob.com/image_resources/logo/teamlogo/8543.png"]
+    ]
+  },
+
+  {
+    league:"Bundesliga",
+    clubs:[
+      ["bayern","Bayern Munich","https://images.fotmob.com/image_resources/logo/teamlogo/9823.png"],
+      ["dortmund","Borussia Dortmund","https://images.fotmob.com/image_resources/logo/teamlogo/9789.png"],
+      ["leverkusen","Bayer Leverkusen","https://images.fotmob.com/image_resources/logo/teamlogo/8178.png"],
+      ["leipzig","RB Leipzig","https://images.fotmob.com/image_resources/logo/teamlogo/178475.png"],
+      ["frankfurt","Eintracht Frankfurt","https://images.fotmob.com/image_resources/logo/teamlogo/9810.png"],
+      ["wolfsburg","Wolfsburg","https://images.fotmob.com/image_resources/logo/teamlogo/9831.png"]
+    ]
+  },
+
+  {
+    league:"Ligue 1",
+    clubs:[
+      ["psg","Paris Saint-Germain","https://images.fotmob.com/image_resources/logo/teamlogo/9847.png"],
+      ["marseille","Marseille","https://images.fotmob.com/image_resources/logo/teamlogo/8592.png"],
+      ["lyon","Lyon","https://images.fotmob.com/image_resources/logo/teamlogo/9746.png"],
+      ["monaco","Monaco","https://images.fotmob.com/image_resources/logo/teamlogo/9829.png"],
+      ["lille","Lille","https://images.fotmob.com/image_resources/logo/teamlogo/8639.png"],
+      ["nice","Nice","https://images.fotmob.com/image_resources/logo/teamlogo/9830.png"]
+    ]
+  }
+
+];
+
+function profileApi(path,options={}){
+  if(typeof api === "function"){
+    return api(path,options);
+  }
+
+  return fetch(path,{
+    ...options,
+    headers:{
+      "Content-Type":"application/json",
+      ...(typeof zingoAuthHeaders==="function" ? zingoAuthHeaders() : {}),
+      ...(options.headers || {})
+    }
+  }).then(async r=>{
+    const data=await r.json().catch(()=>({}));
+    if(!r.ok || data.ok===false){
+      throw new Error(data.error || "Request failed");
+    }
+    return data;
+  });
+}
+
+function allClubs(){
+  return CLUBS.flatMap(x=>x.clubs);
+}
+
+function clubById(id){
+  return allClubs().find(x=>x[0]===id) || null;
+}
+
+function getProfile(){
+  return window.__zingoProfile || {};
+}
+
+async function loadZingoProfile(){
+  try{
+    const result=await profileApi("/api/profile");
+    window.__zingoProfile=result.profile || {};
+    return window.__zingoProfile;
+  }catch(e){
+    console.warn("profile:",e.message);
+    return {};
+  }
+}
+
+window.zingoClubById=clubById;
+
+function profileAvatar(profile){
+  const p=profile || {};
+  const club=clubById(p.club_id);
+
+  if(p.avatar_data){
+    return p.avatar_data;
+  }
+
+  if(club){
+    return club[2];
+  }
+
+  return "";
+}
+
+window.zingoProfileCard=profileCard;
+
+function profileCard(){
+  const p=getProfile();
+  const u=state.user || tg?.initDataUnsafe?.user || {};
+  const avatar=profileAvatar(p);
+  const vip=state.mode==="vip";
+
+  return `
+    <div class="card card-pad">
+
+      <div class="zingo-avatar-wrap">
+        ${
+          avatar
+          ? `<img
+              class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+              src="${esc(avatar)}"
+              alt=""
+            >`
+          : `<div class="zingo-avatar ${vip ? "zingo-vip-crest" : ""}"
+                  style="display:grid;place-items:center;font-size:38px">
+                  ◇
+             </div>`
+        }
+      </div>
+
+      <div style="text-align:center">
+        <div class="eyebrow">${vip ? "BLACK DIAMOND PLAYER" : "PLAYER IDENTITY"}</div>
+        <h2 style="margin-top:8px">
+          ${esc(p.display_name || u.first_name || "Player")}
+        </h2>
+        ${
+          p.club_id && clubById(p.club_id)
+          ? `<div class="muted">${esc(clubById(p.club_id)[1])}</div>`
+          : ""
+        }
+      </div>
+
+      <div style="margin-top:16px">
+        <button
+          class="btn primary"
+          type="button"
+          onclick="window.zingoOpenProfileEditor()"
+        >
+          تعديل الملف الشخصي
+        </button>
+      </div>
+
+    </div>
+  `;
+}
+
+window.zingoOpenProfileEditor=async function(){
+
+  await loadZingoProfile();
+
+  const p=getProfile();
+
+  const app=document.getElementById("app");
+  if(!app) return;
+
+  app.innerHTML=`
+    <div class="page">
+
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">PLAYER IDENTITY</div>
+          <h1>تعديل الملف الشخصي</h1>
+        </div>
+      </div>
+
+      <section class="card card-pad zingo-profile-editor">
+
+        <div class="zingo-avatar-wrap">
+          ${
+            profileAvatar(p)
+            ? `<img id="zingoAvatarPreview"
+                    class="zingo-avatar ${state.mode==="vip"?"zingo-vip-crest":""}"
+                    src="${esc(profileAvatar(p))}"
+                    alt="">`
+            : `<div id="zingoAvatarPreview"
+                    class="zingo-avatar ${state.mode==="vip"?"zingo-vip-crest":""}"
+                    style="display:grid;place-items:center;font-size:38px">
+                    ◇
+               </div>`
+          }
+        </div>
+
+        <label class="btn">
+          تغيير الصورة
+          <input
+            id="zingoAvatarInput"
+            type="file"
+            accept="image/*"
+            hidden
+          >
+        </label>
+
+        <label>
+          <div class="eyebrow" style="margin-bottom:7px">اسم اللاعب</div>
+          <input
+            id="zingoDisplayName"
+            class="zingo-profile-input"
+            maxlength="24"
+            value="${esc(p.display_name || "")}"
+            placeholder="اكتب اسمك"
+            autocomplete="off"
+          >
+          <div class="muted" style="margin-top:6px;font-size:10px">
+            الاسم يجب أن يكون فريداً بين اللاعبين.
+          </div>
+        </label>
+
+        <div>
+          <div class="eyebrow">النادي المفضل</div>
+
+          ${
+            CLUBS.map(league=>`
+              <div class="zingo-league-title">${esc(league.league)}</div>
+
+              <div class="zingo-club-grid">
+
+                ${
+                  league.clubs.map(c=>`
+                    <button
+                      type="button"
+                      class="zingo-club ${p.club_id===c[0]?"active":""}"
+                      data-club="${esc(c[0])}"
+                    >
+                      <img src="${esc(c[2])}" alt="">
+                      <span>${esc(c[1])}</span>
+                    </button>
+                  `).join("")
+                }
+
+              </div>
+          `).join("")
+          }
+
+        </div>
+
+        <div>
+          <div class="eyebrow">لغة الواجهة</div>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button
+              id="zingoProfileLangAR"
+              class="btn"
+              type="button"
+              onclick="window.zingoSelectProfileLanguage('ar')"
+            >العربية</button>
+
+            <button
+              id="zingoProfileLangEN"
+              class="btn"
+              type="button"
+              onclick="window.zingoSelectProfileLanguage('en')"
+            >EN</button>
+          </div>
+        </div>
+
+        <div style="display:flex;gap:8px">
+          <button
+            class="btn primary"
+            type="button"
+            onclick="window.zingoSaveProfile()"
+          >
+            حفظ
+          </button>
+
+          <button
+            class="btn"
+            type="button"
+            onclick="render()"
+          >
+            إلغاء
+          </button>
+        </div>
+
+        <div id="zingoProfileMessage" class="muted"></div>
+
+      </section>
+    </div>
+  `;
+
+  let selectedClub=p.club_id || "";
+
+  document.querySelectorAll("[data-club]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+
+      selectedClub=btn.dataset.club;
+
+      document.querySelectorAll("[data-club]")
+        .forEach(x=>x.classList.toggle(
+          "active",
+          x.dataset.club===selectedClub
+        ));
+
+    });
+  });
+
+  document
+    .getElementById("zingoAvatarInput")
+    ?.addEventListener("change",async e=>{
+
+      const file=e.target.files?.[0];
+      if(!file) return;
+
+      try{
+
+        const data=await new Promise((resolve,reject)=>{
+
+          const img=new Image();
+          const reader=new FileReader();
+
+          reader.onload=()=>{
+            img.onload=()=>{
+
+              const max=512;
+
+              let w=img.width;
+              let h=img.height;
+
+              if(w>max || h>max){
+                const scale=Math.min(max/w,max/h);
+                w=Math.round(w*scale);
+                h=Math.round(h*scale);
+              }
+
+              const canvas=document.createElement("canvas");
+              canvas.width=w;
+              canvas.height=h;
+
+              const ctx=canvas.getContext("2d");
+              ctx.drawImage(img,0,0,w,h);
+
+              resolve(
+                canvas.toDataURL("image/jpeg",.78)
+              );
+            };
+
+            img.onerror=reject;
+            img.src=reader.result;
+          };
+
+          reader.onerror=reject;
+          reader.readAsDataURL(file);
+        });
+
+        window.__zingoProfileDraftAvatar=data;
+
+        const preview=document.getElementById("zingoAvatarPreview");
+
+        if(preview){
+          if(preview.tagName==="IMG"){
+            preview.src=data;
+          }else{
+            preview.outerHTML=
+              `<img id="zingoAvatarPreview"
+                    class="zingo-avatar ${state.mode==="vip"?"zingo-vip-crest":""}"
+                    src="${esc(data)}"
+                    alt="">`;
+          }
+        }
+
+      }catch(err){
+        console.error(err);
+        alert("تعذر قراءة الصورة");
+      }
+
+    });
+
+  window.__zingoProfileDraftClub=selectedClub;
+
+  window.__zingoProfileDraftLanguage =
+    localStorage.getItem("zingo_language") || "ar";
+
+  window.zingoSelectProfileLanguage=function(lang){
+    lang=lang==="en" ? "en" : "ar";
+
+    window.__zingoProfileDraftLanguage=lang;
+
+    const ar=document.getElementById("zingoProfileLangAR");
+    const en=document.getElementById("zingoProfileLangEN");
+
+    if(ar) ar.classList.toggle("primary",lang==="ar");
+    if(en) en.classList.toggle("primary",lang==="en");
+  };
+
+  window.zingoSelectProfileLanguage(
+    window.__zingoProfileDraftLanguage
+  );
+};
+
+window.zingoSaveProfile=async function(){
+
+  const input=document.getElementById("zingoDisplayName");
+  const msg=document.getElementById("zingoProfileMessage");
+
+  const name=(input?.value || "").trim();
+  const avatar=window.__zingoProfileDraftAvatar || getProfile().avatar_data || "";
+  const club=document.querySelector("[data-club].active")?.dataset.club
+    || getProfile().club_id
+    || "";
+
+  if(!name){
+    if(msg) msg.textContent="اكتب اسم اللاعب أولاً";
+    return;
+  }
+
+  try{
+
+    if(msg) msg.textContent="جارٍ الحفظ...";
+
+    const result=await profileApi("/api/profile/update",{
+      method:"POST",
+      body:JSON.stringify({
+        display_name:name,
+        avatar_data:avatar,
+        club_id:club
+      })
+    });
+
+    window.__zingoProfile=result.profile || {};
+
+    const selectedLanguage =
+      window.__zingoProfileDraftLanguage === "en" ? "en" : "ar";
+
+    localStorage.setItem("zingo_language",selectedLanguage);
+
+    window.__zingoProfileDraftAvatar="";
+    window.__zingoProfileDraftClub="";
+    window.__zingoProfileDraftLanguage="";
+
+    if(
+      window.zingoI18n &&
+      typeof window.zingoI18n.setLanguage==="function"
+    ){
+      window.zingoI18n.setLanguage(selectedLanguage);
+    }
+
+    if(typeof toast==="function"){
+      toast("تم تحديث الملف الشخصي");
+    }
+
+    render();
+
+  }catch(e){
+
+    if(msg) msg.textContent=e.message || "تعذر حفظ الملف الشخصي";
+
+  }
+
+};
+
+window.zingoSettings=function(){
+
+  const app=document.getElementById("app");
+  if(!app) return;
+
+  app.innerHTML=`
+    <div class="page">
+
+      <div class="page-head">
+        <div>
+          <div class="eyebrow">SYSTEM</div>
+          <h1>الإعدادات</h1>
+        </div>
+      </div>
+
+      <section class="card card-pad zingo-settings-card">
+<div class="zingo-setting-row">
+          <div>
+            <strong>الملف الشخصي</strong>
+            <div class="muted">الاسم، الصورة، والنادي</div>
+          </div>
+
+          <button
+            class="btn"
+            onclick="window.zingoOpenProfileEditor()"
+          >
+            تعديل
+          </button>
+        </div>
+
+        <div class="zingo-setting-row">
+          <div>
+            <strong>VIP</strong>
+            <div class="muted">
+              ${state.subscription?.active ? "Black Diamond Access" : "VIP Access"}
+            </div>
+          </div>
+
+          <button
+            class="btn"
+            onclick="window.switchZingoMode ? window.switchZingoMode('vip') : (state.mode='vip',state.page='home',render())"
+          >
+            VIP
+          </button>
+        </div>
+
+      </section>
+    </div>
+  `;
+};
+
+
+
+})();
+</script>
+
+
+
+
+</body>
+</html>
