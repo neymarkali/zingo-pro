@@ -14,3 +14,4 @@ Auth: Telegram `initData` (HMAC) in `X-Telegram-Init-Data`. Tables are created a
 
 ## Tests
 `node --experimental-sqlite test/api.test.mjs` (Node 22+, D1 emulated with node:sqlite).
+
