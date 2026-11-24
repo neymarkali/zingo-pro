@@ -104,6 +104,25 @@ assert.equal((await call("/api/admin/round/delete", { body: { round_id: rd.round
 const empty = await call("/api/admin/round", { body: { tier: "free", title: "x", lock_at: lock, matches: ms } });
 assert.equal((await call("/api/admin/round/delete", { body: { round_id: empty.round_id } })).ok, true);
 
+// football-data.org (stubbed)
+globalThis.fetch = async (u, o) => {
+  assert.ok(String(u).startsWith("https://api.football-data.org/v4/matches"));
+  assert.equal(o.headers["X-Auth-Token"], "FD");
+  if (String(u).includes("ids=")) return new Response(JSON.stringify({ matches: [{ id: 501, status: "FINISHED", score: { fullTime: { home: 3, away: 1 } } }, { id: 502, status: "TIMED", score: { fullTime: { home: null, away: null } } }] }));
+  return new Response(JSON.stringify({ matches: [
+    { id: 501, status: "TIMED", utcDate: "2026-11-29T20:00:00Z", homeTeam: { shortName: "Barcelona" }, awayTeam: { name: "Real Madrid CF" }, competition: { code: "PD" } },
+    { id: 9, status: "FINISHED", utcDate: "2026-11-22T20:00:00Z", homeTeam: { shortName: "A" }, awayTeam: { shortName: "B" }, competition: { code: "PD" } }] }));
+};
+assert.equal((await call("/api/admin/fixtures?from=2026-11-29&to=2026-12-03")).error, "no_football_token");
+env.FOOTBALL_DATA_TOKEN = "FD";
+assert.equal((await call("/api/admin/fixtures?from=bad&to=x")).error, "bad_dates");
+const fx = await call("/api/admin/fixtures?from=2026-11-29&to=2026-12-03");
+assert.deepEqual(fx.matches.map((m) => [m.ext_id, m.home, m.away]), [[501, "Barcelona", "Real Madrid CF"]], "only upcoming matches, names mapped");
+const er = await call("/api/admin/round", { body: { tier: "free", title: "auto", lock_at: lock, matches: [{ home: "Barcelona", away: "Real Madrid CF", kickoff: lock, ext_id: 501 }, { home: "X", away: "Y", kickoff: lock, ext_id: 502 }] } });
+const fr = await call("/api/admin/results?round_id=" + er.round_id);
+assert.deepEqual(fr.results.map((x) => [x.hg, x.ag]), [[3, 1], [null, null]], "finished match gets score, pending stays empty");
+assert.equal((await call("/api/admin/fixtures?from=2026-11-29&to=2026-12-03", { user: "2" })).s, 403);
+
 // not found / assets
 assert.equal((await call("/api/nope")).s, 404);
 assert.equal(await (await worker.fetch(new Request("https://x/"), env)).text(), "asset");

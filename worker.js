@@ -39,6 +39,7 @@ let schemaReady = false;
 async function ensureSchema(env) {
   if (schemaReady) return;
   await env.DB.batch(SCHEMA.map((s) => env.DB.prepare(s)));
+  try { await env.DB.prepare("ALTER TABLE z_matches ADD COLUMN ext_id INTEGER").run(); } catch (e) { /* column already exists */ }
   schemaReady = true;
 }
 
@@ -308,8 +309,8 @@ async function adminRound(env, b) {
     // optional team strengths (0-100) fix the VIP odds at creation time
     const d = (Number(m.str_home ?? 80) - Number(m.str_away ?? 80)) + 3;
     const ph0 = 1 / (1 + Math.pow(10, -d / 12)), pd = Math.max(0.18, 0.3 - 0.012 * Math.abs(d)), r = 1 - pd;
-    return env.DB.prepare("INSERT INTO z_matches (round_id,home,away,kickoff,cor_line,car_line,ph,pd,pa) VALUES (?,?,?,?,?,?,?,?,?)")
-      .bind(id, m.home, m.away, Number(m.kickoff), m.cor_line ?? 9.5, m.car_line ?? 4.5, r * ph0, pd, r * (1 - ph0));
+    return env.DB.prepare("INSERT INTO z_matches (round_id,home,away,kickoff,cor_line,car_line,ph,pd,pa,ext_id) VALUES (?,?,?,?,?,?,?,?,?,?)")
+      .bind(id, m.home, m.away, Number(m.kickoff), m.cor_line ?? 9.5, m.car_line ?? 4.5, r * ph0, pd, r * (1 - ph0), m.ext_id ? Number(m.ext_id) : null);
   });
   await env.DB.batch(stmts);
   return json({ ok: true, round_id: id });
@@ -384,6 +385,39 @@ async function adminDeleteRound(env, b) {
   return json({ ok: true });
 }
 
+// ---------- football-data.org (fixtures and final scores) ----------
+async function fd(env, path) {
+  if (!env.FOOTBALL_DATA_TOKEN) return { error: "no_football_token" };
+  const r = await fetch("https://api.football-data.org/v4" + path, { headers: { "X-Auth-Token": env.FOOTBALL_DATA_TOKEN } });
+  if (!r.ok) return { error: "football_api_" + r.status };
+  return { data: await r.json() };
+}
+const teamName = (t) => (t && (t.shortName || t.name)) || "?";
+async function adminFixtures(env, q) {
+  const comps = String(q.get("comps") || "PL,PD,SA").replace(/[^A-Z0-9,]/g, "");
+  const from = String(q.get("from") || ""), to = String(q.get("to") || "");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) return fail("bad_dates");
+  const r = await fd(env, `/matches?dateFrom=${from}&dateTo=${to}&competitions=${comps}`);
+  if (r.error) return fail(r.error, 502);
+  const list = (r.data.matches || [])
+    .filter((m) => m.status === "SCHEDULED" || m.status === "TIMED")
+    .map((m) => ({ ext_id: m.id, home: teamName(m.homeTeam), away: teamName(m.awayTeam), kickoff: Math.floor(Date.parse(m.utcDate) / 1000), comp: m.competition && m.competition.code }));
+  return json({ ok: true, matches: list });
+}
+async function adminFetchResults(env, q) {
+  const rows = (await env.DB.prepare("SELECT id,ext_id FROM z_matches WHERE round_id=? AND ext_id IS NOT NULL").bind(Number(q.get("round_id"))).all()).results || [];
+  if (!rows.length) return json({ ok: true, results: [] });
+  const r = await fd(env, `/matches?ids=${rows.map((x) => x.ext_id).join(",")}`);
+  if (r.error) return fail(r.error, 502);
+  const byExt = Object.fromEntries((r.data.matches || []).map((m) => [m.id, m]));
+  const results = rows.map((x) => {
+    const m = byExt[x.ext_id], ft = m && m.score && m.score.fullTime;
+    const done = m && m.status === "FINISHED" && ft && ft.home != null && ft.away != null;
+    return { match_id: x.id, status: m ? m.status : "UNKNOWN", hg: done ? ft.home : null, ag: done ? ft.away : null };
+  });
+  return json({ ok: true, results });
+}
+
 // ---------- router ----------
 export default {
   async fetch(request, env) {
@@ -412,6 +446,8 @@ export default {
       if (url.pathname.startsWith("/api/admin/")) {
         if (!adminIds(env).has(user.id)) return fail("forbidden", 403);
         if (url.pathname === "/api/admin/rounds") return adminRounds(env);
+        if (url.pathname === "/api/admin/fixtures") return adminFixtures(env, q);
+        if (url.pathname === "/api/admin/results") return adminFetchResults(env, q);
         if (url.pathname === "/api/admin/players") return adminPlayers(env, q.get("q"));
         if (!post) return fail("method", 405);
         if (url.pathname === "/api/admin/round/delete") return adminDeleteRound(env, body);
