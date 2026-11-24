@@ -72,22 +72,22 @@ async function authUser(request, env) {
     if (dev) return { id: String(dev) };
   }
   const initData = request.headers.get("X-Telegram-Init-Data") || "";
-  if (!initData) return null;
-  if (!env.TELEGRAM_BOT_TOKEN) return null;
+  if (!initData) return { reason: "no_init_data" };
+  if (!env.TELEGRAM_BOT_TOKEN) return { reason: "no_token" };
   const params = new URLSearchParams(initData);
   const received = params.get("hash");
-  if (!received) return null;
+  if (!received) return { reason: "no_hash" };
   params.delete("hash");
   const check = [...params.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([k, v]) => `${k}=${v}`).join("\n");
   const secret = await hmac(new TextEncoder().encode("WebAppData"), env.TELEGRAM_BOT_TOKEN);
-  if (!safeEqual(hex(await hmac(secret, check)), received.toLowerCase())) return null;
+  if (!safeEqual(hex(await hmac(secret, check)), received.toLowerCase())) return { reason: "bad_signature" };
   const age = now() - Number(params.get("auth_date") || 0);
-  if (!(age >= -60 && age <= 86400)) return null;
+  if (!(age >= -60 && age <= 86400)) return { reason: "expired" };
   try {
     const u = JSON.parse(params.get("user") || "null");
-    return u && u.id ? { id: String(u.id) } : null;
+    return u && u.id ? { id: String(u.id) } : { reason: "no_user" };
   } catch {
-    return null;
+    return { reason: "no_user" };
   }
 }
 
@@ -360,11 +360,15 @@ export default {
   async fetch(request, env) {
     const url = new URL(request.url);
     if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
-    if (url.pathname === "/api/health") return json({ ok: true, auth: Boolean(env.TELEGRAM_BOT_TOKEN) });
+    if (url.pathname === "/api/health") {
+      const tok = String(env.TELEGRAM_BOT_TOKEN || "");
+      // bot id (digits before ":") is public; it lets you compare with the bot you open the app from
+      return json({ ok: true, auth: Boolean(tok), bot_id: tok.split(":")[0] || null, token_shape_ok: /^\d{6,12}:[\w-]{30,}$/.test(tok) });
+    }
     try {
       await ensureSchema(env);
       const user = await authUser(request, env);
-      if (!user) return fail("unauthorized", 401);
+      if (!user || user.reason) return json({ ok: false, error: "unauthorized", reason: user && user.reason }, 401);
       const post = request.method === "POST";
       const body = post ? await request.json().catch(() => ({})) : {};
       const q = url.searchParams;

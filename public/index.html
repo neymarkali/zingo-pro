@@ -486,7 +486,7 @@ async function loadRank(){
   RANK.length=0;RANK.push(...rows);
 }
 async function boot(){
-  if(API.on){const r=await API.call('/api/me');if(!r.ok){app.innerHTML=`<div class="screen"><div class="card" style="text-align:center"><div class="h2">ZINGO</div><p class="mute">${errMsg(r.error)}</p></div></div>`;return}
+  if(API.on){const r=await API.call('/api/me');if(!r.ok){app.innerHTML=`<div class="screen"><div class="card" style="text-align:center"><div class="h2">ZINGO</div><p class="mute">${errMsg(r.error)}</p><p class="sm mute" dir="ltr">${esc(r.reason||'')}</p></div></div>`;return}
     if(!applyMe(r))S.tier='onboard';}
   render();
 }
