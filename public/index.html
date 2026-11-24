@@ -1,0 +1,438 @@
+<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>ZINGO</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Barlow+Condensed:ital,wght@1,800&display=swap">
+<style>
+/* Layout: one phone-width column. Three tiers share the structure and swap tokens:
+   FREE = deep navy + electric blue, PRO = black + gold, VIP = obsidian + diamond (iridescent ice). */
+:root{
+  --f-ui:'Cairo','Segoe UI',Tahoma,sans-serif;--f-logo:'Barlow Condensed','Arial Narrow',Impact,sans-serif;
+  --bg:#050a18;--bg2:#0a1428;--card:#0d1b36;--card2:#122447;--line:rgba(70,140,255,.28);--accent:#2c8cff;--accent2:#8cc6ff;
+  --fg:#eaf2ff;--mute:#8fa4c4;--glow:rgba(44,140,255,.5);--ok:#46e39a;--bad:#ff6b6b;
+  --btn:linear-gradient(180deg,#46a2ff,#1569e0);--btn-fg:#fff;--amb1:rgba(44,140,255,.22);--amb2:rgba(20,80,200,.18);
+  color-scheme:dark;
+}
+:root[data-tier="pro"]{--bg:#0a0804;--bg2:#14100a;--card:#1a1409;--card2:#251c0c;--line:rgba(212,175,55,.3);--accent:#d4af37;--accent2:#f3e5ab;--fg:#f8f1de;--mute:#ab9d7c;--glow:rgba(212,175,55,.45);--btn:linear-gradient(180deg,#f0d77a,#b8922a);--btn-fg:#1a1204;--amb1:rgba(212,175,55,.2);--amb2:rgba(120,80,10,.2)}
+:root[data-tier="vip"]{--bg:#03050a;--bg2:#09101c;--card:#0c1424;--card2:#142038;--line:rgba(160,230,255,.34);--accent:#8fe8ff;--accent2:#eefcff;--fg:#f2fbff;--mute:#8aa6b8;--glow:rgba(130,225,255,.55);--btn:linear-gradient(135deg,#f1fdff,#8fe8ff 48%,#b9a8ff);--btn-fg:#04141c;--amb1:rgba(140,230,255,.2);--amb2:rgba(150,120,255,.18)}
+*{box-sizing:border-box}
+html,body{background:var(--bg);color:var(--fg);font-family:var(--f-ui);-webkit-tap-highlight-color:transparent}
+body{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));min-height:100vh;overflow-x:hidden}
+button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+button:focus-visible,input:focus-visible{outline:2px solid var(--accent2);outline-offset:2px}
+#amb{position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(70% 40% at 80% 0%,var(--amb1),transparent 70%),radial-gradient(60% 40% at 0% 100%,var(--amb2),transparent 70%),var(--bg)}
+#amb::after{content:"";position:absolute;inset:-30%;opacity:.0;background:conic-gradient(from 0deg,transparent,rgba(255,255,255,.08),transparent 30%,rgba(255,255,255,.06),transparent 60%);animation:amb 28s linear infinite}
+:root[data-tier="vip"] #amb::after{opacity:1}
+@keyframes amb{to{transform:rotate(360deg)}}
+#app{max-width:480px;margin:0 auto;padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+.screen{animation:rise .35s ease both}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+/* Header */
+.hd{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:14px 0 10px;position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:linear-gradient(var(--bg) 72%,transparent)}
+.logo{font:italic 800 34px/1 var(--f-logo);letter-spacing:.02em;direction:ltr;background:linear-gradient(180deg,#fff,var(--accent2) 55%,var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px var(--glow))}
+.ibtn{height:38px;min-width:38px;padding:0 12px;border-radius:12px;background:var(--card);border:1px solid var(--line);font-size:14px;font-weight:600;display:inline-flex;align-items:center;justify-content:center;gap:6px}
+.sw{position:relative;display:flex;padding:3px;border-radius:999px;background:var(--card);border:1px solid var(--line);direction:ltr}
+.sw button{position:relative;z-index:1;padding:7px 18px;border-radius:999px;font:800 14px/1 var(--f-logo);letter-spacing:.1em;color:var(--mute);transition:color .25s}
+.sw button.on{color:var(--btn-fg)}
+.sw i{position:absolute;top:3px;bottom:3px;width:calc(50% - 3px);border-radius:999px;background:var(--btn);box-shadow:0 0 16px var(--glow);transition:transform .35s cubic-bezier(.3,.8,.3,1);inset-inline-start:auto;left:3px}
+.sw[data-v="vip"] i{transform:translateX(100%)}
+/* Primitives */
+.card{background:linear-gradient(180deg,var(--card2),var(--card));border:1px solid var(--line);border-radius:18px;padding:14px;contain:layout paint}
+.stack{display:flex;flex-direction:column;gap:12px}
+.row{display:flex;align-items:center;gap:10px}.grow{flex:1;min-width:0}
+.h2{font-weight:900;font-size:20px;margin:0}
+.mute{color:var(--mute)}.sm{font-size:12.5px}
+.btn{width:100%;padding:13px 16px;border-radius:14px;background:var(--btn);color:var(--btn-fg);font-weight:900;font-size:16px;box-shadow:0 6px 22px -8px var(--glow),inset 0 1px 0 rgba(255,255,255,.45);transition:transform .12s,filter .2s}
+.btn:active{transform:scale(.97)}.btn:disabled{filter:grayscale(.8) brightness(.55);cursor:default;box-shadow:none}
+.btn.ghost{background:var(--card);color:var(--fg);border:1px solid var(--line);box-shadow:none}
+.pill{display:inline-flex;align-items:center;gap:5px;padding:3px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:700;color:var(--accent2)}
+/* Launcher */
+.lead{text-align:center;padding:26px 0 14px}.lead .logo{font-size:64px}
+.tier{position:relative;display:flex;align-items:center;gap:14px;width:100%;text-align:start;padding:18px 16px;border-radius:20px;overflow:hidden;border:1px solid var(--tl);background:linear-gradient(135deg,var(--t1),var(--t2));transition:transform .15s}
+.tier:active{transform:scale(.98)}
+.tier h3{margin:0;font-size:22px;font-weight:900;color:var(--tc)}.tier p{margin:2px 0 0;font-size:12.5px;color:var(--tm)}
+.tier .tg{width:54px;height:54px;border-radius:16px;display:grid;place-items:center;font:800 26px/1 var(--f-logo);color:var(--tg1);background:var(--tg2);border:1px solid var(--tl)}
+.tier.t-free{--tl:rgba(70,140,255,.5);--t1:#0f2a57;--t2:#0a1a38;--tc:#eaf2ff;--tm:#9fb6da;--tg1:#8cc6ff;--tg2:#0b1d3e}
+.tier.t-pro{--tl:rgba(212,175,55,.55);--t1:#2a1f08;--t2:#120d04;--tc:#f6e7ae;--tm:#b9a672;--tg1:#f0d77a;--tg2:#1b1405}
+.tier.t-vip{--tl:rgba(160,230,255,.6);--t1:#16263f;--t2:#080f1c;--tc:#eefcff;--tm:#9ab6c8;--tg1:#bff3ff;--tg2:#0b1626}
+.tier.t-vip::after{content:"";position:absolute;inset:0;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.22) 50%,transparent 65%);transform:translateX(-120%);animation:sheen 4.5s ease-in-out infinite}
+@keyframes sheen{60%,100%{transform:translateX(120%)}}
+/* Bottom nav */
+.nav{position:fixed;left:0;right:0;bottom:0;z-index:8;padding:8px max(12px,env(safe-area-inset-left,0px)) calc(8px + env(safe-area-inset-bottom,0px));background:linear-gradient(transparent,var(--bg) 38%)}
+.nav div{max-width:480px;margin:0 auto;display:grid;grid-template-columns:repeat(3,1fr);gap:6px;padding:6px;border-radius:20px;background:var(--card);border:1px solid var(--line);box-shadow:0 10px 30px -10px #000}
+.nav button{display:flex;flex-direction:column;align-items:center;gap:2px;padding:7px 0;border-radius:14px;color:var(--mute);font-size:12px;font-weight:700}
+.nav button svg{width:22px;height:22px}
+.nav button.on{background:var(--btn);color:var(--btn-fg)}
+/* Round + matches */
+.rb{display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center}
+.cd{font:800 30px/1 var(--f-logo);letter-spacing:.06em;direction:ltr;color:var(--accent2);text-shadow:0 0 14px var(--glow)}
+.prog{height:6px;border-radius:4px;background:rgba(255,255,255,.1);overflow:hidden;margin-top:10px}.prog i{display:block;height:100%;background:var(--btn);transition:width .4s}
+.m{display:flex;flex-direction:column;gap:12px}
+.teams{display:grid;grid-template-columns:1fr auto 1fr;gap:6px;align-items:center;text-align:center}
+.team b{display:block;font-size:14px;font-weight:700;margin-top:4px}
+.crest{width:56px;height:56px;margin:0 auto;display:block;filter:drop-shadow(0 4px 8px rgba(0,0,0,.5))}
+.ko{font:800 24px/1 var(--f-logo);direction:ltr;color:var(--accent2)}
+.mk{border-top:1px dashed var(--line);padding-top:10px}
+.mk .t{display:flex;justify-content:space-between;align-items:center;font-size:12.5px;color:var(--mute);margin-bottom:7px;font-weight:700}
+.opts{display:grid;gap:7px}.o2{grid-template-columns:repeat(2,1fr)}.o3{grid-template-columns:repeat(3,1fr)}
+.o{position:relative;padding:10px 4px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);font-weight:800;font-size:15px;transition:transform .12s,background .2s,border-color .2s,box-shadow .2s}
+.o small{display:block;font-size:11px;font-weight:700;color:var(--accent2);opacity:.85;margin-top:1px}
+.o:active{transform:scale(.94)}
+.o.sel{background:var(--btn);color:var(--btn-fg);border-color:transparent;box-shadow:0 0 18px var(--glow)}.o.sel small{color:var(--btn-fg)}
+.o.sel::after{content:"";position:absolute;inset:0;border-radius:12px;box-shadow:0 0 0 0 var(--glow);animation:ping .5s ease-out}
+@keyframes ping{to{box-shadow:0 0 0 12px transparent}}
+.o:disabled{opacity:.4}.o.sel:disabled{opacity:1}
+.m.saved{border-color:var(--accent)}
+.stp{display:flex;align-items:center;justify-content:center;gap:14px;direction:ltr}
+.stp button{width:40px;height:40px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);font-size:22px;font-weight:800}.stp b{font:800 34px/1 var(--f-logo);min-width:40px;text-align:center}
+.bst{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);font-size:12px;font-weight:800;color:var(--accent2)}
+.bst.on{background:var(--btn);color:var(--btn-fg);border-color:transparent;box-shadow:0 0 14px var(--glow)}
+.lock{display:inline-flex;align-items:center;gap:5px;color:var(--ok);font-weight:800;font-size:13px}
+/* Ranking */
+.pod{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:8px;align-items:end;text-align:center}
+.pod .c{padding:12px 4px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
+.pod .c.r1{padding-block:18px;border-color:#d4af37;box-shadow:0 0 24px rgba(212,175,55,.3)}
+.pod b{display:block;font-size:13px;margin-top:6px}.pod .pt{font:800 22px/1 var(--f-logo);color:var(--accent2)}
+.medal{width:34px;height:34px;margin:6px auto 0;display:block}
+.rk{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid rgba(255,255,255,.07)}
+.rk .n{width:26px;text-align:center;font:800 20px/1 var(--f-logo);color:var(--mute)}
+.rk.me{background:linear-gradient(90deg,transparent,var(--amb1));border-radius:12px;padding-inline:8px}
+.mini{width:40px;height:40px;position:relative;flex:none;display:grid;place-items:center;border-radius:50%;background:var(--bg2);isolation:isolate}
+/* Profile + frames (transform/opacity only) */
+.pf{display:flex;align-items:center;gap:18px}
+.av{position:relative;width:96px;height:96px;flex:none;display:grid;place-items:center;border-radius:50%;background:var(--bg2);isolation:isolate}
+.av svg.em{width:78%;height:78%}
+.fr{position:absolute;inset:-7px;border-radius:50%;pointer-events:none;z-index:-1;background:conic-gradient(var(--c1),var(--c2),var(--c3),var(--c2),var(--c1));-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 6px),#000 calc(100% - 5px));mask:radial-gradient(farthest-side,transparent calc(100% - 6px),#000 calc(100% - 5px))}
+.mini .fr{inset:-4px;-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px));mask:radial-gradient(farthest-side,transparent calc(100% - 3px),#000 calc(100% - 2px))}
+.f-none .fr{display:none}
+.f-diamond{--c1:#d8f8ff;--c2:#5cd0ff;--c3:#f5ecff;--gl:rgba(110,215,255,.6)}
+.f-gold{--c1:#ffe48c;--c2:#d19a0f;--c3:#fff4c4;--gl:rgba(255,200,70,.55)}
+.f-silver{--c1:#f2f5f8;--c2:#8d98a6;--c3:#ffffff;--gl:rgba(200,210,225,.5)}
+.f-bronze{--c1:#f0b47c;--c2:#8c5524;--c3:#f8d3ad;--gl:rgba(220,140,80,.5)}
+.f-aurora{--c1:#7dffb0;--c2:#7a6bff;--c3:#ff8ee6;--gl:rgba(140,140,255,.55)}
+.f-blaze{--c1:#ffd36a;--c2:#ff4d2e;--c3:#fff0b0;--gl:rgba(255,110,50,.55)}
+.anim .fr{inset:-9px;will-change:transform;animation:spin 5s linear infinite}
+.mini.anim .fr{inset:-5px}
+.anim::before{content:"";position:absolute;inset:-24px;border-radius:50%;z-index:-2;pointer-events:none;background:radial-gradient(circle,var(--gl) 30%,transparent 68%);will-change:transform,opacity;animation:pls 2.2s ease-in-out infinite alternate}
+.mini.anim::before{inset:-10px}
+@keyframes spin{to{transform:rotate(360deg)}}@keyframes pls{from{opacity:.45;transform:scale(.92)}to{opacity:1;transform:scale(1.06)}}
+.lite .anim .fr,.lite .anim::before{animation:none}
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:800;border:1px solid var(--line);color:var(--accent2)}
+.bdg.vip{background:linear-gradient(135deg,rgba(241,253,255,.18),rgba(143,232,255,.12));border-color:rgba(160,230,255,.6);color:#d9f8ff}
+.bdg.pro{border-color:rgba(212,175,55,.6);color:#f0d77a}
+.grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.ach{position:relative;text-align:center;padding:10px 2px;border-radius:14px;background:var(--bg2);border:1px solid var(--line);font-size:11px;line-height:1.3}
+.ach .ic{width:38px;height:38px;margin:0 auto 6px;border-radius:50%;display:grid;place-items:center;font-size:18px;background:var(--card2)}
+.ach.lk{opacity:.45;filter:grayscale(.8)}
+.ach.rare{border-color:#8fd0ff}.ach.epic{border-color:#d9a6ff}.ach.leg{border-color:#ffd76a;box-shadow:0 0 14px rgba(255,215,106,.25)}
+.fgrid{display:flex;gap:12px;overflow-x:auto;padding:12px 8px 6px;scrollbar-width:none}.fgrid::-webkit-scrollbar{display:none}
+.fo{flex:none;text-align:center;font-size:11px;width:68px}.fo .mini{width:52px;height:52px;margin:0 auto 6px}.fo.lk{opacity:.5}
+.egrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.eo{aspect-ratio:1;border-radius:14px;background:var(--bg2);border:1px solid var(--line);display:grid;place-items:center;padding:6px;transition:transform .12s}
+.eo.on{border-color:var(--accent);box-shadow:0 0 14px var(--glow);background:var(--card2)}.eo:active{transform:scale(.92)}
+.eo svg{width:100%;height:100%}
+/* Cinematic */
+#cine{position:fixed;inset:0;z-index:50;display:none;overflow:hidden;background:#000}
+#cine.on{display:block}
+#cine canvas{position:absolute;inset:0;width:100%;height:100%}
+#cine .fl{position:absolute;inset:0;background:#fff;opacity:0;pointer-events:none}
+#cine .tt{position:absolute;left:0;right:0;top:46%;text-align:center;font:italic 800 clamp(40px,13vw,72px)/1 var(--f-logo);letter-spacing:.08em;opacity:0;transform:scale(.8);direction:ltr}
+#cine .skip{position:absolute;top:calc(14px + env(safe-area-inset-top,0px));inset-inline-start:16px;z-index:2;padding:8px 16px;border-radius:999px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.3);font-weight:700;font-size:13px}
+.toast{position:fixed;left:50%;bottom:calc(96px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--card2);border:1px solid var(--accent);color:var(--accent2);padding:9px 16px;border-radius:999px;font-size:13px;font-weight:700;z-index:40;animation:rise .25s both;max-width:90vw}
+.sheet{position:fixed;inset:0;z-index:30;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center}
+.sheet .p{width:100%;max-width:480px;background:var(--card);border:1px solid var(--line);border-radius:22px 22px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom,0px));animation:up .3s ease both}
+@keyframes up{from{transform:translateY(40px);opacity:0}to{transform:none;opacity:1}}
+input.tx{width:100%;background:var(--bg2);color:var(--fg);border:1px solid var(--line);border-radius:12px;padding:12px;font:inherit;font-size:16px}
+@media (prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;animation-iteration-count:1!important;transition:none!important}}
+</style>
+<div id="amb"></div><div id="app"></div>
+<div id="cine"><canvas id="cv"></canvas><div class="fl" id="fl"></div><div class="tt" id="tt"></div><button class="skip" id="skip">تخطي</button></div>
+<script>
+'use strict';
+document.documentElement.lang='ar';document.documentElement.dir='rtl';
+try{if((navigator.hardwareConcurrency&&navigator.hardwareConcurrency<=4)||(navigator.deviceMemory&&navigator.deviceMemory<=2))document.documentElement.classList.add('lite')}catch(e){}
+const TG=(window.Telegram&&window.Telegram.WebApp)||null;
+try{if(TG){TG.ready();TG.expand()}}catch(e){}
+const hap=(k)=>{try{TG&&TG.HapticFeedback&&(k==='ok'?TG.HapticFeedback.notificationOccurred('success'):TG.HapticFeedback.impactOccurred('light'))}catch(e){}};
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+
+/* ---------- Original emblems (no real club logos): shield / round / hex + symbol ---------- */
+const SYM={
+  star:'M50 22l8 16.2 17.9 2.6-13 12.6 3.1 17.8L50 62.8l-16 8.4 3.1-17.8-13-12.6L42 38.2z',
+  bolt:'M57 20L33 55h15l-6 25 25-37H51z',
+  crown:'M27 68V38l14 14 9-21 9 21 14-14v30z',
+  flame:'M50 20c4 14 19 20 19 39a19 19 0 0 1-38 0c0-9 4-13 9-17 0 8 4 11 7 11-5-15-1-26 3-33z',
+  diamond:'M50 22l21 23-21 34-21-34z',
+  wing:'M22 60c11-4 17-15 21-28 4 11 9 15 17 17-4 4-10 6-17 6 9 2 15 0 21-4-4 13-17 19-42 9z',
+  moon:'M60 24a26 26 0 1 0 0 52 21 21 0 1 1 0-52z',
+  orb:'M50 28a22 22 0 1 0 0 44 22 22 0 0 0 0-44zm0 9a13 13 0 1 1 0 26 13 13 0 0 1 0-26z'
+};
+const SHAPE={
+  shield:'M50 6L88 19v32c0 22-16 36-38 44C28 87 12 73 12 51V19z',
+  round:'M50 6a44 44 0 1 0 0 88 44 44 0 0 0 0-88z',
+  hex:'M50 5l39 22v46L50 95 11 73V27z'
+};
+let _eid=0;
+function emblem(e,txt){
+  const id='e'+(++_eid);
+  return `<svg class="em" viewBox="0 0 100 100" aria-hidden="true"><defs><linearGradient id="${id}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${e.c1}"/><stop offset="1" stop-color="${e.c2}"/></linearGradient>
+  <linearGradient id="${id}s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".38"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+  <path d="${SHAPE[e.sh]}" fill="url(#${id})" stroke="${e.c3}" stroke-width="3.2"/><path d="${SHAPE[e.sh]}" fill="url(#${id}s)"/>
+  ${txt?`<text x="50" y="60" text-anchor="middle" font-family="Barlow Condensed,Arial" font-style="italic" font-weight="800" font-size="30" fill="${e.c3}">${txt}</text>`:`<path d="${SYM[e.sym]}" fill="${e.c3}" opacity=".95"/>`}</svg>`;
+}
+const EMBLEMS=[
+ ['النسور الحمراء','shield','wing','#c1272d','#6e0f14','#ffd36a'],['أسود الشمال','shield','crown','#0b3d91','#05224f','#ffd36a'],
+ ['الصقور الذهبية','round','wing','#d4af37','#7a5a0a','#1a1204'],['العاصفة','shield','bolt','#1c7ed6','#0b3a70','#ffffff'],
+ ['اللهب','hex','flame','#e8590c','#7a1f00','#fff0b0'],['الفجر','round','orb','#f59f00','#7a4a00','#fff8db'],
+ ['الهلال','round','moon','#0f7b6c','#054035','#eafff7'],['الماس','hex','diamond','#5cd0ff','#1b5d8a','#ffffff'],
+ ['النجم البنفسجي','shield','star','#7048e8','#2b1a73','#ffe066'],['الملوك','hex','crown','#2b2f33','#050607','#d4af37'],
+ ['الفهود','round','bolt','#2b8a3e','#0b3b17','#ffe066'],['العقبان','shield','wing','#3a4047','#101214','#f1f3f5'],
+ ['البرق الأزرق','hex','bolt','#15aabf','#094a57','#ffffff'],['الأبطال','shield','star','#f08c00','#6b3a00','#fff3bf'],
+ ['الجمر','round','flame','#c92a2a','#5c0f0f','#ffd8a8'],['الكوكب','round','orb','#1971c2','#0a2f5c','#d0ebff'],
+ ['الشرارة','hex','star','#ae3ec9','#4a1559','#fff0f6'],['الدرع الأخضر','shield','diamond','#2f9e44','#0f4a1e','#d3f9d8'],
+ ['الغروب','hex','moon','#e67700','#5a2d00','#fff4e6'],['الصاعقة','shield','bolt','#364fc7','#14215e','#fff3bf']
+].map(a=>({n:a[0],sh:a[1],sym:a[2],c1:a[3],c2:a[4],c3:a[5]}));
+
+/* ---------- Mock round (replace with /api/round when wired) ---------- */
+const T={BAR:['برشلونة','#a50044','#1b2f6b','#edbb00',86],RMA:['ريال مدريد','#e8e8e8','#8d97a8','#1b2f6b',88],INT:['إنتر','#0b4a9e','#050f2c','#e8e8e8',85],MIL:['ميلان','#c1121f','#1a1a1a','#ffffff',80],
+ ARS:['آرسنال','#d6001c','#6e0010','#ffffff',87],CHE:['تشيلسي','#1c3f94','#0a1c4a','#ffffff',78],NAP:['نابولي','#3d95d9','#124a85','#ffffff',79],JUV:['يوفنتوس','#f4f4f4','#222','#111',77],
+ LIV:['ليفربول','#c8102e','#6b0a19','#ffe9a8',86],MCI:['مان سيتي','#6cabdd','#1c5a8c','#ffffff',90]};
+const MATCHES=[['BAR','RMA','21:00',9.5,4.5],['INT','MIL','19:45',9.5,5.5],['ARS','CHE','17:30',10.5,4.5],['NAP','JUV','20:45',8.5,5.5],['LIV','MCI','22:00',10.5,3.5]]
+ .map((m,i)=>({id:i+1,h:m[0],a:m[1],t:m[2],cor:m[3],car:m[4]}));
+const POINTS={wdl:2,btts:1,cor:1,car:1,ex:5};
+function probs(m){ // team strength -> win/draw/lose odds (VIP smart points). Fixed when the round is created.
+  const d=T[m.h][4]-T[m.a][4]+3,ph=1/(1+Math.pow(10,-d/12)),pd=Math.max(.18,.30-.012*Math.abs(d)),r=1-pd;
+  return{h:r*ph,d:pd,a:r*(1-ph)};
+}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function pts(tier,m,key){
+  if(tier!=='vip'||(key!=='wdl'&&!/^dc/.test(key)))return POINTS[key]||0;
+  const p=probs(m);return key==='wdl'?{1:clamp(Math.round(1.2/p.h),1,6),X:clamp(Math.round(1.2/p.d),1,6),2:clamp(Math.round(1.2/p.a),1,6)}:
+    {dc1X:clamp(Math.round(.9/(p.h+p.d)),1,4),dc12:clamp(Math.round(.9/(p.h+p.a)),1,4),dcX2:clamp(Math.round(.9/(p.d+p.a)),1,4)};
+}
+const LOCK_AT=Date.now()+3*3600e3+25*60e3+12e3;
+
+/* ---------- Mock profile, ranking, achievements ---------- */
+const FRAMES=[
+ {id:'diamond',n:'الماسي',how:'تلقائي لمشتركي VIP',vip:true,anim:true},
+ {id:'gold',n:'الذهبي',how:'المركز الأول أسبوعياً',earned:false,anim:false},
+ {id:'silver',n:'الفضي',how:'المركز الثاني أسبوعياً',earned:false,anim:false},
+ {id:'bronze',n:'البرونزي',how:'المركز الثالث أسبوعياً',earned:true,anim:false},
+ {id:'aurora',n:'الشفق',how:'10 توقعات صحيحة متتالية',earned:false,anim:true},
+ {id:'blaze',n:'اللهب',how:'جولة كاملة بلا خطأ',earned:false,anim:true}
+];
+const ACH=[
+ ['★','أول توقع',1,''],['✔','10 توقعات صحيحة',1,''],['⚡','سلسلة 5 فوز',1,'rare'],['◆','أسبوع كامل',0,'rare'],
+ ['♛','المركز الأول',0,'epic'],['✦','نتيجة دقيقة',0,'epic'],['❖','10 أسابيع',0,'leg'],['✺','أسطورة زينغو',0,'leg']
+].map(a=>({i:a[0],n:a[1],got:!!a[2],r:a[3]}));
+const RANK=[['سلطان',48,0,'gold'],['نجم الليل',44,1,'silver'],['أبو فهد',41,2,'bronze'],['كابتن ليث',39,3,'none'],['الصقر',36,4,'none'],['ملك التوقع',33,5,'none'],['أنت',31,6,'me'],['رعد',29,7,'none'],['زعيم',27,8,'none'],['بدر',25,9,'none']]
+ .map((r,i)=>({n:r[0],p:r[1],e:r[2],f:r[3],rk:i+1}));
+const S={tier:'menu',tab:'play',emb:7,frameSel:null,boost:null,tg:{v:12,saved:false},nameDays:12,name:'كابتن ليث',picks:{},saved:{}};
+const planOf=()=>S.tier==='free'?0:S.tier==='pro'?1:2;
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
+const ICON={
+ play:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7l3.5 2.5-1.3 4.1H9.8L8.5 9.5z"/></svg>',
+ rank:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 20h8"/></svg>',
+ me:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>'
+};
+const MEDAL=(c1,c2,n)=>`<svg class="medal" viewBox="0 0 40 40"><defs><linearGradient id="md${n}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs><path d="M12 3h6l2 9-5 2zM28 3h-6l-2 9 5 2z" fill="${c2}"/><circle cx="20" cy="25" r="11" fill="url(#md${n})" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/><text x="20" y="30" text-anchor="middle" font-size="14" font-weight="800" fill="#1a1204" font-family="Barlow Condensed,Arial">${n}</text></svg>`;
+const MEDALS={1:MEDAL('#ffe48c','#b8860b',1),2:MEDAL('#f2f5f8','#8d98a6',2),3:MEDAL('#f0b47c','#8c5524',3)};
+</script>
+<script>
+'use strict';
+const app=$('#app');
+const tierName={free:'فري',pro:'برو',vip:'VIP'};
+const crest=(k)=>emblem({sh:'shield',c1:T[k][1],c2:T[k][2],c3:T[k][3]},k);
+function frameOf(){ // chosen frame, else the best one the player owns (VIP always owns the diamond one)
+  if(S.frameSel)return S.frameSel;return 'diamond';
+}
+function frameCls(id){const f=FRAMES.find(x=>x.id===id);return 'f-'+id+(f&&f.anim?' anim':'')}
+function avatarHTML(cls,i,size){return `<div class="${size==='mini'?'mini':'av'} ${cls}"><i class="fr"></i>${emblem(EMBLEMS[i])}</div>`}
+const owned=(f)=>f.vip||f.earned;
+
+/* ---------- Shell ---------- */
+function render(){
+  document.documentElement.dataset.tier=S.tier==='menu'?'free':S.tier;
+  if(S.tier==='menu'){app.innerHTML=menuHTML();return}
+  app.innerHTML=headerHTML()+`<div class="screen" id="view">${S.tab==='play'?playHTML():S.tab==='rank'?rankHTML():profileHTML()}</div>`+navHTML();
+  tickCd();
+}
+function headerHTML(){
+  const right=S.tier==='free'?`<span class="pill">فري · أسبوعية</span>`:`<div class="sw" data-v="${S.tier}"><i></i><button data-a="sw" data-v="pro" class="${S.tier==='pro'?'on':''}">PRO</button><button data-a="sw" data-v="vip" class="${S.tier==='vip'?'on':''}">VIP</button></div>`;
+  return `<div class="hd"><span class="logo">ZINGO</span><div class="row">${right}<button class="ibtn" data-a="menu" aria-label="القائمة">⌂</button></div></div>`;
+}
+function navHTML(){
+  const t=(k,l)=>`<button data-a="tab" data-v="${k}" class="${S.tab===k?'on':''}">${ICON[k]}${l}</button>`;
+  return `<div class="nav"><div>${t('play','المباريات')}${t('rank','الترتيب')}${t('me','ملفي')}</div></div>`;
+}
+function menuHTML(){
+  return `<div class="screen"><div class="lead"><div class="logo">ZINGO</div><p class="mute" style="margin:6px 0 0">اختر مسابقتك</p></div><div class="stack">
+  <button class="tier t-free" data-a="go" data-v="free"><span class="tg">F</span><span class="grow"><h3>فري</h3><p>مسابقة مجانية لمدة أسبوع · جوائز للمراكز الثلاثة</p></span></button>
+  <button class="tier t-pro" data-a="go" data-v="pro"><span class="tg">P</span><span class="grow"><h3>برو</h3><p>ركنيات وبطاقات وميزة التعزيز بواجهة ذهبية</p></span></button>
+  <button class="tier t-vip" data-a="go" data-v="vip"><span class="tg">V</span><span class="grow"><h3>VIP</h3><p>فرصة مزدوجة ونتيجة دقيقة ونقاط ذكية بواجهة ماسية</p></span></button></div></div>`;
+}
+
+/* ---------- Matches ---------- */
+function optBtn(m,key,val,label,sub,fx){
+  const p=S.picks[m.id]||{},saved=S.saved[m.id],on=(p[key]===val);
+  const locked=saved||(p.ex&&key!=='ex');
+  return `<button class="o${on?' sel':''}${on&&fx?' fx':''}" data-a="pick" data-m="${m.id}" data-k="${key}" data-v="${val}" ${locked?'disabled':''}>${label}${sub!==''?`<small>+${sub}</small>`:''}</button>`;
+}
+function matchHTML(m,fx){
+  const tier=S.tier,p=S.picks[m.id]||{},saved=S.saved[m.id],H=T[m.h][0],A=T[m.a][0],w=pts(tier,m,'wdl'),d=pts(tier,m,'dc1X')&&pts(tier,m,'dc');
+  const wp=tier==='vip'?w:{1:2,X:2,2:2},has=p.wdl||p.btts||p.cor||p.car||p.dc||p.ex;
+  const boosted=S.boost===m.id;
+  const mk=(t,inner,extra)=>`<div class="mk"><div class="t"><span>${t}</span>${extra||''}</div>${inner}</div>`;
+  let h=`<div class="card m${saved?' saved':''}" id="m${m.id}"><div class="teams"><div class="team">${crest(m.h)}<b>${H}</b></div><div class="ko">${m.t}</div><div class="team">${crest(m.a)}<b>${A}</b></div></div>`;
+  const boostBtn=tier==='free'?'':`<button class="bst${boosted?' on':''}" data-a="boost" data-m="${m.id}" ${saved&&!boosted?'disabled':''}>⚡ تعزيز ×2</button>`;
+  h+=mk('نتيجة المباراة',`<div class="opts o3">${optBtn(m,'wdl','1','فوز '+H,wp[1],fx==='wdl1')}${optBtn(m,'wdl','X','تعادل',wp.X,fx==='wdlX')}${optBtn(m,'wdl','2','فوز '+A,wp[2],fx==='wdl2')}</div>`,boostBtn);
+  h+=mk('هل يسجل الفريقان؟',`<div class="opts o2">${optBtn(m,'btts','y','نعم',POINTS.btts,fx==='bttsy')}${optBtn(m,'btts','n','لا',POINTS.btts,fx==='bttsn')}</div>`);
+  if(tier!=='free'){
+    h+=mk('عدد الركنيات',`<div class="opts o2">${optBtn(m,'cor','o','أكثر من '+m.cor,POINTS.cor,fx==='coro')}${optBtn(m,'cor','u','أقل من '+m.cor,POINTS.cor,fx==='coru')}</div>`);
+    h+=mk('عدد البطاقات',`<div class="opts o2">${optBtn(m,'car','o','أكثر من '+m.car,POINTS.car,fx==='caro')}${optBtn(m,'car','u','أقل من '+m.car,POINTS.car,fx==='caru')}</div>`);
+  }
+  if(tier==='vip'){
+    const dc=pts('vip',m,'dc');
+    h+=mk('الفرصة المزدوجة',`<div class="opts o3">${optBtn(m,'dc','1X','1X · '+H+' أو تعادل',dc.dc1X,fx==='dc1X')}${optBtn(m,'dc','12','12 · بلا تعادل',dc.dc12,fx==='dc12')}${optBtn(m,'dc','X2','X2 · '+A+' أو تعادل',dc.dcX2,fx==='dcX2')}</div>`);
+    const ex=p.ex;
+    h+=mk('النتيجة الدقيقة · +5 ثابتة',ex?`<div class="stp" style="margin-bottom:8px"><button data-a="exs" data-m="${m.id}" data-s="h" data-d="1" ${saved?'disabled':''}>+</button><b>${ex.h}</b><button data-a="exs" data-m="${m.id}" data-s="h" data-d="-1" ${saved?'disabled':''}>−</button><span class="mute">-</span><button data-a="exs" data-m="${m.id}" data-s="a" data-d="1" ${saved?'disabled':''}>+</button><b>${ex.a}</b><button data-a="exs" data-m="${m.id}" data-s="a" data-d="-1" ${saved?'disabled':''}>−</button></div>
+      <p class="sm mute" style="margin:0 0 8px">اختيار النتيجة الدقيقة بيقفل باقي خيارات هالمباراة.</p>`:'',
+      `<button class="bst${ex?' on':''}" data-a="ex" data-m="${m.id}" ${saved?'disabled':''}>${ex?'إلغاء النتيجة الدقيقة':'اختيار نتيجة دقيقة'}</button>`);
+  }
+  h+=saved?`<div class="row" style="justify-content:center;padding-top:2px"><span class="lock">✔ تم الحفظ · غير قابل للتعديل</span></div>`
+    :`<button class="btn" data-a="save" data-m="${m.id}" ${has?'':'disabled'}>${has?'حفظ التوقع':'اختر توقعك أولاً'}</button>`;
+  return h+'</div>';
+}
+function playHTML(){
+  const n=Object.keys(S.saved).length,tot=MATCHES.length,pr=Math.round(n/tot*100);
+  const label={free:'ZINGO FREE · الجولة 12',pro:'ZINGO PRO · الجولة 12',vip:'ZINGO VIP · الجولة 12'}[S.tier];
+  return `<div class="stack"><div class="card"><div class="rb"><div><div class="mute sm" style="font-weight:700">${label}</div><div class="h2" style="margin-top:2px">يُقفل باب التوقعات بعد</div></div><div class="cd" id="cd">--:--:--</div></div>
+   <div class="prog"><i id="pg" style="width:${pr}%"></i></div><div class="sm mute" style="margin-top:6px" id="pgt">${n} من ${tot} مباريات محفوظة</div></div>
+   ${MATCHES.map(m=>matchHTML(m)).join('')}${tgHTML()}</div>`;
+}
+function tgHTML(){
+  const g=S.tg;
+  return `<div class="card stack" id="tgc"><div><div class="h2">مجموع أهداف الجولة</div><p class="sm mute" style="margin:4px 0 0">توقّع العدد الإجمالي لأهداف مباريات الجولة. الرقم الدقيق 3 نقاط، الأقرب بفارق هدف نقطتان، وبفارق هدفين نقطة.</p></div>
+   <div class="stp"><button data-a="tgs" data-d="1" ${g.saved?'disabled':''}>+</button><b>${g.v}</b><button data-a="tgs" data-d="-1" ${g.saved?'disabled':''}>−</button></div>
+   ${g.saved?`<div class="row" style="justify-content:center"><span class="lock">✔ تم الحفظ · غير قابل للتعديل</span></div>`:`<button class="btn" data-a="tgsave">حفظ التوقع</button>`}</div>`;
+}
+function tickCd(){
+  const el=$('#cd');if(!el)return;const s=Math.max(0,Math.floor((LOCK_AT-Date.now())/1000));
+  const f=n=>String(n).padStart(2,'0');el.textContent=f(Math.floor(s/3600))+':'+f(Math.floor(s%3600/60))+':'+f(s%60);
+}
+setInterval(tickCd,1000);
+
+/* ---------- Ranking ---------- */
+function frameFor(r){return r.f==='gold'||r.f==='silver'||r.f==='bronze'?r.f:r.f==='me'?frameOf():'none'}
+function rankHTML(){
+  const pod=[RANK[1],RANK[0],RANK[2]].map(r=>`<div class="c r${r.rk}">${avatarHTML(frameCls(frameFor(r)),r.e)}${MEDALS[r.rk]}<b>${esc(r.n)}</b><div class="pt">${r.p}</div></div>`).join('');
+  const rows=RANK.slice(3).map(r=>`<div class="rk${r.f==='me'?' me':''}"><span class="n">${r.rk}</span>${avatarHTML(frameCls(frameFor(r)),r.f==='me'?S.emb:r.e,'mini')}<span class="grow"><b>${r.f==='me'?esc(S.name):esc(r.n)}</b></span><span class="h2">${r.p}</span></div>`).join('');
+  const prizes=S.tier==='free'?`<div class="card stack"><div class="h2">جوائز ختام الأسبوع</div>
+    <div class="rk" style="border:0;padding:0">${MEDALS[1]}<span class="grow">اشتراك VIP إضافي + 250 ليرة سورية</span></div>
+    <div class="rk" style="padding:0">${MEDALS[2]}<span class="grow">250 ليرة سورية</span></div>
+    <div class="rk" style="padding:0">${MEDALS[3]}<span class="grow">اشتراك مسابقة برو مجاناً</span></div></div>`
+    :`<div class="card"><div class="h2">الجوائز</div><p class="mute sm" style="margin:4px 0 0">تُعلن جوائز مسابقة ${tierName[S.tier]} قريباً.</p></div>`;
+  return `<div class="stack"><div><div class="h2">ترتيب الأسبوع</div><div class="mute sm">أفضل المشاركين في مسابقة ${tierName[S.tier]}</div></div><div class="pod">${pod}</div><div class="card">${rows}</div>${prizes}</div>`;
+}
+
+/* ---------- Profile ---------- */
+function profileHTML(){
+  const fr=frameOf(),lock=30-S.nameDays;
+  const frames=FRAMES.map(f=>`<button class="fo${owned(f)?'':' lk'}" data-a="frame" data-v="${f.id}"><div class="mini ${frameCls(f.id)}"><i class="fr"></i>${emblem(EMBLEMS[S.emb])}</div><b>${f.n}</b><div class="mute" style="font-size:10px;line-height:1.3;margin-top:2px">${owned(f)?(S.frameSel===f.id||(!S.frameSel&&f.id==='diamond')?'مُفعّل':'اضغط للتفعيل'):f.how}</div></button>`).join('');
+  const ach=ACH.map(a=>`<div class="ach ${a.r==='leg'?'leg':a.r}${a.got?'':' lk'}"><div class="ic">${a.i}</div>${a.n}</div>`).join('');
+  const emb=EMBLEMS.map((e,i)=>`<button class="eo${i===S.emb?' on':''}" data-a="emb" data-v="${i}" aria-label="${e.n}">${emblem(e)}</button>`).join('');
+  return `<div class="stack"><div class="card stack"><div class="pf">${avatarHTML(frameCls(fr),S.emb)}<div class="grow"><div class="h2">${esc(S.name)}</div>
+   <div class="row" style="flex-wrap:wrap;gap:6px;margin-top:6px"><span class="bdg vip">◆ VIP</span><span class="bdg pro">★ PRO</span><span class="bdg">${MEDALS[3].replace('class="medal"','style="width:16px;height:16px"')} المركز الثالث</span></div></div></div>
+   <button class="btn ghost" data-a="name">تغيير الاسم · متاح بعد ${lock} يوماً</button></div>
+   <div class="card"><div class="h2">إطاراتي</div><p class="sm mute" style="margin:2px 0 0">إطار VIP الماسي تلقائي. الباقي يُفتح بالإنجازات.</p><div class="fgrid">${frames}</div></div>
+   <div class="card"><div class="h2">الإنجازات</div><div class="grid" style="margin-top:12px">${ach}</div></div>
+   <div class="card"><div class="h2">الصورة الرمزية</div><p class="sm mute" style="margin:2px 0 12px">20 شعاراً أصلياً. اختر ما يعبّر عن تشجيعك.</p><div class="egrid">${emb}</div></div></div>`;
+}
+const FORBID=/(زين?[غج]و|زنغو|ز[يى]نغو|z\s*[i1]\s*n\s*g\s*o)/i,TAKEN=['سلطان','نجم الليل','زعيم','رعد'];
+function nameSheet(){
+  const lock=30-S.nameDays;
+  const o=document.createElement('div');o.className='sheet';o.id='sh';
+  o.innerHTML=`<div class="p stack"><div class="h2">تغيير الاسم</div><input class="tx" id="nm" maxlength="16" value="${esc(S.name)}" autocomplete="off"><div class="sm" id="nmsg" style="min-height:18px"></div>
+   <p class="sm mute" style="margin:0">يمكن تغيير الاسم مرة كل 30 يوماً. ممنوع اسم "زينغو" وتكرار الأسماء.</p>
+   <div class="row"><button class="btn ghost" data-a="close">إغلاق</button><button class="btn" data-a="nsave" id="nbtn" disabled>حفظ</button></div></div>`;
+  document.body.appendChild(o);
+  const inp=$('#nm',o),msg=$('#nmsg',o);
+  const chk=()=>{const v=inp.value.trim();let m='',ok=false;
+    if(lock>0)m=`لا يمكنك تغيير الاسم الآن. متاح بعد ${lock} يوماً.`;
+    else if(v.length<3)m='الاسم لازم يكون 3 أحرف على الأقل.';
+    else if(FORBID.test(v))m='هذا الاسم غير مسموح.';
+    else if(TAKEN.includes(v))m='هذا الاسم مستخدم من لاعب آخر.';
+    else{ok=true;m='الاسم متاح'}
+    msg.textContent=m;msg.style.color=ok?'var(--ok)':'var(--bad)';$('#nbtn',o).disabled=!ok};
+  inp.addEventListener('input',chk);chk();
+}
+</script>
+<script>
+'use strict';
+/* ---------- Cinematic Pro <-> VIP ---------- */
+let cineBusy=false,cineSkip=false;
+async function cinematic(to){
+  if(cineBusy)return;cineBusy=true;cineSkip=false;
+  const el=$('#cine'),cv=$('#cv'),fl=$('#fl'),tt=$('#tt'),ctx=cv.getContext('2d');
+  const lite=document.documentElement.classList.contains('lite'),dpr=Math.min(window.devicePixelRatio||1,lite?1:2);
+  const W=cv.width=innerWidth*dpr,H=cv.height=innerHeight*dpr,cx=W/2,cy=H/2;
+  const vip=to==='vip',cols=vip?['#ffd36a','#f5b300','#fff3bf']:['#8fe3ff','#5cd0ff','#ffffff'];
+  const N=lite?60:140,ps=[];
+  for(let i=0;i<N;i++){const a=Math.random()*6.283,r=Math.max(W,H)*(.5+Math.random()*.5);ps.push({a,r,s:(1+Math.random()*3)*dpr,c:cols[i%3],d:Math.random()*.3})}
+  tt.textContent=vip?'VIP':'PRO';tt.style.color=vip?'#9fe8ff':'#ffd36a';tt.style.textShadow=vip?'0 0 40px #5cd0ff':'0 0 40px #f5b300';
+  el.classList.add('on');el.style.background=vip?'#05080f':'#0a0804';hap('i');
+  const D=2200,t0=performance.now();
+  await new Promise(res=>{
+    $('#skip').onclick=()=>{cineSkip=true};
+    (function f(now){
+      const t=cineSkip?D:now-t0,k=Math.min(t/D,1);
+      ctx.clearRect(0,0,W,H);
+      const g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*.6);
+      g.addColorStop(0,(vip?'rgba(92,208,255,':'rgba(245,179,0,')+(.15+.5*k)+')');g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+      const conv=k<.6?k/.6:1; // particles rush to centre
+      for(const p of ps){
+        const q=Math.max(0,Math.min(1,(conv-p.d)/(1-p.d)));const e=q*q*(3-2*q),r=p.r*(1-e);
+        const x=cx+Math.cos(p.a+e*2)*r,y=cy+Math.sin(p.a+e*2)*r;
+        ctx.globalAlpha=k>.8?Math.max(0,(1-k)/.2):1;ctx.fillStyle=p.c;
+        ctx.save();ctx.translate(x,y);ctx.rotate(p.a+e*6);
+        if(vip){ctx.beginPath();ctx.moveTo(0,-p.s*2);ctx.lineTo(p.s,0);ctx.lineTo(0,p.s*2);ctx.lineTo(-p.s,0);ctx.closePath();ctx.fill()}else ctx.fillRect(-p.s,-p.s,p.s*2,p.s*2);
+        ctx.restore();
+      }
+      ctx.globalAlpha=1;
+      // title punch + white flash at the climax
+      const tk=Math.max(0,(k-.55)/.3);tt.style.opacity=k>.9?String(Math.max(0,(1-k)/.1)):String(Math.min(1,tk));tt.style.transform=`scale(${.8+.35*Math.min(1,tk)})`;
+      const fk=k<.62?0:k<.7?(k-.62)/.08:Math.max(0,1-(k-.7)/.2);fl.style.opacity=String(fk*.9);
+      if(k>=1)return res();requestAnimationFrame(f);
+    })(performance.now());
+  });
+  S.tier=to;render();hap('ok');
+  el.style.transition='opacity .35s';el.style.opacity='0';await sleep(360);
+  el.classList.remove('on');el.style.opacity='';el.style.transition='';tt.style.opacity=0;fl.style.opacity=0;
+  cineBusy=false;
+}
+
+/* ---------- Events ---------- */
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-a]');if(!b||b.disabled)return;
+  const a=b.dataset.a,v=b.dataset.v,mid=+b.dataset.m;hap('i');
+  if(a==='go'){S.tier=v;S.tab='play';render()}
+  else if(a==='menu'){S.tier='menu';render()}
+  else if(a==='tab'){S.tab=v;render();scrollTo(0,0)}
+  else if(a==='sw'){if(v!==S.tier)cinematic(v)}
+  else if(a==='pick'){const p=S.picks[mid]||(S.picks[mid]={}),k=b.dataset.k;p[k]=p[k]===v?undefined:v;if(p[k]===undefined)delete p[k];const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='boost'){S.boost=S.boost===mid?null:mid;if(S.boost)toast('تم تفعيل التعزيز لهذه المباراة (مرة واحدة بالجولة)');const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='ex'){const p=S.picks[mid]||(S.picks[mid]={});if(p.ex)delete p.ex;else{S.picks[mid]={ex:{h:1,a:1}}}const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='exs'){const x=S.picks[mid].ex,s=b.dataset.s;x[s]=clamp(x[s]+ +b.dataset.d,0,9);const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='save'){S.saved[mid]=true;hap('ok');toast('تم حفظ التوقع');const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='tgs'){S.tg.v=clamp(S.tg.v+ +b.dataset.d,0,60);const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='tgsave'){S.tg.saved=true;hap('ok');toast('تم حفظ مجموع الأهداف');const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='frame'){const f=FRAMES.find(x=>x.id===v);if(!owned(f)){toast('مقفل: '+f.how);return}S.frameSel=v;render()}
+  else if(a==='emb'){S.emb=+v;render()}
+  else if(a==='name'){nameSheet()}
+  else if(a==='close'){$('#sh')&&$('#sh').remove()}
+  else if(a==='nsave'){const v2=$('#nm').value.trim();S.name=v2;S.nameDays=0;$('#sh').remove();toast('تم تغيير الاسم · القادم بعد 30 يوماً');render()}
+});
+render();
+</script>
+</html>
