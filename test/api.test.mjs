@@ -95,6 +95,15 @@ assert.equal(rk.rows[0].name, "الصقر");
 assert.equal((await call("/api/me", { user: "4" })).frames[0], "gold", "weekly #1 gets gold frame");
 assert.equal((await call("/api/predict", { user: "3", body: { match_id: b, wdl: "1" } })).error, "round_locked", "settled round closed");
 
+// admin lists
+const ar = await call("/api/admin/rounds");
+assert.equal(ar.rounds.length, 3); assert.equal(ar.rounds.find((r) => r.id === rd.round_id).players, 3);
+assert.equal((await call("/api/admin/rounds", { user: "2" })).s, 403);
+assert.equal((await call("/api/admin/players?q=%D8%B3%D9%84")).players[0].name, "سلطان");
+assert.equal((await call("/api/admin/round/delete", { body: { round_id: rd.round_id } })).error, "has_picks");
+const empty = await call("/api/admin/round", { body: { tier: "free", title: "x", lock_at: lock, matches: ms } });
+assert.equal((await call("/api/admin/round/delete", { body: { round_id: empty.round_id } })).ok, true);
+
 // not found / assets
 assert.equal((await call("/api/nope")).s, 404);
 assert.equal(await (await worker.fetch(new Request("https://x/"), env)).text(), "asset");

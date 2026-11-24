@@ -355,6 +355,35 @@ async function adminGrant(env, b) {
   return json({ ok: true, ends_at: ends });
 }
 
+async function adminRounds(env) {
+  const rs = (await env.DB.prepare("SELECT * FROM z_rounds ORDER BY id DESC LIMIT 12").all()).results || [];
+  const out = [];
+  for (const r of rs) {
+    const ms = (await env.DB.prepare("SELECT id,home,away,kickoff,hg,ag,corners,cards FROM z_matches WHERE round_id=? ORDER BY kickoff,id").bind(r.id).all()).results || [];
+    const c = await env.DB.prepare("SELECT COUNT(DISTINCT tg) n FROM (SELECT tg FROM z_picks WHERE round_id=?1 UNION SELECT tg FROM z_totals WHERE round_id=?1)").bind(r.id).first();
+    out.push({ id: r.id, tier: r.tier, title: r.title, lock_at: r.lock_at, status: r.status, total_goals: r.total_goals, players: c ? c.n : 0, matches: ms });
+  }
+  return json({ ok: true, rounds: out });
+}
+async function adminPlayers(env, q) {
+  const like = "%" + String(q || "").replace(/[%_]/g, "") + "%";
+  const rows = (await env.DB.prepare("SELECT tg,name FROM z_players WHERE name LIKE ? OR tg LIKE ? ORDER BY created_at DESC LIMIT 20").bind(like, like).all()).results || [];
+  const now_ = now();
+  const out = [];
+  for (const p of rows) {
+    const subs = (await env.DB.prepare("SELECT tier,ends_at FROM z_subs WHERE tg=? AND ends_at>?").bind(p.tg, now_).all()).results || [];
+    out.push({ tg: p.tg, name: p.name, subs });
+  }
+  return json({ ok: true, players: out });
+}
+async function adminDeleteRound(env, b) {
+  const id = Number(b.round_id);
+  const used = await env.DB.prepare("SELECT 1 x FROM z_picks WHERE round_id=?1 UNION SELECT 1 FROM z_totals WHERE round_id=?1").bind(id).first();
+  if (used) return fail("has_picks", 409);
+  await env.DB.batch([env.DB.prepare("DELETE FROM z_matches WHERE round_id=?").bind(id), env.DB.prepare("DELETE FROM z_rounds WHERE id=?").bind(id)]);
+  return json({ ok: true });
+}
+
 // ---------- router ----------
 export default {
   async fetch(request, env) {
@@ -382,7 +411,10 @@ export default {
       }
       if (url.pathname.startsWith("/api/admin/")) {
         if (!adminIds(env).has(user.id)) return fail("forbidden", 403);
+        if (url.pathname === "/api/admin/rounds") return adminRounds(env);
+        if (url.pathname === "/api/admin/players") return adminPlayers(env, q.get("q"));
         if (!post) return fail("method", 405);
+        if (url.pathname === "/api/admin/round/delete") return adminDeleteRound(env, body);
         if (url.pathname === "/api/admin/round") return adminRound(env, body);
         if (url.pathname === "/api/admin/settle") return adminSettle(env, body);
         if (url.pathname === "/api/admin/grant") return adminGrant(env, body);
