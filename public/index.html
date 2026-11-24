@@ -1,4 +1,5 @@
-<!doctype html><html><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1"><title>ZINGO</title>
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><script src="/telegram-web-app.js"></script>
+<title>ZINGO</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=Barlow+Condensed:ital,wght@1,800&display=swap">
 <style>
@@ -197,20 +198,22 @@ const EMBLEMS=[
 const T={BAR:['برشلونة','#a50044','#1b2f6b','#edbb00',86],RMA:['ريال مدريد','#e8e8e8','#8d97a8','#1b2f6b',88],INT:['إنتر','#0b4a9e','#050f2c','#e8e8e8',85],MIL:['ميلان','#c1121f','#1a1a1a','#ffffff',80],
  ARS:['آرسنال','#d6001c','#6e0010','#ffffff',87],CHE:['تشيلسي','#1c3f94','#0a1c4a','#ffffff',78],NAP:['نابولي','#3d95d9','#124a85','#ffffff',79],JUV:['يوفنتوس','#f4f4f4','#222','#111',77],
  LIV:['ليفربول','#c8102e','#6b0a19','#ffe9a8',86],MCI:['مان سيتي','#6cabdd','#1c5a8c','#ffffff',90]};
-const MATCHES=[['BAR','RMA','21:00',9.5,4.5],['INT','MIL','19:45',9.5,5.5],['ARS','CHE','17:30',10.5,4.5],['NAP','JUV','20:45',8.5,5.5],['LIV','MCI','22:00',10.5,3.5]]
+let MATCHES=[['BAR','RMA','21:00',9.5,4.5],['INT','MIL','19:45',9.5,5.5],['ARS','CHE','17:30',10.5,4.5],['NAP','JUV','20:45',8.5,5.5],['LIV','MCI','22:00',10.5,3.5]]
  .map((m,i)=>({id:i+1,h:m[0],a:m[1],t:m[2],cor:m[3],car:m[4]}));
+function TM(k){if(T[k])return T[k];let h=0;for(const c of String(k))h=(h*31+c.charCodeAt(0))>>>0;const hue=h%360;return[k,`hsl(${hue} 65% 45%)`,`hsl(${hue} 70% 22%)`,'#ffffff',78]}
 const POINTS={wdl:2,btts:1,cor:1,car:1,ex:5};
 function probs(m){ // team strength -> win/draw/lose odds (VIP smart points). Fixed when the round is created.
-  const d=T[m.h][4]-T[m.a][4]+3,ph=1/(1+Math.pow(10,-d/12)),pd=Math.max(.18,.30-.012*Math.abs(d)),r=1-pd;
+  const d=TM(m.h)[4]-TM(m.a)[4]+3,ph=1/(1+Math.pow(10,-d/12)),pd=Math.max(.18,.30-.012*Math.abs(d)),r=1-pd;
   return{h:r*ph,d:pd,a:r*(1-ph)};
 }
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
 function pts(tier,m,key){
+  if(tier==='vip'&&m.sp&&(key==='wdl'||/^dc/.test(key)))return key==='wdl'?m.sp.wdl:{dc1X:m.sp.dc['1X'],dc12:m.sp.dc['12'],dcX2:m.sp.dc.X2};
   if(tier!=='vip'||(key!=='wdl'&&!/^dc/.test(key)))return POINTS[key]||0;
   const p=probs(m);return key==='wdl'?{1:clamp(Math.round(1.2/p.h),1,6),X:clamp(Math.round(1.2/p.d),1,6),2:clamp(Math.round(1.2/p.a),1,6)}:
     {dc1X:clamp(Math.round(.9/(p.h+p.d)),1,4),dc12:clamp(Math.round(.9/(p.h+p.a)),1,4),dcX2:clamp(Math.round(.9/(p.d+p.a)),1,4)};
 }
-const LOCK_AT=Date.now()+3*3600e3+25*60e3+12e3;
+let LOCK_AT=Date.now()+3*3600e3+25*60e3+12e3;
 
 /* ---------- Mock profile, ranking, achievements ---------- */
 const FRAMES=[
@@ -227,7 +230,7 @@ const ACH=[
 ].map(a=>({i:a[0],n:a[1],got:!!a[2],r:a[3]}));
 const RANK=[['سلطان',48,0,'gold'],['نجم الليل',44,1,'silver'],['أبو فهد',41,2,'bronze'],['كابتن ليث',39,3,'none'],['الصقر',36,4,'none'],['ملك التوقع',33,5,'none'],['أنت',31,6,'me'],['رعد',29,7,'none'],['زعيم',27,8,'none'],['بدر',25,9,'none']]
  .map((r,i)=>({n:r[0],p:r[1],e:r[2],f:r[3],rk:i+1}));
-const S={tier:'menu',tab:'play',emb:7,frameSel:null,boost:null,tg:{v:12,saved:false},nameDays:12,name:'كابتن ليث',picks:{},saved:{}};
+const S={tier:'menu',tab:'play',emb:7,frameSel:null,boost:null,tg:{v:12,saved:false},nameDays:30,name:'كابتن ليث',picks:{},saved:{}};
 const planOf=()=>S.tier==='free'?0:S.tier==='pro'?1:2;
 function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
 const ICON={
@@ -242,7 +245,8 @@ const MEDALS={1:MEDAL('#ffe48c','#b8860b',1),2:MEDAL('#f2f5f8','#8d98a6',2),3:ME
 'use strict';
 const app=$('#app');
 const tierName={free:'فري',pro:'برو',vip:'VIP'};
-const crest=(k)=>emblem({sh:'shield',c1:T[k][1],c2:T[k][2],c3:T[k][3]},k);
+const abbr=k=>{const s=String(k);if(s.length<=3)return s;const l=s.replace(/[^A-Za-z]/g,'');return l.length>=3?l.slice(0,3).toUpperCase():s.replace(/\s/g,'').slice(0,2)};
+const crest=(k)=>emblem({sh:'shield',c1:TM(k)[1],c2:TM(k)[2],c3:TM(k)[3]},abbr(k));
 function frameOf(){ // chosen frame, else the best one the player owns (VIP always owns the diamond one)
   if(S.frameSel)return S.frameSel;return 'diamond';
 }
@@ -252,8 +256,9 @@ const owned=(f)=>f.vip||f.earned;
 
 /* ---------- Shell ---------- */
 function render(){
-  document.documentElement.dataset.tier=S.tier==='menu'?'free':S.tier;
+  document.documentElement.dataset.tier=(S.tier==='menu'||S.tier==='onboard')?'free':S.tier;
   if(S.tier==='menu'){app.innerHTML=menuHTML();return}
+  if(S.tier==='onboard'){app.innerHTML=onboardHTML();return}
   app.innerHTML=headerHTML()+`<div class="screen" id="view">${S.tab==='play'?playHTML():S.tab==='rank'?rankHTML():profileHTML()}</div>`+navHTML();
   tickCd();
 }
@@ -279,7 +284,7 @@ function optBtn(m,key,val,label,sub,fx){
   return `<button class="o${on?' sel':''}${on&&fx?' fx':''}" data-a="pick" data-m="${m.id}" data-k="${key}" data-v="${val}" ${locked?'disabled':''}>${label}${sub!==''?`<small>+${sub}</small>`:''}</button>`;
 }
 function matchHTML(m,fx){
-  const tier=S.tier,p=S.picks[m.id]||{},saved=S.saved[m.id],H=T[m.h][0],A=T[m.a][0],w=pts(tier,m,'wdl'),d=pts(tier,m,'dc1X')&&pts(tier,m,'dc');
+  const tier=S.tier,p=S.picks[m.id]||{},saved=S.saved[m.id],H=TM(m.h)[0],A=TM(m.a)[0],w=pts(tier,m,'wdl'),d=pts(tier,m,'dc1X')&&pts(tier,m,'dc');
   const wp=tier==='vip'?w:{1:2,X:2,2:2},has=p.wdl||p.btts||p.cor||p.car||p.dc||p.ex;
   const boosted=S.boost===m.id;
   const mk=(t,inner,extra)=>`<div class="mk"><div class="t"><span>${t}</span>${extra||''}</div>${inner}</div>`;
@@ -303,9 +308,15 @@ function matchHTML(m,fx){
     :`<button class="btn" data-a="save" data-m="${m.id}" ${has?'':'disabled'}>${has?'حفظ التوقع':'اختر توقعك أولاً'}</button>`;
   return h+'</div>';
 }
+function onboardHTML(){
+  const emb=EMBLEMS.map((e,i)=>`<button class="eo${i===S.emb?' on':''}" data-a="emb" data-v="${i}" aria-label="${e.n}">${emblem(e)}</button>`).join('');
+  return `<div class="screen"><div class="lead"><div class="logo">ZINGO</div><p class="mute" style="margin:6px 0 0">أهلاً فيك. اختر اسمك وشعارك</p></div><div class="stack"><div class="card stack"><div class="h2">اسم اللاعب</div><input class="tx" id="nm" maxlength="16" placeholder="3 إلى 16 حرفاً" autocomplete="off"><p class="sm mute" style="margin:0">بيتحفظ مرة وحدة وما بتقدر تغيّره إلا بعد 30 يوم. اسم "زينغو" وتكرار الأسماء ممنوع.</p><div class="sm" id="nmsg" style="min-height:18px;color:var(--bad)"></div></div>
+  <div class="card"><div class="h2">شعارك</div><div class="egrid" style="margin-top:12px">${emb}</div></div><button class="btn" data-a="onb">ابدأ</button></div></div>`;
+}
 function playHTML(){
+  if(!MATCHES.length)return `<div class="card stack" style="text-align:center"><div class="h2">لا توجد جولة مفتوحة حالياً</div><p class="sm mute" style="margin:0">بنعلمك لما تنزل الجولة الجديدة.</p></div>`;
   const n=Object.keys(S.saved).length,tot=MATCHES.length,pr=Math.round(n/tot*100);
-  const label={free:'ZINGO FREE · الجولة 12',pro:'ZINGO PRO · الجولة 12',vip:'ZINGO VIP · الجولة 12'}[S.tier];
+  const label='ZINGO '+S.tier.toUpperCase()+' · '+(S.roundTitle||'الجولة 12');
   return `<div class="stack"><div class="card"><div class="rb"><div><div class="mute sm" style="font-weight:700">${label}</div><div class="h2" style="margin-top:2px">يُقفل باب التوقعات بعد</div></div><div class="cd" id="cd">--:--:--</div></div>
    <div class="prog"><i id="pg" style="width:${pr}%"></i></div><div class="sm mute" style="margin-top:6px" id="pgt">${n} من ${tot} مباريات محفوظة</div></div>
    ${MATCHES.map(m=>matchHTML(m)).join('')}${tgHTML()}</div>`;
@@ -416,23 +427,70 @@ async function cinematic(to){
 document.addEventListener('click',async e=>{
   const b=e.target.closest('[data-a]');if(!b||b.disabled)return;
   const a=b.dataset.a,v=b.dataset.v,mid=+b.dataset.m;hap('i');
-  if(a==='go'){S.tier=v;S.tab='play';render()}
+  if(a==='go'){if(!gate(v))return;S.tier=v;S.tab='play';await loadRound();render();scrollTo(0,0)}
   else if(a==='menu'){S.tier='menu';render()}
-  else if(a==='tab'){S.tab=v;render();scrollTo(0,0)}
-  else if(a==='sw'){if(v!==S.tier)cinematic(v)}
+  else if(a==='tab'){S.tab=v;if(v==='rank')await loadRank();render();scrollTo(0,0)}
+  else if(a==='sw'){if(v!==S.tier&&gate(v)){await loadRound(v);cinematic(v)}}
   else if(a==='pick'){const p=S.picks[mid]||(S.picks[mid]={}),k=b.dataset.k;p[k]=p[k]===v?undefined:v;if(p[k]===undefined)delete p[k];const y=scrollY;render();scrollTo(0,y)}
   else if(a==='boost'){S.boost=S.boost===mid?null:mid;if(S.boost)toast('تم تفعيل التعزيز لهذه المباراة (مرة واحدة بالجولة)');const y=scrollY;render();scrollTo(0,y)}
   else if(a==='ex'){const p=S.picks[mid]||(S.picks[mid]={});if(p.ex)delete p.ex;else{S.picks[mid]={ex:{h:1,a:1}}}const y=scrollY;render();scrollTo(0,y)}
   else if(a==='exs'){const x=S.picks[mid].ex,s=b.dataset.s;x[s]=clamp(x[s]+ +b.dataset.d,0,9);const y=scrollY;render();scrollTo(0,y)}
-  else if(a==='save'){S.saved[mid]=true;hap('ok');toast('تم حفظ التوقع');const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='save'){if(API.on){await apiSave(mid);return}S.saved[mid]=true;hap('ok');toast('تم حفظ التوقع');const y=scrollY;render();scrollTo(0,y)}
   else if(a==='tgs'){S.tg.v=clamp(S.tg.v+ +b.dataset.d,0,60);const y=scrollY;render();scrollTo(0,y)}
-  else if(a==='tgsave'){S.tg.saved=true;hap('ok');toast('تم حفظ مجموع الأهداف');const y=scrollY;render();scrollTo(0,y)}
-  else if(a==='frame'){const f=FRAMES.find(x=>x.id===v);if(!owned(f)){toast('مقفل: '+f.how);return}S.frameSel=v;render()}
-  else if(a==='emb'){S.emb=+v;render()}
+  else if(a==='tgsave'){if(API.on){await apiTotal();return}S.tg.saved=true;hap('ok');toast('تم حفظ مجموع الأهداف');const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='frame'){const f=FRAMES.find(x=>x.id===v);if(!owned(f)){toast('مقفل: '+f.how);return}S.frameSel=v;if(API.on)await apiProfile({frame:v});render()}
+  else if(a==='emb'){S.emb=+v;if(API.on&&S.tier!=='onboard')await apiProfile({emblem:+v});render()}
+  else if(a==='onb'){const n=($('#nm').value||'').trim();const r=await apiProfile({name:n,emblem:S.emb});if(r&&r.ok){S.tier='menu';render()}else $('#nmsg').textContent=errMsg(r&&r.error)}
   else if(a==='name'){nameSheet()}
   else if(a==='close'){$('#sh')&&$('#sh').remove()}
-  else if(a==='nsave'){const v2=$('#nm').value.trim();S.name=v2;S.nameDays=0;$('#sh').remove();toast('تم تغيير الاسم · القادم بعد 30 يوماً');render()}
+  else if(a==='nsave'){const v2=$('#nm').value.trim();if(API.on){const r=await apiProfile({name:v2});if(!r||!r.ok){$('#nmsg').textContent=errMsg(r&&r.error);$('#nmsg').style.color='var(--bad)';return}}else{S.name=v2;S.nameDays=0}$('#sh').remove();toast('تم تغيير الاسم · القادم بعد 30 يوماً');render()}
 });
-render();
+/* ---------- API layer (Telegram). Outside Telegram the page keeps the demo data. ---------- */
+const API={on:!!(TG&&TG.initData),
+  async call(path,body){try{const r=await fetch(path,{method:body?'POST':'GET',headers:{'Content-Type':'application/json','X-Telegram-Init-Data':TG.initData},body:body?JSON.stringify(body):undefined});return await r.json().catch(()=>({ok:false,error:'server_error'}))}catch(e){return{ok:false,error:'network'}}}};
+const ERR={unauthorized:'تعذّر التحقق من حسابك. افتح التطبيق من البوت.',name_too_short:'الاسم لازم يكون 3 أحرف على الأقل.',name_too_long:'الاسم طويل (16 حرفاً كحد أقصى).',name_forbidden:'هذا الاسم غير مسموح.',name_taken:'هذا الاسم مستخدم من لاعب آخر.',name_locked:'ما بتقدر تغيّر الاسم قبل مرور 30 يوماً.',name_required:'اكتب اسمك أولاً.',frame_locked:'هذا الإطار لسا مقفل.',subscription_required:'هذه المسابقة تحتاج اشتراك.',profile_required:'أنشئ ملفك أولاً.',round_locked:'انقفل باب التوقعات.',already_saved:'هذا التوقع محفوظ مسبقاً.',boost_used:'استخدمت التعزيز بهذه الجولة.',pro_only:'متاح بمسابقة برو وVIP.',vip_only:'متاح بمسابقة VIP فقط.',empty_pick:'اختر توقعك أولاً.',network:'تعذّر الاتصال. جرّب مرة ثانية.',server_error:'صار خطأ بالسيرفر. جرّب بعد شوي.'};
+const errMsg=e=>ERR[e]||'صار خطأ. جرّب مرة ثانية.';
+S.acc={pro:true,vip:true};S.roundId=null;
+const hhmm=t=>new Date(t*1000).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+function gate(tier){if(tier==='free'||S.acc[tier])return true;toast(tier==='pro'?'مسابقة برو تحتاج اشتراك برو':'مسابقة VIP تحتاج اشتراك VIP');return false}
+function applyMe(r){if(!r||!r.ok)return;const p=r.player;S.acc={pro:r.access.pro,vip:r.access.vip};
+  if(p){S.name=p.name;S.emb=p.emblem;S.frameSel=p.frame||null;S.nameDays=30-r.name_locked_days}
+  FRAMES.forEach(f=>{f.earned=(r.frames||[]).includes(f.id);f.vip=f.id==='diamond'&&r.access.vip});return p}
+async function loadRound(tier){
+  if(!API.on)return;const t=tier||S.tier;if(!['free','pro','vip'].includes(t))return;
+  const r=await API.call('/api/round?tier='+t);
+  if(!r.ok){toast(errMsg(r.error));MATCHES=[];return}
+  S.picks={};S.saved={};S.boost=null;S.tg={v:S.tg.v,saved:false};
+  if(!r.round){MATCHES=[];S.roundId=null;return}
+  S.roundId=r.round.id;S.roundTitle=r.round.title;LOCK_AT=r.round.lock_at*1000;
+  MATCHES=r.matches.map(m=>({id:m.id,h:m.home,a:m.away,t:hhmm(m.kickoff),cor:m.cor_line,car:m.car_line,sp:m.points}));
+  r.matches.forEach(m=>{if(!m.pick)return;S.saved[m.id]=true;const q={};for(const k of ['wdl','btts','cor','car','dc','ex'])if(m.pick[k])q[k]=m.pick[k];S.picks[m.id]=q;if(m.pick.boost)S.boost=m.id});
+  if(r.total)S.tg={v:r.total.guess,saved:true};
+}
+async function apiSave(mid){
+  const p=S.picks[mid]||{};
+  const r=await API.call('/api/predict',{match_id:mid,wdl:p.wdl,btts:p.btts,cor:p.cor,car:p.car,dc:p.dc,ex:p.ex,boost:S.boost===mid});
+  if(!r.ok){toast(errMsg(r.error));if(r.error==='boost_used')S.boost=null;return render()}
+  hap('ok');toast('تم حفظ التوقع');const y=scrollY;await loadRound();render();scrollTo(0,y);
+}
+async function apiTotal(){
+  const r=await API.call('/api/total',{round_id:S.roundId,guess:S.tg.v});
+  if(!r.ok)return toast(errMsg(r.error));
+  hap('ok');toast('تم حفظ مجموع الأهداف');S.tg.saved=true;const y=scrollY;render();scrollTo(0,y);
+}
+async function apiProfile(b){const r=await API.call('/api/profile',b);if(r&&r.ok)applyMe(r);else if(r&&b.name===undefined)toast(errMsg(r.error));return r}
+async function loadRank(){
+  if(!API.on)return;const r=await API.call('/api/ranking?tier='+S.tier);if(!r.ok)return;
+  const rows=r.rows.map(x=>({n:x.name,p:x.points,e:x.emblem,f:x.rank<=3?['gold','silver','bronze'][x.rank-1]:x.me?'me':'none',rk:x.rank}));
+  while(rows.length<3)rows.push({n:'—',p:0,e:0,f:'none',rk:rows.length+1});
+  RANK.length=0;RANK.push(...rows);
+}
+async function boot(){
+  if(API.on){const r=await API.call('/api/me');if(!r.ok){app.innerHTML=`<div class="screen"><div class="card" style="text-align:center"><div class="h2">ZINGO</div><p class="mute">${errMsg(r.error)}</p></div></div>`;return}
+    if(!applyMe(r))S.tier='onboard';}
+  render();
+}
+
+boot();
 </script>
 </html>

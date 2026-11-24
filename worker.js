@@ -1,1019 +1,392 @@
+// ZINGO API (rebuild). Cloudflare Worker + D1. Static design is served from ./public.
+// Tiers: free | pro | vip. Points follow the agreed rules (see POINTS / settle()).
+
+const POINTS = { wdl: 2, btts: 1, cor: 1, car: 1, ex: 5 };
+const TOTAL_POINTS = [3, 2, 1]; // exact, off by 1, off by 2
+const NAME_COOLDOWN_DAYS = 30;
+const TIERS = ["free", "pro", "vip"];
+const EMBLEM_COUNT = 20;
+const FRAMES = ["diamond", "gold", "silver", "bronze", "aurora", "blaze"];
+
+const SCHEMA = [
+  `CREATE TABLE IF NOT EXISTS z_players (
+    tg TEXT PRIMARY KEY, name TEXT NOT NULL, name_key TEXT NOT NULL UNIQUE,
+    name_changed_at INTEGER NOT NULL, emblem INTEGER NOT NULL DEFAULT 0,
+    frame TEXT, created_at INTEGER NOT NULL)`,
+  `CREATE TABLE IF NOT EXISTS z_subs (
+    tg TEXT NOT NULL, tier TEXT NOT NULL, ends_at INTEGER NOT NULL, PRIMARY KEY (tg, tier))`,
+  `CREATE TABLE IF NOT EXISTS z_awards (
+    tg TEXT NOT NULL, frame TEXT NOT NULL, round_id INTEGER, PRIMARY KEY (tg, frame))`,
+  `CREATE TABLE IF NOT EXISTS z_rounds (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, tier TEXT NOT NULL, title TEXT NOT NULL,
+    lock_at INTEGER NOT NULL, status TEXT NOT NULL DEFAULT 'open', total_goals INTEGER)`,
+  `CREATE TABLE IF NOT EXISTS z_matches (
+    id INTEGER PRIMARY KEY AUTOINCREMENT, round_id INTEGER NOT NULL, home TEXT NOT NULL,
+    away TEXT NOT NULL, kickoff INTEGER NOT NULL, cor_line REAL, car_line REAL,
+    ph REAL, pd REAL, pa REAL, hg INTEGER, ag INTEGER, corners INTEGER, cards INTEGER)`,
+  `CREATE TABLE IF NOT EXISTS z_picks (
+    tg TEXT NOT NULL, match_id INTEGER NOT NULL, round_id INTEGER NOT NULL,
+    wdl TEXT, btts TEXT, cor TEXT, car TEXT, dc TEXT, ex_h INTEGER, ex_a INTEGER,
+    boost INTEGER NOT NULL DEFAULT 0, saved_at INTEGER NOT NULL, points INTEGER,
+    PRIMARY KEY (tg, match_id))`,
+  `CREATE TABLE IF NOT EXISTS z_totals (
+    tg TEXT NOT NULL, round_id INTEGER NOT NULL, guess INTEGER NOT NULL,
+    saved_at INTEGER NOT NULL, points INTEGER, PRIMARY KEY (tg, round_id))`,
+  `CREATE INDEX IF NOT EXISTS z_picks_round ON z_picks(round_id, tg)`,
+];
+
+let schemaReady = false;
+async function ensureSchema(env) {
+  if (schemaReady) return;
+  await env.DB.batch(SCHEMA.map((s) => env.DB.prepare(s)));
+  schemaReady = true;
+}
+
+// ---------- helpers ----------
+const now = () => Math.floor(Date.now() / 1000);
+const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 function json(data, status = 200) {
   return new Response(JSON.stringify(data), {
     status,
-    headers: {
-      "Content-Type": "application/json; charset=utf-8",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-      "Access-Control-Allow-Headers": "Content-Type, X-Telegram-Init-Data",
-    },
+    headers: { "Content-Type": "application/json; charset=utf-8", "Cache-Control": "no-store" },
   });
 }
+const fail = (error, status = 400) => json({ ok: false, error }, status);
+const adminIds = (env) => new Set(String(env.ADMIN_IDS || "994708968").split(",").map((s) => s.trim()));
 
-async function getActivePro(env) {
-  return await env.DB.prepare(`
-    SELECT *
-    FROM competitions
-    WHERE type = 'pro'
-      AND status IN ('active', 'upcoming')
-    ORDER BY
-      CASE WHEN status = 'active' THEN 0 ELSE 1 END,
-      start_at ASC
-    LIMIT 1
-  `).first();
+// ---------- Telegram auth ----------
+const hex = (b) => Array.from(b).map((x) => x.toString(16).padStart(2, "0")).join("");
+async function hmac(key, msg) {
+  const k = await crypto.subtle.importKey("raw", key, { name: "HMAC", hash: "SHA-256" }, false, ["sign"]);
+  return new Uint8Array(await crypto.subtle.sign("HMAC", k, new TextEncoder().encode(msg)));
 }
-
-const ZINGO_ADMIN_IDS = new Set([
-  "994708968"
-]);
-
-function isZingoAdmin(telegramId) {
-  return ZINGO_ADMIN_IDS.has(String(telegramId || "").trim());
-}
-
-
-function bytesToHex(bytes) {
-  return Array.from(bytes)
-    .map(b => b.toString(16).padStart(2, "0"))
-    .join("");
-}
-
 function safeEqual(a, b) {
-  if (typeof a !== "string" || typeof b !== "string") return false;
   if (a.length !== b.length) return false;
-
-  let diff = 0;
-  for (let i = 0; i < a.length; i++) {
-    diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
-  }
-
-  return diff === 0;
+  let d = 0;
+  for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return d === 0;
 }
-
-async function hmacSha256(key, message) {
-  const cryptoKey = await crypto.subtle.importKey(
-    "raw",
-    key,
-    { name: "HMAC", hash: "SHA-256" },
-    false,
-    ["sign"]
-  );
-
-  return new Uint8Array(
-    await crypto.subtle.sign(
-      "HMAC",
-      cryptoKey,
-      new TextEncoder().encode(message)
-    )
-  );
-}
-
-async function verifyTelegramInitData(request, env) {
-  const initData =
-    request.headers.get("X-Telegram-Init-Data") || "";
-
-  if (!initData) {
-    return {
-      ok: false,
-      status: 401,
-      error: "telegram_init_data_missing"
-    };
+async function authUser(request, env) {
+  if (env.DEV_AUTH === "1") {
+    const dev = request.headers.get("X-Dev-User");
+    if (dev) return { id: String(dev) };
   }
-
-  if (!env.TELEGRAM_BOT_TOKEN) {
-    console.error("TELEGRAM_BOT_TOKEN is not configured");
-
-    return {
-      ok: false,
-      status: 500,
-      error: "telegram_auth_not_configured"
-    };
-  }
-
+  const initData = request.headers.get("X-Telegram-Init-Data") || "";
+  if (!initData) return null;
+  if (!env.TELEGRAM_BOT_TOKEN) return null;
+  const params = new URLSearchParams(initData);
+  const received = params.get("hash");
+  if (!received) return null;
+  params.delete("hash");
+  const check = [...params.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([k, v]) => `${k}=${v}`).join("\n");
+  const secret = await hmac(new TextEncoder().encode("WebAppData"), env.TELEGRAM_BOT_TOKEN);
+  if (!safeEqual(hex(await hmac(secret, check)), received.toLowerCase())) return null;
+  const age = now() - Number(params.get("auth_date") || 0);
+  if (!(age >= -60 && age <= 86400)) return null;
   try {
-    const params = new URLSearchParams(initData);
-    const receivedHash = params.get("hash");
-
-    if (!receivedHash) {
-      return {
-        ok: false,
-        status: 401,
-        error: "telegram_hash_missing"
-      };
-    }
-
-    params.delete("hash");
-
-    const dataCheckString = Array.from(params.entries())
-      .sort((a, b) => a[0].localeCompare(b[0]))
-      .map(([key, value]) => `${key}=${value}`)
-      .join("\n");
-
-    const botToken = new TextEncoder().encode(
-      env.TELEGRAM_BOT_TOKEN
-    );
-
-    const secretKey = await hmacSha256(
-      new TextEncoder().encode("WebAppData"),
-      env.TELEGRAM_BOT_TOKEN
-    );
-
-    const calculatedHash = bytesToHex(
-      await hmacSha256(secretKey, dataCheckString)
-    );
-
-    if (
-      !safeEqual(
-        calculatedHash,
-        receivedHash.toLowerCase()
-      )
-    ) {
-      return {
-        ok: false,
-        status: 401,
-        error: "telegram_init_data_invalid"
-      };
-    }
-
-    const authDate = Number(
-      params.get("auth_date") || 0
-    );
-
-    const now = Math.floor(Date.now() / 1000);
-
-    if (
-      !Number.isFinite(authDate) ||
-      authDate <= 0 ||
-      Math.abs(now - authDate) > 86400
-    ) {
-      return {
-        ok: false,
-        status: 401,
-        error: "telegram_init_data_expired"
-      };
-    }
-
-    let user;
-
-    try {
-      user = JSON.parse(
-        params.get("user") || "null"
-      );
-    } catch {
-      user = null;
-    }
-
-    if (!user || !user.id) {
-      return {
-        ok: false,
-        status: 401,
-        error: "telegram_user_missing"
-      };
-    }
-
-    return {
-      ok: true,
-      user: {
-        id: String(user.id),
-        first_name: user.first_name || "",
-        last_name: user.last_name || "",
-        username: user.username || ""
-      }
-    };
-
-  } catch (error) {
-    console.error(
-      "Telegram authentication error:",
-      error
-    );
-
-    return {
-      ok: false,
-      status: 401,
-      error: "telegram_auth_failed"
-    };
-  }
-}
-
-async function requireTelegramUser(request, env) {
-  const result =
-    await verifyTelegramInitData(request, env);
-
-  if (!result.ok) {
-    return {
-      ok: false,
-      response: json(
-        {
-          ok: false,
-          error: result.error
-        },
-        result.status
-      )
-    };
-  }
-
-  return {
-    ok: true,
-    user: result.user
-  };
-}
-
-async function getSubscription(env, telegramId) {
-  const id = String(telegramId || '').trim();
-
-  if (!id || id === '0') {
+    const u = JSON.parse(params.get("user") || "null");
+    return u && u.id ? { id: String(u.id) } : null;
+  } catch {
     return null;
   }
-
-  // ZINGO ADMIN: unrestricted PRO/VIP access.
-  // Server-side check: subscription expiry cannot block the admin account.
-  if (isZingoAdmin(id)) {
-    return {
-      active: true,
-      plan: 'vip',
-      status: 'admin',
-      start_at: '2000-01-01T00:00:00.000Z',
-      end_at: '2999-12-31T23:59:59.999Z',
-      payment_method: 'admin'
-    };
-  }
-
-  const row = await env.DB.prepare(`
-    SELECT
-      id,
-      telegram_id,
-      plan,
-      start_at,
-      end_at,
-      status,
-      payment_method
-    FROM subscriptions
-    WHERE telegram_id = ?
-      AND plan = 'vip'
-    ORDER BY id DESC
-    LIMIT 1
-  `).bind(id).first();
-
-  if (!row) {
-    return null;
-  }
-
-  const now = Date.now();
-  const start = row.start_at ? Date.parse(row.start_at) : NaN;
-  const end = row.end_at ? Date.parse(row.end_at) : NaN;
-
-  const active =
-    row.status === 'active' &&
-    Number.isFinite(start) &&
-    Number.isFinite(end) &&
-    start <= now &&
-    now <= end;
-
-  return {
-    active,
-    plan: row.plan,
-    status: row.status,
-    start_at: row.start_at,
-    end_at: row.end_at,
-    payment_method: row.payment_method || null
-  };
 }
 
-
-// ZINGO PLAYER IDENTITY V1
-
-async function ensureZingoProfiles(env) {
-  await env.DB.prepare(`
-    CREATE TABLE IF NOT EXISTS zingo_profiles (
-      id INTEGER PRIMARY KEY AUTOINCREMENT,
-      telegram_id TEXT NOT NULL UNIQUE,
-      display_name TEXT NOT NULL,
-      name_key TEXT NOT NULL UNIQUE,
-      avatar_data TEXT,
-      club_id TEXT,
-      created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-      updated_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
-    )
-  `).run();
-
-  await env.DB.prepare(`
-    CREATE UNIQUE INDEX IF NOT EXISTS idx_zingo_profiles_name_key
-    ON zingo_profiles(name_key)
-  `).run();
+// ---------- names ----------
+function normName(v) {
+  return String(v || "")
+    .normalize("NFKC").replace(/[​-‍﻿]/g, "").toLowerCase().trim()
+    .replace(/[ً-ٰٟۖ-ۭ]/g, "")
+    .replace(/[إأآٱ]/g, "ا").replace(/ى/g, "ي").replace(/ؤ/g, "و").replace(/ئ/g, "ي").replace(/ة/g, "ه")
+    .replace(/[\s_\-.'`~!@#$%^&*()+={}[\]|\\:;"<>?,/،؛؟]+/g, "");
 }
-
-function normalizeZingoName(value) {
-  let s = String(value || "")
-    .normalize("NFKC")
-    .replace(/[\u200B-\u200D\uFEFF]/g, "")
-    .toLowerCase()
-    .trim();
-
-  s = s
-    .replace(/[\u064B-\u065F\u0670\u06D6-\u06ED]/g, "")
-    .replace(/[إأآٱ]/g, "ا")
-    .replace(/ى/g, "ي")
-    .replace(/ؤ/g, "و")
-    .replace(/ئ/g, "ي")
-    .replace(/ة/g, "ه");
-
-  return s
-    .replace(/[\s_\-.'`~!@#$%^&*()+={}[\]|\\:;"<>?,/،؛؟]+/g, "")
-    .trim();
-}
-
-function isForbiddenZingoName(value) {
-  const key = normalizeZingoName(value);
-
+function forbiddenName(key) {
   if (!key) return true;
-
-  const blocked = new Set([
-    "zingo",
-    "زينغو",
-    "زينجو",
-    "زينقو",
-    "زينغ",
-    "z1ngo",
-    "zlngo",
-    "zinqo",
-    "zingoapp",
-    "zingopro",
-    "zingovip"
-  ]);
-
-  if (blocked.has(key)) return true;
-
-  const latin = key
-    .replace(/[0]/g, "o")
-    .replace(/[1|!]/g, "i")
-    .replace(/[3]/g, "e")
-    .replace(/[4@]/g, "a")
-    .replace(/[5]/g, "s")
-    .replace(/[7]/g, "t");
-
-  if (latin === "zingo") return true;
-
-  return false;
+  if (/زين?[غجق]و|زنغو|ز[يى]نغ/.test(key)) return true;
+  const latin = key.replace(/0/g, "o").replace(/[1|!l]/g, "i").replace(/3/g, "e").replace(/[4@]/g, "a").replace(/5/g, "s").replace(/7/g, "t");
+  return /z[i]?ngo|zinqo|zingo/.test(latin);
+}
+function checkName(raw) {
+  const name = String(raw || "").normalize("NFKC").trim();
+  if (name.length < 3) return { error: "name_too_short" };
+  if (name.length > 16) return { error: "name_too_long" };
+  const key = normName(name);
+  if (forbiddenName(key)) return { error: "name_forbidden" };
+  return { name, key };
 }
 
-function validateZingoDisplayName(value) {
-  const name = String(value || "").normalize("NFKC").trim();
+// ---------- access ----------
+async function access(env, tg) {
+  if (adminIds(env).has(tg)) return { pro: true, vip: true, admin: true };
+  const rows = await env.DB.prepare("SELECT tier FROM z_subs WHERE tg=? AND ends_at>?").bind(tg, now()).all();
+  const t = new Set((rows.results || []).map((r) => r.tier));
+  const vip = t.has("vip");
+  return { pro: vip || t.has("pro"), vip, admin: false };
+}
+const canPlay = (acc, tier) => tier === "free" || (tier === "pro" && acc.pro) || (tier === "vip" && acc.vip);
 
-  if (name.length < 2) {
-    return { ok:false, error:"الاسم يجب أن يحتوي على حرفين على الأقل" };
-  }
-
-  if (name.length > 24) {
-    return { ok:false, error:"الاسم يجب ألا يتجاوز 24 حرفاً" };
-  }
-
-  if (isForbiddenZingoName(name)) {
-    return { ok:false, error:"هذا الاسم غير مسموح" };
-  }
-
+// ---------- points ----------
+function dynPoints(m) {
+  // VIP: harder outcomes pay more. Probabilities are fixed when the round is created.
+  const p = { 1: m.ph, X: m.pd, 2: m.pa };
+  const wdl = {};
+  for (const k of ["1", "X", "2"]) wdl[k] = clamp(Math.round(1.2 / p[k]), 1, 6);
   return {
-    ok:true,
-    name,
-    name_key:normalizeZingoName(name)
+    wdl,
+    dc: {
+      "1X": clamp(Math.round(0.9 / (m.ph + m.pd)), 1, 4),
+      "12": clamp(Math.round(0.9 / (m.ph + m.pa)), 1, 4),
+      X2: clamp(Math.round(0.9 / (m.pd + m.pa)), 1, 4),
+    },
   };
 }
-
-
-// ZINGO_PRO_GOLD_PREVIEW_V1
-async function zingoGoldPreview(request, env) {
-  const url = new URL(request.url);
-  if (url.pathname !== "/pro-gold-preview") return null;
-
-  const asset = await env.ASSETS.fetch(
-    new Request(new URL("/pro-gold-preview.html", request.url), request)
-  );
-
-  return asset;
-}
-
-export default {
-  async fetch(request, env) {
-    const goldPreview = await zingoGoldPreview(request, env);
-    if (goldPreview) return goldPreview;
-    const url = new URL(request.url);
-
-    if (url.pathname === '/api/subscription' && request.method === 'GET') {
-  try {
-    const auth = await requireTelegramUser(request, env);
-    if (!auth.ok) return auth.response;
-    const telegramId = auth.user.id;
-
-    const vip = await getSubscription(env, telegramId);
-
-    return json({
-      ok: true,
-      vip: vip || {
-        active: false,
-        plan: 'vip',
-        status: 'none',
-        start_at: null,
-        end_at: null,
-        payment_method: null
-      }
-    });
-  } catch (e) {
-    console.error('subscription error:', e);
-
-    return json({
-      ok: false,
-      vip: {
-        active: false
-      },
-      error: 'subscription_lookup_failed'
-    }, 500);
+function scorePick(tier, m, p) {
+  if (m.hg == null || m.ag == null) return null;
+  let pts = 0;
+  if (p.ex_h != null) {
+    pts = p.ex_h === m.hg && p.ex_a === m.ag ? POINTS.ex : 0;
+  } else {
+    const res = m.hg > m.ag ? "1" : m.hg < m.ag ? "2" : "X";
+    const dyn = tier === "vip" && m.ph ? dynPoints(m) : null;
+    if (p.wdl && p.wdl === res) pts += dyn ? dyn.wdl[res] : POINTS.wdl;
+    if (p.dc && dyn && p.dc.includes(res === "X" ? "X" : res)) pts += dyn.dc[p.dc];
+    if (p.btts && (p.btts === "y") === (m.hg > 0 && m.ag > 0)) pts += POINTS.btts;
+    if (p.cor && m.corners != null && m.cor_line != null && (p.cor === "o") === (m.corners > m.cor_line)) pts += POINTS.cor;
+    if (p.car && m.cards != null && m.car_line != null && (p.car === "o") === (m.cards > m.car_line)) pts += POINTS.car;
   }
+  return p.boost ? pts * 2 : pts;
 }
 
-    if (request.method === "OPTIONS") {
-      return new Response(null, {
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-          "Access-Control-Allow-Headers": "Content-Type, X-Telegram-Init-Data",
-        },
-      });
-    }
+// ---------- handlers ----------
+async function me(env, user) {
+  const p = await env.DB.prepare("SELECT * FROM z_players WHERE tg=?").bind(user.id).first();
+  const acc = await access(env, user.id);
+  const awards = p ? ((await env.DB.prepare("SELECT frame FROM z_awards WHERE tg=?").bind(user.id).all()).results || []).map((r) => r.frame) : [];
+  const days = p ? Math.max(0, Math.ceil((p.name_changed_at + NAME_COOLDOWN_DAYS * 86400 - now()) / 86400)) : 0;
+  return json({ ok: true, player: p && { name: p.name, emblem: p.emblem, frame: p.frame }, access: acc, name_locked_days: days, frames: awards });
+}
 
-    try {
-      // =========================
-      // PRO ROUND
-      // =========================
-      if (url.pathname === "/api/db/status") {
+async function saveProfile(env, user, body) {
+  const acc = await access(env, user.id);
+  const cur = await env.DB.prepare("SELECT * FROM z_players WHERE tg=?").bind(user.id).first();
+  const t = now();
+  let emblem = body.emblem != null ? Number(body.emblem) : cur ? cur.emblem : 0;
+  if (!Number.isInteger(emblem) || emblem < 0 || emblem >= EMBLEM_COUNT) return fail("bad_emblem");
+  let frame = body.frame !== undefined ? body.frame : cur ? cur.frame : null;
+  if (frame) {
+    if (!FRAMES.includes(frame)) return fail("bad_frame");
+    const owned = frame === "diamond" ? acc.vip : !!(await env.DB.prepare("SELECT 1 x FROM z_awards WHERE tg=? AND frame=?").bind(user.id, frame).first());
+    if (!owned) return fail("frame_locked", 403);
+  }
+  let name = cur && cur.name, key = cur && cur.name_key, changed = cur ? cur.name_changed_at : t;
+  if (body.name !== undefined && (!cur || body.name !== cur.name)) {
+    if (cur && t < cur.name_changed_at + NAME_COOLDOWN_DAYS * 86400) return fail("name_locked", 403);
+    const v = checkName(body.name);
+    if (v.error) return fail(v.error);
+    const dup = await env.DB.prepare("SELECT tg FROM z_players WHERE name_key=? AND tg<>?").bind(v.key, user.id).first();
+    if (dup) return fail("name_taken", 409);
+    name = v.name; key = v.key; changed = t;
+  }
+  if (!name) return fail("name_required");
+  try {
+    await env.DB.prepare(
+      `INSERT INTO z_players (tg,name,name_key,name_changed_at,emblem,frame,created_at) VALUES (?,?,?,?,?,?,?)
+       ON CONFLICT(tg) DO UPDATE SET name=excluded.name,name_key=excluded.name_key,name_changed_at=excluded.name_changed_at,emblem=excluded.emblem,frame=excluded.frame`
+    ).bind(user.id, name, key, changed, emblem, frame || null, t).run();
+  } catch (e) {
+    if (String(e).includes("UNIQUE")) return fail("name_taken", 409);
+    throw e;
+  }
+  return me(env, user);
+}
+
+async function getRound(env, user, tier, roundId) {
+  if (!TIERS.includes(tier)) return fail("bad_tier");
+  const acc = await access(env, user.id);
+  if (!canPlay(acc, tier)) return fail("subscription_required", 403);
+  const r = roundId
+    ? await env.DB.prepare("SELECT * FROM z_rounds WHERE id=? AND tier=?").bind(roundId, tier).first()
+    : await env.DB.prepare("SELECT * FROM z_rounds WHERE tier=? ORDER BY (status='open') DESC, id DESC LIMIT 1").bind(tier).first();
+  if (!r) return json({ ok: true, round: null });
+  const ms = (await env.DB.prepare("SELECT * FROM z_matches WHERE round_id=? ORDER BY kickoff,id").bind(r.id).all()).results || [];
+  const picks = (await env.DB.prepare("SELECT * FROM z_picks WHERE tg=? AND round_id=?").bind(user.id, r.id).all()).results || [];
+  const tot = await env.DB.prepare("SELECT guess,points FROM z_totals WHERE tg=? AND round_id=?").bind(user.id, r.id).first();
+  const byMatch = Object.fromEntries(picks.map((p) => [p.match_id, p]));
+  const settled = r.status === "settled";
   return json({
     ok: true,
-    secret_configured: Boolean(env.ZINGO_DB_SECRET),
+    round: { id: r.id, tier: r.tier, title: r.title, lock_at: r.lock_at, status: r.status, locked: now() >= r.lock_at, total_goals: settled ? r.total_goals : null },
+    matches: ms.map((m) => ({
+      id: m.id, home: m.home, away: m.away, kickoff: m.kickoff, cor_line: m.cor_line, car_line: m.car_line,
+      points: tier === "vip" && m.ph ? dynPoints(m) : null,
+      result: settled ? { hg: m.hg, ag: m.ag, corners: m.corners, cards: m.cards } : null,
+      pick: byMatch[m.id] ? pickOut(byMatch[m.id]) : null,
+    })),
+    total: tot || null,
+    boost_used: picks.some((p) => p.boost),
   });
 }
-
-if (url.pathname === "/api/db/query" || url.pathname === "/api/xdb") {
-        if (request.method !== "POST") {
-          return json({ ok: false, error: "Method not allowed" }, 405);
-        }
-
-        try {
-          const body = await request.json();
-          const dbKey = typeof body?.db_key === "string" ? body.db_key.trim() : "";
-          const sql = typeof body?.sql === "string" ? body.sql.trim() : "";
-          const params = Array.isArray(body?.params) ? body.params : [];
-
-          if (!env.ZINGO_DB_SECRET || dbKey !== env.ZINGO_DB_SECRET) {
-            return json({ ok: false, error: "Unauthorized" }, 401);
-          }
-
-          if (!sql) {
-            return json({ ok: false, error: "SQL is required" }, 400);
-          }
-
-          if (sql.includes(";")) {
-            return json(
-              { ok: false, error: "Multiple SQL statements are not allowed" },
-              400
-            );
-          }
-
-          const result = await env.DB
-            .prepare(sql)
-            .bind(...params)
-            .all();
-
-          return json({
-            ok: true,
-            rows: result.results || [],
-            meta: {
-              changes: result.meta?.changes ?? 0,
-              last_row_id: result.meta?.last_row_id ?? null,
-              rows_read: result.meta?.rows_read ?? 0,
-              rows_written: result.meta?.rows_written ?? 0,
-            },
-          });
-        } catch (error) {
-          console.error("DB QUERY ERROR:", error);
-
-          return json(
-            {
-              ok: false,
-              error: error?.message || "Database error",
-            },
-            500
-          );
-        }
-      }
-
-      if (url.pathname === "/api/pro_round") {
-        const auth = await requireTelegramUser(request, env);
-        if (!auth.ok) return auth.response;
-        const telegramId = Number(auth.user.id);
-
-        const competition = await getActivePro(env);
-
-        if (!competition) {
-          return json({
-            ok: true,
-            competition: null,
-            matches: [],
-          });
-        }
-
-        const matches = await env.DB.prepare(`
-          SELECT
-            cm.id,
-            cm.match_id,
-            cm.home_team,
-            cm.away_team,
-            cm.market,
-            cm.result,
-            cm.extra_market,
-            cm.extra_prediction,
-            p1.prediction AS prediction_1x2,
-            pb.prediction AS prediction_btts
-          FROM competition_matches cm
-          LEFT JOIN competition_predictions p1
-            ON p1.competition_match_id = cm.id
-            AND p1.telegram_id = ?
-            AND p1.market = '1x2'
-          LEFT JOIN competition_predictions pb
-            ON pb.competition_match_id = cm.id
-            AND pb.telegram_id = ?
-            AND pb.market = 'btts'
-          WHERE cm.competition_id = ?
-          ORDER BY cm.id ASC
-        `)
-          .bind(telegramId, telegramId, competition.id)
-          .all();
-
-        // تأكيد تسجيل المستخدم بالمسابقة
-        if (telegramId) {
-          await env.DB.prepare(`
-            INSERT OR IGNORE INTO competition_entries
-            (competition_id, telegram_id, status, points)
-            VALUES (?, ?, 'active', 0)
-          `)
-            .bind(competition.id, telegramId)
-            .run();
-        }
-
-        return json({
-          ok: true,
-          competition,
-          matches: matches.results || [],
-        });
-      }
-
-      // =========================
-      // SUBMIT PREDICTION
-      // =========================
-      if (
-        url.pathname === "/api/pro_submit" &&
-        request.method === "POST"
-      ) {
-        const body = await request.json();
-
-        const auth = await requireTelegramUser(request, env);
-        if (!auth.ok) return auth.response;
-
-        const telegramId = Number(auth.user.id);
-        const competitionMatchId = Number(
-          body.competition_match_id || 0
-        );
-        const prediction = String(body.prediction || "").trim();
-        const market = String(body.market || "1x2").trim();
-
-        if (
-          !telegramId ||
-          !competitionMatchId ||
-          !prediction ||
-          !["1x2", "btts"].includes(market)
-        ) {
-          return json(
-            {
-              ok: false,
-              error: "بيانات التوقع غير مكتملة",
-            },
-            400
-          );
-        }
-
-        const competition = await getActivePro(env);
-
-        if (!competition) {
-          return json(
-            {
-              ok: false,
-              error: "لا توجد مسابقة PRO فعالة حالياً",
-            },
-            404
-          );
-        }
-
-        const match = await env.DB.prepare(`
-          SELECT *
-          FROM competition_matches
-          WHERE id = ?
-            AND competition_id = ?
-          LIMIT 1
-        `)
-          .bind(competitionMatchId, competition.id)
-          .first();
-
-        if (!match) {
-          return json(
-            {
-              ok: false,
-              error: "المباراة غير موجودة",
-            },
-            404
-          );
-        }
-
-        // لا تسمح بتعديل التوقع بعد تسجيله
-        const existing = await env.DB.prepare(`
-          SELECT id
-          FROM competition_predictions
-          WHERE competition_match_id = ?
-            AND telegram_id = ?
-            AND market = ?
-          LIMIT 1
-        `)
-          .bind(competitionMatchId, telegramId, market)
-          .first();
-
-        if (existing) {
-          return json({
-            ok: true,
-            already_submitted: true,
-          });
-        }
-
-        await env.DB.prepare(`
-          INSERT INTO competition_entries
-          (competition_id, telegram_id, status, points)
-          VALUES (?, ?, 'active', 0)
-          ON CONFLICT(competition_id, telegram_id)
-          DO NOTHING
-        `)
-          .bind(competition.id, telegramId)
-          .run();
-
-        await env.DB.prepare(`
-          INSERT INTO competition_predictions
-          (
-            competition_id,
-            competition_match_id,
-            telegram_id,
-            prediction,
-            result,
-            points,
-            market
-          )
-          VALUES (?, ?, ?, ?, 'pending', 0, ?)
-        `)
-          .bind(
-            competition.id,
-            competitionMatchId,
-            telegramId,
-            prediction,
-            market
-          )
-          .run();
-
-        return json({
-          ok: true,
-          already_submitted: false,
-        });
-      }
-
-      // =========================
-      // RANKING
-      // =========================
-      if (url.pathname === "/api/pro_ranking") {
-        const auth = await requireTelegramUser(request, env);
-        if (!auth.ok) return auth.response;
-        const telegramId = Number(auth.user.id);
-
-        const competition = await getActivePro(env);
-
-        if (!competition) {
-          return json({
-            ok: true,
-            players: [],
-            current_rank: null,
-            total_players: 0,
-          });
-        }
-
-        const ranking = await env.DB.prepare(`
-          SELECT
-            ce.telegram_id,
-            ce.points,
-            ROW_NUMBER() OVER (
-              ORDER BY ce.points DESC, ce.created_at ASC
-            ) AS rank
-          FROM competition_entries ce
-          WHERE ce.competition_id = ?
-            AND ce.status != 'cancelled'
-          ORDER BY ce.points DESC, ce.created_at ASC
-          LIMIT 100
-        `)
-          .bind(competition.id)
-          .all();
-
-        const rows = ranking.results || [];
-
-        const players = rows.map((player, index) => {
-        const playerId = Number(player.telegram_id);
-        const isMe = playerId === telegramId;
-
-        return {
-          rank: Number(player.rank || index + 1),
-          telegram_id: playerId,
-          name: isMe
-            ? "أنت"
-            : `لاعب ${String(playerId).slice(-4)}`,
-          points: Number(player.points || 0),
-          is_me: isMe,
-        };
-      });
-
-        const current = players.find(
-          (player) => player.telegram_id === telegramId
-        );
-
-        return json({
-          ok: true,
-          players,
-          current_rank: current ? current.rank : null,
-          total_players: rows.length,
-        });
-      }
-
-      // =========================
-      // TEST / HEALTH
-      // =========================
-
-    // =========================
-    // ZINGO PLAYER PROFILE
-    // =========================
-
-    if (
-      (url.pathname === "/api/profile" ||
-       url.pathname === "/api/profile/update") &&
-      (request.method === "GET" || request.method === "POST")
-    ) {
-
-      const auth = await requireTelegramUser(request, env);
-      if (!auth.ok) return auth.response;
-
-      const telegramId = String(auth.user.id);
-
-      try {
-        await ensureZingoProfiles(env);
-
-        if (request.method === "GET") {
-
-          const profile = await env.DB.prepare(`
-            SELECT
-              telegram_id,
-              display_name,
-              avatar_data,
-              club_id,
-              created_at,
-              updated_at
-            FROM zingo_profiles
-            WHERE telegram_id = ?
-            LIMIT 1
-          `)
-          .bind(telegramId)
-          .first();
-
-          return json({
-            ok:true,
-            profile:profile || null
-          });
-        }
-
-        const body = await request.json();
-
-        const checked = validateZingoDisplayName(body?.display_name);
-
-        if (!checked.ok) {
-          return json({
-            ok:false,
-            error:checked.error
-          },400);
-        }
-
-        const avatar =
-          typeof body?.avatar_data === "string"
-            ? body.avatar_data.trim()
-            : "";
-
-        const clubId =
-          typeof body?.club_id === "string"
-            ? body.club_id.trim().slice(0,80)
-            : "";
-
-        if (avatar && avatar.length > 180000) {
-          return json({
-            ok:false,
-            error:"الصورة كبيرة جداً"
-          },413);
-        }
-
-        const existing = await env.DB.prepare(`
-          SELECT telegram_id
-          FROM zingo_profiles
-          WHERE name_key = ?
-          AND telegram_id != ?
-          LIMIT 1
-        `)
-        .bind(checked.name_key, telegramId)
-        .first();
-
-        if (existing) {
-          return json({
-            ok:false,
-            error:"هذا الاسم مستخدم من لاعب آخر"
-          },409);
-        }
-
-        try {
-
-          await env.DB.prepare(`
-            INSERT INTO zingo_profiles
-              (telegram_id,display_name,name_key,avatar_data,club_id)
-            VALUES (?,?,?,?,?)
-            ON CONFLICT(telegram_id)
-            DO UPDATE SET
-              display_name=excluded.display_name,
-              name_key=excluded.name_key,
-              avatar_data=excluded.avatar_data,
-              club_id=excluded.club_id,
-              updated_at=CURRENT_TIMESTAMP
-          `)
-          .bind(
-            telegramId,
-            checked.name,
-            checked.name_key,
-            avatar || null,
-            clubId || null
-          )
-          .run();
-
-        } catch (e) {
-
-          const msg = String(e?.message || "");
-
-          if (
-            msg.toLowerCase().includes("unique") ||
-            msg.toLowerCase().includes("constraint")
-          ) {
-            return json({
-              ok:false,
-              error:"هذا الاسم مستخدم من لاعب آخر"
-            },409);
-          }
-
-          throw e;
-        }
-
-        const profile = await env.DB.prepare(`
-          SELECT
-            telegram_id,
-            display_name,
-            avatar_data,
-            club_id,
-            created_at,
-            updated_at
-          FROM zingo_profiles
-          WHERE telegram_id = ?
-          LIMIT 1
-        `)
-        .bind(telegramId)
-        .first();
-
-        return json({
-          ok:true,
-          profile
-        });
-
-      } catch (e) {
-
-        console.error("profile error:",e);
-
-        return json({
-          ok:false,
-          error:"تعذر حفظ الملف الشخصي"
-        },500);
-      }
-    }
-
-    if (url.pathname === "/api/health") {
-        const competition = await getActivePro(env);
-
-        return json({
-          ok: true,
-          cloud: true,
-          d1: true,
-          active_pro: competition
-            ? {
-                id: competition.id,
-                name: competition.name,
-                status: competition.status,
-              }
-            : null,
-        });
-      }
-
-      // =========================
-      // PRO PAGE
-      // =========================
-      if (url.pathname === "/pro") {
-        return new Response(`
-<!DOCTYPE html>
-<html lang="ar" dir="rtl">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ZINGO PRO</title>
-<style>
-body{
-  margin:0;
-  min-height:100vh;
-  background:#050914;
-  color:white;
-  font-family:Arial,sans-serif;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+const pickOut = (p) => ({ wdl: p.wdl, btts: p.btts, cor: p.cor, car: p.car, dc: p.dc, ex: p.ex_h != null ? { h: p.ex_h, a: p.ex_a } : null, boost: !!p.boost, points: p.points });
+
+async function predict(env, user, b) {
+  const m = await env.DB.prepare("SELECT m.*, r.tier, r.lock_at, r.status FROM z_matches m JOIN z_rounds r ON r.id=m.round_id WHERE m.id=?").bind(Number(b.match_id)).first();
+  if (!m) return fail("match_not_found", 404);
+  const acc = await access(env, user.id);
+  if (!canPlay(acc, m.tier)) return fail("subscription_required", 403);
+  if (!(await env.DB.prepare("SELECT 1 x FROM z_players WHERE tg=?").bind(user.id).first())) return fail("profile_required", 403);
+  if (m.status !== "open" || now() >= m.lock_at) return fail("round_locked", 403);
+  const oneOf = (v, set) => (v == null ? null : set.includes(v) ? v : false);
+  let wdl = oneOf(b.wdl, ["1", "X", "2"]), btts = oneOf(b.btts, ["y", "n"]), cor = oneOf(b.cor, ["o", "u"]), car = oneOf(b.car, ["o", "u"]), dc = oneOf(b.dc, ["1X", "12", "X2"]);
+  if ([wdl, btts, cor, car, dc].includes(false)) return fail("bad_pick");
+  let exh = null, exa = null;
+  if (b.ex) {
+    if (m.tier !== "vip") return fail("vip_only", 403);
+    exh = Number(b.ex.h); exa = Number(b.ex.a);
+    if (!Number.isInteger(exh) || !Number.isInteger(exa) || exh < 0 || exa < 0 || exh > 9 || exa > 9) return fail("bad_pick");
+    wdl = btts = cor = car = dc = null; // exact score locks the other options for this match only
+  }
+  if ((cor || car) && m.tier === "free") return fail("pro_only", 403);
+  if (dc && m.tier !== "vip") return fail("vip_only", 403);
+  const boost = b.boost ? 1 : 0;
+  if (boost && m.tier === "free") return fail("pro_only", 403);
+  if (!(wdl || btts || cor || car || dc || exh != null)) return fail("empty_pick");
+  if (boost) {
+    const used = await env.DB.prepare("SELECT 1 x FROM z_picks WHERE tg=? AND round_id=? AND boost=1").bind(user.id, m.round_id).first();
+    if (used) return fail("boost_used", 409);
+  }
+  try {
+    await env.DB.prepare("INSERT INTO z_picks (tg,match_id,round_id,wdl,btts,cor,car,dc,ex_h,ex_a,boost,saved_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+      .bind(user.id, m.id, m.round_id, wdl, btts, cor, car, dc, exh, exa, boost, now()).run();
+  } catch (e) {
+    if (String(e).includes("UNIQUE") || String(e).includes("PRIMARY")) return fail("already_saved", 409);
+    throw e;
+  }
+  return json({ ok: true });
 }
-.box{
-  width:90%;
-  max-width:500px;
-  padding:35px;
-  text-align:center;
-  border:1px solid #1264ff;
-  border-radius:24px;
-  background:#081120;
-  box-shadow:0 0 40px rgba(0,100,255,.25);
+
+async function saveTotal(env, user, b) {
+  const r = await env.DB.prepare("SELECT * FROM z_rounds WHERE id=?").bind(Number(b.round_id)).first();
+  if (!r) return fail("round_not_found", 404);
+  const acc = await access(env, user.id);
+  if (!canPlay(acc, r.tier)) return fail("subscription_required", 403);
+  if (!(await env.DB.prepare("SELECT 1 x FROM z_players WHERE tg=?").bind(user.id).first())) return fail("profile_required", 403);
+  const g = Number(b.guess);
+  if (!Number.isInteger(g) || g < 0 || g > 99) return fail("bad_pick");
+  if (r.status !== "open" || now() >= r.lock_at) return fail("round_locked", 403);
+  try {
+    await env.DB.prepare("INSERT INTO z_totals (tg,round_id,guess,saved_at) VALUES (?,?,?,?)").bind(user.id, r.id, g, now()).run();
+  } catch (e) {
+    if (String(e).includes("UNIQUE") || String(e).includes("PRIMARY")) return fail("already_saved", 409);
+    throw e;
+  }
+  return json({ ok: true });
 }
-.logo{
-  font-size:60px;
-  font-weight:900;
-  color:#1680ff;
+
+async function ranking(env, user, tier, roundId) {
+  if (!TIERS.includes(tier)) return fail("bad_tier");
+  const r = roundId
+    ? await env.DB.prepare("SELECT * FROM z_rounds WHERE id=? AND tier=?").bind(roundId, tier).first()
+    : await env.DB.prepare("SELECT * FROM z_rounds WHERE tier=? ORDER BY id DESC LIMIT 1").bind(tier).first();
+  if (!r) return json({ ok: true, round_id: null, rows: [] });
+  const q = await env.DB.prepare(
+    `SELECT p.tg, p.name, p.emblem, p.frame,
+       COALESCE((SELECT SUM(points) FROM z_picks WHERE tg=p.tg AND round_id=?1),0) + COALESCE((SELECT points FROM z_totals WHERE tg=p.tg AND round_id=?1),0) AS pts
+     FROM z_players p
+     WHERE p.tg IN (SELECT tg FROM z_picks WHERE round_id=?1 UNION SELECT tg FROM z_totals WHERE round_id=?1)
+     ORDER BY pts DESC, p.name LIMIT 100`
+  ).bind(r.id).all();
+  const rows = (q.results || []).map((x, i) => ({ rank: i + 1, name: x.name, emblem: x.emblem, frame: x.frame, points: x.pts, me: x.tg === user.id }));
+  return json({ ok: true, round_id: r.id, status: r.status, rows });
 }
-h1{
-  margin:10px 0;
+
+// ---------- admin ----------
+async function adminRound(env, b) {
+  if (!TIERS.includes(b.tier) || !Array.isArray(b.matches) || !b.matches.length || !b.lock_at) return fail("bad_round");
+  const rr = await env.DB.prepare("INSERT INTO z_rounds (tier,title,lock_at) VALUES (?,?,?)").bind(b.tier, String(b.title || "جولة"), Number(b.lock_at)).run();
+  const id = rr.meta.last_row_id;
+  const rnd = (a) => a.sort(() => Math.random() - 0.5); // matches are shown in random order
+  const stmts = rnd([...b.matches]).map((m) => {
+    // optional team strengths (0-100) fix the VIP odds at creation time
+    const d = (Number(m.str_home ?? 80) - Number(m.str_away ?? 80)) + 3;
+    const ph0 = 1 / (1 + Math.pow(10, -d / 12)), pd = Math.max(0.18, 0.3 - 0.012 * Math.abs(d)), r = 1 - pd;
+    return env.DB.prepare("INSERT INTO z_matches (round_id,home,away,kickoff,cor_line,car_line,ph,pd,pa) VALUES (?,?,?,?,?,?,?,?,?)")
+      .bind(id, m.home, m.away, Number(m.kickoff), m.cor_line ?? 9.5, m.car_line ?? 4.5, r * ph0, pd, r * (1 - ph0));
+  });
+  await env.DB.batch(stmts);
+  return json({ ok: true, round_id: id });
 }
-p{
-  color:#aebbd0;
+
+async function adminSettle(env, b) {
+  const r = await env.DB.prepare("SELECT * FROM z_rounds WHERE id=?").bind(Number(b.round_id)).first();
+  if (!r) return fail("round_not_found", 404);
+  for (const x of b.results || []) {
+    await env.DB.prepare("UPDATE z_matches SET hg=?,ag=?,corners=?,cards=? WHERE id=? AND round_id=?")
+      .bind(x.hg, x.ag, x.corners ?? null, x.cards ?? null, x.match_id, r.id).run();
+  }
+  const ms = (await env.DB.prepare("SELECT * FROM z_matches WHERE round_id=?").bind(r.id).all()).results || [];
+  if (ms.some((m) => m.hg == null)) return fail("results_incomplete");
+  const byId = Object.fromEntries(ms.map((m) => [m.id, m]));
+  const picks = (await env.DB.prepare("SELECT * FROM z_picks WHERE round_id=?").bind(r.id).all()).results || [];
+  const ups = picks.map((p) => env.DB.prepare("UPDATE z_picks SET points=? WHERE tg=? AND match_id=?").bind(scorePick(r.tier, byId[p.match_id], p), p.tg, p.match_id));
+  // total goals: nearest guess wins 3/2/1 depending on distance (0/1/2); ties share the same points
+  const total = ms.reduce((s, m) => s + m.hg + m.ag, 0);
+  const tots = (await env.DB.prepare("SELECT * FROM z_totals WHERE round_id=?").bind(r.id).all()).results || [];
+  const best = tots.length ? Math.min(...tots.map((t) => Math.abs(t.guess - total))) : 99;
+  for (const t of tots) {
+    const d = Math.abs(t.guess - total);
+    ups.push(env.DB.prepare("UPDATE z_totals SET points=? WHERE tg=? AND round_id=?").bind(d === best && best <= 2 ? TOTAL_POINTS[best] : 0, t.tg, r.id));
+  }
+  ups.push(env.DB.prepare("UPDATE z_rounds SET status='settled', total_goals=? WHERE id=?").bind(total, r.id));
+  if (ups.length) await env.DB.batch(ups);
+  // frames for the weekly top 3 of this round
+  const top = (await ranking(env, { id: "" }, r.tier, r.id).then((x) => x.json())).rows.slice(0, 3);
+  const names = ["gold", "silver", "bronze"];
+  for (let i = 0; i < top.length; i++) {
+    if (top[i].points <= 0) continue;
+    const p = await env.DB.prepare("SELECT tg FROM z_players WHERE name=?").bind(top[i].name).first();
+    if (p) await env.DB.prepare("INSERT OR IGNORE INTO z_awards (tg,frame,round_id) VALUES (?,?,?)").bind(p.tg, names[i], r.id).run();
+  }
+  return json({ ok: true, total_goals: total, scored: picks.length });
 }
-.ok{
-  display:inline-block;
-  margin-top:20px;
-  padding:10px 18px;
-  border-radius:30px;
-  background:#073c22;
-  color:#36e98a;
+
+async function adminGrant(env, b) {
+  if (!["pro", "vip"].includes(b.tier) || !b.tg) return fail("bad_grant");
+  const ends = now() + Math.max(1, Number(b.days || 30)) * 86400;
+  await env.DB.prepare("INSERT INTO z_subs (tg,tier,ends_at) VALUES (?,?,?) ON CONFLICT(tg,tier) DO UPDATE SET ends_at=excluded.ends_at").bind(String(b.tg), b.tier, ends).run();
+  return json({ ok: true, ends_at: ends });
 }
-</style>
-</head>
-<body>
-<div class="box">
-  <div class="logo">Z</div>
-  <h1>ZINGO PRO</h1>
-  <p>نظام المسابقات السحابي</p>
-  <div class="ok">🟢 النظام السحابي متصل</div>
-</div>
-</body>
-</html>
-        `, {
-          headers: {
-            "Content-Type": "text/html; charset=utf-8"
-          }
-        });
+
+// ---------- router ----------
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
+    if (url.pathname === "/api/health") return json({ ok: true, auth: Boolean(env.TELEGRAM_BOT_TOKEN) });
+    try {
+      await ensureSchema(env);
+      const user = await authUser(request, env);
+      if (!user) return fail("unauthorized", 401);
+      const post = request.method === "POST";
+      const body = post ? await request.json().catch(() => ({})) : {};
+      const q = url.searchParams;
+      switch (url.pathname) {
+        case "/api/me": return me(env, user);
+        case "/api/profile": return post ? saveProfile(env, user, body) : fail("method", 405);
+        case "/api/round": return getRound(env, user, q.get("tier") || "free", Number(q.get("id")) || 0);
+        case "/api/predict": return post ? predict(env, user, body) : fail("method", 405);
+        case "/api/total": return post ? saveTotal(env, user, body) : fail("method", 405);
+        case "/api/ranking": return ranking(env, user, q.get("tier") || "free", Number(q.get("id")) || 0);
       }
-
-      return json({
-        ok: true,
-        service: "ZINGO PRO",
-        status: "online",
-      });
-
-    } catch (error) {
-      console.error(error);
-
-      return json(
-        {
-          ok: false,
-          error: error?.message || "Server error",
-        },
-        500
-      );
+      if (url.pathname.startsWith("/api/admin/")) {
+        if (!adminIds(env).has(user.id)) return fail("forbidden", 403);
+        if (!post) return fail("method", 405);
+        if (url.pathname === "/api/admin/round") return adminRound(env, body);
+        if (url.pathname === "/api/admin/settle") return adminSettle(env, body);
+        if (url.pathname === "/api/admin/grant") return adminGrant(env, body);
+      }
+      return fail("not_found", 404);
+    } catch (e) {
+      console.error("api error", e);
+      return fail("server_error", 500);
     }
   },
 };
