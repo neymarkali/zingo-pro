@@ -396,7 +396,11 @@ async function adminDeleteRound(env, b) {
 async function fd(env, path) {
   if (!env.FOOTBALL_DATA_TOKEN) return { error: "no_football_token" };
   const r = await fetch("https://api.football-data.org/v4" + path, { headers: { "X-Auth-Token": env.FOOTBALL_DATA_TOKEN } });
-  if (!r.ok) return { error: "football_api_" + r.status };
+  if (!r.ok) {
+    let detail = "";
+    try { const j = await r.json(); detail = String(j.message || j.error || "").slice(0, 200); } catch { /* no body */ }
+    return { error: "football_api_" + r.status, detail };
+  }
   return { data: await r.json() };
 }
 const teamName = (t) => (t && (t.shortName || t.name)) || "?";
@@ -405,7 +409,7 @@ async function adminFixtures(env, q) {
   const from = String(q.get("from") || ""), to = String(q.get("to") || "");
   if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) return fail("bad_dates");
   const r = await fd(env, `/matches?dateFrom=${from}&dateTo=${to}&competitions=${comps}`);
-  if (r.error) return fail(r.error, 502);
+  if (r.error) return json({ ok: false, error: r.error, detail: r.detail }, 502);
   const list = (r.data.matches || [])
     .filter((m) => m.status === "SCHEDULED" || m.status === "TIMED")
     .map((m) => ({ ext_id: m.id, home: teamName(m.homeTeam), away: teamName(m.awayTeam), kickoff: Math.floor(Date.parse(m.utcDate) / 1000), comp: m.competition && m.competition.code }));
@@ -415,7 +419,7 @@ async function adminFetchResults(env, q) {
   const rows = (await env.DB.prepare("SELECT id,ext_id FROM z_matches WHERE round_id=? AND ext_id IS NOT NULL").bind(Number(q.get("round_id"))).all()).results || [];
   if (!rows.length) return json({ ok: true, results: [] });
   const r = await fd(env, `/matches?ids=${rows.map((x) => x.ext_id).join(",")}`);
-  if (r.error) return fail(r.error, 502);
+  if (r.error) return json({ ok: false, error: r.error, detail: r.detail }, 502);
   const byExt = Object.fromEntries((r.data.matches || []).map((m) => [m.id, m]));
   const results = rows.map((x) => {
     const m = byExt[x.ext_id], ft = m && m.score && m.score.fullTime;

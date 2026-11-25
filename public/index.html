@@ -545,7 +545,7 @@ async function adminEvent(a,b){
   else if(a==='adcomp'){AD.fx.comps[d.v]=AD.fx.comps[d.v]?0:1}
   else if(a==='adfx'){const c=Object.keys(AD.fx.comps).filter(k=>AD.fx.comps[k]).join(',');if(!c)return toast('اختر دوري واحد على الأقل');
     const r=await API.call(`/api/admin/fixtures?comps=${c}&from=${AD.fx.from}&to=${AD.fx.to}`);
-    if(!r.ok){AD.fx.note=r.error==='no_football_token'?'أضف السر FOOTBALL_DATA_TOKEN بـCloudflare أولاً':'تعذّر الجلب: '+(r.error||'');AD.fx.list=[]}
+    if(!r.ok){AD.fx.note=r.error==='no_football_token'?'أضف السر FOOTBALL_DATA_TOKEN بـCloudflare أولاً':'تعذّر الجلب: '+(r.error||'')+(r.detail?' - '+r.detail:'');AD.fx.list=[]}
     else{AD.fx.list=r.matches;AD.fx.sel={};AD.fx.note=r.matches.length?'اختر المباريات اللي بدك ياها':'ما في مباريات بهالفترة (المدى الأقصى 10 أيام)'}}
   else if(a==='adfxsel'){AD.fx.sel[d.v]=!AD.fx.sel[d.v]}
   else if(a==='adfxadd'){const ch=AD.fx.list.filter(m=>AD.fx.sel[m.ext_id]);if(!ch.length)return toast('اختر مباراة أولاً');
