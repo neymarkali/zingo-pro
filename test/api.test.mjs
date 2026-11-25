@@ -108,23 +108,32 @@ assert.equal((await call("/api/admin/round/delete", { body: { round_id: rd.round
 const empty = await call("/api/admin/round", { body: { tier: "free", title: "x", lock_at: lock, matches: ms } });
 assert.equal((await call("/api/admin/round/delete", { body: { round_id: empty.round_id } })).ok, true);
 
-// football-data.org (stubbed)
+// API-Football (stubbed)
 globalThis.fetch = async (u, o) => {
-  assert.ok(String(u).startsWith("https://api.football-data.org/v4/matches"));
-  assert.equal(o.headers["X-Auth-Token"], "FD");
-  if (String(u).includes("ids=")) return new Response(JSON.stringify({ matches: [{ id: 501, status: "FINISHED", score: { fullTime: { home: 3, away: 1 } } }, { id: 502, status: "TIMED", score: { fullTime: { home: null, away: null } } }] }));
-  return new Response(JSON.stringify({ matches: [
-    { id: 501, status: "TIMED", utcDate: "2026-11-29T20:00:00Z", homeTeam: { shortName: "Barcelona" }, awayTeam: { name: "Real Madrid CF" }, competition: { code: "PD" } },
-    { id: 9, status: "FINISHED", utcDate: "2026-11-22T20:00:00Z", homeTeam: { shortName: "A" }, awayTeam: { shortName: "B" }, competition: { code: "PD" } }] }));
+  u = String(u);
+  assert.ok(u.startsWith("https://v3.football.api-sports.io/fixtures"));
+  assert.equal(o.headers["x-apisports-key"], "KEY");
+  const fx = (id, st, h, a, date, g) => ({ fixture: { id, status: { short: st }, date }, teams: { home: { name: h }, away: { name: a } }, goals: { home: g[0], away: g[1] } });
+  if (u.includes("ids=")) return new Response(JSON.stringify({ errors: [], response: [fx(501, "FT", "B", "R", "2026-11-29T20:00:00+00:00", [3, 1]), fx(502, "NS", "X", "Y", "2026-11-29T20:00:00+00:00", [null, null])] }));
+  if (env.APIF_FAIL) return new Response(JSON.stringify({ errors: { plan: "Free plans do not have access to this season, try from 2022 to 2024." }, response: [] }));
+  if (u.includes("league=140")) return new Response(JSON.stringify({ errors: [], response: [fx(501, u.includes("round=") ? "FT" : "NS", "Barcelona", "Real Madrid", "2026-11-29T20:00:00+00:00", [3, 1]), fx(9, "FT", "A", "B", "2026-11-22T20:00:00+00:00", [1, 0])] }));
+  return new Response(JSON.stringify({ errors: [], response: [] }));
 };
 assert.equal((await call("/api/admin/fixtures?from=2026-11-29&to=2026-12-03")).error, "no_football_token");
-env.FOOTBALL_DATA_TOKEN = "FD";
+env.FOOTBALL_DATA_TOKEN = "KEY";
 assert.equal((await call("/api/admin/fixtures?from=bad&to=x")).error, "bad_dates");
 const fx = await call("/api/admin/fixtures?from=2026-11-29&to=2026-12-03");
-assert.deepEqual(fx.matches.map((m) => [m.ext_id, m.home, m.away]), [[501, "Barcelona", "Real Madrid CF"]], "only upcoming matches, names mapped");
-const er = await call("/api/admin/round", { body: { tier: "free", title: "auto", lock_at: lock, matches: [{ home: "Barcelona", away: "Real Madrid CF", kickoff: lock, ext_id: 501 }, { home: "X", away: "Y", kickoff: lock, ext_id: 502 }] } });
+assert.deepEqual(fx.matches.map((m) => [m.ext_id, m.home, m.away, m.comp]), [[501, "Barcelona", "Real Madrid", "PD"]], "only upcoming (NS) matches");
+const rp = await call("/api/admin/fixtures?mode=replay&season=2024&round=10");
+assert.equal(rp.matches.length, 2, "replay mode keeps finished matches");
+assert.equal((await call("/api/admin/fixtures?mode=replay&season=2024&round=0")).error, "bad_round");
+env.APIF_FAIL = true;
+const bad = await call("/api/admin/fixtures?from=2026-11-29&to=2026-12-03");
+assert.equal(bad.error, "football_api_error"); assert.match(bad.detail, /Free plans/);
+delete env.APIF_FAIL;
+const er = await call("/api/admin/round", { body: { tier: "free", title: "auto", lock_at: lock, matches: [{ home: "Barcelona", away: "Real Madrid", kickoff: lock, ext_id: 501 }, { home: "X", away: "Y", kickoff: lock, ext_id: 502 }] } });
 const fr = await call("/api/admin/results?round_id=" + er.round_id);
-assert.deepEqual(fr.results.map((x) => `${x.hg},${x.ag}`).sort(), ["3,1", "null,null"], "finished match gets score, pending stays empty (order is random)");
+assert.deepEqual(fr.results.map((x) => `${x.hg},${x.ag}`).sort(), ["3,1", "null,null"], "finished match gets score, pending stays empty");
 assert.equal((await call("/api/admin/fixtures?from=2026-11-29&to=2026-12-03", { user: "2" })).s, 403);
 
 // not found / assets

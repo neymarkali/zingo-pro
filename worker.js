@@ -392,39 +392,61 @@ async function adminDeleteRound(env, b) {
   return json({ ok: true });
 }
 
-// ---------- football-data.org (fixtures and final scores) ----------
-async function fd(env, path) {
-  if (!env.FOOTBALL_DATA_TOKEN) return { error: "no_football_token" };
-  const r = await fetch("https://api.football-data.org/v4" + path, { headers: { "X-Auth-Token": env.FOOTBALL_DATA_TOKEN } });
-  if (!r.ok) {
-    let detail = "";
-    try { const j = await r.json(); detail = String(j.message || j.error || "").slice(0, 200); } catch { /* no body */ }
-    return { error: "football_api_" + r.status, detail };
-  }
-  return { data: await r.json() };
+// ---------- API-Football v3 (fixtures and final scores) ----------
+// Key: APIF_KEY, or FOOTBALL_DATA_TOKEN (kept for the existing secret name).
+const LEAGUES = { PL: 39, PD: 140, SA: 135 };
+const FINISHED = new Set(["FT", "AET", "PEN"]);
+async function apif(env, path) {
+  const key = env.APIF_KEY || env.FOOTBALL_DATA_TOKEN;
+  if (!key) return { error: "no_football_token" };
+  const r = await fetch("https://v3.football.api-sports.io" + path, { headers: { "x-apisports-key": key } });
+  if (!r.ok) return { error: "football_api_" + r.status };
+  const j = await r.json().catch(() => null);
+  if (!j) return { error: "football_api_bad_json" };
+  const errs = j.errors && (Array.isArray(j.errors) ? j.errors : Object.values(j.errors));
+  if (errs && errs.length) return { error: "football_api_error", detail: String(errs[0]).slice(0, 200) };
+  return { data: j };
 }
-const teamName = (t) => (t && (t.shortName || t.name)) || "?";
+const seasonOf = (d) => (d.getUTCMonth() >= 6 ? d.getUTCFullYear() : d.getUTCFullYear() - 1);
 async function adminFixtures(env, q) {
-  const comps = String(q.get("comps") || "PL,PD,SA").replace(/[^A-Z0-9,]/g, "");
-  const from = String(q.get("from") || ""), to = String(q.get("to") || "");
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) return fail("bad_dates");
-  const r = await fd(env, `/matches?dateFrom=${from}&dateTo=${to}&competitions=${comps}`);
-  if (r.error) return json({ ok: false, error: r.error, detail: r.detail }, 502);
-  const list = (r.data.matches || [])
-    .filter((m) => m.status === "SCHEDULED" || m.status === "TIMED")
-    .map((m) => ({ ext_id: m.id, home: teamName(m.homeTeam), away: teamName(m.awayTeam), kickoff: Math.floor(Date.parse(m.utcDate) / 1000), comp: m.competition && m.competition.code }));
-  return json({ ok: true, matches: list });
+  const comps = String(q.get("comps") || "PL,PD,SA").split(",").filter((c) => LEAGUES[c]);
+  if (!comps.length) return fail("bad_comps");
+  const replay = q.get("mode") === "replay";
+  const out = [];
+  for (const c of comps) {
+    let path;
+    if (replay) {
+      const season = Number(q.get("season")), round = Number(q.get("round"));
+      if (!(season >= 2000 && season <= 2100) || !(round >= 1 && round <= 60)) return fail("bad_round");
+      path = `/fixtures?league=${LEAGUES[c]}&season=${season}&round=${encodeURIComponent("Regular Season - " + round)}`;
+    } else {
+      const from = String(q.get("from") || ""), to = String(q.get("to") || "");
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) return fail("bad_dates");
+      path = `/fixtures?league=${LEAGUES[c]}&season=${seasonOf(new Date(from))}&from=${from}&to=${to}`;
+    }
+    const r = await apif(env, path);
+    if (r.error) return json({ ok: false, error: r.error, detail: r.detail }, 502);
+    for (const m of r.data.response || []) {
+      const st = m.fixture.status && m.fixture.status.short;
+      if (!replay && st !== "NS" && st !== "TBD") continue;
+      out.push({ ext_id: m.fixture.id, home: m.teams.home.name, away: m.teams.away.name, kickoff: Math.floor(Date.parse(m.fixture.date) / 1000), comp: c });
+    }
+  }
+  return json({ ok: true, matches: out });
 }
 async function adminFetchResults(env, q) {
-  const rows = (await env.DB.prepare("SELECT id,ext_id FROM z_matches WHERE round_id=? AND ext_id IS NOT NULL").bind(Number(q.get("round_id"))).all()).results || [];
+  const rows = (await env.DB.prepare("SELECT id,ext_id FROM z_matches WHERE round_id=? AND ext_id IS NOT NULL ORDER BY id").bind(Number(q.get("round_id"))).all()).results || [];
   if (!rows.length) return json({ ok: true, results: [] });
-  const r = await fd(env, `/matches?ids=${rows.map((x) => x.ext_id).join(",")}`);
-  if (r.error) return json({ ok: false, error: r.error, detail: r.detail }, 502);
-  const byExt = Object.fromEntries((r.data.matches || []).map((m) => [m.id, m]));
+  const byExt = {};
+  for (let i = 0; i < rows.length; i += 20) {
+    const r = await apif(env, `/fixtures?ids=${rows.slice(i, i + 20).map((x) => x.ext_id).join("-")}`);
+    if (r.error) return json({ ok: false, error: r.error, detail: r.detail }, 502);
+    for (const m of r.data.response || []) byExt[m.fixture.id] = m;
+  }
   const results = rows.map((x) => {
-    const m = byExt[x.ext_id], ft = m && m.score && m.score.fullTime;
-    const done = m && m.status === "FINISHED" && ft && ft.home != null && ft.away != null;
-    return { match_id: x.id, status: m ? m.status : "UNKNOWN", hg: done ? ft.home : null, ag: done ? ft.away : null };
+    const m = byExt[x.ext_id], st = m && m.fixture.status && m.fixture.status.short;
+    const done = m && FINISHED.has(st) && m.goals.home != null && m.goals.away != null;
+    return { match_id: x.id, status: st || "UNKNOWN", hg: done ? m.goals.home : null, ag: done ? m.goals.away : null };
   });
   return json({ ok: true, results });
 }
@@ -437,7 +459,7 @@ export default {
     if (url.pathname === "/api/health") {
       // bot ids (digits before ":") are public; they let you compare with the bot you open the app from
       const ids = botTokens(env).map((t) => t.split(":")[0]);
-      return json({ ok: true, auth: ids.length > 0, football: Boolean(env.FOOTBALL_DATA_TOKEN), bot_ids: ids });
+      return json({ ok: true, auth: ids.length > 0, football: Boolean(env.APIF_KEY || env.FOOTBALL_DATA_TOKEN), bot_ids: ids });
     }
     try {
       await ensureSchema(env);
