@@ -426,7 +426,7 @@ export default {
     if (url.pathname === "/api/health") {
       const tok = String(env.TELEGRAM_BOT_TOKEN || "");
       // bot id (digits before ":") is public; it lets you compare with the bot you open the app from
-      return json({ ok: true, auth: Boolean(tok), bot_id: tok.split(":")[0] || null, token_shape_ok: /^\d{6,12}:[\w-]{30,}$/.test(tok) });
+      return json({ ok: true, auth: Boolean(tok), football: Boolean(env.FOOTBALL_DATA_TOKEN), bot_id: tok.split(":")[0] || null, token_shape_ok: /^\d{6,12}:[\w-]{30,}$/.test(tok) });
     }
     try {
       await ensureSchema(env);
