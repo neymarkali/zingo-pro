@@ -67,6 +67,8 @@ function safeEqual(a, b) {
   for (let i = 0; i < a.length; i++) d |= a.charCodeAt(i) ^ b.charCodeAt(i);
   return d === 0;
 }
+// Bot tokens accepted for initData: the new bot (TELEGRAM_BOT_TOKEN_NEW) and the existing one (TELEGRAM_BOT_TOKEN).
+const botTokens = (env) => [env.TELEGRAM_BOT_TOKEN_NEW, env.TELEGRAM_BOT_TOKEN].filter(Boolean).map(String);
 async function authUser(request, env) {
   if (env.DEV_AUTH === "1") {
     const dev = request.headers.get("X-Dev-User");
@@ -74,14 +76,19 @@ async function authUser(request, env) {
   }
   const initData = request.headers.get("X-Telegram-Init-Data") || "";
   if (!initData) return { reason: "no_init_data" };
-  if (!env.TELEGRAM_BOT_TOKEN) return { reason: "no_token" };
+  const tokens = botTokens(env);
+  if (!tokens.length) return { reason: "no_token" };
   const params = new URLSearchParams(initData);
   const received = params.get("hash");
   if (!received) return { reason: "no_hash" };
   params.delete("hash");
   const check = [...params.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([k, v]) => `${k}=${v}`).join("\n");
-  const secret = await hmac(new TextEncoder().encode("WebAppData"), env.TELEGRAM_BOT_TOKEN);
-  if (!safeEqual(hex(await hmac(secret, check)), received.toLowerCase())) return { reason: "bad_signature" };
+  let ok = false;
+  for (const tok of tokens) {
+    const secret = await hmac(new TextEncoder().encode("WebAppData"), tok);
+    if (safeEqual(hex(await hmac(secret, check)), received.toLowerCase())) { ok = true; break; }
+  }
+  if (!ok) return { reason: "bad_signature" };
   const age = now() - Number(params.get("auth_date") || 0);
   if (!(age >= -60 && age <= 86400)) return { reason: "expired" };
   try {
@@ -424,9 +431,9 @@ export default {
     const url = new URL(request.url);
     if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
     if (url.pathname === "/api/health") {
-      const tok = String(env.TELEGRAM_BOT_TOKEN || "");
-      // bot id (digits before ":") is public; it lets you compare with the bot you open the app from
-      return json({ ok: true, auth: Boolean(tok), football: Boolean(env.FOOTBALL_DATA_TOKEN), bot_id: tok.split(":")[0] || null, token_shape_ok: /^\d{6,12}:[\w-]{30,}$/.test(tok) });
+      // bot ids (digits before ":") are public; they let you compare with the bot you open the app from
+      const ids = botTokens(env).map((t) => t.split(":")[0]);
+      return json({ ok: true, auth: ids.length > 0, football: Boolean(env.FOOTBALL_DATA_TOKEN), bot_ids: ids });
     }
     try {
       await ensureSchema(env);

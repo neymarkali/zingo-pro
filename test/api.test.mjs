@@ -30,6 +30,10 @@ const mk = (id, tok = env.TELEGRAM_BOT_TOKEN) => {
   return p.toString();
 };
 assert.equal((await call("/api/me", { init: mk(7) })).s, 200, "valid initData");
+env.TELEGRAM_BOT_TOKEN_NEW = "555:NEWBOT";
+assert.equal((await call("/api/me", { init: mk(7, "555:NEWBOT") })).s, 200, "second (new) bot accepted");
+assert.equal((await call("/api/me", { init: mk(7) })).s, 200, "old bot still accepted");
+delete env.TELEGRAM_BOT_TOKEN_NEW;
 assert.equal((await call("/api/me", { init: mk(7, "9:OTHER") })).reason, "bad_signature", "bad signature");
 assert.equal((await call("/api/me", { init: "garbage" })).s, 401);
 env.DEV_AUTH = "0"; assert.equal((await call("/api/me")).s, 401, "dev header ignored when off"); env.DEV_AUTH = "1";
