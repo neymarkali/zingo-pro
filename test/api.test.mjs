@@ -124,7 +124,7 @@ const fx = await call("/api/admin/fixtures?from=2026-11-29&to=2026-12-03");
 assert.deepEqual(fx.matches.map((m) => [m.ext_id, m.home, m.away]), [[501, "Barcelona", "Real Madrid CF"]], "only upcoming matches, names mapped");
 const er = await call("/api/admin/round", { body: { tier: "free", title: "auto", lock_at: lock, matches: [{ home: "Barcelona", away: "Real Madrid CF", kickoff: lock, ext_id: 501 }, { home: "X", away: "Y", kickoff: lock, ext_id: 502 }] } });
 const fr = await call("/api/admin/results?round_id=" + er.round_id);
-assert.deepEqual(fr.results.map((x) => [x.hg, x.ag]), [[3, 1], [null, null]], "finished match gets score, pending stays empty");
+assert.deepEqual(fr.results.map((x) => `${x.hg},${x.ag}`).sort(), ["3,1", "null,null"], "finished match gets score, pending stays empty (order is random)");
 assert.equal((await call("/api/admin/fixtures?from=2026-11-29&to=2026-12-03", { user: "2" })).s, 403);
 
 // not found / assets
