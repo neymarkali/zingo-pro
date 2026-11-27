@@ -127,7 +127,7 @@ async function authUser(request, env) {
 // ---------- names ----------
 function normName(v) {
   return String(v || "")
-    .normalize("NFKC").replace(/[-‍﻿]/g, "").toLowerCase().trim()
+    .normalize("NFKC").replace(/[​-‍﻿]/g, "").toLowerCase().trim()
     .replace(/[ً-ٰٟۖ-ۭ]/g, "")
     .replace(/[إأآٱ]/g, "ا").replace(/ى/g, "ي").replace(/ؤ/g, "و").replace(/ئ/g, "ي").replace(/ة/g, "ه")
     .replace(/[\s_\-.'`~!@#$%^&*()+={}[\]|\\:;"<>?,/،؛؟]+/g, "");
@@ -368,4 +368,257 @@ async function predict(env, user, b) {
   const oneOf = (v, set) => (v == null ? null : set.includes(v) ? v : false);
   let wdl = oneOf(b.wdl, ["1", "X", "2"]), btts = oneOf(b.btts, ["y", "n"]), cor = oneOf(b.cor, ["o", "u"]), car = oneOf(b.car, ["o", "u"]), dc = oneOf(b.dc, ["1X", "12", "X2"]);
   if ([wdl, btts, cor, car, dc].includes(false)) return fail("bad_pick");
-  
+  let exh = null, exa = null;
+  if (b.ex) {
+    if (m.tier !== "vip") return fail("vip_only", 403);
+    exh = Number(b.ex.h); exa = Number(b.ex.a);
+    if (!Number.isInteger(exh) || !Number.isInteger(exa) || exh < 0 || exa < 0 || exh > 9 || exa > 9) return fail("bad_pick");
+    wdl = btts = cor = car = dc = null; // exact score locks the other options for this match only
+  }
+  if ((cor || car) && m.tier === "free") return fail("pro_only", 403);
+  if (dc && m.tier !== "vip") return fail("vip_only", 403);
+  const boost = b.boost ? 1 : 0;
+  if (boost && m.tier === "free") return fail("pro_only", 403);
+  if (!(wdl || btts || cor || car || dc || exh != null)) return fail("empty_pick");
+  if (boost) {
+    const used = await env.DB.prepare("SELECT 1 x FROM z_picks WHERE tg=? AND round_id=? AND boost=1").bind(user.id, m.round_id).first();
+    if (used) return fail("boost_used", 409);
+  }
+  try {
+    await env.DB.prepare("INSERT INTO z_picks (tg,match_id,round_id,wdl,btts,cor,car,dc,ex_h,ex_a,boost,saved_at) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)")
+      .bind(user.id, m.id, m.round_id, wdl, btts, cor, car, dc, exh, exa, boost, now()).run();
+  } catch (e) {
+    if (String(e).includes("UNIQUE") || String(e).includes("PRIMARY")) return fail("already_saved", 409);
+    throw e;
+  }
+  return json({ ok: true });
+}
+
+async function saveTotal(env, user, b) {
+  const r = await env.DB.prepare("SELECT * FROM z_rounds WHERE id=?").bind(Number(b.round_id)).first();
+  if (!r) return fail("round_not_found", 404);
+  const acc = await access(env, user.id);
+  if (!canPlay(acc, r.tier)) return fail("subscription_required", 403);
+  if (!(await env.DB.prepare("SELECT 1 x FROM z_players WHERE tg=?").bind(user.id).first())) return fail("profile_required", 403);
+  const g = Number(b.guess);
+  if (!Number.isInteger(g) || g < 0 || g > 99) return fail("bad_pick");
+  if (r.status !== "open" || now() >= r.lock_at) return fail("round_locked", 403);
+  try {
+    await env.DB.prepare("INSERT INTO z_totals (tg,round_id,guess,saved_at) VALUES (?,?,?,?)").bind(user.id, r.id, g, now()).run();
+  } catch (e) {
+    if (String(e).includes("UNIQUE") || String(e).includes("PRIMARY")) return fail("already_saved", 409);
+    throw e;
+  }
+  await addXp(env, user.id, XP.save);
+  return json({ ok: true });
+}
+
+async function ranking(env, user, tier, roundId) {
+  if (!TIERS.includes(tier)) return fail("bad_tier");
+  const r = roundId
+    ? await env.DB.prepare("SELECT * FROM z_rounds WHERE id=? AND tier=?").bind(roundId, tier).first()
+    : await env.DB.prepare("SELECT * FROM z_rounds WHERE tier=? ORDER BY id DESC LIMIT 1").bind(tier).first();
+  if (!r) return json({ ok: true, round_id: null, rows: [] });
+  const q = await env.DB.prepare(
+    `SELECT p.tg, p.name, p.emblem, p.frame,
+       COALESCE((SELECT SUM(points) FROM z_picks WHERE tg=p.tg AND round_id=?1),0) + COALESCE((SELECT points FROM z_totals WHERE tg=p.tg AND round_id=?1),0) AS pts
+     FROM z_players p
+     WHERE p.tg IN (SELECT tg FROM z_picks WHERE round_id=?1 UNION SELECT tg FROM z_totals WHERE round_id=?1)
+     ORDER BY pts DESC, p.name LIMIT 100`
+  ).bind(r.id).all();
+  const rows = (q.results || []).map((x, i) => ({ rank: i + 1, name: x.name, emblem: x.emblem, frame: x.frame, points: x.pts, me: x.tg === user.id }));
+  return json({ ok: true, round_id: r.id, status: r.status, rows });
+}
+
+// ---------- admin ----------
+async function adminRound(env, b) {
+  if (!TIERS.includes(b.tier) || !Array.isArray(b.matches) || !b.matches.length || !b.lock_at) return fail("bad_round");
+  const rr = await env.DB.prepare("INSERT INTO z_rounds (tier,title,lock_at) VALUES (?,?,?)").bind(b.tier, String(b.title || "جولة"), Number(b.lock_at)).run();
+  const id = rr.meta.last_row_id;
+  const rnd = (a) => a.sort(() => Math.random() - 0.5); // matches are shown in random order
+  const stmts = rnd([...b.matches]).map((m) => {
+    // optional team strengths (0-100) fix the VIP odds at creation time
+    const d = (Number(m.str_home ?? 80) - Number(m.str_away ?? 80)) + 3;
+    const ph0 = 1 / (1 + Math.pow(10, -d / 12)), pd = Math.max(0.18, 0.3 - 0.012 * Math.abs(d)), r = 1 - pd;
+    return env.DB.prepare("INSERT INTO z_matches (round_id,home,away,kickoff,cor_line,car_line,ph,pd,pa,ext_id) VALUES (?,?,?,?,?,?,?,?,?,?)")
+      .bind(id, m.home, m.away, Number(m.kickoff), m.cor_line ?? 9.5, m.car_line ?? 4.5, r * ph0, pd, r * (1 - ph0), m.ext_id ? Number(m.ext_id) : null);
+  });
+  await env.DB.batch(stmts);
+  return json({ ok: true, round_id: id });
+}
+
+async function adminSettle(env, b) {
+  const r = await env.DB.prepare("SELECT * FROM z_rounds WHERE id=?").bind(Number(b.round_id)).first();
+  if (!r) return fail("round_not_found", 404);
+  if (r.status === "settled") return fail("already_settled", 409);
+  for (const x of b.results || []) {
+    await env.DB.prepare("UPDATE z_matches SET hg=?,ag=?,corners=?,cards=? WHERE id=? AND round_id=?")
+      .bind(x.hg, x.ag, x.corners ?? null, x.cards ?? null, x.match_id, r.id).run();
+  }
+  const ms = (await env.DB.prepare("SELECT * FROM z_matches WHERE round_id=?").bind(r.id).all()).results || [];
+  if (ms.some((m) => m.hg == null)) return fail("results_incomplete");
+  const byId = Object.fromEntries(ms.map((m) => [m.id, m]));
+  const picks = (await env.DB.prepare("SELECT * FROM z_picks WHERE round_id=?").bind(r.id).all()).results || [];
+  const ups = picks.map((p) => env.DB.prepare("UPDATE z_picks SET points=? WHERE tg=? AND match_id=?").bind(scorePick(r.tier, byId[p.match_id], p), p.tg, p.match_id));
+  // total goals: nearest guess wins 3/2/1 depending on distance (0/1/2); ties share the same points
+  const total = ms.reduce((s, m) => s + m.hg + m.ag, 0);
+  const tots = (await env.DB.prepare("SELECT * FROM z_totals WHERE round_id=?").bind(r.id).all()).results || [];
+  const best = tots.length ? Math.min(...tots.map((t) => Math.abs(t.guess - total))) : 99;
+  for (const t of tots) {
+    const d = Math.abs(t.guess - total);
+    ups.push(env.DB.prepare("UPDATE z_totals SET points=? WHERE tg=? AND round_id=?").bind(d === best && best <= 2 ? TOTAL_POINTS[best] : 0, t.tg, r.id));
+  }
+  ups.push(env.DB.prepare("UPDATE z_rounds SET status='settled', total_goals=? WHERE id=?").bind(total, r.id));
+  if (ups.length) await env.DB.batch(ups);
+  // XP for everyone who took part, then achievements and frames
+  const tgs = [...new Set(picks.map((p) => p.tg))];
+  for (const tg of tgs) {
+    const mine = picks.filter((p) => p.tg === tg);
+    let gain = 0;
+    for (const p of mine) gain += xpForPick(r.tier, byId[p.match_id], p);
+    if (mine.length === ms.length && ms.length > 0) gain += XP.weekly;
+    await addXp(env, tg, gain);
+  }
+  for (const tg of tgs) await checkAchievements(env, tg);
+  return json({ ok: true, total_goals: total, scored: picks.length });
+}
+
+async function adminGrant(env, b) {
+  if (!["pro", "vip"].includes(b.tier) || !b.tg) return fail("bad_grant");
+  const ends = now() + Math.max(1, Number(b.days || 30)) * 86400;
+  await env.DB.prepare("INSERT INTO z_subs (tg,tier,ends_at) VALUES (?,?,?) ON CONFLICT(tg,tier) DO UPDATE SET ends_at=excluded.ends_at").bind(String(b.tg), b.tier, ends).run();
+  return json({ ok: true, ends_at: ends });
+}
+
+async function adminRounds(env) {
+  const rs = (await env.DB.prepare("SELECT * FROM z_rounds ORDER BY id DESC LIMIT 12").all()).results || [];
+  const out = [];
+  for (const r of rs) {
+    const ms = (await env.DB.prepare("SELECT id,home,away,kickoff,hg,ag,corners,cards FROM z_matches WHERE round_id=? ORDER BY kickoff,id").bind(r.id).all()).results || [];
+    const c = await env.DB.prepare("SELECT COUNT(DISTINCT tg) n FROM (SELECT tg FROM z_picks WHERE round_id=?1 UNION SELECT tg FROM z_totals WHERE round_id=?1)").bind(r.id).first();
+    out.push({ id: r.id, tier: r.tier, title: r.title, lock_at: r.lock_at, status: r.status, total_goals: r.total_goals, players: c ? c.n : 0, matches: ms });
+  }
+  return json({ ok: true, rounds: out });
+}
+async function adminPlayers(env, q) {
+  const like = "%" + String(q || "").replace(/[%_]/g, "") + "%";
+  const rows = (await env.DB.prepare("SELECT tg,name FROM z_players WHERE name LIKE ? OR tg LIKE ? ORDER BY created_at DESC LIMIT 20").bind(like, like).all()).results || [];
+  const now_ = now();
+  const out = [];
+  for (const p of rows) {
+    const subs = (await env.DB.prepare("SELECT tier,ends_at FROM z_subs WHERE tg=? AND ends_at>?").bind(p.tg, now_).all()).results || [];
+    out.push({ tg: p.tg, name: p.name, subs });
+  }
+  return json({ ok: true, players: out });
+}
+async function adminDeleteRound(env, b) {
+  const id = Number(b.round_id);
+  const used = await env.DB.prepare("SELECT 1 x FROM z_picks WHERE round_id=?1 UNION SELECT 1 FROM z_totals WHERE round_id=?1").bind(id).first();
+  if (used) return fail("has_picks", 409);
+  await env.DB.batch([env.DB.prepare("DELETE FROM z_matches WHERE round_id=?").bind(id), env.DB.prepare("DELETE FROM z_rounds WHERE id=?").bind(id)]);
+  return json({ ok: true });
+}
+
+// ---------- API-Football v3 (fixtures and final scores) ----------
+// Key: APIF_KEY, or FOOTBALL_DATA_TOKEN (kept for the existing secret name).
+const LEAGUES = { PL: 39, PD: 140, SA: 135 };
+const FINISHED = new Set(["FT", "AET", "PEN"]);
+async function apif(env, path) {
+  const key = env.APIF_KEY || env.FOOTBALL_DATA_TOKEN;
+  if (!key) return { error: "no_football_token" };
+  const r = await fetch("https://v3.football.api-sports.io" + path, { headers: { "x-apisports-key": key } });
+  if (!r.ok) return { error: "football_api_" + r.status };
+  const j = await r.json().catch(() => null);
+  if (!j) return { error: "football_api_bad_json" };
+  const errs = j.errors && (Array.isArray(j.errors) ? j.errors : Object.values(j.errors));
+  if (errs && errs.length) return { error: "football_api_error", detail: String(errs[0]).slice(0, 200) };
+  return { data: j };
+}
+const seasonOf = (d) => (d.getUTCMonth() >= 6 ? d.getUTCFullYear() : d.getUTCFullYear() - 1);
+async function adminFixtures(env, q) {
+  const comps = String(q.get("comps") || "PL,PD,SA").split(",").filter((c) => LEAGUES[c]);
+  if (!comps.length) return fail("bad_comps");
+  const replay = q.get("mode") === "replay";
+  const out = [];
+  for (const c of comps) {
+    let path;
+    if (replay) {
+      const season = Number(q.get("season")), round = Number(q.get("round"));
+      if (!(season >= 2000 && season <= 2100) || !(round >= 1 && round <= 60)) return fail("bad_round");
+      path = `/fixtures?league=${LEAGUES[c]}&season=${season}&round=${encodeURIComponent("Regular Season - " + round)}`;
+    } else {
+      const from = String(q.get("from") || ""), to = String(q.get("to") || "");
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(from) || !/^\d{4}-\d{2}-\d{2}$/.test(to)) return fail("bad_dates");
+      path = `/fixtures?league=${LEAGUES[c]}&season=${seasonOf(new Date(from))}&from=${from}&to=${to}`;
+    }
+    const r = await apif(env, path);
+    if (r.error) return json({ ok: false, error: r.error, detail: r.detail }, 502);
+    for (const m of r.data.response || []) {
+      const st = m.fixture.status && m.fixture.status.short;
+      if (!replay && st !== "NS" && st !== "TBD") continue;
+      out.push({ ext_id: m.fixture.id, home: m.teams.home.name, away: m.teams.away.name, kickoff: Math.floor(Date.parse(m.fixture.date) / 1000), comp: c });
+    }
+  }
+  return json({ ok: true, matches: out });
+}
+async function adminFetchResults(env, q) {
+  const rows = (await env.DB.prepare("SELECT id,ext_id FROM z_matches WHERE round_id=? AND ext_id IS NOT NULL ORDER BY id").bind(Number(q.get("round_id"))).all()).results || [];
+  if (!rows.length) return json({ ok: true, results: [] });
+  const byExt = {};
+  for (let i = 0; i < rows.length; i += 20) {
+    const r = await apif(env, `/fixtures?ids=${rows.slice(i, i + 20).map((x) => x.ext_id).join("-")}`);
+    if (r.error) return json({ ok: false, error: r.error, detail: r.detail }, 502);
+    for (const m of r.data.response || []) byExt[m.fixture.id] = m;
+  }
+  const results = rows.map((x) => {
+    const m = byExt[x.ext_id], st = m && m.fixture.status && m.fixture.status.short;
+    const done = m && FINISHED.has(st) && m.goals.home != null && m.goals.away != null;
+    return { match_id: x.id, status: st || "UNKNOWN", hg: done ? m.goals.home : null, ag: done ? m.goals.away : null };
+  });
+  return json({ ok: true, results });
+}
+
+// ---------- router ----------
+export default {
+  async fetch(request, env) {
+    const url = new URL(request.url);
+    if (!url.pathname.startsWith("/api/")) return env.ASSETS.fetch(request);
+    if (url.pathname === "/api/health") {
+      // bot ids (digits before ":") are public; they let you compare with the bot you open the app from
+      const ids = botTokens(env).map((t) => t.split(":")[0]);
+      return json({ ok: true, auth: ids.length > 0, football: Boolean(env.APIF_KEY || env.FOOTBALL_DATA_TOKEN), bot_ids: ids });
+    }
+    try {
+      await ensureSchema(env);
+      const user = await authUser(request, env);
+      if (!user || user.reason) return json({ ok: false, error: "unauthorized", reason: user && user.reason }, 401);
+      const post = request.method === "POST";
+      const body = post ? await request.json().catch(() => ({})) : {};
+      const q = url.searchParams;
+      switch (url.pathname) {
+        case "/api/me": return me(env, user);
+        case "/api/profile": return post ? saveProfile(env, user, body) : fail("method", 405);
+        case "/api/round": return getRound(env, user, q.get("tier") || "free", Number(q.get("id")) || 0);
+        case "/api/predict": return post ? predict(env, user, body) : fail("method", 405);
+        case "/api/total": return post ? saveTotal(env, user, body) : fail("method", 405);
+        case "/api/ranking": return ranking(env, user, q.get("tier") || "free", Number(q.get("id")) || 0);
+      }
+      if (url.pathname.startsWith("/api/admin/")) {
+        if (!adminIds(env).has(user.id)) return fail("forbidden", 403);
+        if (url.pathname === "/api/admin/rounds") return adminRounds(env);
+        if (url.pathname === "/api/admin/fixtures") return adminFixtures(env, q);
+        if (url.pathname === "/api/admin/results") return adminFetchResults(env, q);
+        if (url.pathname === "/api/admin/players") return adminPlayers(env, q.get("q"));
+        if (!post) return fail("method", 405);
+        if (url.pathname === "/api/admin/round/delete") return adminDeleteRound(env, body);
+        if (url.pathname === "/api/admin/round") return adminRound(env, body);
+        if (url.pathname === "/api/admin/settle") return adminSettle(env, body);
+        if (url.pathname === "/api/admin/grant") return adminGrant(env, body);
+      }
+      return fail("not_found", 404);
+    } catch (e) {
+      console.error("api error", e);
+      return fail("server_error", 500);
+    }
+  },
+};
