@@ -6,7 +6,7 @@ const TOTAL_POINTS = [3, 2, 1]; // exact, off by 1, off by 2
 const NAME_COOLDOWN_DAYS = 30;
 const TIERS = ["free", "pro", "vip"];
 const EMBLEM_COUNT = 20;
-const FRAMES = ["bronze", "silver", "gold", "elite", "royal", "throne"];
+const FRAMES = ["free_blue", "free_dots", "free_green", "free_aurora", "bronze", "silver", "gold", "carbon", "ruby", "rope", "crystal", "crown", "star", "emerald", "halo", "kasi"];
 
 // ---------- rules (mirrors zingo-rules.mjs) ----------
 const XP = { save: 5, result1x2: 20, extraOption: 10, exact: 50, achievement: 100, weekly: 30 };
@@ -23,12 +23,25 @@ const ACHIEVEMENTS = {
 };
 // frame id -> tier needed to have ever subscribed, and the achievement that unlocks it
 const FRAME_RULES = {
-  bronze: { tier: "pro", achievement: "first" },
-  silver: { tier: "pro", achievement: "correct10" },
-  gold:   { tier: "pro", achievement: "rank1x2" },
-  elite:  { tier: "vip", achievement: "exact3" },
-  royal:  { tier: "vip", achievement: "streak7" },
-  throne: { tier: "vip", achievement: "legend" },
+  // FREE: unlocked by level only, open to everyone (no subscription needed)
+  free_blue:  { tier: "free", level: 2 },
+  free_dots:  { tier: "free", level: 4 },
+  free_green: { tier: "free", level: 6 },
+  free_aurora: { tier: "free", level: 29 },
+  // PRO: unlocked by an achievement, or by reaching a level. Needs a PRO subscription ever.
+  bronze:  { tier: "pro", achievement: "first" },
+  silver:  { tier: "pro", achievement: "correct10" },
+  gold:    { tier: "pro", achievement: "rank1x2" },
+  carbon:  { tier: "pro", level: 5 },
+  ruby:    { tier: "pro", level: 10 },
+  rope:    { tier: "pro", level: 15 },
+  // VIP: same rule, needs a VIP subscription ever.
+  crystal: { tier: "vip", achievement: "exact3" },
+  crown:   { tier: "vip", achievement: "streak7" },
+  star:    { tier: "vip", level: 20 },
+  emerald: { tier: "vip", level: 25 },
+  halo:    { tier: "vip", level: 30 },
+  kasi:    { tier: "vip", achievement: "legend" },
 };
 
 const SCHEMA = [
@@ -272,9 +285,12 @@ async function checkAchievements(env, tg) {
   }
   const owned = new Set(((await env.DB.prepare("SELECT frame FROM z_awards WHERE tg=?").bind(tg).all()).results || []).map((r) => r.frame));
   const ever = new Set(((await env.DB.prepare("SELECT tier FROM z_subs WHERE tg=?").bind(tg).all()).results || []).map((r) => r.tier));
+  const xpRow = await env.DB.prepare("SELECT xp FROM z_xp WHERE tg=?").bind(tg).first();
+  const lvl = levelFromXp(xpRow ? xpRow.xp : 0).level;
   for (const [frame, rule] of Object.entries(FRAME_RULES)) {
     if (owned.has(frame)) continue;
-    if (ever.has(rule.tier) && ACHIEVEMENTS[rule.achievement].need(stats)) {
+    const earned = rule.level ? lvl >= rule.level : ACHIEVEMENTS[rule.achievement].need(stats);
+    if ((rule.tier === "free" || ever.has(rule.tier)) && earned) {
       await env.DB.prepare("INSERT OR IGNORE INTO z_awards (tg,frame,round_id) VALUES (?,?,NULL)").bind(tg, frame).run();
     }
   }
@@ -290,10 +306,16 @@ async function me(env, user) {
   const xp = xpRow ? xpRow.xp : 0;
   const got = new Set(((await env.DB.prepare("SELECT ach FROM z_ach WHERE tg=?").bind(user.id).all()).results || []).map((r) => r.ach));
   const stats = await playerStats(env, user.id);
+  // legend has two routes; each one is a half of the ring on the locked frame
+  const legend = {
+    first: Math.min(1, stats.rank1Count / 3),
+    points: Math.min(1, Math.min(stats.points / 500, stats.top5Count / 4)),
+  };
   const achievements = Object.entries(ACHIEVEMENTS).map(([id, a]) => ({
-    id, name: a.name, unlocked: got.has(id), progress: Math.min(1, a.value(stats) / a.goal),
+    id, name: a.name, unlocked: got.has(id),
+    progress: id === "legend" ? Math.max(legend.first, legend.points) : Math.min(1, a.value(stats) / a.goal),
   }));
-  return json({ ok: true, player: p && { name: p.name, emblem: p.emblem, frame: p.frame }, access: acc, name_locked_days: days, frames: awards, level: levelFromXp(xp), achievements });
+  return json({ ok: true, player: p && { name: p.name, emblem: p.emblem, frame: p.frame }, access: acc, name_locked_days: days, frames: awards, level: levelFromXp(xp), achievements, legend });
 }
 
 async function saveProfile(env, user, body) {
