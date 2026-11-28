@@ -88,9 +88,12 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent2);outlin
 .bst.on{background:var(--btn);color:var(--btn-fg);border-color:transparent;box-shadow:0 0 14px var(--glow)}
 .lock{display:inline-flex;align-items:center;gap:5px;color:var(--ok);font-weight:800;font-size:13px}
 /* Ranking */
-.pod{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:8px;align-items:end;text-align:center}
+.pod{display:grid;grid-template-columns:1fr 1.15fr 1fr;gap:10px;align-items:start;text-align:center}
+.pod .c{transform:none!important;overflow:visible;padding:0 6px 12px}
+.pod .c .av{width:44px;height:44px;margin:38px auto 10px}
+.pod .c.r1 .av{width:50px;height:50px;margin:42px auto 10px}
 .pod .c{padding:12px 4px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line)}
-.pod .c.r1{padding-block:18px;border-color:#d4af37;box-shadow:0 0 24px rgba(212,175,55,.3)}
+.pod .c.r1{padding-block:0 14px;border-color:#d4af37;box-shadow:0 0 24px rgba(212,175,55,.3)}
 .pod b{display:block;font-size:13px;margin-top:6px}.pod .pt{font:800 22px/1 var(--f-logo);color:var(--accent2)}
 .medal{width:34px;height:34px;margin:6px auto 0;display:block}
 .rk{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid rgba(255,255,255,.07)}
@@ -125,7 +128,13 @@ button:focus-visible,input:focus-visible{outline:2px solid var(--accent2);outlin
 .ach.lk{opacity:.45;filter:grayscale(.8)}
 .ach.rare{border-color:#8fd0ff}.ach.epic{border-color:#d9a6ff}.ach.leg{border-color:#ffd76a;box-shadow:0 0 14px rgba(255,215,106,.25)}
 .fgrid{display:flex;gap:12px;overflow-x:auto;padding:12px 8px 6px;scrollbar-width:none}.fgrid::-webkit-scrollbar{display:none}
-.fo{flex:none;text-align:center;font-size:11px;width:68px}.fo .mini{width:52px;height:52px;margin:0 auto 6px}.fo.lk{opacity:.5}
+.fgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:12px}
+.fo{text-align:center;font-size:11px;padding:0 4px 10px;border-radius:16px;background:var(--card);border:1px solid var(--line);overflow:visible}
+.fo .mini{width:44px;height:44px;margin:44px auto 46px}
+.fo.lk{opacity:.5}
+.mtog{display:block;width:100%;margin:10px 0 0;padding:8px;border-radius:12px;background:transparent;border:1px dashed var(--line);color:var(--accent2);font-weight:700;font-size:13px;font-family:inherit;cursor:pointer}
+.mtog.on{border-style:solid}
+.mbody{margin-top:4px}
 .egrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
 .eo{aspect-ratio:1;border-radius:14px;background:var(--bg2);border:1px solid var(--line);display:grid;place-items:center;padding:6px;transition:transform .12s}
 .eo.on{border-color:var(--accent);box-shadow:0 0 14px var(--glow);background:var(--card2)}.eo:active{transform:scale(.92)}
@@ -154,6 +163,8 @@ input.tx{width:100%;background:var(--bg2);color:var(--fg);border:1px solid var(-
 @media (prefers-reduced-motion:reduce){.zf-deco *{animation:none!important}}
 
 .pb{height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin-top:5px;overflow:hidden}.pb i{display:block;height:100%;background:var(--btn)}
+/* frames are static everywhere (avatars, ranking, frame picker); animation is reserved for hard achievement badges */
+.zf-deco *{animation:none!important}
 </style>
 <div id="amb"></div><div id="app"></div>
 <div id="cine"><canvas id="cv"></canvas><div class="fl" id="fl"></div><div class="tt" id="tt"></div><button class="skip" id="skip">تخطي</button></div>
@@ -315,7 +326,10 @@ function matchHTML(m,fx){
   const wp=tier==='vip'?w:{1:2,X:2,2:2},has=p.wdl||p.btts||p.cor||p.car||p.dc||p.ex;
   const boosted=S.boost===m.id;
   const mk=(t,inner,extra)=>`<div class="mk"><div class="t"><span>${t}</span>${extra||''}</div>${inner}</div>`;
-  let h=`<div class="card m${saved?' saved':''}" id="m${m.id}"><div class="teams"><div class="team">${crest(m.h)}<b>${H}</b></div><div class="ko">${m.t}</div><div class="team">${crest(m.a)}<b>${A}</b></div></div>`;
+  const open=S.openM===m.id;
+  let h=`<div class="card m${saved?' saved':''}" id="m${m.id}"><div class="teams"><div class="team">${crest(m.h)}<b>${H}</b></div><div class="ko">${m.t}</div><div class="team">${crest(m.a)}<b>${A}</b></div></div><button class="mtog${open?' on':''}" data-a="mtog" data-m="${m.id}">${saved?'✔ توقعك محفوظ · ':''}${open?'إخفاء الخيارات ▲':'فتح الخيارات ▼'}</button>`;
+  if(!open)return h+'</div>';
+  h+='<div class="mbody">';
   const boostBtn=tier==='free'?'':`<button class="bst${boosted?' on':''}" data-a="boost" data-m="${m.id}" ${saved&&!boosted?'disabled':''}>⚡ تعزيز ×2</button>`;
   h+=mk('نتيجة المباراة',`<div class="opts o3">${optBtn(m,'wdl','1','فوز '+H,wp[1],fx==='wdl1')}${optBtn(m,'wdl','X','تعادل',wp.X,fx==='wdlX')}${optBtn(m,'wdl','2','فوز '+A,wp[2],fx==='wdl2')}</div>`,boostBtn);
   h+=mk('هل يسجل الفريقان؟',`<div class="opts o2">${optBtn(m,'btts','y','نعم',POINTS.btts,fx==='bttsy')}${optBtn(m,'btts','n','لا',POINTS.btts,fx==='bttsn')}</div>`);
@@ -333,7 +347,7 @@ function matchHTML(m,fx){
   }
   h+=saved?`<div class="row" style="justify-content:center;padding-top:2px"><span class="lock">✔ تم الحفظ · غير قابل للتعديل</span></div>`
     :`<button class="btn" data-a="save" data-m="${m.id}" ${has?'':'disabled'}>${has?'حفظ التوقع':'اختر توقعك أولاً'}</button>`;
-  return h+'</div>';
+  return h+'</div></div>';
 }
 function onboardHTML(){
   const emb=EMBLEMS.map((e,i)=>`<button class="eo${i===S.emb?' on':''}" data-a="emb" data-v="${i}" aria-label="${e.n}">${emblem(e)}</button>`).join('');
@@ -461,6 +475,7 @@ document.addEventListener('click',async e=>{
   else if(a==='tab'){S.tab=v;if(v==='rank')await loadRank();render();scrollTo(0,0)}
   else if(a==='sw'){if(v!==S.tier&&gate(v)){await loadRound(v);cinematic(v)}}
   else if(a==='pick'){const p=S.picks[mid]||(S.picks[mid]={}),k=b.dataset.k;p[k]=p[k]===v?undefined:v;if(p[k]===undefined)delete p[k];const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='mtog'){S.openM=S.openM===mid?null:mid;const y=scrollY;render();scrollTo(0,y)}
   else if(a==='boost'){S.boost=S.boost===mid?null:mid;if(S.boost)toast('تم تفعيل التعزيز لهذه المباراة (مرة واحدة بالجولة)');const y=scrollY;render();scrollTo(0,y)}
   else if(a==='ex'){const p=S.picks[mid]||(S.picks[mid]={});if(p.ex)delete p.ex;else{S.picks[mid]={ex:{h:1,a:1}}}const y=scrollY;render();scrollTo(0,y)}
   else if(a==='exs'){const x=S.picks[mid].ex,s=b.dataset.s;x[s]=clamp(x[s]+ +b.dataset.d,0,9);const y=scrollY;render();scrollTo(0,y)}
