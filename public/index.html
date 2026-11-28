@@ -199,4 +199,419 @@ const EMBLEMS=[
  ['الهلال','round','moon','#0f7b6c','#054035','#eafff7'],['الماس','hex','diamond','#5cd0ff','#1b5d8a','#ffffff'],
  ['النجم البنفسجي','shield','star','#7048e8','#2b1a73','#ffe066'],['الملوك','hex','crown','#2b2f33','#050607','#d4af37'],
  ['الفهود','round','bolt','#2b8a3e','#0b3b17','#ffe066'],['العقبان','shield','wing','#3a4047','#101214','#f1f3f5'],
- ['البرق الأزرق','hex','bolt','#15aabf','#094a57','#
+ ['البرق الأزرق','hex','bolt','#15aabf','#094a57','#ffffff'],['الأبطال','shield','star','#f08c00','#6b3a00','#fff3bf'],
+ ['الجمر','round','flame','#c92a2a','#5c0f0f','#ffd8a8'],['الكوكب','round','orb','#1971c2','#0a2f5c','#d0ebff'],
+ ['الشرارة','hex','star','#ae3ec9','#4a1559','#fff0f6'],['الدرع الأخضر','shield','diamond','#2f9e44','#0f4a1e','#d3f9d8'],
+ ['الغروب','hex','moon','#e67700','#5a2d00','#fff4e6'],['الصاعقة','shield','bolt','#364fc7','#14215e','#fff3bf']
+].map(a=>({n:a[0],sh:a[1],sym:a[2],c1:a[3],c2:a[4],c3:a[5]}));
+
+/* ---------- Mock round (replace with /api/round when wired) ---------- */
+const T={BAR:['برشلونة','#a50044','#1b2f6b','#edbb00',86],RMA:['ريال مدريد','#e8e8e8','#8d97a8','#1b2f6b',88],INT:['إنتر','#0b4a9e','#050f2c','#e8e8e8',85],MIL:['ميلان','#c1121f','#1a1a1a','#ffffff',80],
+ ARS:['آرسنال','#d6001c','#6e0010','#ffffff',87],CHE:['تشيلسي','#1c3f94','#0a1c4a','#ffffff',78],NAP:['نابولي','#3d95d9','#124a85','#ffffff',79],JUV:['يوفنتوس','#f4f4f4','#222','#111',77],
+ LIV:['ليفربول','#c8102e','#6b0a19','#ffe9a8',86],MCI:['مان سيتي','#6cabdd','#1c5a8c','#ffffff',90]};
+let MATCHES=[['BAR','RMA','21:00',9.5,4.5],['INT','MIL','19:45',9.5,5.5],['ARS','CHE','17:30',10.5,4.5],['NAP','JUV','20:45',8.5,5.5],['LIV','MCI','22:00',10.5,3.5]]
+ .map((m,i)=>({id:i+1,h:m[0],a:m[1],t:m[2],cor:m[3],car:m[4]}));
+function TM(k){if(T[k])return T[k];let h=0;for(const c of String(k))h=(h*31+c.charCodeAt(0))>>>0;const hue=h%360;return[k,`hsl(${hue} 65% 45%)`,`hsl(${hue} 70% 22%)`,'#ffffff',78]}
+const POINTS={wdl:2,btts:1,cor:1,car:1,ex:5};
+function probs(m){ // team strength -> win/draw/lose odds (VIP smart points). Fixed when the round is created.
+  const d=TM(m.h)[4]-TM(m.a)[4]+3,ph=1/(1+Math.pow(10,-d/12)),pd=Math.max(.18,.30-.012*Math.abs(d)),r=1-pd;
+  return{h:r*ph,d:pd,a:r*(1-ph)};
+}
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
+function pts(tier,m,key){
+  if(tier==='vip'&&m.sp&&(key==='wdl'||/^dc/.test(key)))return key==='wdl'?m.sp.wdl:{dc1X:m.sp.dc['1X'],dc12:m.sp.dc['12'],dcX2:m.sp.dc.X2};
+  if(tier!=='vip'||(key!=='wdl'&&!/^dc/.test(key)))return POINTS[key]||0;
+  const p=probs(m);return key==='wdl'?{1:clamp(Math.round(1.2/p.h),1,6),X:clamp(Math.round(1.2/p.d),1,6),2:clamp(Math.round(1.2/p.a),1,6)}:
+    {dc1X:clamp(Math.round(.9/(p.h+p.d)),1,4),dc12:clamp(Math.round(.9/(p.h+p.a)),1,4),dcX2:clamp(Math.round(.9/(p.d+p.a)),1,4)};
+}
+let LOCK_AT=Date.now()+3*3600e3+25*60e3+12e3;
+
+/* ---------- Mock profile, ranking, achievements ---------- */
+// ZINGO frames (PRO + VIP). Generated from frames-preview.html.
+// Each overlay is absolutely positioned over a .zingo-v3-avatar (position:relative).
+// Overlay size = 293% of the avatar (170px frame over a 58px avatar).
+const ZINGO_FRAMES = {
+  bronze: { id: "bronze", name: "\u0625\u0637\u0627\u0631 \u0628\u0631\u0648\u0646\u0632\u064a", tier: "pro", svg: "<svg viewBox=\"0 0 200 200\" aria-hidden=\"true\"><linearGradient id=\"mBronze\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#4a2a12\"/><stop offset=\"0.35\" stop-color=\"#c98a52\"/><stop offset=\"0.6\" stop-color=\"#7a4a24\"/><stop offset=\"0.85\" stop-color=\"#e9ad74\"/><stop offset=\"1\" stop-color=\"#4a2a12\"/></linearGradient><radialGradient id=\"gBronze\"><stop offset=\"0\" stop-color=\"#ffd9a8\"/><stop offset=\"1\" stop-color=\"#8b4a1c\"/></radialGradient><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"url(#mBronze)\" stroke-width=\"7\"/><circle cx=\"100\" cy=\"100\" r=\"44.1\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"36.9\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"#fff\" stroke-opacity=\".75\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-dasharray=\"22 232\" style=\"transform-box:view-box;transform-origin:100px 100px;animation:fSheen 5.5s linear infinite\"/><circle cx=\"100\" cy=\"100\" r=\"36.5\" fill=\"none\" stroke=\"#f3c08a\" stroke-opacity=\".55\" stroke-width=\"1\" stroke-dasharray=\"1 3\"/><circle cx=\"137.00\" cy=\"100.00\" r=\"1.8\" fill=\"#2a1507\" stroke=\"#f3c08a\" stroke-width=\".5\"/><circle cx=\"118.50\" cy=\"132.04\" r=\"1.8\" fill=\"#2a1507\" stroke=\"#f3c08a\" stroke-width=\".5\"/><circle cx=\"81.50\" cy=\"132.04\" r=\"1.8\" fill=\"#2a1507\" stroke=\"#f3c08a\" stroke-width=\".5\"/><circle cx=\"63.00\" cy=\"100.00\" r=\"1.8\" fill=\"#2a1507\" stroke=\"#f3c08a\" stroke-width=\".5\"/><circle cx=\"81.50\" cy=\"67.96\" r=\"1.8\" fill=\"#2a1507\" stroke=\"#f3c08a\" stroke-width=\".5\"/><circle cx=\"118.50\" cy=\"67.96\" r=\"1.8\" fill=\"#2a1507\" stroke=\"#f3c08a\" stroke-width=\".5\"/><circle cx=\"140.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gBronze)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.00s\"/><circle cx=\"128.64\" cy=\"128.64\" r=\"2.4\" fill=\"url(#gBronze)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.40s\"/><circle cx=\"100.00\" cy=\"140.50\" r=\"2.4\" fill=\"url(#gBronze)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.80s\"/><circle cx=\"71.36\" cy=\"128.64\" r=\"2.4\" fill=\"url(#gBronze)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.20s\"/><circle cx=\"59.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gBronze)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.60s\"/><circle cx=\"71.36\" cy=\"71.36\" r=\"2.4\" fill=\"url(#gBronze)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.00s\"/><circle cx=\"100.00\" cy=\"59.50\" r=\"2.4\" fill=\"url(#gBronze)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.40s\"/><circle cx=\"128.64\" cy=\"71.36\" r=\"2.4\" fill=\"url(#gBronze)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.80s\"/></svg>" },
+  silver: { id: "silver", name: "\u0625\u0637\u0627\u0631 \u0641\u0636\u064a", tier: "pro", svg: "<svg viewBox=\"0 0 200 200\" aria-hidden=\"true\"><linearGradient id=\"mSilver\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#5f6670\"/><stop offset=\"0.35\" stop-color=\"#f4f7fb\"/><stop offset=\"0.6\" stop-color=\"#9aa2ad\"/><stop offset=\"0.85\" stop-color=\"#ffffff\"/><stop offset=\"1\" stop-color=\"#5f6670\"/></linearGradient><radialGradient id=\"gSilver\"><stop offset=\"0\" stop-color=\"#ffffff\"/><stop offset=\"1\" stop-color=\"#7ea8c9\"/></radialGradient><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"url(#mSilver)\" stroke-width=\"7\"/><circle cx=\"100\" cy=\"100\" r=\"44.1\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"36.9\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"#fff\" stroke-opacity=\".75\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-dasharray=\"22 232\" style=\"transform-box:view-box;transform-origin:100px 100px;animation:fSheen 5.5s linear infinite\"/><ellipse cx=\"126.50\" cy=\"142.40\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(148.0 126.50 142.40)\"/><ellipse cx=\"118.84\" cy=\"148.25\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(158.7 118.84 148.25)\"/><ellipse cx=\"109.25\" cy=\"149.14\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(169.3 109.25 149.14)\"/><ellipse cx=\"100.00\" cy=\"151.80\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(180.0 100.00 151.80)\"/><ellipse cx=\"90.75\" cy=\"149.14\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(190.7 90.75 149.14)\"/><ellipse cx=\"81.16\" cy=\"148.25\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(201.3 81.16 148.25)\"/><ellipse cx=\"73.50\" cy=\"142.40\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(212.0 73.50 142.40)\"/><ellipse cx=\"73.50\" cy=\"142.40\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(212.0 73.50 142.40)\"/><ellipse cx=\"81.16\" cy=\"148.25\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(201.3 81.16 148.25)\"/><ellipse cx=\"90.75\" cy=\"149.14\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(190.7 90.75 149.14)\"/><ellipse cx=\"100.00\" cy=\"151.80\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(180.0 100.00 151.80)\"/><ellipse cx=\"109.25\" cy=\"149.14\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(169.3 109.25 149.14)\"/><ellipse cx=\"118.84\" cy=\"148.25\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(158.7 118.84 148.25)\"/><ellipse cx=\"126.50\" cy=\"142.40\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mSilver)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(148.0 126.50 142.40)\"/><circle cx=\"140.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.00s\"/><circle cx=\"135.07\" cy=\"120.25\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.30s\"/><circle cx=\"120.25\" cy=\"135.07\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.60s\"/><circle cx=\"100.00\" cy=\"140.50\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.90s\"/><circle cx=\"79.75\" cy=\"135.07\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.20s\"/><circle cx=\"64.93\" cy=\"120.25\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.50s\"/><circle cx=\"59.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.80s\"/><circle cx=\"64.93\" cy=\"79.75\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.10s\"/><circle cx=\"79.75\" cy=\"64.93\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.40s\"/><circle cx=\"100.00\" cy=\"59.50\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.70s\"/><circle cx=\"120.25\" cy=\"64.93\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:3.00s\"/><circle cx=\"135.07\" cy=\"79.75\" r=\"2.4\" fill=\"url(#gSilver)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:3.30s\"/></svg>" },
+  gold: { id: "gold", name: "\u0627\u0644\u0625\u0637\u0627\u0631 \u0627\u0644\u0630\u0647\u0628\u064a", tier: "pro", svg: "<svg viewBox=\"0 0 200 200\" aria-hidden=\"true\"><linearGradient id=\"mGold\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#8a6100\"/><stop offset=\"0.35\" stop-color=\"#ffe27a\"/><stop offset=\"0.6\" stop-color=\"#c48a10\"/><stop offset=\"0.85\" stop-color=\"#fff7c2\"/><stop offset=\"1\" stop-color=\"#7a5300\"/></linearGradient><radialGradient id=\"gGold\"><stop offset=\"0\" stop-color=\"#fff3a0\"/><stop offset=\"1\" stop-color=\"#b56e00\"/></radialGradient><radialGradient id=\"gRuby\"><stop offset=\"0\" stop-color=\"#ff8a8a\"/><stop offset=\"1\" stop-color=\"#7a0010\"/></radialGradient><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"url(#mGold)\" stroke-width=\"7\"/><circle cx=\"100\" cy=\"100\" r=\"44.1\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"36.9\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"#fff\" stroke-opacity=\".75\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-dasharray=\"22 232\" style=\"transform-box:view-box;transform-origin:100px 100px;animation:fSheen 5.5s linear infinite\"/><path d=\"M89,62 L91,49 L96,55 L100,45 L104,55 L109,49 L111,62 Z\" fill=\"url(#mGold)\" stroke=\"#4a2f00\" stroke-width=\".8\" stroke-linejoin=\"round\"/><circle cx=\"100\" cy=\"58\" r=\"2.6\" fill=\"url(#gRuby)\" style=\"animation:fTwinkle 2.4s ease-in-out infinite\"/><circle cx=\"140.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.00s\"/><circle cx=\"135.07\" cy=\"120.25\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.30s\"/><circle cx=\"120.25\" cy=\"135.07\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.60s\"/><circle cx=\"100.00\" cy=\"140.50\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.90s\"/><circle cx=\"79.75\" cy=\"135.07\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.20s\"/><circle cx=\"64.93\" cy=\"120.25\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.50s\"/><circle cx=\"59.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.80s\"/><circle cx=\"64.93\" cy=\"79.75\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.10s\"/><circle cx=\"79.75\" cy=\"64.93\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.40s\"/><circle cx=\"100.00\" cy=\"59.50\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.70s\"/><circle cx=\"120.25\" cy=\"64.93\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:3.00s\"/><circle cx=\"135.07\" cy=\"79.75\" r=\"2.4\" fill=\"url(#gGold)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:3.30s\"/></svg>" },
+  elite: { id: "elite", name: "\u0625\u0637\u0627\u0631 \u0627\u0644\u0646\u062e\u0628\u0629", tier: "vip", svg: "<svg viewBox=\"0 0 200 200\" aria-hidden=\"true\"><linearGradient id=\"mElite\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#2a1758\"/><stop offset=\"0.35\" stop-color=\"#b58cff\"/><stop offset=\"0.6\" stop-color=\"#3b1f7a\"/><stop offset=\"0.85\" stop-color=\"#6ff4ff\"/><stop offset=\"1\" stop-color=\"#2a1758\"/></linearGradient><linearGradient id=\"mWing\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#6ff4ff\"/><stop offset=\"0.5\" stop-color=\"#8e6bff\"/><stop offset=\"1\" stop-color=\"#2a1758\"/></linearGradient><radialGradient id=\"gElite\"><stop offset=\"0\" stop-color=\"#e8fbff\"/><stop offset=\"1\" stop-color=\"#3ad8ff\"/></radialGradient><g fill=\"url(#mWing)\" stroke=\"#120830\" stroke-opacity=\".5\" stroke-width=\".6\"><path d=\"M60,106 C40,100 28,84 22,58 C36,66 46,70 56,74 C44,82 42,94 46,104 C52,104 56,105 60,106 Z\"/><path d=\"M60,106 C40,100 28,84 22,58 C36,66 46,70 56,74 C44,82 42,94 46,104 C52,104 56,105 60,106 Z\" transform=\"translate(200,0) scale(-1,1)\"/></g><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"url(#mElite)\" stroke-width=\"7\"/><circle cx=\"100\" cy=\"100\" r=\"44.1\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"36.9\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"#fff\" stroke-opacity=\".75\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-dasharray=\"22 232\" style=\"transform-box:view-box;transform-origin:100px 100px;animation:fSheen 5.5s linear infinite\"/><path d=\"M100.00,137.30 L102.40,140.50 L100.00,143.70 L97.60,140.50 Z\" fill=\"url(#gElite)\" stroke=\"#fff\" stroke-opacity=\".5\" stroke-width=\".3\" style=\"animation:fTwinkle 2.6s ease-in-out infinite;animation-delay:0.0s\"/><path d=\"M59.50,96.80 L61.90,100.00 L59.50,103.20 L57.10,100.00 Z\" fill=\"url(#gElite)\" stroke=\"#fff\" stroke-opacity=\".5\" stroke-width=\".3\" style=\"animation:fTwinkle 2.6s ease-in-out infinite;animation-delay:0.5s\"/><path d=\"M100.00,56.30 L102.40,59.50 L100.00,62.70 L97.60,59.50 Z\" fill=\"url(#gElite)\" stroke=\"#fff\" stroke-opacity=\".5\" stroke-width=\".3\" style=\"animation:fTwinkle 2.6s ease-in-out infinite;animation-delay:1.0s\"/><path d=\"M140.50,96.80 L142.90,100.00 L140.50,103.20 L138.10,100.00 Z\" fill=\"url(#gElite)\" stroke=\"#fff\" stroke-opacity=\".5\" stroke-width=\".3\" style=\"animation:fTwinkle 2.6s ease-in-out infinite;animation-delay:1.5s\"/><circle cx=\"140.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gElite)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.00s\"/><circle cx=\"128.64\" cy=\"128.64\" r=\"2.4\" fill=\"url(#gElite)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.40s\"/><circle cx=\"100.00\" cy=\"140.50\" r=\"2.4\" fill=\"url(#gElite)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.80s\"/><circle cx=\"71.36\" cy=\"128.64\" r=\"2.4\" fill=\"url(#gElite)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.20s\"/><circle cx=\"59.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gElite)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.60s\"/><circle cx=\"71.36\" cy=\"71.36\" r=\"2.4\" fill=\"url(#gElite)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.00s\"/><circle cx=\"100.00\" cy=\"59.50\" r=\"2.4\" fill=\"url(#gElite)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.40s\"/><circle cx=\"128.64\" cy=\"71.36\" r=\"2.4\" fill=\"url(#gElite)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.80s\"/></svg>" },
+  royal: { id: "royal", name: "\u0627\u0644\u0625\u0637\u0627\u0631 \u0627\u0644\u0645\u0644\u0643\u064a", tier: "vip", svg: "<svg viewBox=\"0 0 200 200\" aria-hidden=\"true\"><linearGradient id=\"mRoyal\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#7a4f00\"/><stop offset=\"0.35\" stop-color=\"#ffd84a\"/><stop offset=\"0.6\" stop-color=\"#b07a00\"/><stop offset=\"0.85\" stop-color=\"#fff3b0\"/><stop offset=\"1\" stop-color=\"#6b4300\"/></linearGradient><radialGradient id=\"gRoyalR\"><stop offset=\"0\" stop-color=\"#ffb3b3\"/><stop offset=\"1\" stop-color=\"#8a0010\"/></radialGradient><radialGradient id=\"gRoyalB\"><stop offset=\"0\" stop-color=\"#b8dcff\"/><stop offset=\"1\" stop-color=\"#0a3a8a\"/></radialGradient><radialGradient id=\"gRoyalG\"><stop offset=\"0\" stop-color=\"#c8ffd6\"/><stop offset=\"1\" stop-color=\"#0b6b35\"/></radialGradient><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"url(#mRoyal)\" stroke-width=\"7\"/><circle cx=\"100\" cy=\"100\" r=\"44.1\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"36.9\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"#fff\" stroke-opacity=\".75\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-dasharray=\"22 232\" style=\"transform-box:view-box;transform-origin:100px 100px;animation:fSheen 5.5s linear infinite\"/><ellipse cx=\"125.00\" cy=\"143.30\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(150.0 125.00 143.30)\"/><ellipse cx=\"117.72\" cy=\"148.68\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(160.0 117.72 148.68)\"/><ellipse cx=\"108.68\" cy=\"149.24\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(170.0 108.68 149.24)\"/><ellipse cx=\"100.00\" cy=\"151.80\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(180.0 100.00 151.80)\"/><ellipse cx=\"91.32\" cy=\"149.24\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(190.0 91.32 149.24)\"/><ellipse cx=\"82.28\" cy=\"148.68\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(200.0 82.28 148.68)\"/><ellipse cx=\"75.00\" cy=\"143.30\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(210.0 75.00 143.30)\"/><ellipse cx=\"75.00\" cy=\"143.30\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(210.0 75.00 143.30)\"/><ellipse cx=\"82.28\" cy=\"148.68\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(200.0 82.28 148.68)\"/><ellipse cx=\"91.32\" cy=\"149.24\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(190.0 91.32 149.24)\"/><ellipse cx=\"100.00\" cy=\"151.80\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(180.0 100.00 151.80)\"/><ellipse cx=\"108.68\" cy=\"149.24\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(170.0 108.68 149.24)\"/><ellipse cx=\"117.72\" cy=\"148.68\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(160.0 117.72 148.68)\"/><ellipse cx=\"125.00\" cy=\"143.30\" rx=\"4.8\" ry=\"1.9\" fill=\"url(#mRoyal)\" stroke=\"#000\" stroke-opacity=\".3\" stroke-width=\".4\" transform=\"rotate(150.0 125.00 143.30)\"/><path d=\"M80,52 L75,30 L89,41 L100,22 L111,41 L125,30 L120,52 Z\" fill=\"url(#mRoyal)\" stroke=\"#4a2f00\" stroke-width=\".8\" stroke-linejoin=\"round\"/><path d=\"M80,52 Q100,46 120,52 L120,57 Q100,51 80,57 Z\" fill=\"url(#mRoyal)\" stroke=\"#4a2f00\" stroke-width=\".6\"/><circle cx=\"75\" cy=\"30\" r=\"2.4\" fill=\"url(#gRoyalR)\" style=\"animation:fTwinkle 2.2s ease-in-out infinite\"/><circle cx=\"100\" cy=\"21\" r=\"2.8\" fill=\"url(#gRoyalB)\" style=\"animation:fTwinkle 2.2s ease-in-out infinite;animation-delay:.6s\"/><circle cx=\"125\" cy=\"30\" r=\"2.4\" fill=\"url(#gRoyalG)\" style=\"animation:fTwinkle 2.2s ease-in-out infinite;animation-delay:1.1s\"/><circle cx=\"140.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.00s\"/><circle cx=\"135.07\" cy=\"120.25\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.25s\"/><circle cx=\"120.25\" cy=\"135.07\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.50s\"/><circle cx=\"100.00\" cy=\"140.50\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.75s\"/><circle cx=\"79.75\" cy=\"135.07\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.00s\"/><circle cx=\"64.93\" cy=\"120.25\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.25s\"/><circle cx=\"59.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.50s\"/><circle cx=\"64.93\" cy=\"79.75\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.75s\"/><circle cx=\"79.75\" cy=\"64.93\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.00s\"/><circle cx=\"100.00\" cy=\"59.50\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.25s\"/><circle cx=\"120.25\" cy=\"64.93\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.50s\"/><circle cx=\"135.07\" cy=\"79.75\" r=\"2.4\" fill=\"url(#gRoyalB)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.75s\"/></svg>" },
+  throne: { id: "throne", name: "\u0625\u0637\u0627\u0631 \u0627\u0644\u0639\u0631\u0634", tier: "vip", svg: "<svg viewBox=\"0 0 200 200\" aria-hidden=\"true\"><linearGradient id=\"mPlat\" x1=\"0\" y1=\"0\" x2=\"1\" y2=\"1\"><stop offset=\"0\" stop-color=\"#50677a\"/><stop offset=\"0.35\" stop-color=\"#ffffff\"/><stop offset=\"0.6\" stop-color=\"#8ea6b8\"/><stop offset=\"0.85\" stop-color=\"#cfefff\"/><stop offset=\"1\" stop-color=\"#50677a\"/></linearGradient><radialGradient id=\"gDiamond\"><stop offset=\"0\" stop-color=\"#ffffff\"/><stop offset=\"1\" stop-color=\"#3ff6ff\"/></radialGradient><linearGradient id=\"rayG\" x1=\"0\" y1=\"0\" x2=\"0\" y2=\"1\"><stop offset=\"0\" stop-color=\"#e9fdff\" stop-opacity=\".95\"/><stop offset=\"1\" stop-color=\"#3ff6ff\" stop-opacity=\"0\"/></linearGradient><g style=\"transform-box:view-box;transform-origin:100px 100px;animation:fRaySpin 40s linear infinite\"><polygon points=\"144.95,97.96 160.00,100.00 144.95,102.04\" fill=\"url(#rayG)\"/><polygon points=\"142.31,115.32 148.97,120.28 140.75,119.09\" fill=\"url(#rayG)\"/><polygon points=\"133.23,130.34 142.43,142.43 130.34,133.23\" fill=\"url(#rayG)\"/><polygon points=\"119.09,140.75 120.28,148.97 115.32,142.31\" fill=\"url(#rayG)\"/><polygon points=\"102.04,144.95 100.00,160.00 97.96,144.95\" fill=\"url(#rayG)\"/><polygon points=\"84.68,142.31 79.72,148.97 80.91,140.75\" fill=\"url(#rayG)\"/><polygon points=\"69.66,133.23 57.57,142.43 66.77,130.34\" fill=\"url(#rayG)\"/><polygon points=\"59.25,119.09 51.03,120.28 57.69,115.32\" fill=\"url(#rayG)\"/><polygon points=\"55.05,102.04 40.00,100.00 55.05,97.96\" fill=\"url(#rayG)\"/><polygon points=\"57.69,84.68 51.03,79.72 59.25,80.91\" fill=\"url(#rayG)\"/><polygon points=\"66.77,69.66 57.57,57.57 69.66,66.77\" fill=\"url(#rayG)\"/><polygon points=\"80.91,59.25 79.72,51.03 84.68,57.69\" fill=\"url(#rayG)\"/><polygon points=\"97.96,55.05 100.00,40.00 102.04,55.05\" fill=\"url(#rayG)\"/><polygon points=\"115.32,57.69 120.28,51.03 119.09,59.25\" fill=\"url(#rayG)\"/><polygon points=\"130.34,66.77 142.43,57.57 133.23,69.66\" fill=\"url(#rayG)\"/><polygon points=\"140.75,80.91 148.97,79.72 142.31,84.68\" fill=\"url(#rayG)\"/></g><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"url(#mPlat)\" stroke-width=\"7\"/><circle cx=\"100\" cy=\"100\" r=\"44.1\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"36.9\" fill=\"none\" stroke=\"#000\" stroke-opacity=\".35\" stroke-width=\".8\"/><circle cx=\"100\" cy=\"100\" r=\"40.5\" fill=\"none\" stroke=\"#fff\" stroke-opacity=\".75\" stroke-width=\"2.2\" stroke-linecap=\"round\" stroke-dasharray=\"22 232\" style=\"transform-box:view-box;transform-origin:100px 100px;animation:fSheen 5.5s linear infinite\"/><path d=\"M100,38 L106,48 L100,58 L94,48 Z\" fill=\"url(#gDiamond)\" stroke=\"#e9fdff\" stroke-width=\".7\"/><path d=\"M94,48 L106,48\" stroke=\"#e9fdff\" stroke-width=\".6\" opacity=\".8\"/><circle cx=\"140.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.00s\"/><circle cx=\"137.42\" cy=\"115.50\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.20s\"/><circle cx=\"128.64\" cy=\"128.64\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.40s\"/><circle cx=\"115.50\" cy=\"137.42\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.60s\"/><circle cx=\"100.00\" cy=\"140.50\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:0.80s\"/><circle cx=\"84.50\" cy=\"137.42\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.00s\"/><circle cx=\"71.36\" cy=\"128.64\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.20s\"/><circle cx=\"62.58\" cy=\"115.50\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.40s\"/><circle cx=\"59.50\" cy=\"100.00\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.60s\"/><circle cx=\"62.58\" cy=\"84.50\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:1.80s\"/><circle cx=\"71.36\" cy=\"71.36\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.00s\"/><circle cx=\"84.50\" cy=\"62.58\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.20s\"/><circle cx=\"100.00\" cy=\"59.50\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.40s\"/><circle cx=\"115.50\" cy=\"62.58\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.60s\"/><circle cx=\"128.64\" cy=\"71.36\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:2.80s\"/><circle cx=\"137.42\" cy=\"84.50\" r=\"2.4\" fill=\"url(#gDiamond)\" stroke=\"#000\" stroke-opacity=\".4\" stroke-width=\".4\" style=\"animation:fTwinkle 3s ease-in-out infinite;animation-delay:3.00s\"/></svg>" },
+};
+
+// Returns the overlay markup for a frame id, or '' if unknown / none.
+function zingoFrameHTML(id){
+  const f = ZINGO_FRAMES[id];
+  return f ? '<div class="zf-deco">' + f.svg + '</div>' : '';
+}
+const FRAMES=[
+ {id:'bronze',n:'إطار برونزي',how:'أول توقع · برو',tier:'pro'},
+ {id:'silver',n:'إطار فضي',how:'10 توقعات صحيحة · برو',tier:'pro'},
+ {id:'gold',n:'الإطار الذهبي',how:'المركز الأول مرتين · برو',tier:'pro'},
+ {id:'elite',n:'إطار النخبة',how:'نتيجة دقيقة 3 مرات · VIP',tier:'vip'},
+ {id:'royal',n:'الإطار الملكي',how:'سلسلة 7 فوز · VIP',tier:'vip'},
+ {id:'throne',n:'إطار العرش',how:'أسطورة زينغو · VIP',tier:'vip'}
+];
+const ACH_ICON={first:'★',correct10:'✔',streak7:'⚡',fullWeek:'◆',rank1x2:'♛',exact3:'✦',weeks10:'❖',legend:'✺'};
+const ACH=[
+ ['★','أول توقع',1,''],['✔','10 توقعات صحيحة',1,''],['⚡','سلسلة 5 فوز',1,'rare'],['◆','أسبوع كامل',0,'rare'],
+ ['♛','المركز الأول',0,'epic'],['✦','نتيجة دقيقة',0,'epic'],['❖','10 أسابيع',0,'leg'],['✺','أسطورة زينغو',0,'leg']
+].map(a=>({i:a[0],n:a[1],got:!!a[2],r:a[3]}));
+const RANK=[['سلطان',48,0,'gold'],['نجم الليل',44,1,'silver'],['أبو فهد',41,2,'bronze'],['كابتن ليث',39,3,'none'],['الصقر',36,4,'none'],['ملك التوقع',33,5,'none'],['أنت',31,6,'me'],['رعد',29,7,'none'],['زعيم',27,8,'none'],['بدر',25,9,'none']]
+ .map((r,i)=>({n:r[0],p:r[1],e:r[2],f:r[3],rk:i+1}));
+const S={tier:'menu',tab:'play',emb:7,frameSel:null,boost:null,tg:{v:12,saved:false},nameDays:30,name:'كابتن ليث',picks:{},saved:{}};
+const planOf=()=>S.tier==='free'?0:S.tier==='pro'?1:2;
+function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
+const ICON={
+ play:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7l3.5 2.5-1.3 4.1H9.8L8.5 9.5z"/></svg>',
+ rank:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M7 6H4v2a3 3 0 0 0 3 3M17 6h3v2a3 3 0 0 1-3 3M12 14v4M8 20h8"/></svg>',
+ me:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21c1-4 4-6 8-6s7 2 8 6"/></svg>'
+};
+const MEDAL=(c1,c2,n)=>`<svg class="medal" viewBox="0 0 40 40"><defs><linearGradient id="md${n}" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="${c1}"/><stop offset="1" stop-color="${c2}"/></linearGradient></defs><path d="M12 3h6l2 9-5 2zM28 3h-6l-2 9 5 2z" fill="${c2}"/><circle cx="20" cy="25" r="11" fill="url(#md${n})" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/><text x="20" y="30" text-anchor="middle" font-size="14" font-weight="800" fill="#1a1204" font-family="Barlow Condensed,Arial">${n}</text></svg>`;
+const MEDALS={1:MEDAL('#ffe48c','#b8860b',1),2:MEDAL('#f2f5f8','#8d98a6',2),3:MEDAL('#f0b47c','#8c5524',3)};
+</script>
+<script>
+'use strict';
+const app=$('#app');
+const tierName={free:'فري',pro:'برو',vip:'VIP'};
+const abbr=k=>{const s=String(k);if(s.length<=3)return s;const l=s.replace(/[^A-Za-z]/g,'');return l.length>=3?l.slice(0,3).toUpperCase():s.replace(/\s/g,'').slice(0,2)};
+const crest=(k)=>emblem({sh:'shield',c1:TM(k)[1],c2:TM(k)[2],c3:TM(k)[3]},abbr(k));
+function frameOf(){ return S.frameSel||null }
+function avatarHTML(frameId,i,size){return `<div class="${size==='mini'?'mini':'av'}">${emblem(EMBLEMS[i])}${zingoFrameHTML(frameId)}</div>`}
+const owned=(f)=>!!f.earned;
+
+/* ---------- Shell ---------- */
+function render(){
+  document.documentElement.dataset.tier=(S.tier==='menu'||S.tier==='onboard'||S.tier==='admin')?'free':S.tier;
+  if(S.tier==='menu'){app.innerHTML=menuHTML();return}
+  if(S.tier==='onboard'){app.innerHTML=onboardHTML();return}
+  if(S.tier==='admin'){app.innerHTML=adminHTML();return}
+  app.innerHTML=headerHTML()+`<div class="screen" id="view">${S.tab==='play'?playHTML():S.tab==='rank'?rankHTML():profileHTML()}</div>`+navHTML();
+  tickCd();
+}
+function headerHTML(){
+  const right=S.tier==='free'?`<span class="pill">فري · أسبوعية</span>`:`<div class="sw" data-v="${S.tier}"><i></i><button data-a="sw" data-v="pro" class="${S.tier==='pro'?'on':''}">PRO</button><button data-a="sw" data-v="vip" class="${S.tier==='vip'?'on':''}">VIP</button></div>`;
+  return `<div class="hd"><span class="logo">ZINGO</span><div class="row">${right}<button class="ibtn" data-a="menu" aria-label="القائمة">⌂</button></div></div>`;
+}
+function navHTML(){
+  const t=(k,l)=>`<button data-a="tab" data-v="${k}" class="${S.tab===k?'on':''}">${ICON[k]}${l}</button>`;
+  return `<div class="nav"><div>${t('play','المباريات')}${t('rank','الترتيب')}${t('me','ملفي')}</div></div>`;
+}
+function menuHTML(){
+  return `<div class="screen"><div class="lead"><div class="logo">ZINGO</div><p class="mute" style="margin:6px 0 0">اختر مسابقتك</p>${S.acc&&S.acc.admin?`<button class="btn ghost" data-a="adm" style="margin-top:10px">لوحة الإدارة</button>`:''}</div><div class="stack">
+  <button class="tier t-free" data-a="go" data-v="free"><span class="tg">F</span><span class="grow"><h3>فري</h3><p>مسابقة مجانية لمدة أسبوع · جوائز للمراكز الثلاثة</p></span></button>
+  <button class="tier t-pro" data-a="go" data-v="pro"><span class="tg">P</span><span class="grow"><h3>برو</h3><p>ركنيات وبطاقات وميزة التعزيز بواجهة ذهبية</p></span></button>
+  <button class="tier t-vip" data-a="go" data-v="vip"><span class="tg">V</span><span class="grow"><h3>VIP</h3><p>فرصة مزدوجة ونتيجة دقيقة ونقاط ذكية بواجهة ماسية</p></span></button></div></div>`;
+}
+
+/* ---------- Matches ---------- */
+function optBtn(m,key,val,label,sub,fx){
+  const p=S.picks[m.id]||{},saved=S.saved[m.id],on=(p[key]===val);
+  const locked=saved||(p.ex&&key!=='ex');
+  return `<button class="o${on?' sel':''}${on&&fx?' fx':''}" data-a="pick" data-m="${m.id}" data-k="${key}" data-v="${val}" ${locked?'disabled':''}>${label}${sub!==''?`<small>+${sub}</small>`:''}</button>`;
+}
+function matchHTML(m,fx){
+  const tier=S.tier,p=S.picks[m.id]||{},saved=S.saved[m.id],H=TM(m.h)[0],A=TM(m.a)[0],w=pts(tier,m,'wdl'),d=pts(tier,m,'dc1X')&&pts(tier,m,'dc');
+  const wp=tier==='vip'?w:{1:2,X:2,2:2},has=p.wdl||p.btts||p.cor||p.car||p.dc||p.ex;
+  const boosted=S.boost===m.id;
+  const mk=(t,inner,extra)=>`<div class="mk"><div class="t"><span>${t}</span>${extra||''}</div>${inner}</div>`;
+  let h=`<div class="card m${saved?' saved':''}" id="m${m.id}"><div class="teams"><div class="team">${crest(m.h)}<b>${H}</b></div><div class="ko">${m.t}</div><div class="team">${crest(m.a)}<b>${A}</b></div></div>`;
+  const boostBtn=tier==='free'?'':`<button class="bst${boosted?' on':''}" data-a="boost" data-m="${m.id}" ${saved&&!boosted?'disabled':''}>⚡ تعزيز ×2</button>`;
+  h+=mk('نتيجة المباراة',`<div class="opts o3">${optBtn(m,'wdl','1','فوز '+H,wp[1],fx==='wdl1')}${optBtn(m,'wdl','X','تعادل',wp.X,fx==='wdlX')}${optBtn(m,'wdl','2','فوز '+A,wp[2],fx==='wdl2')}</div>`,boostBtn);
+  h+=mk('هل يسجل الفريقان؟',`<div class="opts o2">${optBtn(m,'btts','y','نعم',POINTS.btts,fx==='bttsy')}${optBtn(m,'btts','n','لا',POINTS.btts,fx==='bttsn')}</div>`);
+  if(tier!=='free'){
+    h+=mk('عدد الركنيات',`<div class="opts o2">${optBtn(m,'cor','o','أكثر من '+m.cor,POINTS.cor,fx==='coro')}${optBtn(m,'cor','u','أقل من '+m.cor,POINTS.cor,fx==='coru')}</div>`);
+    h+=mk('عدد البطاقات',`<div class="opts o2">${optBtn(m,'car','o','أكثر من '+m.car,POINTS.car,fx==='caro')}${optBtn(m,'car','u','أقل من '+m.car,POINTS.car,fx==='caru')}</div>`);
+  }
+  if(tier==='vip'){
+    const dc=pts('vip',m,'dc');
+    h+=mk('الفرصة المزدوجة',`<div class="opts o3">${optBtn(m,'dc','1X','1X · '+H+' أو تعادل',dc.dc1X,fx==='dc1X')}${optBtn(m,'dc','12','12 · بلا تعادل',dc.dc12,fx==='dc12')}${optBtn(m,'dc','X2','X2 · '+A+' أو تعادل',dc.dcX2,fx==='dcX2')}</div>`);
+    const ex=p.ex;
+    h+=mk('النتيجة الدقيقة · +5 ثابتة',ex?`<div class="stp" style="margin-bottom:8px"><button data-a="exs" data-m="${m.id}" data-s="h" data-d="1" ${saved?'disabled':''}>+</button><b>${ex.h}</b><button data-a="exs" data-m="${m.id}" data-s="h" data-d="-1" ${saved?'disabled':''}>−</button><span class="mute">-</span><button data-a="exs" data-m="${m.id}" data-s="a" data-d="1" ${saved?'disabled':''}>+</button><b>${ex.a}</b><button data-a="exs" data-m="${m.id}" data-s="a" data-d="-1" ${saved?'disabled':''}>−</button></div>
+      <p class="sm mute" style="margin:0 0 8px">اختيار النتيجة الدقيقة بيقفل باقي خيارات هالمباراة.</p>`:'',
+      `<button class="bst${ex?' on':''}" data-a="ex" data-m="${m.id}" ${saved?'disabled':''}>${ex?'إلغاء النتيجة الدقيقة':'اختيار نتيجة دقيقة'}</button>`);
+  }
+  h+=saved?`<div class="row" style="justify-content:center;padding-top:2px"><span class="lock">✔ تم الحفظ · غير قابل للتعديل</span></div>`
+    :`<button class="btn" data-a="save" data-m="${m.id}" ${has?'':'disabled'}>${has?'حفظ التوقع':'اختر توقعك أولاً'}</button>`;
+  return h+'</div>';
+}
+function onboardHTML(){
+  const emb=EMBLEMS.map((e,i)=>`<button class="eo${i===S.emb?' on':''}" data-a="emb" data-v="${i}" aria-label="${e.n}">${emblem(e)}</button>`).join('');
+  return `<div class="screen"><div class="lead"><div class="logo">ZINGO</div><p class="mute" style="margin:6px 0 0">أهلاً فيك. اختر اسمك وشعارك</p></div><div class="stack"><div class="card stack"><div class="h2">اسم اللاعب</div><input class="tx" id="nm" maxlength="16" placeholder="3 إلى 16 حرفاً" autocomplete="off"><p class="sm mute" style="margin:0">بيتحفظ مرة وحدة وما بتقدر تغيّره إلا بعد 30 يوم. اسم "زينغو" وتكرار الأسماء ممنوع.</p><div class="sm" id="nmsg" style="min-height:18px;color:var(--bad)"></div></div>
+  <div class="card"><div class="h2">شعارك</div><div class="egrid" style="margin-top:12px">${emb}</div></div><button class="btn" data-a="onb">ابدأ</button></div></div>`;
+}
+function playHTML(){
+  if(!MATCHES.length)return `<div class="card stack" style="text-align:center"><div class="h2">لا توجد جولة مفتوحة حالياً</div><p class="sm mute" style="margin:0">بنعلمك لما تنزل الجولة الجديدة.</p></div>`;
+  const n=Object.keys(S.saved).length,tot=MATCHES.length,pr=Math.round(n/tot*100);
+  const label='ZINGO '+S.tier.toUpperCase()+' · '+(S.roundTitle||'الجولة 12');
+  return `<div class="stack"><div class="card"><div class="rb"><div><div class="mute sm" style="font-weight:700">${label}</div><div class="h2" style="margin-top:2px">يُقفل باب التوقعات بعد</div></div><div class="cd" id="cd">--:--:--</div></div>
+   <div class="prog"><i id="pg" style="width:${pr}%"></i></div><div class="sm mute" style="margin-top:6px" id="pgt">${n} من ${tot} مباريات محفوظة</div></div>
+   ${MATCHES.map(m=>matchHTML(m)).join('')}${tgHTML()}</div>`;
+}
+function tgHTML(){
+  const g=S.tg;
+  return `<div class="card stack" id="tgc"><div><div class="h2">مجموع أهداف الجولة</div><p class="sm mute" style="margin:4px 0 0">توقّع العدد الإجمالي لأهداف مباريات الجولة. الرقم الدقيق 3 نقاط، الأقرب بفارق هدف نقطتان، وبفارق هدفين نقطة.</p></div>
+   <div class="stp"><button data-a="tgs" data-d="1" ${g.saved?'disabled':''}>+</button><b>${g.v}</b><button data-a="tgs" data-d="-1" ${g.saved?'disabled':''}>−</button></div>
+   ${g.saved?`<div class="row" style="justify-content:center"><span class="lock">✔ تم الحفظ · غير قابل للتعديل</span></div>`:`<button class="btn" data-a="tgsave">حفظ التوقع</button>`}</div>`;
+}
+function tickCd(){
+  const el=$('#cd');if(!el)return;const s=Math.max(0,Math.floor((LOCK_AT-Date.now())/1000));
+  const f=n=>String(n).padStart(2,'0');el.textContent=f(Math.floor(s/3600))+':'+f(Math.floor(s%3600/60))+':'+f(s%60);
+}
+setInterval(tickCd,1000);
+
+/* ---------- Ranking ---------- */
+function frameFor(r){return (r.me||r.f==='me')?(frameOf()||'none'):(r.f&&r.f!=='none'?r.f:'none')}
+function rankHTML(){
+  const pod=[RANK[1],RANK[0],RANK[2]].map(r=>`<div class="c r${r.rk}">${avatarHTML(frameFor(r),r.e)}${MEDALS[r.rk]}<b>${esc(r.n)}</b><div class="pt">${r.p}</div></div>`).join('');
+  const rows=RANK.slice(3).map(r=>`<div class="rk${(r.me||r.f==='me')?' me':''}"><span class="n">${r.rk}</span>${avatarHTML(frameFor(r),(r.me||r.f==='me')?S.emb:r.e,'mini')}<span class="grow"><b>${(r.me||r.f==='me')?esc(S.name):esc(r.n)}</b></span><span class="h2">${r.p}</span></div>`).join('');
+  const prizes=S.tier==='free'?`<div class="card stack"><div class="h2">جوائز ختام الأسبوع</div>
+    <div class="rk" style="border:0;padding:0">${MEDALS[1]}<span class="grow">اشتراك VIP إضافي + 250 ليرة سورية</span></div>
+    <div class="rk" style="padding:0">${MEDALS[2]}<span class="grow">250 ليرة سورية</span></div>
+    <div class="rk" style="padding:0">${MEDALS[3]}<span class="grow">اشتراك مسابقة برو مجاناً</span></div></div>`
+    :`<div class="card"><div class="h2">الجوائز</div><p class="mute sm" style="margin:4px 0 0">تُعلن جوائز مسابقة ${tierName[S.tier]} قريباً.</p></div>`;
+  return `<div class="stack"><div><div class="h2">ترتيب الأسبوع</div><div class="mute sm">أفضل المشاركين في مسابقة ${tierName[S.tier]}</div></div><div class="pod">${pod}</div><div class="card">${rows}</div>${prizes}</div>`;
+}
+
+/* ---------- Profile ---------- */
+function profileHTML(){
+  const fr=frameOf(),lock=30-S.nameDays;
+  const frames=FRAMES.map(f=>`<button class="fo${owned(f)?'':' lk'}" data-a="frame" data-v="${f.id}"><div class="mini">${emblem(EMBLEMS[S.emb])}${zingoFrameHTML(f.id)}</div><b>${f.n}</b><div class="mute" style="font-size:10px;line-height:1.3;margin-top:2px">${owned(f)?(S.frameSel===f.id||(!S.frameSel&&f.id==='diamond')?'مُفعّل':'اضغط للتفعيل'):f.how}</div></button>`).join('');
+  const ach=ACH.map(a=>`<div class="ach ${a.r==='leg'?'leg':a.r}${a.got?'':' lk'}"><div class="ic">${a.i}</div>${a.n}${a.got?'':`<div class="pb"><i style="width:${Math.round((a.p||0)*100)}%"></i></div>`}</div>`).join('');
+  const emb=EMBLEMS.map((e,i)=>`<button class="eo${i===S.emb?' on':''}" data-a="emb" data-v="${i}" aria-label="${e.n}">${emblem(e)}</button>`).join('');
+  return `<div class="stack"><div class="card stack"><div class="pf">${avatarHTML(fr,S.emb)}<div class="grow"><div class="h2">${esc(S.name)} <span class="pill">المستوى ${S.level||1}</span></div>
+   <div class="row" style="flex-wrap:wrap;gap:6px;margin-top:6px"><span class="bdg vip">◆ VIP</span><span class="bdg pro">★ PRO</span><span class="bdg">${MEDALS[3].replace('class="medal"','style="width:16px;height:16px"')} المركز الثالث</span></div></div></div>
+   <button class="btn ghost" data-a="name">تغيير الاسم · متاح بعد ${lock} يوماً</button></div>
+   <div class="card"><div class="h2">إطاراتي</div><p class="sm mute" style="margin:2px 0 0">الإطارات تنفتح بالإنجازات بعد الاشتراك، وتبقى معك للأبد.</p><div class="fgrid">${frames}</div></div>
+   <div class="card"><div class="h2">الإنجازات</div><div class="grid" style="margin-top:12px">${ach}</div></div>
+   <div class="card"><div class="h2">الصورة الرمزية</div><p class="sm mute" style="margin:2px 0 12px">20 شعاراً أصلياً. اختر ما يعبّر عن تشجيعك.</p><div class="egrid">${emb}</div></div></div>`;
+}
+const FORBID=/(زين?[غج]و|زنغو|ز[يى]نغو|z\s*[i1]\s*n\s*g\s*o)/i,TAKEN=['سلطان','نجم الليل','زعيم','رعد'];
+function nameSheet(){
+  const lock=30-S.nameDays;
+  const o=document.createElement('div');o.className='sheet';o.id='sh';
+  o.innerHTML=`<div class="p stack"><div class="h2">تغيير الاسم</div><input class="tx" id="nm" maxlength="16" value="${esc(S.name)}" autocomplete="off"><div class="sm" id="nmsg" style="min-height:18px"></div>
+   <p class="sm mute" style="margin:0">يمكن تغيير الاسم مرة كل 30 يوماً. ممنوع اسم "زينغو" وتكرار الأسماء.</p>
+   <div class="row"><button class="btn ghost" data-a="close">إغلاق</button><button class="btn" data-a="nsave" id="nbtn" disabled>حفظ</button></div></div>`;
+  document.body.appendChild(o);
+  const inp=$('#nm',o),msg=$('#nmsg',o);
+  const chk=()=>{const v=inp.value.trim();let m='',ok=false;
+    if(lock>0)m=`لا يمكنك تغيير الاسم الآن. متاح بعد ${lock} يوماً.`;
+    else if(v.length<3)m='الاسم لازم يكون 3 أحرف على الأقل.';
+    else if(FORBID.test(v))m='هذا الاسم غير مسموح.';
+    else if(TAKEN.includes(v))m='هذا الاسم مستخدم من لاعب آخر.';
+    else{ok=true;m='الاسم متاح'}
+    msg.textContent=m;msg.style.color=ok?'var(--ok)':'var(--bad)';$('#nbtn',o).disabled=!ok};
+  inp.addEventListener('input',chk);chk();
+}
+</script>
+<script>
+'use strict';
+/* ---------- Cinematic Pro <-> VIP ---------- */
+let cineBusy=false,cineSkip=false;
+async function cinematic(to){
+  if(cineBusy)return;cineBusy=true;cineSkip=false;
+  const el=$('#cine'),cv=$('#cv'),fl=$('#fl'),tt=$('#tt'),ctx=cv.getContext('2d');
+  const lite=document.documentElement.classList.contains('lite'),dpr=Math.min(window.devicePixelRatio||1,lite?1:2);
+  const W=cv.width=innerWidth*dpr,H=cv.height=innerHeight*dpr,cx=W/2,cy=H/2;
+  const vip=to==='vip',cols=vip?['#ffd36a','#f5b300','#fff3bf']:['#8fe3ff','#5cd0ff','#ffffff'];
+  const N=lite?60:140,ps=[];
+  for(let i=0;i<N;i++){const a=Math.random()*6.283,r=Math.max(W,H)*(.5+Math.random()*.5);ps.push({a,r,s:(1+Math.random()*3)*dpr,c:cols[i%3],d:Math.random()*.3})}
+  tt.textContent=vip?'VIP':'PRO';tt.style.color=vip?'#9fe8ff':'#ffd36a';tt.style.textShadow=vip?'0 0 40px #5cd0ff':'0 0 40px #f5b300';
+  el.classList.add('on');el.style.background=vip?'#05080f':'#0a0804';hap('i');
+  const D=2200,t0=performance.now();
+  await new Promise(res=>{
+    $('#skip').onclick=()=>{cineSkip=true};
+    (function f(now){
+      const t=cineSkip?D:now-t0,k=Math.min(t/D,1);
+      ctx.clearRect(0,0,W,H);
+      const g=ctx.createRadialGradient(cx,cy,0,cx,cy,Math.max(W,H)*.6);
+      g.addColorStop(0,(vip?'rgba(92,208,255,':'rgba(245,179,0,')+(.15+.5*k)+')');g.addColorStop(1,'rgba(0,0,0,0)');
+      ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+      const conv=k<.6?k/.6:1; // particles rush to centre
+      for(const p of ps){
+        const q=Math.max(0,Math.min(1,(conv-p.d)/(1-p.d)));const e=q*q*(3-2*q),r=p.r*(1-e);
+        const x=cx+Math.cos(p.a+e*2)*r,y=cy+Math.sin(p.a+e*2)*r;
+        ctx.globalAlpha=k>.8?Math.max(0,(1-k)/.2):1;ctx.fillStyle=p.c;
+        ctx.save();ctx.translate(x,y);ctx.rotate(p.a+e*6);
+        if(vip){ctx.beginPath();ctx.moveTo(0,-p.s*2);ctx.lineTo(p.s,0);ctx.lineTo(0,p.s*2);ctx.lineTo(-p.s,0);ctx.closePath();ctx.fill()}else ctx.fillRect(-p.s,-p.s,p.s*2,p.s*2);
+        ctx.restore();
+      }
+      ctx.globalAlpha=1;
+      // title punch + white flash at the climax
+      const tk=Math.max(0,(k-.55)/.3);tt.style.opacity=k>.9?String(Math.max(0,(1-k)/.1)):String(Math.min(1,tk));tt.style.transform=`scale(${.8+.35*Math.min(1,tk)})`;
+      const fk=k<.62?0:k<.7?(k-.62)/.08:Math.max(0,1-(k-.7)/.2);fl.style.opacity=String(fk*.9);
+      if(k>=1)return res();requestAnimationFrame(f);
+    })(performance.now());
+  });
+  S.tier=to;render();hap('ok');
+  el.style.transition='opacity .35s';el.style.opacity='0';await sleep(360);
+  el.classList.remove('on');el.style.opacity='';el.style.transition='';tt.style.opacity=0;fl.style.opacity=0;
+  cineBusy=false;
+}
+
+/* ---------- Events ---------- */
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('[data-a]');if(!b||b.disabled)return;
+  const a=b.dataset.a,v=b.dataset.v,mid=+b.dataset.m;hap('i');
+  if(a.startsWith('ad')&&a!=='adm'){await adminEvent(a,b);return}
+  if(a==='go'){if(!gate(v))return;S.tier=v;S.tab='play';await loadRound();render();scrollTo(0,0)}
+  else if(a==='menu'){S.tier='menu';render()}
+  else if(a==='adm'){S.tier='admin';AD.tab='new';render();scrollTo(0,0)}
+  else if(a==='tab'){S.tab=v;if(v==='rank')await loadRank();render();scrollTo(0,0)}
+  else if(a==='sw'){if(v!==S.tier&&gate(v)){await loadRound(v);cinematic(v)}}
+  else if(a==='pick'){const p=S.picks[mid]||(S.picks[mid]={}),k=b.dataset.k;p[k]=p[k]===v?undefined:v;if(p[k]===undefined)delete p[k];const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='boost'){S.boost=S.boost===mid?null:mid;if(S.boost)toast('تم تفعيل التعزيز لهذه المباراة (مرة واحدة بالجولة)');const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='ex'){const p=S.picks[mid]||(S.picks[mid]={});if(p.ex)delete p.ex;else{S.picks[mid]={ex:{h:1,a:1}}}const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='exs'){const x=S.picks[mid].ex,s=b.dataset.s;x[s]=clamp(x[s]+ +b.dataset.d,0,9);const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='save'){if(API.on){await apiSave(mid);return}S.saved[mid]=true;hap('ok');toast('تم حفظ التوقع');const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='tgs'){S.tg.v=clamp(S.tg.v+ +b.dataset.d,0,60);const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='tgsave'){if(API.on){await apiTotal();return}S.tg.saved=true;hap('ok');toast('تم حفظ مجموع الأهداف');const y=scrollY;render();scrollTo(0,y)}
+  else if(a==='frame'){const f=FRAMES.find(x=>x.id===v);if(!owned(f)){toast('مقفل: '+f.how);return}S.frameSel=v;if(API.on)await apiProfile({frame:v});render()}
+  else if(a==='emb'){S.emb=+v;if(API.on&&S.tier!=='onboard')await apiProfile({emblem:+v});render()}
+  else if(a==='onb'){const n=($('#nm').value||'').trim();const r=await apiProfile({name:n,emblem:S.emb});if(r&&r.ok){S.tier='menu';render()}else $('#nmsg').textContent=errMsg(r&&r.error)}
+  else if(a==='name'){nameSheet()}
+  else if(a==='close'){$('#sh')&&$('#sh').remove()}
+  else if(a==='nsave'){const v2=$('#nm').value.trim();if(API.on){const r=await apiProfile({name:v2});if(!r||!r.ok){$('#nmsg').textContent=errMsg(r&&r.error);$('#nmsg').style.color='var(--bad)';return}}else{S.name=v2;S.nameDays=0}$('#sh').remove();toast('تم تغيير الاسم · القادم بعد 30 يوماً');render()}
+});
+/* ---------- API layer (Telegram). Outside Telegram the page keeps the demo data. ---------- */
+const API={on:!!(TG&&TG.initData),
+  async call(path,body){try{const r=await fetch(path,{method:body?'POST':'GET',headers:{'Content-Type':'application/json','X-Telegram-Init-Data':TG.initData},body:body?JSON.stringify(body):undefined});return await r.json().catch(()=>({ok:false,error:'server_error'}))}catch(e){return{ok:false,error:'network'}}}};
+const ERR={unauthorized:'تعذّر التحقق من حسابك. افتح التطبيق من البوت.',name_too_short:'الاسم لازم يكون 3 أحرف على الأقل.',name_too_long:'الاسم طويل (16 حرفاً كحد أقصى).',name_forbidden:'هذا الاسم غير مسموح.',name_taken:'هذا الاسم مستخدم من لاعب آخر.',name_locked:'ما بتقدر تغيّر الاسم قبل مرور 30 يوماً.',name_required:'اكتب اسمك أولاً.',frame_locked:'هذا الإطار لسا مقفل.',subscription_required:'هذه المسابقة تحتاج اشتراك.',profile_required:'أنشئ ملفك أولاً.',round_locked:'انقفل باب التوقعات.',already_saved:'هذا التوقع محفوظ مسبقاً.',boost_used:'استخدمت التعزيز بهذه الجولة.',pro_only:'متاح بمسابقة برو وVIP.',vip_only:'متاح بمسابقة VIP فقط.',empty_pick:'اختر توقعك أولاً.',network:'تعذّر الاتصال. جرّب مرة ثانية.',server_error:'صار خطأ بالسيرفر. جرّب بعد شوي.'};
+const errMsg=e=>ERR[e]||'صار خطأ. جرّب مرة ثانية.';
+S.acc={pro:true,vip:true};S.roundId=null;
+const hhmm=t=>new Date(t*1000).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
+function gate(tier){if(tier==='free'||S.acc[tier])return true;toast(tier==='pro'?'مسابقة برو تحتاج اشتراك برو':'مسابقة VIP تحتاج اشتراك VIP');return false}
+function applyMe(r){if(!r||!r.ok)return;const p=r.player;S.acc={pro:r.access.pro,vip:r.access.vip,admin:r.access.admin};
+  if(p){S.name=p.name;S.emb=p.emblem;S.frameSel=p.frame||null;S.nameDays=30-r.name_locked_days}
+  FRAMES.forEach(f=>{f.earned=(r.frames||[]).includes(f.id)});
+  if(r.level)S.level=r.level.level;
+  if(r.achievements&&r.achievements.length){ACH.length=0;ACH.push(...r.achievements.map(a=>({i:ACH_ICON[a.id]||'★',n:a.name,got:a.unlocked,r:'',p:a.progress})))}
+  return p}
+async function loadRound(tier){
+  if(!API.on)return;const t=tier||S.tier;if(!['free','pro','vip'].includes(t))return;
+  const r=await API.call('/api/round?tier='+t);
+  if(!r.ok){toast(errMsg(r.error));MATCHES=[];return}
+  S.picks={};S.saved={};S.boost=null;S.tg={v:S.tg.v,saved:false};
+  if(!r.round){MATCHES=[];S.roundId=null;return}
+  S.roundId=r.round.id;S.roundTitle=r.round.title;LOCK_AT=r.round.lock_at*1000;
+  MATCHES=r.matches.map(m=>({id:m.id,h:m.home,a:m.away,t:hhmm(m.kickoff),cor:m.cor_line,car:m.car_line,sp:m.points}));
+  r.matches.forEach(m=>{if(!m.pick)return;S.saved[m.id]=true;const q={};for(const k of ['wdl','btts','cor','car','dc','ex'])if(m.pick[k])q[k]=m.pick[k];S.picks[m.id]=q;if(m.pick.boost)S.boost=m.id});
+  if(r.total)S.tg={v:r.total.guess,saved:true};
+}
+async function apiSave(mid){
+  const p=S.picks[mid]||{};
+  const r=await API.call('/api/predict',{match_id:mid,wdl:p.wdl,btts:p.btts,cor:p.cor,car:p.car,dc:p.dc,ex:p.ex,boost:S.boost===mid});
+  if(!r.ok){toast(errMsg(r.error));if(r.error==='boost_used')S.boost=null;return render()}
+  hap('ok');toast('تم حفظ التوقع');const y=scrollY;await loadRound();render();scrollTo(0,y);
+}
+async function apiTotal(){
+  const r=await API.call('/api/total',{round_id:S.roundId,guess:S.tg.v});
+  if(!r.ok)return toast(errMsg(r.error));
+  hap('ok');toast('تم حفظ مجموع الأهداف');S.tg.saved=true;const y=scrollY;render();scrollTo(0,y);
+}
+async function apiProfile(b){const r=await API.call('/api/profile',b);if(r&&r.ok)applyMe(r);else if(r&&b.name===undefined)toast(errMsg(r.error));return r}
+async function loadRank(){
+  if(!API.on)return;const r=await API.call('/api/ranking?tier='+S.tier);if(!r.ok)return;
+  const rows=r.rows.map(x=>({n:x.name,p:x.points,e:x.emblem,f:x.frame||'none',me:!!x.me,rk:x.rank}));
+  while(rows.length<3)rows.push({n:'—',p:0,e:0,f:'none',rk:rows.length+1});
+  RANK.length=0;RANK.push(...rows);
+}
+async function boot(){
+  if(API.on){const r=await API.call('/api/me');if(!r.ok){app.innerHTML=`<div class="screen"><div class="card" style="text-align:center"><div class="h2">ZINGO</div><p class="mute">${errMsg(r.error)}</p><p class="sm mute" dir="ltr">${esc(r.reason||'')}</p></div></div>`;return}
+    if(!applyMe(r))S.tier='onboard';}
+  render();
+}
+
+/* ---------- Admin screen (only for ADMIN_IDS) ---------- */
+const iso=d=>d.toISOString().slice(0,10);
+const AD={fx:{mode:'up',season:'2024',round:'10',from:iso(new Date()),to:iso(new Date(Date.now()+6*864e5)),comps:{PL:1,PD:1,SA:1},list:[],sel:{},note:''},tab:'new',tier:'free',title:'',lock:'',matches:[{h:'',a:'',k:'',cor:'9.5',car:'4.5',sh:'80',sa:'80'}],rounds:[],res:{},players:[],q:'',msg:''};
+const dtv=t=>{const d=new Date(t*1000),p=n=>String(n).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate())+'T'+p(d.getHours())+':'+p(d.getMinutes())};
+const ts=v=>Math.floor(new Date(v).getTime()/1000);
+const fld=(f,ph,val,extra='')=>`<input class="tx" data-f="${f}" placeholder="${ph}" value="${esc(val)}" ${extra}>`;
+function adminHTML(){
+  const tabs=[['new','جولة جديدة'],['rounds','الجولات'],['subs','الاشتراكات']].map(([k,l])=>`<button class="o${AD.tab===k?' sel':''}" data-a="adtab" data-v="${k}">${l}</button>`).join('');
+  let body='';
+  if(AD.tab==='new'){
+    const tiers=['free','pro','vip'].map(t=>`<button class="o${AD.tier===t?' sel':''}" data-a="adtier" data-v="${t}">${tierName[t]}</button>`).join('');
+    body=`<div class="card stack"><div class="h2">جولة جديدة</div><div class="opts o3">${tiers}</div>
+     <div class="card stack" style="padding:12px"><b>جلب المباريات تلقائياً</b><div class="sm mute">من API-Football (الأسماء والمواعيد)</div>
+      <div class="opts o2"><button class="o${AD.fx.mode==='up'?' sel':''}" data-a="adfxmode" data-v="up">مباريات قادمة</button><button class="o${AD.fx.mode==='replay'?' sel':''}" data-a="adfxmode" data-v="replay">إعادة جولة سابقة</button></div>
+      <div class="opts o3">${[['PL','إنكليزي'],['PD','إسباني'],['SA','إيطالي']].map(([c,l])=>`<button class="o${AD.fx.comps[c]?' sel':''}" data-a="adcomp" data-v="${c}">${l}</button>`).join('')}</div>
+      ${AD.fx.mode==='up'?`<div class="row"><div class="grow"><input class="tx" type="date" data-f="fxfrom" value="${AD.fx.from}"></div><div class="grow"><input class="tx" type="date" data-f="fxto" value="${AD.fx.to}"></div></div>`:`<div class="sm mute">الخطة المجانية بتسمح بمواسم 2022 إلى 2024 فقط. بتفيد للتجربة بمباريات حقيقية منتهية.</div><div class="row"><div class="grow"><input class="tx" data-f="fxseason" placeholder="الموسم (مثلاً 2024)" inputmode="numeric" value="${esc(AD.fx.season)}"></div><div class="grow"><input class="tx" data-f="fxround" placeholder="رقم الجولة" inputmode="numeric" value="${esc(AD.fx.round)}"></div></div>`}
+      <button class="btn ghost" data-a="adfx">جلب المباريات</button>${AD.fx.note?`<div class="sm mute">${esc(AD.fx.note)}</div>`:''}
+      ${AD.fx.list.map((m,i)=>`<button class="o${AD.fx.sel[m.ext_id]?' sel':''}" data-a="adfxsel" data-v="${m.ext_id}" style="text-align:start">${esc(m.home)} - ${esc(m.away)}<small>${esc(m.comp||'')} · ${new Date(m.kickoff*1000).toLocaleString('en-GB',{dateStyle:'short',timeStyle:'short'})}</small></button>`).join('')}
+      ${AD.fx.list.length?`<button class="btn" data-a="adfxadd">إضافة المحدد للجولة</button>`:''}</div>
+     ${fld('title','اسم الجولة (مثلاً الجولة 13)',AD.title)}
+     <div class="sm mute">وقت إقفال التوقعات</div><input class="tx" type="datetime-local" data-f="lock" value="${esc(AD.lock)}">
+     ${AD.matches.map((m,i)=>`<div class="card stack" style="padding:12px"><div class="row"><b class="grow">مباراة ${i+1}</b>${AD.matches.length>1?`<button class="ibtn" data-a="admdel" data-i="${i}" aria-label="حذف">✕</button>`:''}</div>
+      ${fld('h','الفريق الأول',m.h,`data-i="${i}"`)}${fld('a','الفريق الثاني',m.a,`data-i="${i}"`)}
+      <div class="sm mute">وقت المباراة</div><input class="tx" type="datetime-local" data-f="k" data-i="${i}" value="${esc(m.k)}">
+      <div class="row"><div class="grow">${fld('cor','خط الركنيات',m.cor,`data-i="${i}" inputmode="decimal"`)}</div><div class="grow">${fld('car','خط البطاقات',m.car,`data-i="${i}" inputmode="decimal"`)}</div></div>
+      ${AD.tier==='vip'?`<div class="sm mute">قوة الفريقين (0-100) لتحديد نقاط VIP</div><div class="row"><div class="grow">${fld('sh','الأول',m.sh,`data-i="${i}" inputmode="numeric"`)}</div><div class="grow">${fld('sa','الثاني',m.sa,`data-i="${i}" inputmode="numeric"`)}</div></div>`:''}</div>`).join('')}
+     <button class="btn ghost" data-a="admadd">+ إضافة مباراة</button><button class="btn" data-a="admcreate">نشر الجولة</button></div>`;
+  }else if(AD.tab==='rounds'){
+    body=AD.rounds.length?AD.rounds.map(r=>{const st=r.status==='settled';return `<div class="card stack"><div class="row"><b class="grow">${esc(r.title)} · ${tierName[r.tier]}</b><span class="pill">${st?'منتهية':'مفتوحة'}</span></div>
+      <div class="sm mute">المشاركون: ${r.players} · الإقفال: ${new Date(r.lock_at*1000).toLocaleString('en-GB',{dateStyle:'short',timeStyle:'short'})}</div>
+      ${r.matches.map(m=>{const R=AD.res[m.id]||(AD.res[m.id]={hg:m.hg??'',ag:m.ag??'',corners:m.corners??'',cards:m.cards??''});return `<div class="card stack" style="padding:12px"><b>${esc(m.home)} - ${esc(m.away)}</b>
+        ${st?`<div class="sm mute">النتيجة ${m.hg}-${m.ag}</div>`:`<div class="row"><div class="grow">${fld('hg','أهداف '+esc(m.home),R.hg,`data-m="${m.id}" inputmode="numeric"`)}</div><div class="grow">${fld('ag','أهداف '+esc(m.away),R.ag,`data-m="${m.id}" inputmode="numeric"`)}</div></div><div class="row"><div class="grow">${fld('corners','الركنيات',R.corners,`data-m="${m.id}" inputmode="numeric"`)}</div><div class="grow">${fld('cards','البطاقات',R.cards,`data-m="${m.id}" inputmode="numeric"`)}</div></div>`}</div>`}).join('')}
+      ${st?`<div class="sm mute">مجموع الأهداف: ${r.total_goals}</div>`:`<button class="btn ghost" data-a="adres" data-r="${r.id}">جلب النتائج تلقائياً</button><div class="sm mute">الركنيات والبطاقات بتكتبهم بإيدك (اختياري).</div><button class="btn" data-a="adsettle" data-r="${r.id}">اعتماد النتائج وحساب النقاط</button>${r.players===0?`<button class="btn ghost" data-a="adrdel" data-r="${r.id}">حذف الجولة</button>`:''}`}</div>`}).join(''):`<div class="card"><p class="mute" style="margin:0">ما في جولات بعد.</p></div>`;
+  }else{
+    body=`<div class="card stack"><div class="h2">إعطاء اشتراك</div>${fld('q','ابحث باسم اللاعب أو رقمه',AD.q)}<button class="btn ghost" data-a="adfind">بحث</button></div>`+
+      AD.players.map(p=>`<div class="card stack"><div class="row"><b class="grow">${esc(p.name)}</b><span class="sm mute" dir="ltr">${esc(p.tg)}</span></div><div class="sm mute">${p.subs.length?p.subs.map(s=>tierName[s.tier]+' حتى '+new Date(s.ends_at*1000).toLocaleDateString('en-GB')).join(' · '):'بدون اشتراك'}</div>
+      <div class="row"><button class="btn" data-a="adgrant" data-tg="${esc(p.tg)}" data-t="pro">برو 30 يوم</button><button class="btn" data-a="adgrant" data-tg="${esc(p.tg)}" data-t="vip">VIP 30 يوم</button></div></div>`).join('');
+  }
+  return `<div class="hd"><span class="logo">ZINGO</span><div class="row"><span class="pill">إدارة</span><button class="ibtn" data-a="menu" aria-label="القائمة">⌂</button></div></div>
+   <div class="screen"><div class="stack"><div class="opts o3">${tabs}</div>${AD.msg?`<div class="card sm" style="color:var(--ok)">${esc(AD.msg)}</div>`:''}${body}</div></div>`;
+}
+document.addEventListener('input',e=>{const el=e.target.closest('[data-f]');if(!el)return;const f=el.dataset.f;
+  if(el.dataset.m){(AD.res[el.dataset.m]||(AD.res[el.dataset.m]={}))[f]=el.value}
+  else if(el.dataset.i!==undefined){AD.matches[+el.dataset.i][f]=el.value}
+  else if(f==='fxfrom')AD.fx.from=el.value;else if(f==='fxseason')AD.fx.season=el.value;else if(f==='fxround')AD.fx.round=el.value;else if(f==='fxto')AD.fx.to=el.value;else AD[f]=el.value});
+async function adminEvent(a,b){
+  const d=b.dataset;AD.msg='';
+  if(a==='adtab'){AD.tab=d.v;if(d.v==='rounds')await adLoadRounds();if(d.v==='subs'&&!AD.players.length)await adFind()}
+  else if(a==='adtier')AD.tier=d.v;
+  else if(a==='adfxmode'){AD.fx.mode=d.v;AD.fx.list=[];AD.fx.note=''}
+  else if(a==='adcomp'){AD.fx.comps[d.v]=AD.fx.comps[d.v]?0:1}
+  else if(a==='adfx'){const c=Object.keys(AD.fx.comps).filter(k=>AD.fx.comps[k]).join(',');if(!c)return toast('اختر دوري واحد على الأقل');
+    const r=await API.call(AD.fx.mode==='replay'?`/api/admin/fixtures?comps=${c}&mode=replay&season=${encodeURIComponent(AD.fx.season)}&round=${encodeURIComponent(AD.fx.round)}`:`/api/admin/fixtures?comps=${c}&from=${AD.fx.from}&to=${AD.fx.to}`);
+    if(!r.ok){AD.fx.note=r.error==='no_football_token'?'أضف مفتاح API-Football (السر FOOTBALL_DATA_TOKEN) بـCloudflare أولاً':'تعذّر الجلب: '+(r.error||'')+(r.detail?' - '+r.detail:'');AD.fx.list=[]}
+    else{AD.fx.list=r.matches;AD.fx.sel={};AD.fx.note=r.matches.length?'اختر المباريات اللي بدك ياها':'ما في مباريات بهالفترة (المدى الأقصى 10 أيام)'}}
+  else if(a==='adfxsel'){AD.fx.sel[d.v]=!AD.fx.sel[d.v]}
+  else if(a==='adfxadd'){const n=adAddSelected();if(!n)return toast('اختر مباراة أولاً');AD.msg='انضافت '+n+' مباراة. راجع الأسماء وخط الركنيات والبطاقات'}
+  else if(a==='adres'){const r=await API.call('/api/admin/results?round_id='+d.r);if(!r.ok)return toast(r.error==='no_football_token'?'أضف السر FOOTBALL_DATA_TOKEN':'تعذّر الجلب: '+(r.error||''));
+    let n=0;r.results.forEach(x=>{if(x.hg!=null){const R=AD.res[x.match_id]||(AD.res[x.match_id]={});R.hg=x.hg;R.ag=x.ag;n++}});AD.msg=n?'انجلبت نتائج '+n+' مباراة. أكمل الباقي يدوي':'ما في مباريات منتهية بعد'}
+  else if(a==='admadd')AD.matches.push({h:'',a:'',k:'',cor:'9.5',car:'4.5',sh:'80',sa:'80'});
+  else if(a==='admdel')AD.matches.splice(+d.i,1);
+  else if(a==='admcreate'){
+    adAddSelected();AD.matches=AD.matches.filter(m=>m.h.trim()||m.a.trim()||m.k);
+    const ms=AD.matches;if(!ms.length)return toast('اختر مباراة من القائمة، أو أضف مباراة يدوي');
+    if(ms.some(m=>!m.h.trim()||!m.a.trim()||!m.k))return toast('كمّل اسم الفريقين ووقت المباراة، أو احذف المباراة الناقصة');
+    if(!AD.lock)AD.lock=AD.fx.mode==='replay'?dtv(Date.now()/1000+7200):dtv(Math.min(...ms.map(m=>ts(m.k)))-1800);
+    if(ts(AD.lock)<=Date.now()/1000)return toast('وقت إقفال التوقعات لازم يكون بالمستقبل');
+    const r=await API.call('/api/admin/round',{tier:AD.tier,title:AD.title||'جولة',lock_at:ts(AD.lock),matches:ms.map(m=>({home:m.h.trim(),away:m.a.trim(),kickoff:ts(m.k),cor_line:+m.cor||9.5,car_line:+m.car||4.5,str_home:+m.sh||80,str_away:+m.sa||80,ext_id:m.ext||null}))});
+    if(!r.ok)return toast('تعذّر النشر: '+(r.error||''));
+    AD.msg='انتشرت الجولة';AD.matches=[{h:'',a:'',k:'',cor:'9.5',car:'4.5',sh:'80',sa:'80'}];AD.title='';AD.lock='';
+  }
+  else if(a==='adsettle'){const rd=AD.rounds.find(x=>x.id===+d.r);
+    const results=rd.matches.map(m=>{const R=AD.res[m.id]||{};return{match_id:m.id,hg:R.hg===''||R.hg==null?null:+R.hg,ag:R.ag===''||R.ag==null?null:+R.ag,corners:R.corners===''||R.corners==null?null:+R.corners,cards:R.cards===''||R.cards==null?null:+R.cards}});
+    if(results.some(x=>x.hg==null||x.ag==null))return toast('اكتب أهداف الفريقين لكل مباراة');
+    const r=await API.call('/api/admin/settle',{round_id:rd.id,results});if(!r.ok)return toast('تعذّر الاعتماد: '+(r.error||''));
+    AD.msg='انحسبت النقاط. مجموع الأهداف: '+r.total_goals;await adLoadRounds()}
+  else if(a==='adrdel'){const r=await API.call('/api/admin/round/delete',{round_id:+d.r});if(!r.ok)return toast('تعذّر الحذف: '+(r.error||''));await adLoadRounds()}
+  else if(a==='adfind')await adFind();
+  else if(a==='adgrant'){const r=await API.call('/api/admin/grant',{tg:d.tg,tier:d.t,days:30});if(!r.ok)return toast('تعذّر: '+(r.error||''));AD.msg='انعطى الاشتراك';await adFind()}
+  render();
+}
+function adAddSelected(){const ch=AD.fx.list.filter(m=>AD.fx.sel[m.ext_id]);if(!ch.length)return 0;
+  if(AD.matches.every(m=>!m.h.trim()&&!m.a.trim()&&!m.k))AD.matches=[];
+  ch.forEach(m=>{if(!AD.matches.some(x=>x.ext===m.ext_id))AD.matches.push({h:m.home,a:m.away,k:dtv(m.kickoff),cor:'9.5',car:'4.5',sh:'80',sa:'80',ext:m.ext_id})});
+  if(!AD.lock)AD.lock=AD.fx.mode==='replay'?dtv(Date.now()/1000+7200):dtv(Math.min(...AD.matches.map(m=>ts(m.k)))-1800);
+  AD.fx.sel={};return ch.length}
+async function adLoadRounds(){const r=await API.call('/api/admin/rounds');if(r.ok){AD.rounds=r.rounds;AD.res={}}}
+async function adFind(){const r=await API.call('/api/admin/players?q='+encodeURIComponent(AD.q||''));if(r.ok)AD.players=r.players}
+
+boot();
+</script>
+</html>
