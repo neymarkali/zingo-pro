@@ -203,6 +203,16 @@ input.tx{width:100%;background:var(--bg2);color:var(--fg);border:1px solid var(-
 @keyframes zfa-s2{0%{stop-color:#d9a6ff}33%{stop-color:#ffb3e6}66%{stop-color:#fff6c8}100%{stop-color:#d9a6ff}}
 @keyframes zfa-s3{0%{stop-color:#ffb3e6}33%{stop-color:#fff6c8}66%{stop-color:#8fe8ff}100%{stop-color:#ffb3e6}}
 .zfa-s1{animation:zfa-s1 5s linear infinite}.zfa-s2{animation:zfa-s2 5s linear infinite}.zfa-s3{animation:zfa-s3 5s linear infinite}
+.fs-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);display:flex;align-items:flex-end;justify-content:center;z-index:60}
+.fs-card{width:100%;max-width:480px;background:var(--card);border-radius:22px 22px 0 0;padding:18px 18px 24px;border-top:1px solid var(--line)}
+.fsteps{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.pcs{width:64px;height:64px;display:block;margin:0 auto}
+.fst{text-align:center;padding:10px 4px;border-radius:12px;background:var(--bg2);border:1px solid var(--line);opacity:.55}
+.fst.on{opacity:1;border-color:var(--accent2)}
+.fst small{display:block;font-size:10px;color:var(--mute,#8fa4c4);margin-top:4px}
+.fst span{font-size:12px}
+.fway{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--bg2);border:1px solid var(--line)}
+.lgwrap{width:170px;height:170px;margin:12px auto 4px}.lgsvg{width:100%;height:100%}
 .pb{height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin-top:5px;overflow:hidden}.pb i{display:block;height:100%;background:var(--btn)}
 </style>
 <div id="amb"></div><div id="app"></div>
@@ -328,6 +338,61 @@ const RANK=[['سلطان',48,0,'gold'],['نجم الليل',44,1,'silver'],['أ�
  .map((r,i)=>({n:r[0],p:r[1],e:r[2],f:r[3],rk:i+1}));
 const S={tier:'menu',tab:'play',emb:7,frameSel:null,boost:null,tg:{v:12,saved:false},nameDays:30,name:'كابتن ليث',picks:{},saved:{}};
 const planOf=()=>S.tier==='free'?0:S.tier==='pro'?1:2;
+// Top frames show their steps: a segment unlocks at each listed level, the frame completes at the last one.
+const FRAME_STEPS={carbon:[1,2,4,5],ruby:[3,5,8,10],rope:[4,8,11,15],emerald:[6,13,19,25],halo:[8,15,23,30]};
+function frameSheet(f){
+  document.getElementById('fsheet')?.remove();
+  const lv=S.level||1, legend=S.legend, steps=FRAME_STEPS[f.id];
+  let body='';
+  if(steps){
+    const piece=(i,on)=>{const a0=-Math.PI/2+i*Math.PI/2,a1=a0+Math.PI/2,r=40,x0=100+r*Math.cos(a0),y0=100+r*Math.sin(a0),x1=100+r*Math.cos(a1),y1=100+r*Math.sin(a1);
+      return `<svg viewBox="0 0 200 200" class="pcs"><circle cx="100" cy="100" r="46" fill="none" stroke="#24345a" stroke-width="2" opacity=".5"/><path d="M${x0.toFixed(1)} ${y0.toFixed(1)} A${r} ${r} 0 0 1 ${x1.toFixed(1)} ${y1.toFixed(1)}" fill="none" stroke="${on?'#ffd86b':'#2b3950'}" stroke-width="16" stroke-linecap="butt"/>${on?'':'<g transform="translate(70 60) scale(1.1)"><rect x="0" y="22" width="60" height="50" rx="8" fill="#0a1224" stroke="#8d98a6" stroke-width="4"/><path d="M14 22 V12 A16 16 0 0 1 46 12 V22" fill="none" stroke="#8d98a6" stroke-width="4"/></g>'}</svg>`};
+    body+=`<div class="sec" style="margin-top:14px">قطع الإطار</div><div class="fsteps">`+steps.map((n,i)=>{const ok=lv>=n;return `<div class="fst${ok?' on':''}">${piece(i,ok)}<small>${ok?'مفتوحة':'عند المستوى '+n}</small></div>`}).join('')+`</div>`;
+    body+=`<p class="sm mute" style="margin:10px 0 0">مستواك الحالي ${lv}. الإطار ينفتح كامل عند المستوى ${steps[steps.length-1]}.</p>`;
+  } else if(f.id==='kasi' && legend){
+    const p1=Math.round(legend.first*3), p2=Math.round(legend.points*100);
+    body+=`<div class="sec" style="margin-top:14px">طريقتين، وحدة تكفي</div>
+      <div class="fway"><b>الطريقة الأولى</b><p class="sm mute" style="margin:2px 0 0">المركز الأول 3 مرات بالترتيب الأسبوعي · ${Math.min(3,p1)}/3</p></div>
+      <div class="fway"><b>الطريقة الثانية</b><p class="sm mute" style="margin:2px 0 0">500 نقطة إجمالية، وأول 5 بالترتيب 4 مرات · ${p2}%</p></div>`;
+  } else {
+    body+=`<p class="sm mute" style="margin:12px 0 0">الشرط: ${f.how}</p>`;
+  }
+  const html=`<div id="fsheet" class="fs-bg"><div class="fs-card"><div class="h2" style="font-size:18px">${f.n}</div>${body}<button class="btn" style="margin-top:16px;width:100%" data-a="fsClose">إغلاق</button></div></div>`;
+  document.body.insertAdjacentHTML('beforeend',html);
+}
+const ACH_REQ={
+  first:'احفظ توقعاً واحداً',
+  correct10:'10 توقعات صحيحة بالمجموع',
+  streak7:'7 توقعات صحيحة متتالية (أي خطأ يبدأ العد من جديد)',
+  fullWeek:'توقع كل مباريات أسبوع، و80% منها صحيحة',
+  rank1x2:'تكون الأول بالترتيب الأسبوعي مرتين',
+  exact3:'3 نتائج دقيقة صحيحة',
+  weeks10:'تشارك 10 أسابيع متتالية، وتجمع نقطة على الأقل كل أسبوع',
+  legend:'طريقة من اثنتين'
+};
+function achSheet(id){
+  document.getElementById('fsheet')?.remove();
+  const a=ACH.find(x=>x.id===id); if(!a)return;
+  const pct=Math.round((a.p||0)*100);
+  let body=`<div style="font-size:34px;text-align:center;margin-top:6px">${a.got?'✔':'🔒'}</div>`;
+  if(id==='legend' && S.legend){
+    const l=S.legend, p1=Math.round(l.first*100), p2=Math.round(l.points*100);
+    body+=`<div class="lgwrap"><svg viewBox="0 0 200 200" class="lgsvg">
+      <path d="M100 54 A46 46 0 0 1 100 146" pathLength="100" fill="none" stroke="#24345a" stroke-width="7" stroke-linecap="round"/>
+      <path d="M100 54 A46 46 0 0 1 100 146" pathLength="100" fill="none" stroke="#ffd86b" stroke-width="7" stroke-linecap="round" stroke-dasharray="${p1} 100"/>
+      <path d="M100 54 A46 46 0 0 0 100 146" pathLength="100" fill="none" stroke="#24345a" stroke-width="7" stroke-linecap="round"/>
+      <path d="M100 54 A46 46 0 0 0 100 146" pathLength="100" fill="none" stroke="#8fe8ff" stroke-width="7" stroke-linecap="round" stroke-dasharray="${p2} 100"/>
+    </svg></div>
+    <div class="fway"><b style="color:#ffd86b">يمين · المركز الأول 3 مرات</b><p class="sm mute" style="margin:2px 0 0">بالترتيب الأسبوعي · ${p1}%</p></div>
+    <div class="fway"><b style="color:#8fe8ff">يسار · 500 نقطة إجمالية</b><p class="sm mute" style="margin:2px 0 0">وأول 5 بالترتيب 4 مرات · ${p2}%</p></div>`;
+  } else {
+    body+=`<p class="sm" style="margin:12px 0 6px">المطلوب: ${ACH_REQ[id]||''}</p>
+      <div class="pb" style="height:8px;margin-top:8px"><i style="width:${pct}%"></i></div>
+      <p class="sm mute" style="margin:6px 0 0">${a.got?'✔ مفتوح':'التقدم: '+pct+'%'}</p>`;
+  }
+  const html=`<div id="fsheet" class="fs-bg"><div class="fs-card"><div class="h2" style="font-size:18px">${a.n}</div>${body}<button class="btn" style="margin-top:16px;width:100%" data-a="fsClose">إغلاق</button></div></div>`;
+  document.body.insertAdjacentHTML('beforeend',html);
+}
 function toast(m){const t=document.createElement('div');t.className='toast';t.textContent=m;document.body.appendChild(t);setTimeout(()=>t.remove(),2000)}
 const ICON={
  play:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7l3.5 2.5-1.3 4.1H9.8L8.5 9.5z"/></svg>',
@@ -455,7 +520,7 @@ function profileHTML(){
   const frames=(S.tier==='pro'||S.tier==='vip')
     ?`<div class="sec">${S.tier==='pro'?'إطارات البرو':'إطارات VIP'}</div><div class="fgrid">${frameGrid(S.tier)}</div>`
     :`<div class="sec">إطارات مجانية</div><div class="fgrid">${frameGrid('free')}</div><div class="sec">إطارات البرو</div><div class="fgrid">${frameGrid('pro')}</div><div class="sec">إطارات VIP</div><div class="fgrid">${frameGrid('vip')}</div>`;
-  const ach=ACH.map(a=>`<div class="ach ${a.r==='leg'?'leg':a.r}${a.got?'':' lk'}"><div class="ic">${a.i}</div>${a.n}${a.got?'':`<div class="pb"><i style="width:${Math.round((a.p||0)*100)}%"></i></div>`}</div>`).join('');
+  const ach=ACH.map(a=>`<div class="ach ${a.r==='leg'?'leg':a.r}${a.got?'':' lk'}" data-a="ach" data-v="${a.id||''}"><div class="ic">${a.i}</div>${a.n}${a.got?'':`<div class="pb"><i style="width:${Math.round((a.p||0)*100)}%"></i></div>`}</div>`).join('');
   const emb=EMBLEMS.map((e,i)=>`<button class="eo${i===S.emb?' on':''}" data-a="emb" data-v="${i}" aria-label="${e.n}">${emblem(e)}</button>`).join('');
   return `<div class="stack"><div class="card stack"><div class="pf">${avatarHTML(fr,S.emb)}<div class="grow"><div class="h2">${esc(S.name)} <span class="pill">المستوى ${S.level||1}</span></div>
    <div class="row" style="flex-wrap:wrap;gap:6px;margin-top:6px"><span class="bdg vip">◆ VIP</span><span class="bdg pro">★ PRO</span><span class="bdg">${MEDALS[3].replace('class="medal"','style="width:16px;height:16px"')} المركز الثالث</span></div></div></div>
@@ -546,7 +611,9 @@ document.addEventListener('click',async e=>{
   else if(a==='save'){if(API.on){await apiSave(mid);return}S.saved[mid]=true;hap('ok');toast('تم حفظ التوقع');const y=scrollY;render();scrollTo(0,y)}
   else if(a==='tgs'){S.tg.v=clamp(S.tg.v+ +b.dataset.d,0,60);const y=scrollY;render();scrollTo(0,y)}
   else if(a==='tgsave'){if(API.on){await apiTotal();return}S.tg.saved=true;hap('ok');toast('تم حفظ مجموع الأهداف');const y=scrollY;render();scrollTo(0,y)}
-  else if(a==='frame'){const f=FRAMES.find(x=>x.id===v);if(!owned(f)){toast('مقفل: '+f.how);return}S.frameSel=v;if(API.on)await apiProfile({frame:v});render()}
+  else if(a==='frame'){const f=FRAMES.find(x=>x.id===v);if(!owned(f)){frameSheet(f);return}S.frameSel=v;if(API.on)await apiProfile({frame:v});render()}
+  else if(a==='fsClose'){document.getElementById('fsheet')?.remove();return}
+  else if(a==='ach'){achSheet(v);return}
   else if(a==='emb'){S.emb=+v;if(API.on&&S.tier!=='onboard')await apiProfile({emblem:+v});render()}
   else if(a==='onb'){const n=($('#nm').value||'').trim();const r=await apiProfile({name:n,emblem:S.emb});if(r&&r.ok){S.tier='menu';render()}else $('#nmsg').textContent=errMsg(r&&r.error)}
   else if(a==='name'){nameSheet()}
@@ -566,7 +633,7 @@ function applyMe(r){if(!r||!r.ok)return;const p=r.player;S.acc={pro:r.access.pro
   FRAMES.forEach(f=>{f.earned=(r.frames||[]).includes(f.id)});
   if(r.level)S.level=r.level.level;
   S.legend=r.legend||null;
-  if(r.achievements&&r.achievements.length){ACH.length=0;ACH.push(...r.achievements.map(a=>({i:ACH_ICON[a.id]||'★',n:a.name,got:a.unlocked,r:'',p:a.progress})))}
+  if(r.achievements&&r.achievements.length){ACH.length=0;ACH.push(...r.achievements.map(a=>({id:a.id,i:ACH_ICON[a.id]||'★',n:a.name,got:a.unlocked,r:'',p:a.progress})))}
   return p}
 async function loadRound(tier){
   if(!API.on)return;const t=tier||S.tier;if(!['free','pro','vip'].includes(t))return;
