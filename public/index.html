@@ -543,7 +543,7 @@ function nameSheet(){
   const chk=()=>{const v=inp.value.trim();let m='',ok=false;
     if(lock>0)m=`لا يمكنك تغيير الاسم الآن. متاح بعد ${lock} يوماً.`;
     else if(v.length<3)m='الاسم لازم يكون 3 أحرف على الأقل.';
-    else if(FORBID.test(v))m='هذا الاسم غير مسموح.';
+    else if(!S.acc.admin&&FORBID.test(v))m='هذا الاسم غير مسموح.';
     else if(TAKEN.includes(v))m='هذا الاسم مستخدم من لاعب آخر.';
     else{ok=true;m='الاسم متاح'}
     msg.textContent=m;msg.style.color=ok?'var(--ok)':'var(--bad)';$('#nbtn',o).disabled=!ok};
