@@ -629,8 +629,8 @@ const ERR={unauthorized:'تعذّر التحقق من حسابك. افتح ال�
 const errMsg=e=>ERR[e]||'صار خطأ. جرّب مرة ثانية.';
 S.acc={pro:true,vip:true};S.roundId=null;
 const hhmm=t=>new Date(t*1000).toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit',hour12:false});
-function gate(tier){if(tier==='free'||S.acc[tier])return true;toast(tier==='pro'?'مسابقة برو تحتاج اشتراك برو':'مسابقة VIP تحتاج اشتراك VIP');return false}
-function applyMe(r){if(!r||!r.ok)return;const p=r.player;S.acc={pro:r.access.pro,vip:r.access.vip,admin:r.access.admin};
+function gate(tier){if(tier==='free')return true;if(!S.paidOpen&&!S.acc.admin){toast('قريباً');return false}if(S.acc[tier])return true;toast(tier==='pro'?'مسابقة برو تحتاج اشتراك برو':'مسابقة VIP تحتاج اشتراك VIP');return false}
+function applyMe(r){if(!r||!r.ok)return;const p=r.player;S.paidOpen=!!r.paid_open;S.acc={pro:r.access.pro,vip:r.access.vip,admin:r.access.admin};
   if(p){S.name=p.name;S.emb=p.emblem;S.frameSel=p.frame||null;S.nameDays=30-r.name_locked_days}
   FRAMES.forEach(f=>{f.earned=(r.frames||[]).includes(f.id)});
   if(r.level)S.level=r.level.level;
