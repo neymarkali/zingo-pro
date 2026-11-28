@@ -213,6 +213,8 @@ input.tx{width:100%;background:var(--bg2);color:var(--fg);border:1px solid var(-
 .fst span{font-size:12px}
 .fway{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--bg2);border:1px solid var(--line)}
 .lgwrap{width:170px;height:170px;margin:12px auto 4px}.lgsvg{width:100%;height:100%}
+[data-a]{cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ach{cursor:pointer}
 .pb{height:4px;border-radius:2px;background:rgba(255,255,255,.12);margin-top:5px;overflow:hidden}.pb i{display:block;height:100%;background:var(--btn)}
 </style>
 <div id="amb"></div><div id="app"></div>
@@ -331,12 +333,12 @@ const FRAMES=[
 ];
 const ACH_ICON={first:'★',correct10:'✔',streak7:'⚡',fullWeek:'◆',rank1x2:'♛',exact3:'✦',weeks10:'❖',legend:'✺'};
 const ACH=[
- ['★','أول توقع',1,''],['✔','10 توقعات صحيحة',1,''],['⚡','سلسلة 5 فوز',1,'rare'],['◆','أسبوع كامل',0,'rare'],
- ['♛','المركز الأول',0,'epic'],['✦','نتيجة دقيقة',0,'epic'],['❖','10 أسابيع',0,'leg'],['✺','أسطورة زينغو',0,'leg']
-].map(a=>({i:a[0],n:a[1],got:!!a[2],r:a[3]}));
+ ['first','★','أول توقع',1,'',1],['correct10','✔','10 توقعات صحيحة',1,'',1],['streak7','⚡','سلسلة 7 فوز',0,'rare',.3],['fullWeek','◆','أسبوع كامل',0,'rare',0],
+ ['rank1x2','♛','المركز الأول مرتين',0,'epic',.5],['exact3','✦','نتيجة دقيقة',0,'epic',.33],['weeks10','❖','10 أسابيع',0,'leg',.1],['legend','✺','أسطورة زينغو',0,'leg',.33]
+].map(a=>({id:a[0],i:a[1],n:a[2],got:!!a[3],r:a[4],p:a[5]}));
 const RANK=[['سلطان',48,0,'gold'],['نجم الليل',44,1,'silver'],['أبو فهد',41,2,'bronze'],['كابتن ليث',39,3,'none'],['الصقر',36,4,'none'],['ملك التوقع',33,5,'none'],['أنت',31,6,'me'],['رعد',29,7,'none'],['زعيم',27,8,'none'],['بدر',25,9,'none']]
  .map((r,i)=>({n:r[0],p:r[1],e:r[2],f:r[3],rk:i+1}));
-const S={tier:'menu',tab:'play',emb:7,frameSel:null,boost:null,tg:{v:12,saved:false},nameDays:30,name:'كابتن ليث',picks:{},saved:{}};
+const S={tier:'menu',tab:'play',emb:7,frameSel:null,boost:null,tg:{v:12,saved:false},nameDays:30,name:'كابتن ليث', legend:{first:.33,points:.2},picks:{},saved:{}};
 const planOf=()=>S.tier==='free'?0:S.tier==='pro'?1:2;
 // Top frames show their steps: a segment unlocks at each listed level, the frame completes at the last one.
 const FRAME_STEPS={carbon:[1,2,4,5],ruby:[3,5,8,10],rope:[4,8,11,15],emerald:[6,13,19,25],halo:[8,15,23,30]};
