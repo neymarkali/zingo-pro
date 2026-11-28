@@ -168,7 +168,8 @@ async function access(env, tg) {
   const vip = t.has("vip");
   return { pro: vip || t.has("pro"), vip, admin: false };
 }
-const canPlay = (acc, tier) => tier === "free" || (tier === "pro" && acc.pro) || (tier === "vip" && acc.vip);
+// Paid contests stay closed until PAID_OPEN=1 is set. Admins can always test them.
+const canPlay = (acc, tier, env) => tier === "free" || (acc.admin && tier !== "free") || (env.PAID_OPEN === "1" && ((tier === "pro" && acc.pro) || (tier === "vip" && acc.vip)));
 
 // ---------- points ----------
 function dynPoints(m) {
@@ -315,7 +316,7 @@ async function me(env, user) {
     id, name: a.name, unlocked: got.has(id),
     progress: id === "legend" ? Math.max(legend.first, legend.points) : Math.min(1, a.value(stats) / a.goal),
   }));
-  return json({ ok: true, player: p && { name: p.name, emblem: p.emblem, frame: p.frame }, access: acc, name_locked_days: days, frames: awards, level: levelFromXp(xp), achievements, legend });
+  return json({ ok: true, player: p && { name: p.name, emblem: p.emblem, frame: p.frame }, access: acc, name_locked_days: days, frames: awards, level: levelFromXp(xp), achievements, legend, paid_open: env.PAID_OPEN === "1" });
 }
 
 async function saveProfile(env, user, body) {
@@ -355,7 +356,7 @@ async function saveProfile(env, user, body) {
 async function getRound(env, user, tier, roundId) {
   if (!TIERS.includes(tier)) return fail("bad_tier");
   const acc = await access(env, user.id);
-  if (!canPlay(acc, tier)) return fail("subscription_required", 403);
+  if (!canPlay(acc, tier, env)) return fail("subscription_required", 403);
   const r = roundId
     ? await env.DB.prepare("SELECT * FROM z_rounds WHERE id=? AND tier=?").bind(roundId, tier).first()
     : await env.DB.prepare("SELECT * FROM z_rounds WHERE tier=? ORDER BY (status='open') DESC, id DESC LIMIT 1").bind(tier).first();
@@ -384,7 +385,7 @@ async function predict(env, user, b) {
   const m = await env.DB.prepare("SELECT m.*, r.tier, r.lock_at, r.status FROM z_matches m JOIN z_rounds r ON r.id=m.round_id WHERE m.id=?").bind(Number(b.match_id)).first();
   if (!m) return fail("match_not_found", 404);
   const acc = await access(env, user.id);
-  if (!canPlay(acc, m.tier)) return fail("subscription_required", 403);
+  if (!canPlay(acc, m.tier, env)) return fail("subscription_required", 403);
   if (!(await env.DB.prepare("SELECT 1 x FROM z_players WHERE tg=?").bind(user.id).first())) return fail("profile_required", 403);
   if (m.status !== "open" || now() >= m.lock_at) return fail("round_locked", 403);
   const oneOf = (v, set) => (v == null ? null : set.includes(v) ? v : false);
@@ -420,7 +421,7 @@ async function saveTotal(env, user, b) {
   const r = await env.DB.prepare("SELECT * FROM z_rounds WHERE id=?").bind(Number(b.round_id)).first();
   if (!r) return fail("round_not_found", 404);
   const acc = await access(env, user.id);
-  if (!canPlay(acc, r.tier)) return fail("subscription_required", 403);
+  if (!canPlay(acc, r.tier, env)) return fail("subscription_required", 403);
   if (!(await env.DB.prepare("SELECT 1 x FROM z_players WHERE tg=?").bind(user.id).first())) return fail("profile_required", 403);
   const g = Number(b.guess);
   if (!Number.isInteger(g) || g < 0 || g > 99) return fail("bad_pick");
