@@ -151,12 +151,12 @@ function forbiddenName(key) {
   const latin = key.replace(/0/g, "o").replace(/[1|!l]/g, "i").replace(/3/g, "e").replace(/[4@]/g, "a").replace(/5/g, "s").replace(/7/g, "t");
   return /z[i]?ngo|zinqo|zingo/.test(latin);
 }
-function checkName(raw) {
+function checkName(raw, allowReserved = false) {
   const name = String(raw || "").normalize("NFKC").trim();
   if (name.length < 3) return { error: "name_too_short" };
   if (name.length > 16) return { error: "name_too_long" };
   const key = normName(name);
-  if (forbiddenName(key)) return { error: "name_forbidden" };
+  if (!allowReserved && forbiddenName(key)) return { error: "name_forbidden" };
   return { name, key };
 }
 
@@ -334,7 +334,7 @@ async function saveProfile(env, user, body) {
   let name = cur && cur.name, key = cur && cur.name_key, changed = cur ? cur.name_changed_at : t;
   if (body.name !== undefined && (!cur || body.name !== cur.name)) {
     if (cur && t < cur.name_changed_at + NAME_COOLDOWN_DAYS * 86400) return fail("name_locked", 403);
-    const v = checkName(body.name);
+    const v = checkName(body.name, adminIds(env).has(user.id));
     if (v.error) return fail(v.error);
     const dup = await env.DB.prepare("SELECT tg FROM z_players WHERE name_key=? AND tg<>?").bind(v.key, user.id).first();
     if (dup) return fail("name_taken", 409);
